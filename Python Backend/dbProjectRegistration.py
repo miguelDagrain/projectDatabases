@@ -6,24 +6,27 @@
 # );
 from enum import Enum
 
-class registration(Enum):
-    Undefined=0
-    Bezig=1
-    Geslaagd=2
-    NietGeslaagd=3
-class dbProjectRegistration:
-    m_project=None
-    m_status=None
-    m_student=None
 
-    def dbProjectRegistration(self,project,status,student):
+class registration(Enum):
+    Undefined = 0
+    Bezig = 1
+    Geslaagd = 2
+    NietGeslaagd = 3
+
+
+class dbProjectRegistration:
+    m_project = None
+    m_status = None
+    m_student = None
+
+    def dbProjectRegistration(self, project, status, student):
         """
         a constructor for a dbProjectRegistration with all variables given
         :param project: an int representing a project id
-        :param status:  a registration Enum that represents the status of the registration
-        :param student: an that represent the studentid coupled to this registration
+        :param status: a registration Enum that represents the status of the registration
+        :param student: an int that represent the studentId coupled to this registration
         :return:
         """
-        self.m_project=project
-        self.m_status=status
-        self.m_student=student
+        self.m_project = project
+        self.m_status = status
+        self.m_student = student

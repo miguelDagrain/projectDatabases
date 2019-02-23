@@ -11,25 +11,29 @@
 # );
 
 from enum import Enum
+
+
 class title(Enum):
-    geen=0
-    professor=1
-    PHD=2
+    geen = 0
+    professor = 1
+    PHD = 2
+
 
 class intext(Enum):
-    Undefined=0
-    Intern=1
-    Extern=2
+    Undefined = 0
+    Intern = 1
+    Extern = 2
+
 
 class dbEmployee:
-    m_email=None
-    m_office=None
-    m_researchgroup=None
-    m_title=None
-    m_internOrExtern=None
-    m_active=False
+    m_email = None
+    m_office = None
+    m_researchgroup = None
+    m_title = None
+    m_internOrExtern = None
+    m_active = False
 
-    def dbEmployee(self,email,office,researchgroup,title,interextern,active):
+    def dbEmployee(self, email, office, researchgroup, title, interextern, active):
         """
         constructor for dbEmployee  where all varibales are given
         :param email: a string representing an email
@@ -40,9 +44,9 @@ class dbEmployee:
         :param active: a bool stating whether the employee is active or not
         :return: a new dbEmployee object
         """
-        self.m_email=email
-        self.m_office=office
-        self.m_researchgroup=researchgroup
-        self.m_title=title
-        self.m_internOrExtern=interextern
-        self.m_active=active
+        self.m_email = email
+        self.m_office = office
+        self.m_researchgroup = researchgroup
+        self.m_title = title
+        self.m_internOrExtern = interextern
+        self.m_active = active
