@@ -25,7 +25,7 @@ CREATE TABLE researchGroup(
   discipline subject,
   active bit,     --1 is active, 0 is not active
   adress varchar(255),
-  telNr INT,
+  telNr varchar(255) ,
   groupDescription text,
   foreign key (groupDescription) references document (content),
   primary key (name, abbreviation)

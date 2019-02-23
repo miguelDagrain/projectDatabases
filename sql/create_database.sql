@@ -1,0 +1,3 @@
+CREATE ROLE pdb WITH LOGIN PASSWORD 'hunter2';
+ALTER ROLE pdb CREATEDB;
+CREATE DATABASE pdbDatabase owner pdb;
