@@ -22,15 +22,7 @@ class subject(Enum):
 
 
 class dbResearchGroup:
-    m_name = None
-    m_abbreviation = None
-    m_discipline = None
-    m_active = False
-    m_adress = None
-    m_telNr = None
-    m_groupDescription = None
-
-    def dbResearchGorup(self, name, abbreviation, discipline, active, adress, telNr, groupDescription):
+    def __init__(self, name, abbreviation, discipline, active, adress, telNr, groupDescription):
         """
         constructor for a dbResearchGroup
         :param name: a string representing a name for the researchGroup

@@ -26,14 +26,7 @@ class intext(Enum):
 
 
 class dbEmployee:
-    m_email = None
-    m_office = None
-    m_researchgroup = None
-    m_title = None
-    m_internOrExtern = None
-    m_active = False
-
-    def dbEmployee(self, email, office, researchgroup, title, interextern, active):
+    def __init__(self, email, office, researchgroup, title, interextern, active):
         """
         constructor for dbEmployee  where all varibales are given
         :param email: a string representing an email

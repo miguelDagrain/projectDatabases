@@ -11,13 +11,7 @@ import time
 
 
 class dbsession:
-    m_sessionId = None
-    m_starTime = None
-    m_searchWordTime = None
-    m_clickedProject = None
-    m_clickedProjectTime = None
-
-    def dbSession(self, sessionId, startTime, searchWordTime, clickedProject, clickedProjectTime):
+    def __init__(self, sessionId, startTime, searchWordTime, clickedProject, clickedProjectTime):
         """
         a constructor for a dbSession with all variables given
         :param sessionId: an int representing the session

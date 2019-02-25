@@ -15,11 +15,7 @@ class registration(Enum):
 
 
 class dbProjectRegistration:
-    m_project = None
-    m_status = None
-    m_student = None
-
-    def dbProjectRegistration(self, project, status, student):
+    def __init__(self, project, status, student):
         """
         a constructor for a dbProjectRegistration with all variables given
         :param project: an int representing a project id

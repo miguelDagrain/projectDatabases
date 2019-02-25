@@ -6,12 +6,7 @@
 # );
 
 class dbStudent:
-    m_name = None
-    m_studentID = None
-    m_likedProject = None
-    m_session = None
-
-    def dbStudent(self, name, studentID, likedProject, session):
+    def __init__(self, name, studentID, likedProject, session):
         """
         a constructor for a dbStudent with all variables given
         :param name: a string representing the name of the student

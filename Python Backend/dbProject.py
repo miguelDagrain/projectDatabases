@@ -20,17 +20,7 @@ class typeResearch(Enum):
 
 
 class dbProject:
-    m_title = None
-    m_maxStudents = None
-    m_description = None
-    m_researchGroup = None
-    m_activeyear = None
-    m_type = None
-    m_tag = None
-    m_projectId = None
-    m_relatedProject = None
-
-    def dbProject(self, title, maxStudents, description, researchgroup, activeyear, type, tag, projectId,
+    def __init__(self, title, maxStudents, description, researchgroup, activeyear, type, tag, projectId,
                   relatedproject):
         """
         constructor for a dbProject with all variables given
