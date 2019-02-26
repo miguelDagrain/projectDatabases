@@ -1,5 +1,4 @@
-### TUTORIAL Len Feremans
-###see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
+### Project Databases
 from flask import Flask
 from flask.templating import render_template
 from flask import request, session, jsonify
