@@ -44,3 +44,6 @@ class Project:
         self.tag = tag
         self.projectId = project_id
         self.relatedProject = related_project
+
+    def __str__(self):
+        return "title: "+self.title+", max students: "+str(self.maxStudents)+", description"+self.desc+", group: "+self.researchGroup+", year: "+self.activeYear+", type: "+self.type+", tag: "+self.tag+", id: "+str(self.projectId)+", related project: "+self.relatedProject

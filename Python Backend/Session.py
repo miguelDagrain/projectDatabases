@@ -24,3 +24,6 @@ class Session:
         self.searchWordTime = search_word_time
         self.clickedProject = clicked_project
         self.clickedProjectTime = clicked_project_time
+
+    def __str__(self):
+        return "id: "+str(self.sessionId)+", startTime: "+self.startTime+", searchWordTime: "+self.searchWordTime+", clickedProject: "+self.clickedProject+", clickedProjectTime: "+self.clickedProjectTime

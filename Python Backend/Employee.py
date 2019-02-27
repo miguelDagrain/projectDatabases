@@ -43,3 +43,6 @@ class Employee:
         self.title = title
         self.internOrExtern = interextern
         self.active = active
+
+    def __str__(self):
+        return "email: "+self.email+", office: "+self.office+", group: "+self.research_group+", title: "+self.title+", isintern:"+str(self.internOrExtern)+", active: "+str(self.active)

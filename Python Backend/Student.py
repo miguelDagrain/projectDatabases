@@ -19,3 +19,6 @@ class Student:
         self.studentID = student_id
         self.likedProject = liked_project
         self.session = session
+
+    def __str__(self):
+        return "name: "+self.name+", Id: "+str(self.studentID)+", likedProject: "+str(self.likedProject)+", session: "+str(self.session)

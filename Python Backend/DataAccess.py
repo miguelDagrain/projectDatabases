@@ -22,14 +22,13 @@ class DataAccess:
                 inp = input("geeft uw document")
                 self.add_document(Document(inp))
             elif (inp == "getdoc"):
-                temp = self.get_Document()
+                temp = self.get_documents()
                 for doc in temp:
-                    print(doc.text)
+                    print(doc)
             elif (inp == "getgroup"):
-                temp = self.get_researchGroup()
+                temp = self.get_researchGroups()
                 for i in temp:
-                    print(i.name + " " + i.abbreviation + " " + i.discipline + " " + str(
-                        i.active) + " " + i.adress + " " + i.telNr + " " + i.groupDescription)
+                    print(i)
             elif (inp == "makegroup"):
                 name = input("give name")
                 abb = input("give abbreviation")
@@ -42,8 +41,8 @@ class DataAccess:
                 self.add_researchGroup(temp)
             elif(inp=="getmployee"):
                 temp=self.get_employees()
-                for i in temp
-                    print()
+                for i in temp:
+                    print(i)
 
     def get_documents(self):
         cursor=self.dbconnect.get_cursor()

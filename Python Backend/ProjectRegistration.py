@@ -26,3 +26,6 @@ class ProjectRegistration:
         self.project = project
         self.status = status
         self.student = student
+
+    def  __str__(self):
+        return "project: "+self.project+", status: "+self.status+", student: "+str(self.student)

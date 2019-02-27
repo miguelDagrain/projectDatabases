@@ -6,3 +6,6 @@ class Document:
         :return: a new dbDocument object
         """
         self.text = text
+
+    def __str__(self):
+        return self.text

@@ -23,4 +23,6 @@ def show_research_groups():
 
 
 if __name__ == "__main__":
+    # acces=DataAccess(connection)
+    # acces.manualDataHandling()
     app.run(debug=True)
