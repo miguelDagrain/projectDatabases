@@ -48,3 +48,24 @@ class dbAcces:
         except:
             self.dbconnect.rollback()
             raise Exception('Unable to save document!')
+
+
+    def get_employee(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from employee')
+        employees= list()
+        for row in cursor:
+            employee = dbEmployee(row[0], row[1], row[2], row[3], row[4], row[5])
+            employees.append(employee)
+        return employees
+
+    def add_employee(self,empl):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO employee values(%s,%s,%s,%s,%s,%s)',
+                           (empl.email,empl.office,empl.researchGruoup,empl.title,empl.internOrExtern,empl.active))
+            # get id and return updated object
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to save Employee!')
