@@ -1,4 +1,4 @@
-class dbDocument:
+class Document:
     def __init__(self, text):
         """
         constructor for dbdocument with text given

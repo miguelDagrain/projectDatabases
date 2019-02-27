@@ -7,14 +7,14 @@
 from enum import Enum
 
 
-class registration(Enum):
-    Undefined = 0
-    Bezig = 1
-    Geslaagd = 2
-    NietGeslaagd = 3
+class Registration(Enum):
+    UNDEFINED = 0
+    BUSY = 1
+    FINISHED = 2
+    NOT_FINISHED = 3
 
 
-class dbProjectRegistration:
+class ProjectRegistration:
     def __init__(self, project, status, student):
         """
         a constructor for a dbProjectRegistration with all variables given
