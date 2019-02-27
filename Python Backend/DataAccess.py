@@ -1,21 +1,17 @@
-from dbDocument import *
-from dbResearchGroup import *
-from dbEmployee import *
-from dbProject import *
-from dbProjectRegistration import *
-from dbSession import *
-from dbStudent import *
+from Document import *
+from ResearchGroup import *
 
-class dbAcces:
+
+class DataAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
-    def get_Document(self):
+    def get_document(self):
         cursor=self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document')
         documents=list()
         for row in cursor:
-            document=dbDocument(row[0])
+            document=Document(row[0])
             documents.append(document)
         return documents
 
@@ -34,7 +30,7 @@ class dbAcces:
         cursor.execute('select * from researchGroup')
         rgroups=list()
         for row in cursor:
-            rgroup=dbResearchGroup(row[0],row[1],row[2],row[3],row[4],row[5],row[6])
+            rgroup=ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
             rgroups.append(rgroup)
         return rgroups
 

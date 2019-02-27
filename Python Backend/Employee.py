@@ -13,33 +13,33 @@
 from enum import Enum
 
 
-class title(Enum):
-    geen = 0
+class Title(Enum):
+    none = 0
     professor = 1
     PHD = 2
 
 
-class intext(Enum):
+class InText(Enum):
     Undefined = 0
     Intern = 1
     Extern = 2
 
 
-class dbEmployee:
-    def __init__(self, email, office, researchgroup, title, interextern, active):
+class Employee:
+    def __init__(self, email, office, research_group, title, interextern, active):
         """
         constructor for dbEmployee  where all varibales are given
         :param email: a string representing an email
         :param office: a string representing a office(building+floor+room)
-        :param researchgroup:a string representing a researchgroup (must represent the name of a dbResearch=gorup)
+        :param research_group:a string representing a researchgroup (must represent the name of a dbResearch=gorup)
         :param title: a title enum
-        :param interextern:  a intext enum
+        :param interextern:  a Intext enum
         :param active: a bool stating whether the employee is active or not
         :return: a new dbEmployee object
         """
         self.email = email
         self.office = office
-        self.researchgroup = researchgroup
+        self.research_group = research_group
         self.title = title
         self.internOrExtern = interextern
         self.active = active

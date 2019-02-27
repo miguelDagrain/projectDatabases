@@ -13,34 +13,34 @@
 from enum import Enum
 
 
-class typeResearch(Enum):
-    Undefined = 0
-    MasterThesis = 1
-    researchInternship = 2
+class ResearchType(Enum):
+    UNDEFINED = 0
+    MASTER_THESIS = 1
+    RESEARCH_INTERNSHIP = 2
 
 
-class dbProject:
-    def __init__(self, title, maxStudents, description, researchgroup, activeyear, type, tag, projectId,
-                  relatedproject):
+class Project:
+    def __init__(self, title, max_students, description, research_group, active_year, type, tag, project_id,
+                 related_project):
         """
         constructor for a dbProject with all variables given
         :param title: a string representing a title
-        :param maxStudents:  an int representing the max amount of students on this project
+        :param max_students:  an int representing the max amount of students on this project
         :param description: a string that is the description of this project
-        :param researchgroup: the name of the researchgroup connected with this project (string)
-        :param activeyear: the year it is active (int)
+        :param research_group: the name of the researchgroup connected with this project (string)
+        :param active_year: the year it is active (int)
         :param type: a typeResearch enum that says which type of research it is
         :param tag: a string that will later do things
-        :param projectId: a int that is the id of this project
-        :param relatedproject: the id of a possible related project
+        :param project_id: a int that is the id of this project
+        :param related_project: the id of a possible related project
         :return:
         """
         self.title = title
-        self.maxStudents = maxStudents
-        self.description = description
-        self.researchGroup = researchgroup
-        self.activeyear = activeyear
+        self.maxStudents = max_students
+        self.desc = description
+        self.researchGroup = research_group
+        self.activeYear = active_year
         self.type = type
         self.tag = tag
-        self.projectId = projectId
-        self.relatedProject = relatedproject
+        self.projectId = project_id
+        self.relatedProject = related_project
