@@ -41,10 +41,10 @@ class dbAcces:
     def add_researchGroup(self,group):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO researchGroup values(%s,%s,%s,%s,%s,%s,%s,)',
-                           (group.name,group.abbreviation,group.discipline,"B'"+str(int(group.active))+"'",group.adress,group.telNr,group.groupDescription,))
+            cursor.execute('INSERT INTO researchGroup values(%s,%s,%s,%s,%s,%s,%s)',
+                           (group.name,group.abbreviation,group.discipline,group.active,group.adress,group.telNr,group.groupDescription))
             # get id and return updated object
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
-            raise Exception('Unable to save quote!')
+            raise Exception('Unable to save document!')

@@ -38,7 +38,7 @@ if __name__ == "__main__":
         elif(inp=="getgroup"):
             temp=acces.get_researchGroup()
             for i in temp:
-                print(i.name+" "+i.abbreviation+" "+i.discipline+" "+i.active+" "+i.adress+" "+i.telNr+" "+i.groupDescription)
+                print(i.name+" "+i.abbreviation+" "+i.discipline+" "+str(i.active)+" "+i.adress+" "+i.telNr+" "+i.groupDescription)
         elif(inp=="makegroup"):
             name=input("give name")
             abb=input("give abbreviation")
