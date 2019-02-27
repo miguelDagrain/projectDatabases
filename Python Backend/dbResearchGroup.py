@@ -34,10 +34,10 @@ class dbResearchGroup:
         :param groupDescription: a string that is the full description of the group
         :return:a new dbResearchGroup object
         """
-        self.m_name = name
-        self.m_abbreviation = abbreviation
-        self.m_discipline = discipline
-        self.m_active = active
-        self.m_adress = adress
-        self.m_telNr = telNr
-        self.m_groupDescription = groupDescription
+        self.name = name
+        self.abbreviation = abbreviation
+        self.discipline = discipline
+        self.active = active
+        self.adress = adress
+        self.telNr = telNr
+        self.groupDescription = groupDescription

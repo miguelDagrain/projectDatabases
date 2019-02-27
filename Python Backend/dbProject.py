@@ -35,12 +35,12 @@ class dbProject:
         :param relatedproject: the id of a possible related project
         :return:
         """
-        self.m_title = title
-        self.m_maxStudents = maxStudents
-        self.m_description = description
-        self.m_researchGroup = researchgroup
-        self.m_activeyear = activeyear
-        self.m_type = type
-        self.m_tag = tag
-        self.m_projectId = projectId
-        self.m_relatedProject = relatedproject
+        self.title = title
+        self.maxStudents = maxStudents
+        self.description = description
+        self.researchGroup = researchgroup
+        self.activeyear = activeyear
+        self.type = type
+        self.tag = tag
+        self.projectId = projectId
+        self.relatedProject = relatedproject

@@ -6,7 +6,8 @@ from flask import request, session, jsonify
 from config import config_data
 from dbConnection import DBConnection
 
-from dbAcces import dbAcces
+from dbAcces import *
+from dbDocument import *
 
 ### INITIALIZE SINGLETON SERVICES ###
 app = Flask('PROJECTDB ')
@@ -25,8 +26,31 @@ def main():
 if __name__ == "__main__":
     # app.run()
     acces=dbAcces(connection)
-    temp=acces.get_Document()
-    for doc in temp:
-        print(doc.m_text)
+    while(True):
+        inp=input("geeft input")
+        if (inp=="makedoc"):
+            inp=input("geeft uw document")
+            acces.add_document(dbDocument(inp))
+        elif(inp=="getdoc"):
+            temp=acces.get_Document()
+            for doc in temp:
+                print(doc.text)
+        elif(inp=="getgroup"):
+            temp=acces.get_researchGroup()
+            for i in temp:
+                print(i.name+" "+i.abbreviation+" "+i.discipline+" "+i.active+" "+i.adress+" "+i.telNr+" "+i.groupDescription)
+        elif(inp=="makegroup"):
+            name=input("give name")
+            abb=input("give abbreviation")
+            disc=input("give discipline")
+            active=input("give active")=="True"
+            adress=input("give adress")
+            tel=input("give number")
+            desc=input("give decription")
+            temp=dbResearchGroup(name,abb,disc,active,adress,tel,desc)
+            acces.add_researchGroup(temp)
+
+        elif(inp=="quit"):
+            break
     
     

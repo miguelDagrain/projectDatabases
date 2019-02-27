@@ -23,6 +23,6 @@ class dbProjectRegistration:
         :param student: an int that represent the studentId coupled to this registration
         :return:
         """
-        self.m_project = project
-        self.m_status = status
-        self.m_student = student
+        self.project = project
+        self.status = status
+        self.student = student

@@ -21,8 +21,8 @@ class dbsession:
         :param clickedProjectTime: a time object referencing the time the session clicked on a project
         :return: a new dbSession object
         """
-        self.m_sessionId = sessionId
-        self.m_starTime = startTime
-        self.m_searchWordTime = searchWordTime
-        self.m_clickedProject = clickedProject
-        self.m_clickedProjectTime = clickedProjectTime
+        self.sessionId = sessionId
+        self.startTime = startTime
+        self.searchWordTime = searchWordTime
+        self.clickedProject = clickedProject
+        self.clickedProjectTime = clickedProjectTime

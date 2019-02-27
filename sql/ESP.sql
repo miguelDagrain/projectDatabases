@@ -78,3 +78,8 @@ create table projectRegistration(
   student int references student(studentID),
   PRIMARY KEY (project, status, student)
 );
+
+insert into document values('ik ben jos het document')
+insert into document values('wij zijn een groep');
+Insert into researchGroup values('de grote groep','dgr','Computer Science',B'0','hiere','120725625','wij zijn een groep');
+

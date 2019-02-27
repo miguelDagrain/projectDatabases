@@ -15,7 +15,7 @@ class dbStudent:
         :param session: an int referencing the sessionId of an open session that the student is using
         :return: a new dbStudent object
         """
-        self.m_name = name
-        self.m_studentID = studentID
-        self.m_likedProject = likedProject
-        self.m_session = session
+        self.name = name
+        self.studentID = studentID
+        self.likedProject = likedProject
+        self.session = session

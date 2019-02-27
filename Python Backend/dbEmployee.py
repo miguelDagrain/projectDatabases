@@ -37,9 +37,9 @@ class dbEmployee:
         :param active: a bool stating whether the employee is active or not
         :return: a new dbEmployee object
         """
-        self.m_email = email
-        self.m_office = office
-        self.m_researchgroup = researchgroup
-        self.m_title = title
-        self.m_internOrExtern = interextern
-        self.m_active = active
+        self.email = email
+        self.office = office
+        self.researchgroup = researchgroup
+        self.title = title
+        self.internOrExtern = interextern
+        self.active = active

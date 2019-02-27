@@ -5,4 +5,4 @@ class dbDocument:
         :param text: the text that is contained in the document
         :return: a new dbDocument object
         """
-        self.m_text = text
+        self.text = text
