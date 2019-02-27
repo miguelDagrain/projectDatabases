@@ -4,3 +4,33 @@
 <h1> Hello! </h1>
 
 <a href="/researchgroups">click for research groups</a>
+
+<p>add research group</p>
+<form action="/researchgroups", method="post">
+    Group name:<br>
+    <label>
+        <input type="text" name="name"><br>
+    </label>
+    Abbreviation:<br>
+    <label>
+        <input type="text" name="abbreviation"><br>
+    </label>
+    Active:<br>
+    <label>
+        <input type="checkbox" name="active"><br>
+    </label>
+    Address:<br>
+    <label>
+        <input type="text" name="address"><br>
+    </label>
+    Telephone number:<br>
+    <label>
+        <input type="text" name="telephone"><br>
+    </label>
+    <label>
+        <input type="submit" value="Enter">
+    </label>
+    {% if send == True %}
+        <p>SENT!</p>
+    {% endif %}
+</form>

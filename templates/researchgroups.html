@@ -25,6 +25,9 @@
         <td>
             <strong>desc</strong>
         </td>
+        <td>
+            <strong>active</strong>
+        </td>
     </tr>
     {% for group in r_groups %}
         <tr>
@@ -45,6 +48,13 @@
             </td>
             <td>
                 {{ group.desc }}
+            </td>
+            <td>
+                {% if group.active == True %}
+                Yes
+                {% else %}
+                No
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
