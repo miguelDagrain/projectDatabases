@@ -6,6 +6,8 @@ from flask import request, session, jsonify
 from config import config_data
 from dbConnection import DBConnection
 
+from dbAcces import dbAcces
+
 ### INITIALIZE SINGLETON SERVICES ###
 app = Flask('PROJECTDB ')
 app.secret_key = '*^*(*&)(*)(*afafafaSDD47j\3yX R~X@H!jmM]Lwf/,?KT'
@@ -21,6 +23,10 @@ def main():
 
 ### RUN DEV SERVER ###
 if __name__ == "__main__":
-    app.run()
+    # app.run()
+    acces=dbAcces(connection)
+    temp=acces.get_Document()
+    for doc in temp:
+        print(doc.m_text)
     
     
