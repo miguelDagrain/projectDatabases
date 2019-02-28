@@ -53,6 +53,12 @@ class DataAccess:
             documents.append(document)
         return documents
 
+    def get_document(self,text):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM document WHERE text=%s', (text ))
+        row= cursor.fetchone()
+        return Document(row[0])
+
     def add_document(self, doc):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -71,6 +77,13 @@ class DataAccess:
             rgroup=ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
             rgroups.append(rgroup)
         return rgroups
+
+    def get_researchGroup(self, name,abbr):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM researchGorup WHERE name=%s  and abbreviation=%s', (name,abbr))
+        row = cursor.fetchone()
+        return ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+
 
     def add_researchGroup(self,group):
         cursor = self.dbconnect.get_cursor()
@@ -93,6 +106,12 @@ class DataAccess:
             employees.append(employee)
         return employees
 
+    def get_employee(self, email):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM employee WHERE email=%s ', (email))
+        row = cursor.fetchone()
+        return Employee(row[0], row[1], row[2], row[3], row[4], row[5])
+
     def add_employee(self,empl):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -112,6 +131,12 @@ class DataAccess:
             project = project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8])
             projects.append(project)
         return projects
+
+    def get_project(self, ID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM employee WHERE projectID=%s ', (ID))
+        row = cursor.fetchone()
+        return Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8])
 
     def add_project(self,proj):
         cursor = self.dbconnect.get_cursor()
@@ -134,6 +159,12 @@ class DataAccess:
             sessions.append(session)
         return sessions
 
+    def get_session(self, ID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM employee WHERE sessionID=%s ', (ID))
+        row = cursor.fetchone()
+        return Session(row[0], row[1], row[2], row[3], row[4])
+
     def add_session(self,ses):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -154,6 +185,12 @@ class DataAccess:
             students.append(student)
         return students
 
+    def get_student(self, ID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM employee WHERE studentID=%s ', (ID))
+        row = cursor.fetchone()
+        return Student(row[0], row[1], row[2], row[3])
+
     def add_student(self, stu):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -173,6 +210,16 @@ class DataAccess:
             pr = ProjectRegistration(row[0], row[1], row[2])
             prs.append(pr)
         return prs
+
+    #this function is pretty useless at the moment because to get a single registration you need al the data from it
+    # def get_projectRegistration(self):
+    #     cursor = self.dbconnect.get_cursor()
+    #     cursor.execute('select * from projectRegistration')
+    #     prs = list()
+    #     for row in cursor:
+    #         pr = ProjectRegistration(row[0], row[1], row[2])
+    #         prs.append(pr)
+    #     return prs
 
     def add_projectRegistration(self, pr):
         cursor = self.dbconnect.get_cursor()
