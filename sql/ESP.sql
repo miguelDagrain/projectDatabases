@@ -56,7 +56,7 @@ create table project(
 );
 
 create table session(
-  sessionID int unique not null,
+  sessionID int PRIMARY KEY ,
   startTime timestamp,
   searchword varchar,
   searchwordtime time,
