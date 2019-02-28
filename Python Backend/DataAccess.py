@@ -109,7 +109,7 @@ class DataAccess:
         cursor.execute('select * from project')
         projects = list()
         for row in cursor:
-            project = project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8])
+            project = Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8])
             projects.append(project)
         return projects
 

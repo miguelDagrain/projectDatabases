@@ -5,7 +5,7 @@ from dbConnection import *
 from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
 
-app = Flask(__name__, template_folder="../templates/")
+app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                           dbhost=config_data['dbhost'])
