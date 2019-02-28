@@ -19,7 +19,7 @@ def index():
 @app.route("/researchgroups")
 def show_research_groups():
     access = DataAccess(connection)
-    groups = access.get_researchGroup()
+    groups = access.get_researchGroups()
     return render_template("researchgroups.html", r_groups=groups)
 
 
