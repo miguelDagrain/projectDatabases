@@ -23,7 +23,7 @@ CREATE TABLE researchGroup(
   name varchar(255) unique ,
   abbreviation varchar(25) unique ,
   discipline subject,
-  active bit,     --1 is active, 0 is not active
+  active boolean,     --1 is active, 0 is not active
   adress varchar(255),
   telNr varchar(255) ,
   groupDescription text,
@@ -56,7 +56,7 @@ create table project(
 );
 
 create table session(
-  sessionID int unique not null,
+  sessionID int PRIMARY KEY ,
   startTime timestamp,
   searchword varchar,
   searchwordtime time,
@@ -78,3 +78,8 @@ create table projectRegistration(
   student int references student(studentID),
   PRIMARY KEY (project, status, student)
 );
+
+insert into document values('ik ben jos het document');
+insert into document values('wij zijn een groep');
+Insert into researchGroup values('de grote groep','dgr','Computer Science','true','hiere','120725625','wij zijn een groep');
+

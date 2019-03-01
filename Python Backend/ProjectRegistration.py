@@ -7,14 +7,14 @@
 from enum import Enum
 
 
-class registration(Enum):
-    Undefined = 0
-    Bezig = 1
-    Geslaagd = 2
-    NietGeslaagd = 3
+class Registration(Enum):
+    UNDEFINED = 0
+    BUSY = 1
+    FINISHED = 2
+    NOT_FINISHED = 3
 
 
-class dbProjectRegistration:
+class ProjectRegistration:
     def __init__(self, project, status, student):
         """
         a constructor for a dbProjectRegistration with all variables given
@@ -23,6 +23,9 @@ class dbProjectRegistration:
         :param student: an int that represent the studentId coupled to this registration
         :return:
         """
-        self.m_project = project
-        self.m_status = status
-        self.m_student = student
+        self.project = project
+        self.status = status
+        self.student = student
+
+    def  __str__(self):
+        return "project: "+self.project+", status: "+self.status+", student: "+str(self.student)
