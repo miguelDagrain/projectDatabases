@@ -22,7 +22,7 @@ class Subject(Enum):
 
 
 class ResearchGroup:
-    def __init__(self, name, abbreviation, discipline, active, address, telephone, desc):
+    def __init__(self,id, name, abbreviation, discipline, active, address, telephone, desc):
         """
         constructor for a dbResearchGroup
         :param name: a string representing a name for the researchGroup
@@ -31,9 +31,10 @@ class ResearchGroup:
         :param active: a bool saying if the group is active or not
         :param address: a string that is an adress for the group
         :param telephone: a string that is the phone number for the group
-        :param desc: a string that is the full description of the group
+        :param desc: an int that references the descriptions of this group
         :return:a new dbResearchGroup object
         """
+        self.ID=id
         self.name = name
         self.abbreviation = abbreviation
         self.discipline = discipline

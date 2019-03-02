@@ -19,6 +19,7 @@ CREATE DOMAIN language as TEXT
 
 CREATE TABLE document(
   documentID SERIAL PRIMARY key ,
+  lang language,
   content text
 );
 
@@ -33,6 +34,12 @@ CREATE TABLE researchGroup(
   telNr varchar(255) ,
   groupDescription int,
   foreign key (groupDescription) references document (documentID)
+  );
+
+  create table groupDescription(
+    groupID int references researchGroup(groupID),
+    docID int references document(documentID),
+    primary key(groupID,docID)
   );
 
 create table employee(
@@ -60,9 +67,8 @@ create table project(
 
 create table projectDocument(
   projectID int references project(projectID),
-  lang language,
   docID int references document(documentID),
-  PRIMARY KEY (projectID,lang)
+  PRIMARY KEY (projectID,docID)
 );
 
 create table session(
