@@ -16,6 +16,10 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/image/banner")
+def get_banner():
+    return "../static/image/banner.png"
+
 @app.route("/researchgroups")
 def show_research_groups():
     access = DataAccess(connection)
