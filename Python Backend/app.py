@@ -21,6 +21,7 @@ def index():
 def get_banner():
     return "../static/image/banner.png"
 
+
 @app.route("/researchgroups")
 def show_research_groups():
     access = DataAccess(connection)
@@ -43,6 +44,16 @@ def add_research_group():
     access = DataAccess(connection)
     access.add_researchGroup(r)
     return render_template("index.html", send=True)
+
+
+@app.route("/people")
+def show_people():
+    return render_template("people.html")
+
+
+@app.route("/projects")
+def show_projects():
+    return render_template("projects.html")
 
 
 if __name__ == "__main__":

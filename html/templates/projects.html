@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>UAntwerpen ESP</title>
+    <title>ESP UAntwerpen: projects</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,17 +18,16 @@
         <img class="banner" src="{{ url_for('static', filename='image/banner.png') }}" alt="ESP banner">
     </div>
 </div>
-
 <nav class="navbar navbar-blue" style="margin-bottom: 10px">
     <ul class="navbar-nav flex-row">
         <li class="nav-item text-element">
             <a class="nav-link hyperlink" href="{{ url_for('index') }}">Home </a>
         </li>
         <li class="nav-item text-element after">
-            <a class="nav-link hyperlink" href="{{ url_for('show_projects') }}">Projects</a>
+            <a class="nav-link active hyperlink" href="{{ url_for('show_projects') }}">Projects</a>
         </li>
         <li class="nav-item text-element">
-            <a class="nav-link active hyperlink" href="{{ url_for('show_research_groups') }}">Research groups</a>
+            <a class="nav-link hyperlink" href="{{ url_for('show_research_groups') }}">Research groups</a>
         </li>
         <li class="nav-item text-element">
             <a class="nav-link hyperlink" href="{{ url_for('show_people') }}">People</a>
@@ -36,59 +35,6 @@
     </ul>
 </nav>
 
-<table border="1px">
-    <tr>
-        <td>
-            <strong>Name</strong>
-        </td>
-        <td>
-            <strong>Abbreviation</strong>
-        </td>
-        <td>
-            <strong>Discipline</strong>
-        </td>
-        <td>
-            <strong>Address</strong>
-        </td>
-        <td>
-            <strong>tel nr</strong>
-        </td>
-        <td>
-            <strong>desc</strong>
-        </td>
-        <td>
-            <strong>active</strong>
-        </td>
-    </tr>
-    {% for group in r_groups %}
-        <tr>
-            <td>
-                {{ group.name }}
-            </td>
-            <td>
-                {{ group.abbreviation }}
-            </td>
-            <td>
-                {{ group.discipline }}
-            </td>
-            <td>
-                {{ group.address }}
-            </td>
-            <td>
-                {{ group.telNr }}
-            </td>
-            <td>
-                {{ group.desc }}
-            </td>
-            <td>
-                {% if group.active == True %}
-                Yes
-                {% else %}
-                No
-                {% endif %}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
+
 </body>
 </html>

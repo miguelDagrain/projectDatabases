@@ -5,55 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-<style>
-
-    .navbar-blue {
-        background-color: #003366;
-    }
-
-    .text-element {
-        color: white;
-    }
-
-    .hyperlink {
-        color: white;
-        padding-bottom: 1px;
-    }
-
-    .hyperlink:hover {
-        color: white;
-        font-weight: 900;
-    }
-
-    .active {
-        font-weight: 700;
-        border-bottom-color: rgb(255, 255, 255);
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-    }
-
-    .navbar-nav > li {
-        padding-right: 30px;
-    }
-
-    .head {
-        border: 10px solid;
-        color: #003366;
-        margin: 0;
-    }
-
-    .banner {
-        width: 65%;
-        margin: 10px;
-    }
-
-</style>
 
 <div class="navbar-blue">
     <div class="col-sm-4">
@@ -61,28 +18,26 @@
     </div>
 </div>
 
-<nav class="navbar navbar-blue">
+<nav class="navbar navbar-blue" style="margin-bottom: 10px">
     <ul class="navbar-nav flex-row">
         <li class="nav-item text-element">
-            <a class="nav-link active hyperlink" href="#">Home </a>
+            <a class="nav-link active hyperlink" href="{{ url_for('index') }}">Home </a>
         </li>
         <li class="nav-item text-element after">
-            <a class="nav-link hyperlink" href="#">Projects</a>
+            <a class="nav-link hyperlink" href="{{ url_for('show_projects') }}">Projects</a>
         </li>
         <li class="nav-item text-element">
-            <a class="nav-link hyperlink" href="#">Research groups</a>
+            <a class="nav-link hyperlink" href="{{ url_for('show_research_groups') }}">Research groups</a>
         </li>
         <li class="nav-item text-element">
-            <a class="nav-link hyperlink" href="#">People</a>
+            <a class="nav-link hyperlink" href="{{ url_for('show_people') }}">People</a>
         </li>
     </ul>
 </nav>
 
 
 <h1> Hello! </h1>
-
-
-<a href="/researchgroups">click for research groups</a>
+<br><br><br><br><br><br><br>
 
 <p>add research group</p>
 
@@ -105,7 +60,7 @@
 {% endif %}
 
 
-<form action="/researchgroups" method="post">
+<form action="{{ url_for('add_research_group') }}" method="post">
     <label>
         Group name:<br>
         <input type="text" name="name">
