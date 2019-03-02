@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ESP UAntwerpen: people</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="navbar-blue">
+    <div class="col-sm-4">
+        <img class="banner" src="{{ url_for('static', filename='image/banner.png') }}" alt="ESP banner">
+    </div>
+</div>
+<nav class="navbar navbar-blue" style="margin-bottom: 10px">
+    <ul class="navbar-nav flex-row">
+        <li class="nav-item text-element">
+            <a class="nav-link hyperlink" href="{{ url_for('index') }}">Home </a>
+        </li>
+        <li class="nav-item text-element after">
+            <a class="nav-link hyperlink" href="{{ url_for('show_projects') }}">Projects</a>
+        </li>
+        <li class="nav-item text-element">
+            <a class="nav-link hyperlink" href="{{ url_for('show_research_groups') }}">Research groups</a>
+        </li>
+        <li class="nav-item text-element">
+            <a class="nav-link active hyperlink" href="{{ url_for('show_people') }}">People</a>
+        </li>
+    </ul>
+</nav>
+
+
+</body>
+</html>

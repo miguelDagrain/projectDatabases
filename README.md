@@ -17,3 +17,4 @@ make all the tables
 optional: insert dummy_data
 
 > psql -U pdb -d pdbdatabase -f sql/dummy_data.sql
+

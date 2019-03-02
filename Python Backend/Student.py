@@ -6,12 +6,12 @@
 # );
 
 class Student:
-    def __init__(self, name, student_id, liked_project, session):
+    def __init__(self, student_id,name, session, liked_project,):
         """
         a constructor for a dbStudent with all variables given
         :param name: a string representing the name of the student
         :param student_id: an int that is the id for the student
-        :param liked_project: an int referencing the projectId of a project the student liked
+        :param liked_project: an int referencing the projectId of all the projects the student liked(bookmarked)
         :param session: an int referencing the sessionId of an open session that the student is using
         :return: a new dbStudent object
         """

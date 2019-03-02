@@ -4,8 +4,10 @@ from config import config_data
 from dbConnection import *
 from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
+from Document import *
 
-app = Flask(__name__, template_folder="../templates/")
+
+app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                           dbhost=config_data['dbhost'])
@@ -14,6 +16,11 @@ connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbus
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/image/banner")
+def get_banner():
+    return "../static/image/banner.png"
 
 
 @app.route("/researchgroups")
@@ -31,13 +38,25 @@ def add_research_group():
     active = True if request.form.get("active") == 'on' else False
     address = request.form.get("address")
     telephone = request.form.get("telephone")
-    desc = request.form.get("description")
-    desc = "wij zijn een groep" # enige mogelijkheid op de moment
-    discipline = "Mathematics"  # enige mogelijkheid op de moment
-    r = ResearchGroup(name,abbrev,discipline,active,address,telephone,desc)
+    # desc = request.form.get("description")
+    desc=list()
+    desc.append (Document(1 ,language.NEDERLANDS,'ik ben jos het document')) #TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+
+    discipline = "Mathematics"  #TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
+    r = ResearchGroup(None,name,abbrev,discipline,active,address,telephone,desc)
     access = DataAccess(connection)
     access.add_researchGroup(r)
     return render_template("index.html", send=True)
+
+
+@app.route("/people")
+def show_people():
+    return render_template("people.html")
+
+
+@app.route("/projects")
+def show_projects():
+    return render_template("projects.html")
 
 
 if __name__ == "__main__":
