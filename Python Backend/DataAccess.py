@@ -199,7 +199,7 @@ class DataAccess:
         cursor.execute('select * from project')
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8],None)
+            project = Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],None)
             project.desc=self.get_projectDocuments(str(project.ID))
             projects.append(project)
         return projects

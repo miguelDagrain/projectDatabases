@@ -62,4 +62,5 @@ def show_projects():
 if __name__ == "__main__":
     # acces=DataAccess(connection)
     # acces.manualDataHandling()
+    # temp=acces.get_projects()
     app.run(debug=True)
