@@ -4,6 +4,7 @@ from config import config_data
 from dbConnection import *
 from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
+from Document import *
 
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
@@ -37,10 +38,12 @@ def add_research_group():
     active = True if request.form.get("active") == 'on' else False
     address = request.form.get("address")
     telephone = request.form.get("telephone")
-    desc = request.form.get("description")
-    desc = "wij zijn een groep" # enige mogelijkheid op de moment
-    discipline = "Mathematics"  # enige mogelijkheid op de moment
-    r = ResearchGroup(name,abbrev,discipline,active,address,telephone,desc)
+    # desc = request.form.get("description")
+    desc=list()
+    desc.append (Document(1 ,language.NEDERLANDS,'ik ben jos het document')) #TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+
+    discipline = "Mathematics"  #TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
+    r = ResearchGroup(None,name,abbrev,discipline,active,address,telephone,desc)
     access = DataAccess(connection)
     access.add_researchGroup(r)
     return render_template("index.html", send=True)

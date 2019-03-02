@@ -9,7 +9,7 @@
 
 
 class Session:
-    def __init__(self, session_id, start_time, search_word_time, clicked_project, clicked_project_time):
+    def __init__(self, session_id, start_time, search_word,search_word_time, clicked_project, clicked_project_time):
         """
         a constructor for a dbSession with all variables given
         :param session_id: an int representing the session
@@ -21,6 +21,7 @@ class Session:
         """
         self.sessionId = session_id
         self.startTime = start_time
+        self.searchWord=search_word
         self.searchWordTime = search_word_time
         self.clickedProject = clicked_project
         self.clickedProjectTime = clicked_project_time
