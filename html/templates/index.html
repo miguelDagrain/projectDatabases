@@ -11,29 +11,97 @@
 </head>
 <body>
 
+<style>
+
+    .navbar-blue {
+        background-color: #003366;
+    }
+
+    .text-element {
+        color: white;
+    }
+
+    .hyperlink {
+        color: white;
+        padding-bottom: 1px;
+    }
+
+    .hyperlink:hover {
+        color: white;
+        font-weight: 900;
+    }
+
+    .active {
+        font-weight: 700;
+        border-bottom-color: rgb(255, 255, 255);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+    }
+
+    .navbar-nav > li {
+        padding-right: 30px;
+    }
+
+    .head {
+        border: 10px solid;
+        color: #003366;
+        margin: 0;
+    }
+
+    .banner {
+        width: 65%;
+        margin: 10px;
+    }
+
+</style>
+
+<div class="navbar-blue">
+    <div class="col-sm-4">
+        <img class="banner" src="{{ url_for('static', filename='image/banner.png') }}" alt="ESP banner">
+    </div>
+</div>
+
+<nav class="navbar navbar-blue">
+    <ul class="navbar-nav flex-row">
+        <li class="nav-item text-element">
+            <a class="nav-link active hyperlink" href="#">Home </a>
+        </li>
+        <li class="nav-item text-element after">
+            <a class="nav-link hyperlink" href="#">Projects</a>
+        </li>
+        <li class="nav-item text-element">
+            <a class="nav-link hyperlink" href="#">Research groups</a>
+        </li>
+        <li class="nav-item text-element">
+            <a class="nav-link hyperlink" href="#">People</a>
+        </li>
+    </ul>
+</nav>
+
+
 <h1> Hello! </h1>
 
 
-<a href="researchgroups.html">click for research groups</a>
+<a href="/researchgroups">click for research groups</a>
 
 <p>add research group</p>
 
 <style>
     .alert {
-        width:50%;
-        {#display: inline-block;#}
+        width: 50%;
+    {#display: inline-block;#}
     }
 </style>
 
 {% if send == True %}
-<div class="center-block" align="center">
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        Added research group to the database!
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    <div class="center-block" align="center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Added research group to the database!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     </div>
-</div>
 {% endif %}
 
 
