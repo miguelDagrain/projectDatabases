@@ -25,7 +25,7 @@
     }
 </style>
 
-{#{% if send == True %}#}
+{% if send == True %}
 <div class="center-block" align="center">
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         Added research group to the database!
@@ -34,7 +34,7 @@
         </button>
     </div>
 </div>
-{#{% endif %}#}
+{% endif %}
 
 
 <form action="/researchgroups" method="post">
