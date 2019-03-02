@@ -31,7 +31,7 @@ CREATE TABLE researchGroup(
   discipline subject,
   active boolean,     --1 is active, 0 is not active
   address varchar(255),
-  telNr varchar(255) ,
+  telNr varchar(255)
   );
 
   create table groupDescription(
