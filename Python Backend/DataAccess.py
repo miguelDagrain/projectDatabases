@@ -1,3 +1,4 @@
+from Bookmark import *
 from Document import *
 from ResearchGroup import *
 from Employee import *
@@ -56,7 +57,7 @@ class DataAccess:
 
     def get_document(self,id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM document WHERE documentID=%s', (id ))
+        cursor.execute('SELECT * FROM document WHERE documentID=%s', (str(id) ))
         row= cursor.fetchone()
         return Document(row[0],row[1],row[2])
 
@@ -70,7 +71,9 @@ class DataAccess:
                 id=doc.ID
 
             else:
-                id= cursor.execute('INSERT INTO document VALUES(default ,%s,%s) returning documentID', ( doc.language, doc.text,))
+                cursor.execute('INSERT INTO document VALUES(default ,%s,%s)', ( doc.language, doc.text,))
+                cursor.execute('SELECT LASTVAL()')
+                id = cursor.fetchone()[0]
                 doc.ID=id
             # get id and return updated object
             self.dbconnect.commit()
@@ -81,7 +84,7 @@ class DataAccess:
 
     def get_researchgroupDescriptions(self,groupid):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from groupDescription where groupID=%s',(groupid))
+        cursor.execute('select * from groupDescription where groupID=%s',(str(groupid)))
         desc = list()
         for row in cursor:
             desc.append(self.get_document(row[1]))
@@ -92,7 +95,7 @@ class DataAccess:
         try:
             docid=self.add_document(document)
             cursor.execute('INSERT INTO groupDescription values(%s,%s)',
-                           (groupid,docid))
+                           (str(groupid),str(docid)))
             # get id and return updated object
             self.dbconnect.commit()
         except:
@@ -129,8 +132,10 @@ class DataAccess:
     def add_researchGroup(self,group):
         cursor = self.dbconnect.get_cursor()
         try:
-            gid=cursor.execute('INSERT INTO researchGroup values(default ,%s,%s,%s,%s,%s,%s) returning groupID',
+            cursor.execute('INSERT INTO researchGroup values(default ,%s,%s,%s,%s,%s,%s)',
                            (group.name,group.abbreviation,group.discipline,group.active,group.address,group.telNr))
+            cursor.execute('SELECT LASTVAL()')
+            gid = cursor.fetchone()[0]
             group.ID=gid
             for i in group.desc:
                 self.add_researchGroupDescription(i,gid)
@@ -158,8 +163,10 @@ class DataAccess:
     def add_employee(self,empl):
         cursor = self.dbconnect.get_cursor()
         try:
-            eid=cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s) returning employeeID',
+            cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s)',
                            (empl.name,empl.email,empl.office,empl.researchGruoup,empl.title,empl.internOrExtern,empl.active))
+            cursor.execute('SELECT LASTVAL()')
+            eid = cursor.fetchone()[0]
             empl.Id=eid
             # get id and return updated object
             self.dbconnect.commit()
@@ -169,7 +176,7 @@ class DataAccess:
 
     def get_projectDocuments(self, projectID):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectDocument where projectID=%s', (projectID))
+        cursor.execute('select * from projectDocument where projectID=%s', (str(projectID)))
         desc = list()
         for row in cursor:
             desc.append(self.get_document(row[1]))
@@ -180,7 +187,7 @@ class DataAccess:
         try:
             docid = self.add_document(document)
             cursor.execute('INSERT INTO projectDocument values(%s,%s)',
-                           (projectID, docid))
+                           (str(projectID), str(docid)))
             # get id and return updated object
             self.dbconnect.commit()
         except:
@@ -193,7 +200,7 @@ class DataAccess:
         projects = list()
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8],None)
-            project.desc=self.get_projectDocuments(project.ID)
+            project.desc=self.get_projectDocuments(str(project.ID))
             projects.append(project)
         return projects
 
@@ -207,7 +214,7 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO project values(default,%s,%s,%s,%s,%s,%s,%s)',
-                           (proj.title, proj.maxStudents, proj.researchGroup, proj.activeYear,
+                           (proj.title, str(proj.maxStudents), proj.researchGroup, proj.activeYear,
                             proj.type, proj.tag, proj.projectId,proj.relatedProject))
             for i in proj.desc:
                 self.add_projectDocument(i,proj.projectId)
@@ -236,7 +243,7 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO session values(%s,%s,%s,%s,%s,%s)',
-                           ( ses.sessionId, ses.startTime, ses.searchWord, ses.searchWordTime, ses.clickedProject, ses.clickedProjectTime))
+                           (str(ses.sessionId), ses.startTime, ses.searchWord, ses.searchWordTime, ses.clickedProject, ses.clickedProjectTime))
             # get id and return updated object
             self.dbconnect.commit()
         except:
@@ -246,17 +253,17 @@ class DataAccess:
     #returns all the bookmarks of the student
     def get_studentBookmarks(self,studentId):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where student=%s',(studentId))
+        cursor.execute('select * from bookmark where student=%s',(str(studentId)))
         bookmarks = list()
         for row in cursor:
-            bookmark = bookmark(row[0], row[1])
-            bookmarks.append(bookmark)
+            bookmarker = Bookmark(row[0], row[1])
+            bookmarks.append(bookmarker)
         return bookmarks
 
     #return the projects of all the bookmarks a student has
     def get_studentBookmarkProject(self,studentId):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where student=%s', (studentId))
+        cursor.execute('select * from bookmark where student=%s', (str(studentId)))
         projects = list()
         for row in cursor:
             projects.append(self.get_project(row[0]))
@@ -265,7 +272,7 @@ class DataAccess:
     #returns all bookmarks to a certain project
     def get_projectBookmarks(self,projectId):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where project=%s', (projectId))
+        cursor.execute('select * from bookmark where project=%s', (str(projectId)))
         bookmarks = list()
         for row in cursor:
             bookmark = bookmark(row[0], row[1])
@@ -274,9 +281,9 @@ class DataAccess:
 
     def add_bookmark(self,projectId,studentId):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where project=%s and student=%s', (projectId,studentId))
+        cursor.execute('select * from bookmark where project=%s and student=%s', (str(projectId),str(studentId)))
         if cursor.rowcount==0:
-            cursor.execute('insert into bookmark values(%s,%s)', (projectId,studentId))
+            cursor.execute('insert into bookmark values(%s,%s)', (str(projectId),str(studentId)))
 
     def get_students(self):
         cursor = self.dbconnect.get_cursor()
@@ -290,7 +297,7 @@ class DataAccess:
 
     def get_student(self, ID):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE studentID=%s ', (ID))
+        cursor.execute('SELECT * FROM employee WHERE studentID=%s ', (str(ID)))
         row = cursor.fetchone()
         stu= Student(row[0], row[1], row[2], None)
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
@@ -300,7 +307,7 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO student values(%s,%s,%s)',
-                           (stu.studentId, stu.name, stu.session))
+                           (str(stu.studentId), stu.name, stu.session))
             for i in stu.likedProject:
                 self.add_bookmark(i.ID,stu.studentId)
 
@@ -333,7 +340,7 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO projectRegistration values(%s,%s,%s)',
-                           (pr.project, pr.status, pr.studentn))
+                           (str(pr.project), pr.status, str(pr.student)))
             # get id and return updated object
             self.dbconnect.commit()
         except:
