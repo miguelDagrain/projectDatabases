@@ -21,12 +21,12 @@ class ResearchType(Enum):
 
 class Project:
     def __init__(self,id, title, max_students, research_group, active_year, type, tag,
-                 related_project, description,):
+                 related_project, description):
         """
         constructor for a dbProject with all variables given
         :param title: a string representing a title
         :param max_students:  an int representing the max amount of students on this project
-        :param description: a projectdocument object list that are all the langueages this project supports
+        :param description: the documents object list that are all the langueages this project supports
         :param research_group: the id of the researchgroup connected with this project (string)
         :param active_year: the year it is active (int)
         :param type: a typeResearch enum that says which type of research it is

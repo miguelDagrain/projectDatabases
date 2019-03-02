@@ -30,10 +30,8 @@ CREATE TABLE researchGroup(
   abbreviation varchar(25) unique ,
   discipline subject,
   active boolean,     --1 is active, 0 is not active
-  adress varchar(255),
+  address varchar(255),
   telNr varchar(255) ,
-  groupDescription int,
-  foreign key (groupDescription) references document (documentID)
   );
 
   create table groupDescription(

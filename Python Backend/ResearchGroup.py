@@ -31,7 +31,7 @@ class ResearchGroup:
         :param active: a bool saying if the group is active or not
         :param address: a string that is an adress for the group
         :param telephone: a string that is the phone number for the group
-        :param desc: an int that references the descriptions of this group
+        :param desc: an all the documents that are this groups descriptions
         :return:a new dbResearchGroup object
         """
         self.ID=id
