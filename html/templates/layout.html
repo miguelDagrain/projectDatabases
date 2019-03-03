@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang={{ lang }}>
 <head>
-    <title>ESP - {% block title %}{% endblock %}</title>
+    <title>ESP - {% block title %}{% endblock title%}</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    {% block stylesheets %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block stylesheets %}{% endblock stylesheets %}
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -28,7 +31,7 @@
             }, false);
         </script>
     </div>
-    <nav class="navbar navbar-blue" style="margin-bottom: 10px">
+    <nav class="navbar navbar-blue" style="margin-bottom: 0px">
         <ul class="navbar-nav flex-row" id="nav">
             <li class="nav-item text-element">
                 <a class="nav-link hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">Home</a>

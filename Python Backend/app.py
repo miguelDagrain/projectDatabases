@@ -56,7 +56,9 @@ def show_people():
 
 @app.route("/projects")
 def show_projects():
-    return render_template("projects.html", page="projects")
+    access = DataAccess(connection)
+    projects = access.get_projects()
+    return render_template("projects.html", r_projects=projects, page="projects")
 
 
 if __name__ == "__main__":
