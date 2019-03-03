@@ -64,7 +64,25 @@
         </button>
         <div class="dropdown-menu dropdown-menu-query">
             <div class="dropdown-item dropdown-item-query" id="dropdownResearchGroup1" onclick="changeDrop('dropdownResearchGroup', 'dropdownResearchGroup1')">All</div>
-            <div class="dropdown-item dropdown-item-query" id="dropdownResearchGroup2" onclick="changeDrop('dropdownResearchGroup', 'dropdownResearchGroup2')">Groups</div>
+
+
+            <!-- todo: check if this also can move to external file -->
+            <script>
+                var iter = 1;
+            </script>
+
+            {% for group in r_researchGroups %}
+
+            <div class="dropdown-item dropdown-item-query" id="none" onclick="changeDrop('dropdownResearchGroup', this.id)">{{ group.name }}</div>
+
+            <script>
+                iter++;
+                var idName = "dropdownResearchGroup" + iter; //dit wordt een string, js is echt raar
+                document.getElementById("none").setAttribute(id, idName);
+            </script>
+
+            {% endfor %}
+
         </div>
     </div>
 

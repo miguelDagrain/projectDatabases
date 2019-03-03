@@ -58,7 +58,8 @@ def show_people():
 def show_projects():
     access = DataAccess(connection)
     projects = access.get_projects()
-    return render_template("projects.html", r_projects=projects, page="projects")
+    researchGroups = access.get_researchGroups()
+    return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups, page="projects")
 
 
 if __name__ == "__main__":
