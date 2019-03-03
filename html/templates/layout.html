@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang={{ lang }}>
 <head>
     <title>ESP - {% block title %}{% endblock %}</title>
@@ -17,9 +17,16 @@
 
 <div>
     <div class="navbar-blue">
-        <div class="col-sm-4">
-            <img class="banner" src="{{ url_for('static', filename='image/banner.png') }}" alt="ESP banner">
+        <div class="col-sm-4" id="drag-with-image" draggable="true">
+            <img class="banner" src="{{ url_for('static', filename='image/banner.png') }}" alt="ESP banner" >
         </div>
+        <script>
+            document.getElementById("drag-with-image").addEventListener("dragstart", function(e) {
+            var img = document.createElement("img");
+            img.src = "{{ url_for('static', filename='image/wof.png') }}";
+            e.dataTransfer.setDragImage(img, 0, 0);
+            }, false);
+        </script>
     </div>
     <nav class="navbar navbar-blue" style="margin-bottom: 10px">
         <ul class="navbar-nav flex-row" id="nav">
