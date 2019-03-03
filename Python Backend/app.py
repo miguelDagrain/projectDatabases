@@ -15,7 +15,7 @@ connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbus
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", page="index")
 
 
 @app.route("/image/banner")
@@ -27,7 +27,7 @@ def get_banner():
 def show_research_groups():
     access = DataAccess(connection)
     groups = access.get_researchGroups()
-    return render_template("researchgroups.html", r_groups=groups)
+    return render_template("researchgroups.html", r_groups=groups, page="rgroups")
 
 
 @app.route("/researchgroups", methods=["POST"])
@@ -46,17 +46,17 @@ def add_research_group():
     r = ResearchGroup(None,name,abbrev,discipline,active,address,telephone,desc)
     access = DataAccess(connection)
     access.add_researchGroup(r)
-    return render_template("index.html", send=True)
+    return render_template("index.html", send=True, page="index")
 
 
 @app.route("/people")
 def show_people():
-    return render_template("people.html")
+    return render_template("people.html", page="people")
 
 
 @app.route("/projects")
 def show_projects():
-    return render_template("projects.html")
+    return render_template("projects.html", page="projects")
 
 
 if __name__ == "__main__":

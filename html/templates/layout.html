@@ -11,23 +11,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-        {#    $('.navbar-nav li a').click(function (e) {#}
-        {#        $('.navbar li a.active').removeClass("active");#}
-        {#        var $this = $(this);#}
-        {#        if (!$this.hasClass("active")) {#}
-        {#            $this.addClass("active");#}
-        {#        }#}
-        {#        e.preventDefault();#}
-        {#        e.start();#}
-        {#    });#}
-            $('.navbar-nav li a').addEventListener("click", function () {
-               $('.navbar li a.active').removeClass("active");
-               {#this.addClass("active");#}
-            });
-        });
-    </script>
 </head>
 <body>
 
@@ -41,16 +24,16 @@
     <nav class="navbar navbar-blue" style="margin-bottom: 10px">
         <ul class="navbar-nav flex-row" id="nav">
             <li class="nav-item text-element">
-                <a class="nav-link active hyperlink" href="{{ url_for('index') }}">Home</a>
+                <a class="nav-link hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">Home</a>
             </li>
             <li class="nav-item text-element">
-                <a class="nav-link hyperlink" href="{{ url_for('show_projects') }}">Projects</a>
+                <a class="nav-link hyperlink {{ "active" if page=="projects" }}" href="{{ url_for('show_projects') }}">Projects</a>
             </li>
             <li class="nav-item text-element">
-                <a class="nav-link hyperlink" href="{{ url_for('show_research_groups') }}">Research groups</a>
+                <a class="nav-link hyperlink {{ "active" if page=="rgroups" }}" href="{{ url_for('show_research_groups') }}">Research groups</a>
             </li>
             <li class="nav-item text-element">
-                <a class="nav-link hyperlink" href="{{ url_for('show_people') }}">People</a>
+                <a class="nav-link hyperlink {{ "active" if page=="people" }}" href="{{ url_for('show_people') }}">People</a>
             </li>
         </ul>
     </nav>

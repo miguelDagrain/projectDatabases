@@ -82,6 +82,7 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save document!')
 
+
     def get_researchgroupDescriptions(self,groupid):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from groupDescription where groupID=%s',(str(groupid)))
