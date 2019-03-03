@@ -14,45 +14,59 @@ CREATE DOMAIN typeResearch as TEXT
 CREATE DOMAIN registration as TEXT
   check (value = 'bezig' or value =  'geslaagd' or value = 'niet geslaagd');
 
+CREATE DOMAIN language as TEXT
+  check (value='nederlands' or value='engels');
+
 CREATE TABLE document(
-  content text unique
+  documentID SERIAL PRIMARY key ,
+  lang language,
+  content text
 );
 
 CREATE TABLE researchGroup(
   --needs logo (200x50)
+  groupID SERIAL PRIMARY KEY ,
   name varchar(255) unique ,
   abbreviation varchar(25) unique ,
   discipline subject,
   active boolean,     --1 is active, 0 is not active
-  adress varchar(255),
-  telNr varchar(255) ,
-  groupDescription text,
-  foreign key (groupDescription) references document (content),
-  primary key (name, abbreviation)
+  address varchar(255),
+  telNr varchar(255)
+  );
+
+  create table groupDescription(
+    groupID int references researchGroup(groupID),
+    docID int references document(documentID),
+    primary key(groupID,docID)
   );
 
 create table employee(
   --needs picture (150x150)
+  employeeID SERIAL PRIMARY KEY ,
   name varchar,
   email varchar(255) unique,
   office varchar(255), --thinking office is like 'M.G.005'
-  researchgroup varchar(255) references researchGroup(name),
+  researchgroup int references researchGroup(groupID),
   title title,
   internORextern intext,
-  active bit,  --1 is active 0 is inactive
-  PRIMARY KEY(email)
+  active boolean  --1 is active 0 is inactive
 );
 
 create table project(
+  projectID SERIAL PRIMARY KEY ,
   title varchar(255) not null ,
   maxStudents INT NOT NULL,
-  description text references document(content),
-  researchGroup varchar(255) references researchGroup(name),
+  researchGroup int references researchGroup(groupID),
   activeYear int check(activeYear<2100 and activeYear>1970) NOT NULL, --random years within realm of possibilities
   type typeResearch,
   tag varchar,  --e.g. "Databases" later list with possible things
-  projectID int not null UNIQUE PRIMARY KEY,
   relatedProject int references project(projectID)
+);
+
+create table projectDocument(
+  projectID int references project(projectID),
+  docID int references document(documentID),
+  PRIMARY KEY (projectID,docID)
 );
 
 create table session(
@@ -65,9 +79,8 @@ create table session(
 );
 
 create table student(
+  studentID SERIAL primary key,
   name varchar(70) NOT NULL ,
-  studentID int not null unique primary key,
-  likedProject int references project(projectID),
   session int references session(sessionID)
 );
 
@@ -79,7 +92,8 @@ create table projectRegistration(
   PRIMARY KEY (project, status, student)
 );
 
-insert into document values('ik ben jos het document');
-insert into document values('wij zijn een groep');
-Insert into researchGroup values('de grote groep','dgr','Computer Science','true','hiere','120725625','wij zijn een groep');
-
+create table bookmark(
+  project int references project(projectID),
+  student int references student(studentID),
+  primary key(project,student)
+);

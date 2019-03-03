@@ -26,7 +26,7 @@ class InText(Enum):
 
 
 class Employee:
-    def __init__(self, email, office, research_group, title, interextern, active):
+    def __init__(self,id,name, email, office, research_group, title, interextern, active):
         """
         constructor for dbEmployee  where all varibales are given
         :param email: a string representing an email
@@ -37,6 +37,8 @@ class Employee:
         :param active: a bool stating whether the employee is active or not
         :return: a new dbEmployee object
         """
+        self.ID=id
+        self.name=name
         self.email = email
         self.office = office
         self.research_group = research_group
@@ -45,4 +47,4 @@ class Employee:
         self.active = active
 
     def __str__(self):
-        return "email: "+self.email+", office: "+self.office+", group: "+self.research_group+", title: "+self.title+", isintern:"+str(self.internOrExtern)+", active: "+str(self.active)
+        return "id: "+self.ID+", name: "+self.name+", email: "+self.email+", office: "+self.office+", group: "+self.research_group+", title: "+self.title+", isintern:"+str(self.internOrExtern)+", active: "+str(self.active)

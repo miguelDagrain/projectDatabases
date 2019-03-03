@@ -20,14 +20,14 @@ class ResearchType(Enum):
 
 
 class Project:
-    def __init__(self, title, max_students, description, research_group, active_year, type, tag, project_id,
-                 related_project):
+    def __init__(self,id, title, max_students, research_group, active_year, type, tag,
+                 related_project, description):
         """
         constructor for a dbProject with all variables given
         :param title: a string representing a title
         :param max_students:  an int representing the max amount of students on this project
-        :param description: a string that is the description of this project
-        :param research_group: the name of the researchgroup connected with this project (string)
+        :param description: the documents object list that are all the langueages this project supports
+        :param research_group: the id of the researchgroup connected with this project (string)
         :param active_year: the year it is active (int)
         :param type: a typeResearch enum that says which type of research it is
         :param tag: a string that will later do things
@@ -42,8 +42,8 @@ class Project:
         self.activeYear = active_year
         self.type = type
         self.tag = tag
-        self.projectId = project_id
+        self.ID = id
         self.relatedProject = related_project
 
     def __str__(self):
-        return "title: "+self.title+", max students: "+str(self.maxStudents)+", description"+self.desc+", group: "+self.researchGroup+", year: "+self.activeYear+", type: "+self.type+", tag: "+self.tag+", id: "+str(self.projectId)+", related project: "+self.relatedProject
+        return "title: "+self.title+", max students: "+str(self.maxStudents)+", description"+self.desc+", group: "+self.researchGroup+", year: "+self.activeYear+", type: "+self.type+", tag: "+self.tag+", id: "+str(self.ID)+", related project: "+self.relatedProject
