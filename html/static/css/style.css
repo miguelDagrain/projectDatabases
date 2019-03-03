@@ -4,6 +4,7 @@
     background-color: #003366;
 }
 
+
 .text-element {
     color: white;
 }
@@ -33,4 +34,14 @@
 .banner {
     width: 35%;
     margin-top: 5px;
+}
+
+a::selection {
+    color: #003366;
+    background: white;
+}
+
+a::-moz-selection {
+    color: #003366;
+    background: white;
 }

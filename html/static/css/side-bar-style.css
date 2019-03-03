@@ -57,3 +57,13 @@
 .dropdown-item-bar:hover {
     cursor: pointer;
 }
+
+.side-bar > div > p::selection, label::selection {
+    color: #660033;
+    background: white;
+}
+
+.side-bar > div > p::-moz-selection, label::-moz-selection {
+    color: #660033;
+    background: white;
+}
