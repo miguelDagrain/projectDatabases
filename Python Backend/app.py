@@ -59,7 +59,16 @@ def show_projects():
     access = DataAccess(connection)
     projects = access.get_projects()
     researchGroups = access.get_researchGroups()
-    return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups, page="projects")
+
+    neededValuesProject = []
+    for project in projects:
+        for group in researchGroups:
+            if (group.ID == project.researchGroup):
+                neededValuesProject.append([project.title, group.name, project.maxStudents])
+
+
+
+    return render_template("projects.html", r_projects=neededValuesProject, r_researchGroups=researchGroups, page="projects")
 
 
 if __name__ == "__main__":
