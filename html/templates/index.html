@@ -1,93 +1,60 @@
-<!doctype html>
-<head>
-    <title>UAntwerpen ESP</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% extends "layout.html" %}
 
-<div class="navbar-blue">
-    <div class="col-sm-4">
-        <img class="banner" src="{{ url_for('static', filename='image/banner.png') }}" alt="ESP banner">
-    </div>
-</div>
+{% block title %}Home{% endblock title %}
 
-<nav class="navbar navbar-blue" style="margin-bottom: 10px">
-    <ul class="navbar-nav flex-row">
-        <li class="nav-item text-element">
-            <a class="nav-link active hyperlink" href="{{ url_for('index') }}">Home </a>
-        </li>
-        <li class="nav-item text-element after">
-            <a class="nav-link hyperlink" href="{{ url_for('show_projects') }}">Projects</a>
-        </li>
-        <li class="nav-item text-element">
-            <a class="nav-link hyperlink" href="{{ url_for('show_research_groups') }}">Research groups</a>
-        </li>
-        <li class="nav-item text-element">
-            <a class="nav-link hyperlink" href="{{ url_for('show_people') }}">People</a>
-        </li>
-    </ul>
-</nav>
+{% block body %}
+    <h1> Hello! </h1>
+    <br><br><br><br><br><br><br>
 
+    <p>add research group</p>
 
-<h1> Hello! </h1>
-<br><br><br><br><br><br><br>
+    <style>
+        .alert {
+            width: 50%;
+        {#display: inline-block;#}
+        }
+    </style>
 
-<p>add research group</p>
-
-<style>
-    .alert {
-        width: 50%;
-    {#display: inline-block;#}
-    }
-</style>
-
-{% if send == True %}
-    <div class="center-block" align="center">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            Added research group to the database!
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+    {% if send == True %}
+        <div class="center-block" align="center">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Added research group to the database!
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
 
-<form action="{{ url_for('add_research_group') }}" method="post">
-    <label>
-        Group name:<br>
-        <input type="text" name="name">
-    </label>
-    <br>
-    <label>
-        Abbreviation:<br>
-        <input type="text" name="abbreviation">
-    </label>
-    <br>
-    <label>
-        Active:<br>
-        <input type="checkbox" name="active"><br>
-    </label>
-    <br>
-    <label>
-        Address:<br>
-        <input type="text" name="address"><br>
-    </label>
-    <br>
-    <label>
-        Telephone number:<br>
-        <input type="text" name="telephone"><br>
-    </label>
-    <br>
-    <label>
-        <input type="submit" value="Enter">
-    </label><br>
-</form>
-</body>
+    <form action="{{ url_for('add_research_group') }}" method="post">
+        <label>
+            Group name:<br>
+            <input type="text" name="name">
+        </label>
+        <br>
+        <label>
+            Abbreviation:<br>
+            <input type="text" name="abbreviation">
+        </label>
+        <br>
+        <label>
+            Active:<br>
+            <input type="checkbox" name="active"><br>
+        </label>
+        <br>
+        <label>
+            Address:<br>
+            <input type="text" name="address"><br>
+        </label>
+        <br>
+        <label>
+            Telephone number:<br>
+            <input type="text" name="telephone"><br>
+        </label>
+        <br>
+        <label>
+            <input type="submit" value="Enter">
+        </label><br>
+    </form>
+{% endblock body %}
