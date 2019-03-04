@@ -8,7 +8,6 @@ from Session import *
 from Student import *
 
 
-
 class DataAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
@@ -210,6 +209,58 @@ class DataAccess:
         cursor.execute('SELECT * FROM employee WHERE projectID=%s ', (ID))
         row = cursor.fetchone()
         return Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8])
+
+
+    def filter_projects(self, searchQuery, type, discipline, researchGroup, status):
+        cursor = self.dbconnect.get_cursor()
+
+        ### Default Values ###
+        # searchQuery = ''
+        # type = ""
+        # researchGroup = ""
+        # discipline = ""
+        # status = 0
+
+        typeDefined = "%(typeQ)s"
+        researchGroupDefined = "%(researchGroupQ)s"
+        disciplineDefined = "%(disciplineQ)s"
+
+        if (type == ""):
+            typeDefined = "type "
+        if (researchGroup == ""):
+            researchGroupDefined = "name "
+        if (discipline == ""):
+            disciplineDefined = "discipline "
+
+        if (status == 1):
+            sql = "SELECT * FROM project INNER JOIN researchGroup ON researchGroup.groupID=project.researchGroup " \
+                  "WHERE title LIKE %(searchQueryQ)s " \
+                  "AND type = " + typeDefined + \
+                  "AND name = " + researchGroupDefined + \
+                  "AND discipline = " + disciplineDefined + \
+                  "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
+        elif (status == 2):
+            sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
+                  "WHERE title LIKE %(searchQueryQ)s " \
+                  "AND type = " + typeDefined + \
+                  "AND name = " + researchGroupDefined + \
+                  "AND discipline = " + disciplineDefined + \
+                  "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
+        else:
+            sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
+                  "WHERE title LIKE %(searchQueryQ)s " \
+                  "AND type = " + typeDefined + \
+                  "AND name = " + researchGroupDefined + \
+                  "AND discipline = " + disciplineDefined
+
+        cursor.execute( sql, dict(searchQueryQ = '%' +  searchQuery +'%',typeQ = type, researchGroupQ = researchGroup, disciplineQ = discipline ))
+
+        projects = list()
+        for row in cursor:
+            project = Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],None)
+            project.desc=self.get_projectDocuments(str(project.ID))
+            projects.append(project)
+        return projects
 
     def add_project(self,proj):
         cursor = self.dbconnect.get_cursor()
