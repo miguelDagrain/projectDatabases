@@ -1,0 +1,8 @@
+
+.people-table > tr, .th-1, .th-2 {
+    width: 40%;
+}
+
+.people-table > tr, .th-3 {
+    width: 20%;
+}

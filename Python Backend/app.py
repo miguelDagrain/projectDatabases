@@ -51,7 +51,17 @@ def add_research_group():
 
 @app.route("/people")
 def show_people():
-    return render_template("people.html", page="people")
+    access = DataAccess(connection)
+    people = access.get_employees()
+    researchGroups = access.get_researchGroups()
+
+    neededValuesPeoplePage = []
+    for person in people:
+        for group in researchGroups:
+            if (group.ID == person.research_group):
+                neededValuesPeoplePage.append([person.name, group.name])
+
+    return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
 
 
 @app.route("/projects")

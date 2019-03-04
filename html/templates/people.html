@@ -1,7 +1,91 @@
 {% extends "layout.html" %}
 
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/people-table-style.css')}}">
+
+{% endblock stylesheets%}
+
 {% block title %}People{% endblock title %}
 
 {% block body %}
+
+<script src="{{ url_for('static', filename='js/changeDrop.js') }}"></script>
+
+
+<div style="display: flex">
+    <div class="side-bar">
+        <div class="form-group">
+            <label for="personSearch">Name:</label>
+            <input type="text" class="form-control-sm" id="personSearch">
+        </div>
+
+        <div class="dropdown dropdown-bar">
+            <p>Research group:</p>
+            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownResearchGroup">
+                All
+            </button>
+            <div class="dropdown-menu dropdown-menu-bar">
+                <div class="dropdown-item dropdown-item-bar" id="dropdownResearchGroup1" onclick="changeDrop('dropdownResearchGroup', 'dropdownResearchGroup1')">All</div>
+
+
+                <!-- todo: check if this also can move to external file -->
+                <script>
+                    var iter = 1;
+                </script>
+
+                {% for group in r_values %}
+
+                <div class="dropdown-item dropdown-item-bar" id="none" onclick="changeDrop('dropdownResearchGroup', this.id)">{{ group[1] }}</div>
+
+                <script>
+                    iter++;
+                    var idName = "dropdownResearchGroup" + iter; //dit wordt een string, js is echt raar
+                    document.getElementById("none").setAttribute(id, idName);
+                </script>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="dropdown dropdown-bar">
+            <p>Promotor:</p>
+            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownPromoter">
+                All
+            </button>
+            <div class="dropdown-menu dropdown-menu-bar">
+                <div class="dropdown-item dropdown-item-bar" id="dropdownPromoter1" onclick="changeDrop('dropdownPromoter', this.id)">All</div>
+                <div class="dropdown-item dropdown-item-bar" id="dropdownPromoter2" onclick="changeDrop('dropdownPromoter', this.id)">Yes</div>
+                <div class="dropdown-item dropdown-item-bar" id="dropdownPromoter3" onclick="changeDrop('dropdownPromoter', this.id)">No</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <h1>People</h1>
+
+        <table class="content-table ">
+            <tr>
+                <th class="th-1">Name</th>
+                <th class="th-2">Research group</th>
+                <th class="th-3">Promotor</th>
+            </tr>
+
+            {% for person in r_values %}
+
+            <tr>
+                <td>{{ person[0] }}</td>
+                <td>{{ person[1] }}</td>
+                <td>yes/no</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+    </div>
+</div>
 
 {% endblock body %}

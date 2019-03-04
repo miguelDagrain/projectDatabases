@@ -12,13 +12,8 @@
 
 {% block body %}
 
+<script src="{{ url_for('static', filename='js/changeDrop.js') }}"></script>
 
-<!-- needs to move to external file -->
-<script>
-    function changeDrop(idOfDropdown, idOfClicked){
-        document.getElementById(idOfDropdown).innerHTML = document.getElementById(idOfClicked).innerHTML;
-    }
-</script>
 
 <div style="display:flex;">
 
