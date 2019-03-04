@@ -211,7 +211,7 @@ class DataAccess:
         return Project(row[0], row[1], row[2], row[3], row[4], row[5],row[6],row[7],row[8])
 
 
-    def filter_projects(self, searchQuery, type, discipline, researchGroup, status):
+    def filter_projects(self, searchQuery = "", type = "", discipline = "", researchGroup = "", status = 0):
         cursor = self.dbconnect.get_cursor()
 
         ### Default Values ###
