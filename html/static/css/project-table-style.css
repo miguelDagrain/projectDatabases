@@ -1,0 +1,13 @@
+
+
+.project-table > tr, .th-1 {
+    width:65%;
+}
+
+.project-table > tr, .th-2 {
+    width:20%;
+}
+
+.project-table > tr, .th-3 {
+    width:15%;
+}

@@ -1,0 +1,13 @@
+
+
+.group-table > tr, .th-1, .th-2 {
+    width: 20%;
+}
+
+.group-table > tr, .th-3 {
+    width: 50%;
+}
+
+.group-table > tr, .th-4 {
+    width: 10%;
+}

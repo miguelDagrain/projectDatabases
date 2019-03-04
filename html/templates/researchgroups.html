@@ -1,59 +1,120 @@
 {% extends "layout.html" %}
 {% block title %}Research groups{% endblock title %}
 
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css')}}">
+
+{% endblock stylesheets %}
+
+
 {% block body %}
-    <table border="1px">
-        <tr>
-            <td>
-                <strong>Name</strong>
-            </td>
-            <td>
-                <strong>Abbreviation</strong>
-            </td>
-            <td>
-                <strong>Discipline</strong>
-            </td>
-            <td>
-                <strong>Address</strong>
-            </td>
-            <td>
-                <strong>tel nr</strong>
-            </td>
-            <td>
-                <strong>desc</strong>
-            </td>
-            <td>
-                <strong>active</strong>
-            </td>
-        </tr>
-        {% for group in r_groups %}
+
+<div style="display:flex;">
+
+    <div class="side-bar">
+
+    </div>
+
+    <div class="page-content">
+
+        <h1>Research Groups</h1>
+
+    <!--
+        <table class="content-table">
             <tr>
                 <td>
-                    {{ group.name }}
+                    <strong>Name</strong>
                 </td>
                 <td>
-                    {{ group.abbreviation }}
+                    <strong>Abbreviation</strong>
                 </td>
                 <td>
-                    {{ group.discipline }}
+                    <strong>Discipline</strong>
                 </td>
                 <td>
-                    {{ group.address }}
+                    <strong>Address</strong>
                 </td>
                 <td>
-                    {{ group.telNr }}
+                    <strong>tel nr</strong>
                 </td>
                 <td>
-                    {{ group.desc }}
+                    <strong>desc</strong>
                 </td>
                 <td>
-                    {% if group.active == True %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}
+                    <strong>active</strong>
                 </td>
             </tr>
-        {% endfor %}
-    </table>
+            {% for group in r_groups %}
+                <tr>
+                    <td>
+                        {{ group.name }}
+                    </td>
+                    <td>
+                        {{ group.abbreviation }}
+                    </td>
+                    <td>
+                        {{ group.discipline }}
+                    </td>
+                    <td>
+                        {{ group.address }}
+                    </td>
+                    <td>
+                        {{ group.telNr }}
+                    </td>
+                    <td>
+                        {{ group.desc }}
+                    </td>
+                    <td>
+                        {% if group.active == True %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    -->
+        <table class="content-table group-table">
+            <tr>
+                <th class="th-1">
+                    <strong>Name</strong>
+                </th>
+                <th class="th-2">
+                    <strong>Abbreviation</strong>
+                </th>
+                <th class="th-3">
+                    <strong>Discipline</strong>
+                </th>
+                <th class="th-4">
+                    <strong>active</strong>
+                </th>
+            </tr>
+            {% for group in r_groups %}
+                <tr>
+                    <td>
+                        {{ group.name }}
+                    </td>
+                    <td>
+                        {{ group.abbreviation }}
+                    </td>
+                    <td>
+                        {{ group.discipline }}
+                    </td>
+                    <td>
+                        {% if group.active == True %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
 {% endblock body %}

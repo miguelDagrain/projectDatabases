@@ -23,26 +23,24 @@
     padding-top: 10px;
 }
 
-.project-table {
-    display: block;
+.content-table {
     table-layout: fixed;
     border-collapse: collapse;
     width: 100%;
     white-space: nowrap;
 }
 
-
-.project-table > tr, th {
-    width: 100%;
+.content-table > tr, th {
     border-bottom: 1px solid #003366;
     padding: 20px;
 }
 
-.project-table > tr, td {
+
+.content-table > tr, td {
     padding: 30px;
     text-align: left;
 }
 
-.project-table > tr, th, td {
+.content-table > tr, th, td {
     color: #003366;
 }

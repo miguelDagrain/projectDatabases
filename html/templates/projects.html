@@ -4,7 +4,8 @@
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css')}}"
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
 
 {% endblock stylesheets %}
 
@@ -24,8 +25,8 @@
     <div class="side-bar">
 
         <div class="form-group">
-          <label for="queryForm" style="color:white;">Search query:</label>
-          <input type="text" class="form-control-sm" style="background-color:#003366;color:white;width:100%;" id="queryForm">
+          <label for="queryForm">Search query:</label>
+          <input type="text" class="form-control-sm" id="queryForm">
         </div>
 
         <div class="dropdown dropdown-bar">
@@ -110,12 +111,12 @@
 
         <p>hier kan een beetje uitleg komen</p>
 
-        <table class="project-table">
+        <table class="content-table project-table">
 
             <tr>
-                <th>title</th>
-                <th>research group</th>
-                <th>assigned students</th>
+                <th class="th-1">title</th>
+                <th class="th-2">research group</th>
+                <th class="th-3">assigned students</th>
             </tr>
 
         {% for project in r_projects%}

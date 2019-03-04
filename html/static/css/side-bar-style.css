@@ -3,7 +3,7 @@
     flex-direction: column;
     width: 10%;
     height: 1000px;
-    background-color:#660033;
+    background-color:#D3D3D3;
     margin-top: 0px;
 }
 
@@ -19,6 +19,26 @@
     margin-bottom: 5px;
 }
 
+.form-group > label {
+    color:black;
+}
+
+.form-group > input {
+    background-color:white;
+    color:#003366;
+    width:100%;
+}
+
+.form-group > input::selection {
+    background-color:#003366;
+    color:white;
+}
+
+.form-group > input::-moz-selection {
+    background-color:#003366;
+    color:white;
+}
+
 .dropdown-bar{
     display: inline-block;
     margin-top:0px;
@@ -26,14 +46,14 @@
 }
 
 .dropdown-bar > p {
-    color:white;
+    color:black;
 }
 
-.btn-bar {
 
+.btn-bar {
     float: left;
-    background-color:#003366;
-    color:white;
+    background-color:white;
+    color: #003366;
     display: inline;
     text-overflow-mode: ellipsis;
     overflow: hidden;
@@ -59,11 +79,11 @@
 }
 
 .side-bar > div > p::selection, label::selection {
-    color: #660033;
-    background: white;
+    color: white;
+    background: #003366;
 }
 
 .side-bar > div > p::-moz-selection, label::-moz-selection {
-    color: #660033;
-    background: white;
+    color: white;
+    background: #003366;
 }

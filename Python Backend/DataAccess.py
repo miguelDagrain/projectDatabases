@@ -85,7 +85,7 @@ class DataAccess:
 
     def get_researchgroupDescriptions(self,groupid):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from groupDescription where groupID=%s',(str(groupid)))
+        cursor.execute('select * from groupDescription where groupID=%s', (str(groupid)))
         desc = list()
         for row in cursor:
             desc.append(self.get_document(row[1]))
