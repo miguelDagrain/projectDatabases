@@ -30,6 +30,15 @@ CREATE TABLE document
   content    text
 );
 
+--dont yet know what the attachment should be so this is placeholder
+drop table if exists attachment cascade ;
+create table attachment
+(
+  doc int references document(documentID),
+  attachment varchar(255),
+  primary key(doc,attachment)
+);
+
 DROP TABLE IF EXISTS researchGroup CASCADE;
 CREATE TABLE researchGroup
 (
@@ -62,7 +71,16 @@ CREATE TABLE employee
   researchgroup  int references researchGroup (groupID),
   title          title,
   internORextern intext,
-  active         boolean       --1 is active 0 is inactive
+  active         boolean,
+  promotor       boolean
+
+);
+
+drop table if exists conctactPerson cascade ;
+create table contactPerson(
+  employee int references employee(employeeID),
+  rgroup int references researchGroup(groupID),
+  primary key(employee,rgroup)
 );
 
 DROP TABLE IF EXISTS project CASCADE;
@@ -71,11 +89,57 @@ CREATE TABLE project
   projectID      SERIAL PRIMARY KEY,
   title          varchar(255)                                        not null,
   maxStudents    INT                                                 NOT NULL,
+  active boolean,
   researchGroup  int references researchGroup (groupID),
-  activeYear     int check (activeYear < 2100 and activeYear > 1970) NOT NULL, --random years within realm of possibilities
-  type           typeResearch,
-  tag            varchar,                                                      --e.g. "Databases" later list with possible things
   relatedProject int references project (projectID)
+);
+
+drop table if exists projectYear cascade ;
+create table projectYear
+(
+  yearID serial primary key,
+  year int check (activeYear < 2100 and activeYear > 1970) not null
+);
+
+create table projectYearConnection
+(
+  yearID int references projectYear(yearID),
+  projectID int references project(projectID),
+  primary key (yearID,projectID)
+);
+
+create table projectType
+(
+   typeID serial primary key,
+   type   typeResearch not null
+);
+
+create table projectTypeConnection
+(
+  typeID int references projectType(type),
+  projectID int references project(projectID),
+  primary key (typeID,projectId)
+);
+
+create table projectPromotor
+(
+  employee int references employee(employeeID),
+  project int references project(projectID),
+  primary key (employee,project)
+);
+
+create table projectTag
+(
+  project int references project(projectID)
+  tag varchar(255),
+  primary key(project,tag)
+);
+
+create table projectRelation
+(
+ project1 int references project(projectID),
+ project2 int references project(projectID),
+ primary key(project1,project2)
 );
 
 DROP TABLE IF EXISTS projectDocument CASCADE;
@@ -86,23 +150,13 @@ CREATE TABLE projectDocument
   PRIMARY KEY (projectID, docID)
 );
 
-DROP TABLE IF EXISTS session CASCADE;
-CREATE TABLE session
-(
-  sessionID          int PRIMARY KEY,
-  startTime          timestamp,
-  searchword         varchar,
-  searchwordtime     time,
-  clickedProject     int references project (projectID),
-  clickedProjectTime time
-);
+
 
 DROP TABLE IF EXISTS student CASCADE;
 CREATE TABLE student
 (
   studentID SERIAL primary key,
-  name      varchar(70) NOT NULL,
-  session   int references session (sessionID)
+  name      varchar(70) NOT NULL
 );
 
 --registration was suggested to be within student but seemed easier as own entity
@@ -122,3 +176,31 @@ CREATE TABLE bookmark
   student int references student (studentID),
   primary key (project, student)
 );
+
+DROP TABLE IF EXISTS session CASCADE;
+CREATE TABLE session
+(
+  sessionID          int PRIMARY KEY,
+  studentID          int references student(studentID) not null,
+  startTime          timestamp,
+  startDate          date
+);
+
+create table sessionSearchQuery
+(
+  sessionID references session(sessionID),
+  term VARCHAR(255),
+  searchTime timestamp ,
+  primary key(sessionID,term,searchTime)
+);
+
+create table sessionProjectClick
+(
+ sessionID references session(sessionID),
+  project int references project(projectID),
+  searchTime timestamp ,
+  primary key(sessionID,project,searchTime)
+);
+
+
+

@@ -5,6 +5,8 @@ from dbConnection import *
 from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
 from Document import *
+from flask_babel import *
+
 
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
@@ -85,4 +87,6 @@ if __name__ == "__main__":
     # acces=DataAccess(connection)
     # acces.manualDataHandling()
     # temp=acces.get_projects()
+    babel = Babel(app)
+
     app.run(debug=True)
