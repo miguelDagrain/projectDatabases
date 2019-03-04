@@ -63,21 +63,44 @@ def show_people():
     return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
 
 
-@app.route("/projects")
-def show_projects():
-    access = DataAccess(connection)
-    projects = access.get_projects()
-    researchGroups = access.get_researchGroups()
-
+def helper_sort_values_projects(projects, researchGroups):
     neededValuesProject = []
     for project in projects:
         for group in researchGroups:
             if (group.ID == project.researchGroup):
                 neededValuesProject.append([project.title, group.name, project.maxStudents])
 
+    return neededValuesProject
 
 
-    return render_template("projects.html", r_projects=neededValuesProject, r_researchGroups=researchGroups, page="projects")
+@app.route("/projects")
+def show_projects():
+    access = DataAccess(connection)
+    projects = access.get_projects()
+    researchGroups = access.get_researchGroups()
+
+    neededValuesProject = helper_sort_values_projects(projects, researchGroups)
+
+
+
+    return render_template("projects.html", r_values=neededValuesProject, page="projects")
+
+
+@app.route("/projects", methods=["PRE"])
+def apply_filter_projects():
+    access = DataAccess(connection);
+    query = request.form.get("Search_query")
+    type = request.form.get("Type")
+    discipline = request.form.get("Disciplines")
+    group = request.form.get("Research_group")
+    status = request.form.get("Status")
+
+    projects = access.filter_projects(query, type, discipline, group, status)
+    researchGroups = access.get_researchGroups()
+
+    neededValuesProject = helper_sort_values_projects(projects, researchGroups)
+
+    return render_template("projects.html", r_values=neededValuesProject, page="projects")
 
 
 if __name__ == "__main__":

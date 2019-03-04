@@ -16,7 +16,7 @@
 
 <div style="display:flex;">
 
-    <form class="side-bar">
+    <form class="side-bar" action="{{ url_for('apply_filter_projects') }}" method="pre">
 
 
         <label class="side-bar-input">
@@ -62,9 +62,9 @@
                     var iter = 0;
                 </script>
 
-                {% for group in r_researchGroups %}
+                {% for group in r_values %}
 
-                <option value="" id="noValue">{{ group.name }}</option>
+                <option value="" id="noValue">{{ group[1] }}</option>
 
                 <script>
                     iter++;
@@ -107,7 +107,7 @@
                 <th class="th-3">assigned students</th>
             </tr>
 
-        {% for project in r_projects%}
+        {% for project in r_values %}
 
             <tr>
                 <td>{{ project[0] }}</td>
