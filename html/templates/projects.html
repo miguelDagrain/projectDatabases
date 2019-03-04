@@ -6,97 +6,90 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
 
 {% endblock stylesheets %}
 
 
 {% block body %}
 
-<script src="{{ url_for('static', filename='js/changeDrop.js') }}"></script>
-
 
 <div style="display:flex;">
 
-    <div class="side-bar">
+    <form class="side-bar">
 
-        <div class="form-group">
-          <label for="queryForm">Search query:</label>
-          <input type="text" class="form-control-sm" id="queryForm">
-        </div>
 
-        <div class="dropdown dropdown-bar">
+        <label class="side-bar-input">
+          <p>Search query:</p>
+          <input type="text" class="form-control-sm" name="Search_query">
+        </label>
+
+
+        <div class="dropdown">
             <p>Type:</p>
-            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownTypeButton">
-                All
-            </button>
-            <div class="dropdown-menu dropdown-menu-bar">
-                <div class="dropdown-item dropdown-item-bar" id="dropdownType1" onclick="changeDrop('dropdownTypeButton', 'dropdownType1');">All</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownType2" onclick="changeDrop('dropdownTypeButton', 'dropdownType2');">Bachelor dissertation</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownType3" onclick="changeDrop('dropdownTypeButton', 'dropdownType3');">Master thesis</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownType4" onclick="changeDrop('dropdownTypeButton', 'dropdownType4');">Research internship 1</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownType5" onclick="changeDrop('dropdownTypeButton', 'dropdownType5');">Research internship 2</div>
-            </div>
+            <select name="Type">
+                <option value="0">All</option>
+                <option value="1">Bachelor dissertation</option>
+                <option value="2">Master thesis</option>
+                <option value="3">Research internship 1</option>
+                <option value="4">Research internship 2</option>
+            </select>
         </div>
 
-        <div class="dropdown dropdown-bar">
+
+        <div class="dropdown">
             <p>Disciplines:</p>
-            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownDisciplines">
-                All
-            </button>
-            <div class="dropdown-menu dropdown-menu-bar">
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines1" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines1')">All</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines2" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines2')">MathematicsCompSc</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines3" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines3')">Mathematics</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines4" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines4')">Computer Science</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines5" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines5')">MathematicsCompSc - Mathematics</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines6" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines6')">MathematicsCompSc - Computer Science</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines7" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines7')">Mathematics - Computer Science</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownDisciplines8" onclick="changeDrop('dropdownDisciplines', 'dropdownDisciplines8')">MathematicsCompSc - Mathematics - Computer Science</div>
-            </div>
+            <select name="Disciplines">
+                <option value="0" >All</option>
+                <option value="1" >MathematicsCompSc</option>
+                <option value="2" >Mathematics</option>
+                <option value="3" >Computer Science</option>
+                <option value="4" >MathematicsCompSc - Mathematics</option>
+                <option value="5" >MathematicsCompSc - Computer Science</option>
+                <option value="6" >Mathematics - Computer Science</option>
+                <option value="7" >MathematicsCompSc - Mathematics - Computer Science</option>
+            </select>
         </div>
 
-        <div class="dropdown dropdown-bar">
+        <div class="dropdown">
             <p>Research group:</p>
-            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownResearchGroup">
-                All
-            </button>
-            <div class="dropdown-menu dropdown-menu-bar">
-                <div class="dropdown-item dropdown-item-bar" id="dropdownResearchGroup1" onclick="changeDrop('dropdownResearchGroup', 'dropdownResearchGroup1')">All</div>
+            <select name="Research_group">
+                <option value="0">All</option>
 
 
                 <!-- todo: check if this also can move to external file -->
                 <script>
-                    var iter = 1;
+                    var iter = 0;
                 </script>
 
                 {% for group in r_researchGroups %}
 
-                <div class="dropdown-item dropdown-item-bar" id="none" onclick="changeDrop('dropdownResearchGroup', this.id)">{{ group.name }}</div>
+                <option value="" id="noValue">{{ group.name }}</option>
 
                 <script>
                     iter++;
-                    var idName = "dropdownResearchGroup" + iter; //dit wordt een string, js is echt raar
-                    document.getElementById("none").setAttribute(id, idName);
+                    document.getElementById("noValue").setAttribute("value", iter.toString(10));
+                    document.getElementById("noValue").removeAttribute("id");
                 </script>
 
                 {% endfor %}
 
-            </div>
+            </select>
         </div>
 
-        <div class="dropdown dropdown-bar">
+
+        <div class="dropdown">
             <p>Status:</p>
-            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownStatus">
-                All
-            </button>
-            <div class="dropdown-menu dropdown-menu-bar">
-                <div class="dropdown-item dropdown-item-bar" id="dropdownStatus1" onclick="changeDrop('dropdownStatus', 'dropdownStatus1')">All</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownStatus2" onclick="changeDrop('dropdownStatus', 'dropdownStatus2')">Available projects only</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownStatus3" onclick="changeDrop('dropdownStatus', 'dropdownStatus3')">Assigned projects only</div>
-            </div>
+            <select name="Status">
+                <option value="0">All</option>
+                <option value="1">Available projects only</option>
+                <option value="2">Assigned projects only</option>
+            </select>
         </div>
 
-    </div>
+        <input type="submit" value="Search">
+
+    </form>
 
 
     <!-- Vanaf hier komen de projecten -->
@@ -129,5 +122,8 @@
     </div>
 
 </div>
+
+
+<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
 
 {% endblock body %}

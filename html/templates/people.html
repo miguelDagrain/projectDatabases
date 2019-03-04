@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/people-table-style.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
 
 {% endblock stylesheets%}
 
@@ -16,53 +17,52 @@
 
 
 <div style="display: flex">
-    <div class="side-bar">
-        <div class="form-group">
-            <label for="personSearch">Name:</label>
-            <input type="text" class="form-control-sm" id="personSearch">
-        </div>
 
-        <div class="dropdown dropdown-bar">
-            <p>Research group:</p>
-            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownResearchGroup">
-                All
-            </button>
-            <div class="dropdown-menu dropdown-menu-bar">
-                <div class="dropdown-item dropdown-item-bar" id="dropdownResearchGroup1" onclick="changeDrop('dropdownResearchGroup', 'dropdownResearchGroup1')">All</div>
+    <form class="side-bar">
+
+        <label class="side-bar-input">
+            <p>Name:</p>
+            <input type="text" class="form-control-sm" name="Name">
+        </label>
+
+        <label class="dropdown">
+            Research group:
+            <select name="Research_group">
+                <option value="0">All</option>
 
 
                 <!-- todo: check if this also can move to external file -->
                 <script>
-                    var iter = 1;
+                    var iter = 0;
                 </script>
 
                 {% for group in r_values %}
 
-                <div class="dropdown-item dropdown-item-bar" id="none" onclick="changeDrop('dropdownResearchGroup', this.id)">{{ group[1] }}</div>
+                <option value="" id="noValue">{{ group[1] }}</option>
 
                 <script>
                     iter++;
-                    var idName = "dropdownResearchGroup" + iter; //dit wordt een string, js is echt raar
-                    document.getElementById("none").setAttribute(id, idName);
+                    document.getElementById("noValue").setAttribute("value", iter.toString(10));
+                    document.getElementById("noValue").removeAttribute("id");
                 </script>
 
                 {% endfor %}
 
-            </div>
-        </div>
+            </select>
+        </label>
 
-        <div class="dropdown dropdown-bar">
-            <p>Promotor:</p>
-            <button type="button" class="btn btn-bar dropdown-toggle" data-toggle="dropdown" id="dropdownPromoter">
-                All
-            </button>
-            <div class="dropdown-menu dropdown-menu-bar">
-                <div class="dropdown-item dropdown-item-bar" id="dropdownPromoter1" onclick="changeDrop('dropdownPromoter', this.id)">All</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownPromoter2" onclick="changeDrop('dropdownPromoter', this.id)">Yes</div>
-                <div class="dropdown-item dropdown-item-bar" id="dropdownPromoter3" onclick="changeDrop('dropdownPromoter', this.id)">No</div>
-            </div>
-        </div>
-    </div>
+        <label class="dropdown">
+            Promotor:
+            <select name="Promotor">
+                <option value="0">All</option>
+                <option value="1">Yes</option>
+                <option value="2">No</option>
+            </select>
+        </label>
+
+        <input type="submit" value="Search">
+
+    </form>
 
     <div class="page-content">
         <h1>People</h1>
@@ -79,7 +79,7 @@
             <tr>
                 <td>{{ person[0] }}</td>
                 <td>{{ person[1] }}</td>
-                <td>yes/no</td>
+                <td>yes/no</td> <!-- todo: vervang yes/no door een werkelijke waarde -->
             </tr>
 
             {% endfor %}
@@ -87,5 +87,7 @@
         </table>
     </div>
 </div>
+
+<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
 
 {% endblock body %}
