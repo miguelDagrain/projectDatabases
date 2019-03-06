@@ -18,3 +18,15 @@ optional: insert dummy_data
 
 > psql -U pdb -d pdbdatabase -f sql/dummy_data.sql
 
+
+###Flask-Babel
+Extract all translatable messages to messages.pot
+>pybabel extract -F babel.cfg -o messages.pot .
+
+Initialize file for dutch translations
+
+>pybabel init -i messages.pot -d translations -l nl
+
+Compile translations
+
+>pybabel compile -d translations

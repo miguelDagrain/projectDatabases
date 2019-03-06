@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, session
+from flask import Flask, request, redirect, url_for, session, g
 from flask.templating import render_template
 from config import config_data
 from dbConnection import *
@@ -9,23 +9,37 @@ from flask_babel import *
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
+babel = Babel(app)
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                           dbhost=config_data['dbhost'])
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 
 
+@babel.localeselector
+def get_locale():
+    '''
+    Select the preferred language based on the accept header of the user
+    :return: The language that fits best: nl or en
+    '''
+    return request.accept_languages.best_match(['nl', 'en'])
+
+
 @app.route("/")
 def index():
+    '''
+    Renders the index template
+    :return: Rendered index template
+    '''
     return render_template("index.html", page="index")
-
-
-@app.route("/image/banner")
-def get_banner():
-    return "../static/image/banner.png"
 
 
 @app.route("/researchgroups")
 def show_research_groups():
+    '''
+    Shows the research groups on the website
+    :return: Rendered template containing all research groups
+    '''
     access = DataAccess(connection)
     groups = access.get_researchGroups()
     return render_template("researchgroups.html", r_groups=groups, page="rgroups")
@@ -33,6 +47,12 @@ def show_research_groups():
 
 @app.route("/researchgroups", methods=["POST"])
 def add_research_group():
+    '''
+    Adds a research group to the database
+    This function is called whenever the user uses the POST method on the
+    research group page
+    :return: Rendered template of the index with a send message
+    '''
     name = request.form.get("name")
     abbrev = request.form.get("abbreviation")
     discipline = request.form.get("discipline")
@@ -40,11 +60,12 @@ def add_research_group():
     address = request.form.get("address")
     telephone = request.form.get("telephone")
     # desc = request.form.get("description")
-    desc=list()
-    desc.append (Document(1 ,language.NEDERLANDS,'ik ben jos het document')) #TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+    desc = list()
+    desc.append(Document(1, language.NEDERLANDS,
+                         'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
-    discipline = "Mathematics"  #TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
-    r = ResearchGroup(None,name,abbrev,discipline,active,address,telephone,desc)
+    discipline = "Mathematics"  # TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
+    r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
     access = DataAccess(connection)
     access.add_researchGroup(r)
     return render_template("index.html", send=True, page="index")
@@ -52,6 +73,10 @@ def add_research_group():
 
 @app.route("/people")
 def show_people():
+    '''
+    Shows a table of people on a webpage
+    :return: Rendered template of people HTML
+    '''
     access = DataAccess(connection)
     people = access.get_employees()
     researchGroups = access.get_researchGroups()
@@ -105,7 +130,18 @@ def apply_filter_projects():
 
 @app.errorhandler(404)
 def handle_404(e):
+    '''
+    Handles error 404 (missing page)
+    :param e: Exception container
+    :return: Rendered template of the 404.html file
+    '''
     return render_template("404.html"), 404
+
+
+@app.route("/lang=?", methods=["POST"])
+def pick_language():
+
+    return redirect('/')
 
 
 if __name__ == "__main__":

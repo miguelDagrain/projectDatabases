@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Research groups{% endblock title %}
+{% block title %}{{ _('Research groups') }}{% endblock title %}
 
 {% block stylesheets %}
 
@@ -28,22 +28,22 @@
 
         <div class="page-content">
 
-            <h1>Research Groups</h1>
+            <h1>{{ _('Research groups') }}</h1>
 
             <table class="content-table group-table table-sm" id="verticalScroll" >
                 <thead>
                 <tr>
                     <th class="th-sm">
-                        <strong>Name</strong>
+                        <strong>{{ _('Name') }}</strong>
                     </th>
                     <th class="th-sm">
-                        <strong>Abbreviation</strong>
+                        <strong>{{ _('Abbreviation') }}</strong>
                     </th>
                     <th class="th-sm">
-                        <strong>Discipline</strong>
+                        <strong>{{ _('Discipline') }}</strong>
                     </th>
                     <th class="th-4">
-                        <strong>active</strong>
+                        <strong>{{ _('Active') }}</strong>
                     </th>
                 </tr>
                 </thead>

@@ -5,64 +5,70 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
-{% endblock stylesheets%}
+{% endblock stylesheets %}
 
 {% block body %}
 
-<div style="display: flex">
+    <div style="display: flex">
 
 
-    <form class="side-bar" action="{{ url_for('add_research_group') }}" method="post">
-        <label>
-            Group name:
-            <input type="text" name="name">
-        </label>
+        <form class="side-bar" action="{{ url_for('add_research_group') }}" method="post">
+            <label>
+                {{ _('Group name') }}:
+                <input type="text" name="name">
+            </label>
 
-        <label>
-            Abbreviation:
-            <input type="text" name="abbreviation">
-        </label>
+            <label>
+                {{ _('Abbreviation') }}:
+                <input type="text" name="abbreviation">
+            </label>
 
-        <label>
-            Active:
-            <input type="checkbox" name="active"><br>
-        </label>
+            <label>
+                {{ _('Active') }}:
+                <input type="checkbox" name="active"><br>
+            </label>
 
-        <label>
-            Address:
-            <input type="text" name="address"><br>
-        </label>
+            <label>
+                {{ _('Address') }}:
+                <input type="text" name="address"><br>
+            </label>
 
-        <label>
-            Telephone number:
-            <input type="text" name="telephone"><br>
-        </label>
+            <label>
+                {{ _('Telephone number') }}:
+                <input type="text" name="telephone"><br>
+            </label>
 
-        <input type="submit" value="Enter">
-    </form>
+            <input type="submit" value="{{ _('Enter') }}">
+        </form>
 
 
-    <div class="page-content">
-        <h1>Hello!</h1>
-        <a href="{{ url_for('show_people') }}/404">ERROR 404</a>
-        <br><br><br><br><br><br><br>
+        <div class="page-content">
+            <h1>{{ _('Hello') }}!</h1>
+            <a href="{{ url_for('show_people') }}/404">ERROR 404</a>
+            <br><br><br><br><br><br><br>
 
-        {% if send == True %}
-            <div class="center-block" align="center">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    Added research group to the database!
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            {% if send == True %}
+                <div class="center-block" align="center">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ _('Added research group to the database') }}!
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        {% else %}
-            <p>add research group</p>
-        {% endif %}
+            {% else %}
+                <p>{{ _('add research group') }}</p>
+            {% endif %}
+
+        </div>
 
     </div>
 
-</div>
-
+    <form method="post" action="{{ url_for('pick_language') }}" class="inline">
+        <input type="hidden" name="extra_submit_param" value="extra_submit_value">
+        <button type="submit" name="submit_param" value="submit_value" class="link-button">
+            This is a link that sends a POST request
+        </button>
+    </form>
 
 {% endblock body %}
