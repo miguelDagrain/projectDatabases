@@ -16,7 +16,7 @@
 
 <div style="display:flex;">
 
-    <form class="side-bar" action="{{ url_for('apply_filter_projects') }}" method="pre">
+    <form class="side-bar" action="{{ url_for('apply_filter_projects') }}" method="post">
 
 
         <label class="side-bar-input">
@@ -80,11 +80,13 @@
 
         <div class="dropdown">
             <p>Status:</p>
-            <select name="Status">
-                <option value="0">All</option>
-                <option value="1">Available projects only</option>
-                <option value="2">Assigned projects only</option>
-            </select>
+            <label>
+                <select name="Status">
+                    <option value="0">All</option>
+                    <option value="1">Available projects only</option>
+                    <option value="2">Assigned projects only</option>
+                </select>
+            </label>
         </div>
 
         <input type="submit" value="Search">

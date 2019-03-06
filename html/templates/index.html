@@ -43,7 +43,8 @@
 
 
     <div class="page-content">
-        <h1> Hello! </h1>
+        <h1>Hello!</h1>
+        <a href="{{ url_for('show_people') }}/404">ERROR 404</a>
         <br><br><br><br><br><br><br>
 
         {% if send == True %}
@@ -62,5 +63,6 @@
     </div>
 
 </div>
+
 
 {% endblock body %}
