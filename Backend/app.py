@@ -148,4 +148,6 @@ if __name__ == "__main__":
     # acces=DataAccess(connection)
     # acces.manualDataHandling()
     # temp=acces.get_projects()
+    babel = Babel(app)
+
     app.run(debug=True)

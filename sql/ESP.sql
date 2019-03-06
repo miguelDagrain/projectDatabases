@@ -1,28 +1,50 @@
-DROP DOMAIN IF EXISTS subject CASCADE;
+DROP TABLE IF EXISTS sessionProjectClick ;
+DROP TABLE IF EXISTS sessionSearchQuery ;
+DROP TABLE IF EXISTS session ;
+DROP TABLE IF EXISTS bookmark ;
+DROP TABLE IF EXISTS projectRegistration ;
+DROP TABLE IF EXISTS student ;
+DROP TABLE IF EXISTS projectDocument ;
+DROP TABLE IF EXISTS projectRelation ;
+DROP TABLE IF EXISTS projectTag ;
+DROP TABLE IF EXISTS projectPromotor ;
+DROP TABLE IF EXISTS projectTypeConnection ;
+DROP TABLE IF EXISTS projectType ;
+DROP TABLE IF EXISTS projectYearConnection ;
+drop table if exists projectYear ;
+DROP TABLE IF EXISTS project ;
+drop table if exists contactPerson;
+DROP TABLE IF EXISTS employee ;
+DROP TABLE IF EXISTS groupDescription ;
+DROP TABLE IF EXISTS researchGroup ;
+drop table if exists attachment ;
+DROP TABLE IF EXISTS document ;
+DROP DOMAIN IF EXISTS language ;
+DROP DOMAIN IF EXISTS registration ;
+DROP DOMAIN IF EXISTS typeResearch ;
+DROP DOMAIN IF EXISTS intext ;
+DROP DOMAIN IF EXISTS title ;
+DROP DOMAIN IF EXISTS subject ;
+
+
 CREATE DOMAIN subject as TEXT
   CHECK ( value = 'Computer Science' or value = 'Mathematics' or value = 'Engeneering');
 
-DROP DOMAIN IF EXISTS title CASCADE ;
 CREATE DOMAIN title as TEXT
   check (value = 'professor' or value = 'phd' or value = 'geen');
 
-DROP DOMAIN IF EXISTS intext CASCADE;
 CREATE DOMAIN intext as TEXT
   check (value = 'intern' or value = 'extern');
 
-DROP DOMAIN IF EXISTS typeResearch CASCADE;
 CREATE DOMAIN typeResearch as TEXT
   check (value = 'Master thesis' or value = 'Research internship');
 
-DROP DOMAIN IF EXISTS registration CASCADE;
 CREATE DOMAIN registration as TEXT
   check (value = 'bezig' or value = 'geslaagd' or value = 'niet geslaagd');
 
-DROP DOMAIN IF EXISTS language CASCADE;
 CREATE DOMAIN language as TEXT
   check (value = 'nederlands' or value = 'engels');
 
-DROP TABLE IF EXISTS document CASCADE;
 CREATE TABLE document
 (
   documentID SERIAL PRIMARY key,
@@ -30,7 +52,14 @@ CREATE TABLE document
   content    text
 );
 
-DROP TABLE IF EXISTS researchGroup CASCADE;
+--dont yet know what the attachment should be so this is placeholder
+create table attachment
+(
+  doc int references document(documentID),
+  attachment varchar(255),
+  primary key(doc,attachment)
+);
+
 CREATE TABLE researchGroup
 (
   --needs logo (200x50)
@@ -43,7 +72,6 @@ CREATE TABLE researchGroup
   telNr        varchar(255)
 );
 
-DROP TABLE IF EXISTS groupDescription CASCADE;
 CREATE TABLE groupDescription
 (
   groupID int references researchGroup (groupID),
@@ -51,7 +79,6 @@ CREATE TABLE groupDescription
   primary key (groupID, docID)
 );
 
-DROP TABLE IF EXISTS employee CASCADE;
 CREATE TABLE employee
 (
   --needs picture (150x150)
@@ -62,23 +89,71 @@ CREATE TABLE employee
   researchgroup  int references researchGroup (groupID),
   title          title,
   internORextern intext,
-  active         boolean       --1 is active 0 is inactive
+  active         boolean,
+  promotor       boolean
+
 );
 
-DROP TABLE IF EXISTS project CASCADE;
+create table contactPerson(
+  employee int references employee(employeeID),
+  rgroup int references researchGroup(groupID) unique,
+  primary key(rgroup)
+);
+
 CREATE TABLE project
 (
   projectID      SERIAL PRIMARY KEY,
   title          varchar(255)                                        not null,
   maxStudents    INT                                                 NOT NULL,
-  researchGroup  int references researchGroup (groupID),
-  activeYear     int check (activeYear < 2100 and activeYear > 1970) NOT NULL, --random years within realm of possibilities
-  type           typeResearch,
-  tag            varchar,                                                      --e.g. "Databases" later list with possible things
-  relatedProject int references project (projectID)
+  active boolean,
+  researchGroup  int references researchGroup (groupID)
 );
 
-DROP TABLE IF EXISTS projectDocument CASCADE;
+create table projectYear
+(
+  year int check (Year < 2100 and Year > 1970) not null primary key
+);
+
+create table projectYearConnection
+(
+  year int references projectYear(year),
+  projectID int references project(projectID),
+  primary key (year,projectID)
+);
+
+create table projectType
+(
+   type typeResearch not null primary key
+);
+
+create table projectTypeConnection
+(
+  type typeResearch references projectType(type),
+  projectID int references project(projectID),
+  primary key (type,projectId)
+);
+
+create table projectPromotor
+(
+  employee int references employee(employeeID),
+  project int references project(projectID),
+  primary key (employee,project)
+);
+
+create table projectTag
+(
+  tag varchar(255),
+  project int references project(projectID),
+  primary key(project,tag)
+);
+
+create table projectRelation
+(
+ project1 int references project(projectID),
+ project2 int references project(projectID),
+ primary key(project1,project2)
+);
+
 CREATE TABLE projectDocument
 (
   projectID int references project (projectID),
@@ -86,27 +161,12 @@ CREATE TABLE projectDocument
   PRIMARY KEY (projectID, docID)
 );
 
-DROP TABLE IF EXISTS session CASCADE;
-CREATE TABLE session
-(
-  sessionID          int PRIMARY KEY,
-  startTime          timestamp,
-  searchword         varchar,
-  searchwordtime     time,
-  clickedProject     int references project (projectID),
-  clickedProjectTime time
-);
-
-DROP TABLE IF EXISTS student CASCADE;
 CREATE TABLE student
 (
   studentID SERIAL primary key,
-  name      varchar(70) NOT NULL,
-  session   int references session (sessionID)
+  name      varchar(70) NOT NULL
 );
 
---registration was suggested to be within student but seemed easier as own entity
-DROP TABLE IF EXISTS projectRegistration CASCADE;
 CREATE TABLE projectRegistration
 (
   project int references project (projectID),
@@ -115,10 +175,33 @@ CREATE TABLE projectRegistration
   PRIMARY KEY (project, status, student)
 );
 
-DROP TABLE IF EXISTS bookmark CASCADE;
 CREATE TABLE bookmark
 (
   project int references project (projectID),
   student int references student (studentID),
   primary key (project, student)
+);
+
+CREATE TABLE session
+(
+  sessionID          int PRIMARY KEY,
+  studentID          int references student(studentID) not null,
+  startTime          time,
+  startDate          date
+);
+
+create table sessionSearchQuery
+(
+  sessionID int references session(sessionID),
+  term VARCHAR(255),
+  searchTime time ,
+  primary key(sessionID,term,searchTime)
+);
+
+create table sessionProjectClick
+(
+  sessionID int references session(sessionID),
+  project int references project(projectID),
+  searchTime time ,
+  primary key(sessionID,project,searchTime)
 );

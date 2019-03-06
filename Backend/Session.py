@@ -9,7 +9,7 @@
 
 
 class Session:
-    def __init__(self, session_id, start_time, search_word,search_word_time, clicked_project, clicked_project_time):
+    def __init__(self, session_id, student_id,start_time,start_date):
         """
         a constructor for a dbSession with all variables given
         :param session_id: an int representing the session
@@ -19,12 +19,13 @@ class Session:
         :param clicked_project_time: a time object referencing the time the session clicked on a project
         :return: a new dbSession object
         """
+        self.studentId=student_id
         self.sessionId = session_id
         self.startTime = start_time
-        self.searchWord=search_word
-        self.searchWordTime = search_word_time
-        self.clickedProject = clicked_project
-        self.clickedProjectTime = clicked_project_time
+        self.startDate = start_date
+        #both list of tuples
+        self.searchWords=list()
+        self.clickedProjects = list()
 
     def __str__(self):
         return "id: "+str(self.sessionId)+", startTime: "+self.startTime+", searchWordTime: "+self.searchWordTime+", clickedProject: "+self.clickedProject+", clickedProjectTime: "+self.clickedProjectTime
