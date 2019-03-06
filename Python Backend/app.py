@@ -1,16 +1,18 @@
-from flask import Flask, request, redirect, url_for,  session
+from flask import Flask, request, redirect, url_for, session
 from flask.templating import render_template
 from config import config_data
 from dbConnection import *
 from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
 from Document import *
+from flask_babel import *
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                           dbhost=config_data['dbhost'])
-app.secret_key = b'_5#ypfL"F32448z\n\xec]/'
+app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
+
 
 @app.route("/")
 def index():
@@ -81,14 +83,12 @@ def show_projects():
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
-
-
     return render_template("projects.html", r_values=neededValuesProject, page="projects")
 
 
-@app.route("/projects", methods=["PRE"])
+@app.route("/projects", methods=["POST"])
 def apply_filter_projects():
-    access = DataAccess(connection);
+    access = DataAccess(connection)
     query = request.form.get("Search_query")
     type = request.form.get("Type")
     discipline = request.form.get("Disciplines")
@@ -101,6 +101,11 @@ def apply_filter_projects():
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
     return render_template("projects.html", r_values=neededValuesProject, page="projects")
+
+
+@app.errorhandler(404)
+def handle_404(e):
+    return render_template("404.html"), 404
 
 
 if __name__ == "__main__":

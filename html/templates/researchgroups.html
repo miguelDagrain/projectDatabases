@@ -3,118 +3,74 @@
 
 {% block stylesheets %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
 
 {% endblock stylesheets %}
 
-
+<script>
+    $(document).ready(function () {
+        $('#verticalScroll').DataTable({
+            "scrollY": "50vh",
+            "scrollCollapse": true,
+        });
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
 {% block body %}
 
-<div style="display:flex;">
+    <div style="display:flex;">
 
-    <div class="side-bar">
+{#        <div class="side-bar">#}
+{##}
+{#        </div>#}
 
-    </div>
+        <div class="page-content">
 
-    <div class="page-content">
+            <h1>Research Groups</h1>
 
-        <h1>Research Groups</h1>
-
-    <!--
-        <table class="content-table">
-            <tr>
-                <td>
-                    <strong>Name</strong>
-                </td>
-                <td>
-                    <strong>Abbreviation</strong>
-                </td>
-                <td>
-                    <strong>Discipline</strong>
-                </td>
-                <td>
-                    <strong>Address</strong>
-                </td>
-                <td>
-                    <strong>tel nr</strong>
-                </td>
-                <td>
-                    <strong>desc</strong>
-                </td>
-                <td>
-                    <strong>active</strong>
-                </td>
-            </tr>
-            {% for group in r_groups %}
+            <table class="content-table group-table table-sm" id="verticalScroll" >
+                <thead>
                 <tr>
-                    <td>
-                        {{ group.name }}
-                    </td>
-                    <td>
-                        {{ group.abbreviation }}
-                    </td>
-                    <td>
-                        {{ group.discipline }}
-                    </td>
-                    <td>
-                        {{ group.address }}
-                    </td>
-                    <td>
-                        {{ group.telNr }}
-                    </td>
-                    <td>
-                        {{ group.desc }}
-                    </td>
-                    <td>
-                        {% if group.active == True %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
-                    </td>
+                    <th class="th-sm">
+                        <strong>Name</strong>
+                    </th>
+                    <th class="th-sm">
+                        <strong>Abbreviation</strong>
+                    </th>
+                    <th class="th-sm">
+                        <strong>Discipline</strong>
+                    </th>
+                    <th class="th-4">
+                        <strong>active</strong>
+                    </th>
                 </tr>
-            {% endfor %}
-        </table>
-    -->
-        <table class="content-table group-table">
-            <tr>
-                <th class="th-1">
-                    <strong>Name</strong>
-                </th>
-                <th class="th-2">
-                    <strong>Abbreviation</strong>
-                </th>
-                <th class="th-3">
-                    <strong>Discipline</strong>
-                </th>
-                <th class="th-4">
-                    <strong>active</strong>
-                </th>
-            </tr>
-            {% for group in r_groups %}
-                <tr>
-                    <td>
-                        {{ group.name }}
-                    </td>
-                    <td>
-                        {{ group.abbreviation }}
-                    </td>
-                    <td>
-                        {{ group.discipline }}
-                    </td>
-                    <td>
-                        {% if group.active == True %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+                </thead>
+                <tbody>
+                {% for group in r_groups %}
+                    <tr>
+                        <td>
+                            {{ group.name }}
+                        </td>
+                        <td>
+                            {{ group.abbreviation }}
+                        </td>
+                        <td>
+                            {{ group.discipline }}
+                        </td>
+                        <td>
+                            {% if group.active == True %}
+                                &#10004;
+                            {% else %}
+                                &#10060;
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
+        </div>
     </div>
-</div>
 {% endblock body %}

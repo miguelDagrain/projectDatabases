@@ -1,5 +1,3 @@
-
-
 .navbar-blue {
     background-color: #003366;
 }
@@ -7,6 +5,7 @@
 
 .text-element {
     color: white;
+    font-size: 90%;
 }
 
 .hyperlink {
@@ -28,7 +27,7 @@
 }
 
 .navbar-nav > li {
-    padding-right: 30px;
+    padding-right: 5vmin;
 }
 
 .banner {

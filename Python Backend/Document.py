@@ -6,6 +6,7 @@ class language(Enum):
     NEDERLANDS = 1
     ENGELS = 2
 
+
 class Document:
     def __init__(self,id,lang, text):
         """

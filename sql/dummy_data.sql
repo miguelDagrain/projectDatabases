@@ -1,4 +1,3 @@
-SET TIMEZONE TO 'JT';
 INSERT into document values(default ,'nederlands','ik ben jos het document');
 insert into document values(default ,'nederlands','wij zijn een groep');
 insert into document values(default ,'nederlands','vandaag is de dag dat de wereld samenkomt en eindelijk belgie wat groter maakt');

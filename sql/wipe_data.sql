@@ -5,6 +5,7 @@ delete from session;
 delete from projectDocument;
 delete from project;
 delete from employee;
+delete from groupdescription;
 delete from researchGroup;
 delete from document;
 
