@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang={{ lang }}>
 <head>
-    <title>ESP - {% block title %}{% endblock title%}</title>
+    <title>ESP - {% block title %}{% endblock title %}</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta charset="UTF-8">
 
@@ -21,29 +21,30 @@
 <div>
     <div class="navbar-blue">
         <div class="col-sm-4" id="drag-with-image" draggable="true">
-            <img class="banner" src="{{ url_for('static', filename='image/banner2.png') }}" alt="ESP banner" >
+            <img class="banner" src="{{ url_for('static', filename='image/banner2.png') }}" alt="ESP banner">
         </div>
         <script>
-            document.getElementById("drag-with-image").addEventListener("dragstart", function(e) {
-            var img = document.createElement("img");
-            img.src = "{{ url_for('static', filename='image/wof.png') }}";
-            e.dataTransfer.setDragImage(img, 0, 0);
+            document.getElementById("drag-with-image").addEventListener("dragstart", function (e) {
+                var img = document.createElement("img");
+                img.src = "{{ url_for('static', filename='image/wof.png') }}";
+                e.dataTransfer.setDragImage(img, 0, 0);
             }, false);
         </script>
     </div>
     <nav class="navbar navbar-blue" style="margin-bottom: 0px">
         <ul class="navbar-nav flex-row" id="nav">
             <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">Home</a>
+                <a class="nav-link hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">{{ _('Home') }}</a>
             </li>
             <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="projects" }}" href="{{ url_for('show_projects') }}">Projects</a>
+                <a class="nav-link hyperlink {{ "active" if page=="projects" }}" href="{{ url_for('show_projects') }}">{{ _('Projects') }}</a>
             </li>
             <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="rgroups" }}" href="{{ url_for('show_research_groups') }}">Research groups</a>
+                <a class="nav-link hyperlink {{ "active" if page=="rgroups" }}"
+                   href="{{ url_for('show_research_groups') }}">{{ _('Research groups') }}</a>
             </li>
             <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="people" }}" href="{{ url_for('show_people') }}">People</a>
+                <a class="nav-link hyperlink {{ "active" if page=="people" }}" href="{{ url_for('show_people') }}">{{ _('People') }}</a>
             </li>
         </ul>
     </nav>
