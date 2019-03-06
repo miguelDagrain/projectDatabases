@@ -200,7 +200,7 @@ create table sessionSearchQuery
 
 create table sessionProjectClick
 (
-  session int references session(sessionID),
+  sessionID int references session(sessionID),
   project int references project(projectID),
   searchTime time ,
   primary key(session,project,searchTime)

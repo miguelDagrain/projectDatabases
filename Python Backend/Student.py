@@ -6,7 +6,7 @@
 # );
 
 class Student:
-    def __init__(self, student_id,name, session, liked_project,):
+    def __init__(self, student_id,name):
         """
         a constructor for a dbStudent with all variables given
         :param name: a string representing the name of the student
@@ -17,8 +17,7 @@ class Student:
         """
         self.name = name
         self.studentID = student_id
-        self.likedProject = liked_project
-        self.session = session
+        self.likedProject = list()
 
     def __str__(self):
         return "name: "+self.name+", Id: "+str(self.studentID)+", likedProject: "+str(self.likedProject)+", session: "+str(self.session)

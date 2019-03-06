@@ -411,32 +411,7 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save project!')
 
-    def get_sessions(self):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from session')
-        sessions = list()
-        for row in cursor:
-            session = Session(row[0], row[1], row[2], row[3], row[4], row[5])
-            sessions.append(session)
-        return sessions
 
-    def get_session(self, ID):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE sessionID=%s ', (ID))
-        row = cursor.fetchone()
-        return Session(row[0], row[1], row[2], row[3], row[4], row[5])
-
-    def add_session(self, ses):
-        cursor = self.dbconnect.get_cursor()
-        try:
-            cursor.execute('INSERT INTO session values(%s,%s,%s,%s,%s,%s)',
-                           (str(ses.sessionId), ses.startTime, ses.searchWord, ses.searchWordTime, ses.clickedProject,
-                            ses.clickedProjectTime))
-            # get id and return updated object
-            self.dbconnect.commit()
-        except:
-            self.dbconnect.rollback()
-            raise Exception('Unable to save session!')
 
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
@@ -478,7 +453,7 @@ class DataAccess:
         cursor.execute('select * from student')
         students = list()
         for row in cursor:
-            student = Student(row[0], row[1], row[2], None)
+            student = Student(row[0], row[1])
             student.likedProject = self.get_studentBookmarkProject(student.studentID)
             students.append(student)
         return students
@@ -487,15 +462,21 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM employee WHERE studentID=%s ', (str(ID)))
         row = cursor.fetchone()
-        stu = Student(row[0], row[1], row[2], None)
+        stu = Student(row[0], row[1])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
         return stu
 
     def add_student(self, stu):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO student values(%s,%s,%s)',
-                           (str(stu.studentId), stu.name, stu.session))
+            if(stu.studentId!=None):
+                cursor.execute('INSERT INTO student values(%s,%s)',
+                           (str(stu.studentId), stu.name))
+            else:
+                cursor.execute('INSERT INTO student values(default,%s)',
+                               ( stu.name))
+                cursor.execute('select lastval()')
+                stu.studentId = cursor.fetchone()[0]
             for i in stu.likedProject:
                 self.add_bookmark(i.ID, stu.studentId)
 
@@ -534,3 +515,75 @@ class DataAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
+
+    def get_sessionSearches(self, sessionID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from sessionSearchQuery where sessionID=%s', (str(sessionID)))
+        searchs = list()
+        for row in cursor:
+            searchs.append((row[1],row[2]))
+        return searchs
+
+    def add_sessionSearch(self, sessionId, search):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from sessionSearchQuery where sessionID=%s and term=%s and searchtTime=%s',(str(sessionId),search[0],search[1] ))
+            if (cursor.rowcount == 0):
+                cursor.execute('insert into sessionSearchQuery values(%s,%s,%s)', (str(sessionId),search[0],search[1] ))
+        except:
+            self.dbconnect.rollback()
+            print("unable to save sessionsearch")
+
+    def get_sessionProjectClicks(self, sessionID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from sessionProjectClick where sessionID=%s', (str(sessionID)))
+        clicks = list()
+        for row in cursor:
+            clicks.append((row[1],row[2]))
+        return clicks
+
+    def add_sessionProjectClick(self, sessionId, click):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from sessionProjectClick where sessionID=%s and project=%s and searchtTime=%s',(str(sessionId),str(click[0]),click[1] ))
+            if (cursor.rowcount == 0):
+                cursor.execute('insert into sessionProjectClick values(%s,%s,%s)', (str(sessionId),str(click[0]),click[1] ) )
+        except:
+            self.dbconnect.rollback()
+            print("unable to save sessionClick")
+
+    def get_sessions(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from session')
+        sessions = list()
+        for row in cursor:
+            session = Session(row[0], row[1], row[2], row[3])
+            session.searchWords=self.get_sessionSearches(session.sessionId)
+            session.clickedProjects=self.get_sessionProjectClicks(session.sessionId)
+            sessions.append(session)
+        return sessions
+
+    def get_session(self, ID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM employee WHERE sessionID=%s ', (ID))
+        row = cursor.fetchone()
+        session= Session(row[0], row[1], row[2], row[3])
+        session.searchWords = self.get_sessionSearches(session.sessionId)
+        session.clickedProjects = self.get_sessionProjectClicks(session.sessionId)
+        return session
+
+    def add_session(self, ses):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO session values(%s,%s,%s,%s)',
+                           (str(ses.sessionId), str(ses.studentId),ses.startTime,ses.startDate))
+
+            for i in ses.searchWords:
+                self.add_sessionSearch(ses.sessionId,i)
+            for i in ses.clickedProjects:
+                self.add_sessionProjectClick(ses.sessionId,i)
+            # get id and return updated object
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to save session!')
