@@ -1,0 +1,54 @@
+.dropdown {
+    margin-top: 10px;
+    display: inline-block;
+    width: 90%;
+    color: #003366;
+    position: relative;
+}
+
+/* hide original button */
+.dropdown select {
+    display: none;
+}
+
+.dropdown-selected {
+    background-color: white;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 40px;
+}
+
+
+.dropdown-items, .dropdown-selected {
+    color: #003366;
+    padding:6px;
+    cursor: pointer;
+}
+
+.dropdown-items {
+    position: absolute;
+    background-color: white;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.dropdown-items > div {
+    border: 1px solid;
+    border-color: transparent transparent #003366 transparent;
+}
+
+/* wordt gebruikt om de niet geselecteerde opties onzichtbaar te houden */
+.dropdown-hide {
+  display: none;
+}
+
+.dropdown-items div:hover{
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* css inspired on: https://www.w3schools.com/howto/howto_custom_select.asp */

@@ -1,81 +1,37 @@
 .side-bar {
+    position: sticky;
     display: inline-flex;
     flex-direction: column;
     width: 10%;
     height: 1000px;
     background-color:#D3D3D3;
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .side-bar > div {
     display: block;
     width: 90%;
-    padding: 10px;
-    margin: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    color:#003366;
 }
 
-.form-group {
-    margin-top:0px;
-    margin-bottom: 5px;
+.side-bar > input, label {
+    display: block;
+    width: 90%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #003366;
 }
 
-.form-group > label {
-    color:black;
-}
-
-.form-group > input {
+.side-bar > label > input {
     background-color:white;
     color:#003366;
-    width:100%;
-}
-
-.form-group > input::selection {
-    background-color:#003366;
-    color:white;
-}
-
-.form-group > input::-moz-selection {
-    background-color:#003366;
-    color:white;
-}
-
-.dropdown-bar{
-    display: inline-block;
-    margin-top:0px;
-    margin-bottom:5px;
-}
-
-.dropdown-bar > p {
-    color:black;
-}
-
-
-.btn-bar {
-    float: left;
-    background-color:white;
-    color: #003366;
-    display: inline;
-    text-overflow-mode: ellipsis;
-    overflow: hidden;
     width: 100%;
-}
-
-.dropdown-menu-bar {
-    min-width:95%;
-}
-
-.dropdown-item-bar {
-    color: #003366;
-    background-color: white;
-}
-
-.dropdown-item-bar:active {
-    color:white;
-    background-color: #003366;
-}
-
-.dropdown-item-bar:hover {
-    cursor: pointer;
 }
 
 .side-bar > div > p::selection, label::selection {
@@ -86,4 +42,14 @@
 .side-bar > div > p::-moz-selection, label::-moz-selection {
     color: white;
     background: #003366;
+}
+
+.side-bar-input > input::selection {
+    background-color:#003366;
+    color:white;
+}
+
+.side-bar-input > input::-moz-selection {
+    background-color:#003366;
+    color:white;
 }
