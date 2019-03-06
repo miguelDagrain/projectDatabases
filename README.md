@@ -8,7 +8,7 @@ the goal of this project is to remake the current esp website that is used by pr
 for this you already need postgres installed
 
 create database and role
-> psql -U postgres -d postgres -f sql/create_database
+> psql -U postgres -d postgres -f sql/create_database.sql
 
 make all the tables
 
