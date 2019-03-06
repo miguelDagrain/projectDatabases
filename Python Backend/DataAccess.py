@@ -6,6 +6,7 @@ from Project import *
 from ProjectRegistration import *
 from Session import *
 from Student import *
+from Attachment import *
 
 
 class DataAccess:
@@ -48,17 +49,38 @@ class DataAccess:
     def get_documents(self):
         cursor=self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document')
+
         documents=list()
         for row in cursor:
             document=Document(row[0],row[1],row[2])
+            cursorAttachment = self.dbconnect.get_cursor()
+            cursorAttachment.execute('select * from attachment where %s=doc',(str(document.ID)))
+            for att in cursorAttachment:
+                document.attachment.append(Attachment(att[0],att[1]))
             documents.append(document)
+
         return documents
 
     def get_document(self,id):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document WHERE documentID=%s', (str(id) ))
         row= cursor.fetchone()
-        return Document(row[0],row[1],row[2])
+        document=Document(row[0],row[1],row[2])
+        cursorAttachment = self.dbconnect.get_cursor()
+        cursorAttachment.execute('select * from attachment where %s=doc',(str(document.ID)))
+        for att in cursorAttachment:
+            document.attachment.append(Attachment(att[0], att[1]))
+
+    def add_attachment(self,attachment):
+        try:
+            cursor =self.dbconnect.get_cursor()
+            cursor.execute('select * from attachment where doc=%s and attachment=%s',(str(attachment.docid),attachment.content))
+            if(cursor.rowcount==0):
+                cursor.execute('insert into attachment values(%s,%s)',(str(attachment.docid),attachment.content))
+                self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to save attachment!')
 
     #returns the document id of the added document
     def add_document(self, doc):
@@ -74,6 +96,10 @@ class DataAccess:
                 cursor.execute('SELECT LASTVAL()')
                 id = cursor.fetchone()[0]
                 doc.ID=id
+                for att in doc.attachment:
+                    att.docid=id
+                    self.add_attachment(att)
+
             # get id and return updated object
             self.dbconnect.commit()
             return id

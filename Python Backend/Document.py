@@ -16,6 +16,7 @@ class Document:
         self.ID=id
         self.language=lang
         self.text = text
+        self.attachment=list()
 
 
     def __str__(self):
