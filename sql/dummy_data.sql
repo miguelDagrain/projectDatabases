@@ -27,17 +27,17 @@ insert into projectYearConnection values(1971,1);
 insert into projectYearConnection values(1972,1);
 insert into projectYearConnection values(1973,2);
 
-insert into projectType values(default ,'Master thesis');
-insert into projectType values(default ,'Research internship');
+insert into projectType values('Master thesis');
+insert into projectType values('Research internship');
 
-insert into projectTypeConnection values(1,1);
-insert into projectTypeConnection values(2,2);
+insert into projectTypeConnection values('Master thesis',1);
+insert into projectTypeConnection values('Research internship',2);
 
 insert into projectPromotor values(1,1);
 insert into projectPromotor values(1,2);
 
-insert into projectTag values(1,'feesten');
-insert into projectTag values(2,'niet feesten');
+insert into projectTag values('feesten',1);
+insert into projectTag values('niet feesten',2);
 
 insert into projectRelation values(1,2);
 

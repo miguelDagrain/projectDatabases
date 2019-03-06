@@ -130,7 +130,7 @@ create table projectTypeConnection
 (
   type typeResearch references projectType(type),
   projectID int references project(projectID),
-  primary key (typeID,projectId)
+  primary key (type,projectId)
 );
 
 create table projectPromotor
@@ -203,5 +203,5 @@ create table sessionProjectClick
   sessionID int references session(sessionID),
   project int references project(projectID),
   searchTime time ,
-  primary key(session,project,searchTime)
+  primary key(sessionID,project,searchTime)
 );
