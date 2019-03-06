@@ -96,8 +96,8 @@ CREATE TABLE employee
 
 create table contactPerson(
   employee int references employee(employeeID),
-  rgroup int references researchGroup(groupID),
-  primary key(employee,rgroup)
+  rgroup int references researchGroup(groupID) unique,
+  primary key(rgroup)
 );
 
 CREATE TABLE project
@@ -111,26 +111,24 @@ CREATE TABLE project
 
 create table projectYear
 (
-  yearID serial primary key,
-  year int check (Year < 2100 and Year > 1970) not null
+  year int check (Year < 2100 and Year > 1970) not null primary key
 );
 
 create table projectYearConnection
 (
-  yearID int references projectYear(yearID),
+  year int references projectYear(year),
   projectID int references project(projectID),
-  primary key (yearID,projectID)
+  primary key (year,projectID)
 );
 
 create table projectType
 (
-   typeID SERIAL unique primary key,
-   type   typeResearch not null
+   type typeResearch not null primary key
 );
 
 create table projectTypeConnection
 (
-  typeID int references projectType(typeID),
+  type typeResearch references projectType(type),
   projectID int references project(projectID),
   primary key (typeID,projectId)
 );
@@ -144,8 +142,8 @@ create table projectPromotor
 
 create table projectTag
 (
-  project int references project(projectID),
   tag varchar(255),
+  project int references project(projectID),
   primary key(project,tag)
 );
 

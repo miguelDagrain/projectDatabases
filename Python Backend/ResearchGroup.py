@@ -42,6 +42,7 @@ class ResearchGroup:
         self.address = address
         self.telNr = telephone
         self.desc = desc
+        self.contactID=None
 
     def __str__(self):
         return "name: "+self.name+", abbreviation: "+self.abbreviation+", discipline: "+self.discipline+\

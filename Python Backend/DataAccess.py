@@ -13,40 +13,6 @@ class DataAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
-    """
-    very ugly function to test teh database acces and possible manually handle data a little bit easier
-    this function as been shelved
-    """
-
-    # def manualDataHandling(self):
-    #     while(True):
-    #         inp = input("geeft input")
-    #         if (inp == "makedoc"):
-    #             inp = input("geeft uw document")
-    #             self.add_document(Document(inp))
-    #         elif (inp == "getdoc"):
-    #             temp = self.get_documents()
-    #             for doc in temp:
-    #                 print(doc)
-    #         elif (inp == "getgroup"):
-    #             temp = self.get_researchGroups()
-    #             for i in temp:
-    #                 print(i)
-    #         elif (inp == "makegroup"):
-    #             name = input("give name")
-    #             abb = input("give abbreviation")
-    #             disc = input("give discipline")
-    #             active = input("give active") == "True"
-    #             adress = input("give adress")
-    #             tel = input("give number")
-    #             desc = input("give decription")
-    #             temp = ResearchGroup(name, abb, disc, active, adress, tel, desc)
-    #             self.add_researchGroup(temp)
-    #         elif(inp=="getmployee"):
-    #             temp=self.get_employees()
-    #             for i in temp:
-    #                 print(i)
-
     def get_documents(self):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document')
@@ -132,6 +98,10 @@ class DataAccess:
         for row in cursor:
             rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
             rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
+            newcursor=self.dbconnect.get_cursor()
+            newcursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
+            if (newcursor.rowcount > 0):
+                rgroup.contactID = newcursor.fetchone()[0]
             rgroups.append(rgroup)
         return rgroups
 
@@ -141,16 +111,35 @@ class DataAccess:
         row = cursor.fetchone()
         rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
+        cursor.execute('select * from contactPerson where rgroup=%s',(str(rgroup.ID)))
+        if(cursor.rowcount>0):
+            rgroup.contactID=cursor[0][0]
         return rgroup
 
     def get_researchGroupOnID(self, id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM researchGorup WHERE groupID=%s', (id))
+        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (id))
         row = cursor.fetchone()
         rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
+        cursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
+        if (cursor.rowcount > 0):
+            rgroup.contactID = row[0][0]
         return rgroup
 
+    def checkContactPerson(self,eid,groupID):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('SELECT * FROM contactPerson WHERE groupID=%s', (groupID))
+            if(cursor.rowcount==0):
+                cursor.execute('insert into contactperson values(%s,%s)',(eid,groupID))
+            else:
+                if(cursor[0][0]!=eid):
+                    cursor.execute('update contactPerson SET employee=%s where rgroup=%s',(eid,groupID))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to check contactperson !')
     def add_researchGroup(self, group):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -159,6 +148,8 @@ class DataAccess:
             cursor.execute('SELECT LASTVAL()')
             gid = cursor.fetchone()[0]
             group.ID = gid
+            if(group.contactId!=None):
+                self.checkContactPerson(group.contactId,group.ID)
             for i in group.desc:
                 self.add_researchGroupDescription(i, gid)
             self.dbconnect.commit()
@@ -216,21 +207,134 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save projectdocument!')
 
+    def get_projectYears(self,projectID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectYearConnection where projectID=%s',(str(projectID)))
+        years = list()
+        for i in cursor:
+            years.append(i[0])
+        return years
+
+    def add_projectYears(self,projectId, year):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from projectYear where year=%s',(str(year)))
+            if(cursor.rowcount==0):
+                cursor.execute('insert into projectYear values(%s)',(str(year)))
+            cursor.execute('select * from projectYearConnection where year=%s and projectID=%s',(year,projectId))
+            if(cursor.rowcount==0):
+                cursor.execute('insert into projectYearConnection values(%s,%s)',(year,projectId))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to save projectYear!')
+
+    def get_projectTypes(self, projectID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectYearConnection where projectID=%s', (str(projectID)))
+        types = list()
+        for i in cursor:
+            types.append(i[0])
+        return types
+
+    def add_projectType(self, projectId, type):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from projectType where year=%s', (str(type)))
+            if (cursor.rowcount == 0):
+                cursor.execute('insert into projectType values(%s)', (str(type)))
+            cursor.execute('select * from projectTypeConnection where type=%s and projectID=%s', (type, projectId))
+            if (cursor.rowcount == 0):
+                cursor.execute('insert into projectTypeConnection values(%s,%s)', (type, projectId))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to save projectType!')
+
+    def get_projectPromotors(self,projectID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectPromotor where project=%s',(str(projectID)))
+        proms=list()
+        for row in cursor:
+            proms.append(row[0])
+        return proms
+
+    def add_projectPromotor(self,projectID,employeeId):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from projectPromoter where employee=%s and project=%s',employeeId,projectID)
+            if(cursor.rowcount==0):
+                cursor.execute('insert into projectPromotor values(%s,%s)',(employeeId,projectID))
+        except:
+            self.dbconnect.rollback()
+            print("unable to safe promotor")
+
+    def get_projectTags(self,projectID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectTag where project=%s', (str(projectID)))
+        tags = list()
+        for row in cursor:
+            tags.append(row[0])
+        return tags
+
+    def add_projectTag(self,projectID,tag):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from projectTag where tag=%s and project=%s', tag, str(projectID))
+            if (cursor.rowcount == 0):
+                cursor.execute('insert into projectTag values(%s,%s)', (tag, str(projectID)))
+        except:
+            self.dbconnect.rollback()
+            print("unable to save tag")
+
+    def get_projectRelations(self,projectID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectRelation where project1=%s', (str(projectID)))
+        related = list()
+        for row in cursor:
+            related.append(row[1])
+        cursor.execute('select * from projectRelation where project2=%s', (str(projectID)))
+        for row in cursor:
+            if row[0] not in related:
+                related.append(row[0])
+        return related
+
+    def add_projectRelation(self,project1ID,project2ID):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from  projectRelation where project1=%s and project2=%s',(str(project1ID), str(project2ID)))
+            if (cursor.rowcount == 0):
+                cursor.execute('insert into projectRelation values(%s,%s)', (str(project1ID), str(project2ID)))
+        except:
+            self.dbconnect.rollback()
+            print("unable to save tag")
+
     def get_projects(self):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from project')
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], None)
+            project = Project(row[0], row[1], row[2], row[3],row[4])
             project.desc = self.get_projectDocuments(str(project.ID))
+            project.activeYear = self.get_projectYears(project.ID)
+            project.promotor=self.get_projectPromotors(project.ID)
+            project.tag=self.get_projectTags(project.ID)
+            project.relatedProject=self.get_projectRelations(project.ID)
             projects.append(project)
+
         return projects
 
     def get_project(self, ID):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE projectID=%s ', (ID))
+        cursor.execute('SELECT * FROM employee WHERE projectID=%s ', (str(ID)))
         row = cursor.fetchone()
-        return Project(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+        project=Project(row[0], row[1], row[2], row[3],row[4])
+        project.desc = self.get_projectDocuments(str(project.ID))
+        project.activeYear = self.get_projectYears(project.ID)
+        project.promotor = self.get_projectPromotors(project.ID)
+        project.tag = self.get_projectTags(project.ID)
+        project.relatedProject = self.get_projectRelations(project.ID)
+        return project
 
     def filter_projects(self, searchQuery="", type="", discipline="", researchGroup="", status=0):
         cursor = self.dbconnect.get_cursor()
@@ -277,22 +381,31 @@ class DataAccess:
         cursor.execute(sql, dict(searchQueryQ='%' + searchQuery + '%', typeQ=type, researchGroupQ=researchGroup,
                                  disciplineQ=discipline))
 
-        projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], None)
-            project.desc = self.get_projectDocuments(str(project.ID))
+            project = self.get_project(row[0])
             projects.append(project)
         return projects
 
     def add_project(self, proj):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO project values(default,%s,%s,%s,%s,%s,%s,%s)',
-                           (proj.title, str(proj.maxStudents), proj.researchGroup, proj.activeYear,
-                            proj.type, proj.tag, proj.projectId, proj.relatedProject))
+            cursor.execute('INSERT INTO project values(default,%s,%s,%s,%s)',
+                (proj.title, str(proj.maxStudents),proj.active, proj.researchGroup))
+            cursor.execute('SELECT LASTVAL()')
+            gid = cursor.fetchone()[0]
+            proj.ID = gid
             for i in proj.desc:
                 self.add_projectDocument(i, proj.projectId)
-            # get id and return updated object
+            for i in proj.activeYear:
+                self.add_projectYears(gid,i)
+            for i in proj.type:
+                self.add_projectType(gid,i)
+            for i in proj.tag:
+                self.add_projectTag(gid,i)
+            for i  in proj.relatedProject:
+                self.add_projectRelation(gid,i)
+            for i in proj.promotor:
+                self.add_projectPromotor(gid,i)
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()

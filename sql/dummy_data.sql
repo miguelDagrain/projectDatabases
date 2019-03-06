@@ -19,13 +19,13 @@ insert into contactPerson values(1,1);
 insert into project values(default,'verover nederland',10000,true,1);
 insert into project values(default,'verover frankrijk',10000,true,1);
 
-insert into projectYear values(default,1971);
-insert into projectYear values(default,1972);
-insert into projectYear values(default,1973);
+insert into projectYear values(1971);
+insert into projectYear values(1972);
+insert into projectYear values(1973);
 
-insert into projectYearConnection values(1,1);
-insert into projectYearConnection values(2,1);
-insert into projectYearConnection values(3,2);
+insert into projectYearConnection values(1971,1);
+insert into projectYearConnection values(1972,1);
+insert into projectYearConnection values(1973,2);
 
 insert into projectType values(default ,'Master thesis');
 insert into projectType values(default ,'Research internship');
