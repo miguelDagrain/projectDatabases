@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, session, g
+from flask import *
 from flask.templating import render_template
 from config import config_data
 from dbConnection import *
@@ -19,10 +19,16 @@ app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 @babel.localeselector
 def get_locale():
     '''
-    Select the preferred language based on the accept header of the user
-    :return: The language that fits best: nl or en
+    If the language cookie is set, use its value
+    Else determine the language that fits best based on the user's accept header
+    :return: Language code
     '''
-    return request.accept_languages.best_match(['nl', 'en'])
+    lang = request.cookies.get('lang')
+    if lang is not None:
+        return lang
+    else:
+        lang = request.accept_languages.best_match(['nl', 'en'])
+        return lang
 
 
 @app.route("/")
@@ -31,7 +37,11 @@ def index():
     Renders the index template
     :return: Rendered index template
     '''
-    return render_template("index.html", page="index")
+    resp = make_response(render_template("index.html", page="index"))
+    if request.cookies.get('lang') is None:
+        lang = get_locale()
+        resp.set_cookie('lang', lang)
+    return resp
 
 
 @app.route("/researchgroups")
@@ -138,16 +148,18 @@ def handle_404(e):
     return render_template("404.html"), 404
 
 
-@app.route("/lang=?", methods=["POST"])
+@app.route("/lang", methods=["GET"])
 def pick_language():
+    lang = request.args.get('lang')
+    resp = make_response(redirect('/'))
+    resp.set_cookie('lang', lang)
+    return resp
 
-    return redirect('/')
 
 
 if __name__ == "__main__":
     # acces=DataAccess(connection)
     # acces.manualDataHandling()
     # temp=acces.get_projects()
-    babel = Babel(app)
 
     app.run(debug=True)

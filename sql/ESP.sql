@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS sessionProjectClick ;
 DROP TABLE IF EXISTS sessionSearchQuery ;
-DROP TABLE IF EXISTS session ;
+DROP TABLE IF EXISTS session CASCADE ;
 DROP TABLE IF EXISTS bookmark ;
 DROP TABLE IF EXISTS projectRegistration ;
 DROP TABLE IF EXISTS student ;
