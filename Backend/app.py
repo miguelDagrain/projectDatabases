@@ -6,6 +6,7 @@ from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
 from Document import *
 from flask_babel import *
+import sys
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
@@ -101,7 +102,7 @@ def show_people():
     return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
 
 
-@app.route("/people")
+@app.route("/people", methods=["GET"])
 def apply_filter_people():
 
     access = DataAccess(connection)
@@ -149,37 +150,35 @@ def show_projects():
     return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups, page="projects")
 
 
-@app.route("/projects", methods=["POST"])
+@app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
 
     access = DataAccess(connection)
     researchGroups = access.get_researchGroups()
 
     typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-    disciplineOptions = ["", ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"], ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"], ["MathematicsCompSc", "Mathematics", "Computer Science"]]
+    disciplineOptions = [None, ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"], ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"], ["Mathematics", "Computer Science"],["MathematicsCompSc", "Mathematics", "Computer Science"]]
     researchGroupOptions = [""]
 
     for iter in researchGroups:
         researchGroupOptions.append(iter.name)
 
 
-    query = request.form.get("Search_query")
-    # print(query, file=sys.stderr)
-    typeNr = int(request.form.get("Type"))
+
+    query = request.args.get("Search_query")
+    print(query, file=sys.stderr)
+    typeNr = int(request.args.get("Type"))
     type = typeOptions[typeNr]
-    # print(type, file=sys.stderr)
-    disciplineNr = int(request.form.get("Disciplines"))
+    disciplineNr = int(request.args.get("Disciplines"))
     discipline = disciplineOptions[disciplineNr]
-    # print(discipline, file=sys.stderr)
-    groupNr = int(request.form.get("Research_group"))
+    groupNr = int(request.args.get("Research_group"))
     group = researchGroupOptions[groupNr]
-    # print(group, file=sys.stderr)
-    status = int(request.form.get("Status"))
-    # print(status, file=sys.stderr)
+    status = int(request.args.get("Status"))
 
     projects = access.filter_projects(query, type, discipline, group, status)
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
+
 
     return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups, page="projects")
 

@@ -336,36 +336,35 @@ class DataAccess:
         project.relatedProject = self.get_projectRelations(project.ID)
         return project
 
-    def filter_projects(self, searchQuery="", type="", discipline="", researchGroup="", status=0):
+    def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
         cursor = self.dbconnect.get_cursor()
 
-        ### Default Values ###
-        # searchQuery = ''
-        # type = ""
-        # researchGroup = ""
-        # discipline = ""
-        # status = 0
-
-        typeDefined = "%(typeQ)s"
-        researchGroupDefined = "%(researchGroupQ)s"
-        disciplineDefined = "%(disciplineQ)s"
-
-        if (type == ""):
-            typeDefined = "%"
-        if (researchGroup == ""):
-            researchGroupDefined = "%"
-        if (discipline == ""):
-            disciplineDefined = "%"
 
         sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
               "WHERE p.title LIKE %(searchQueryQ)s "
 
         if (researchGroup != ""):
-            sql += "AND name = " + researchGroupDefined
-        if (discipline != ""):
-            sql += "AND discipline = " + disciplineDefined
+            sql += "AND name = %(researchGroupQ)s"
         if (type != ""):
-            sql += "AND type = " + typeDefined
+            sql += "AND type = %(typeQ)s"
+
+        discipline1 = ""
+        discipline2 = ""
+        discipline3 = ""
+
+        if (discipline != None):
+
+            if (len(discipline) >= 1):
+                discipline1 = discipline[0]
+                sql += "AND (discipline = %(disciplineQ1)s"
+            if (len(discipline) >= 2):
+                discipline2 = discipline[1]
+                sql += "OR discipline = %(disciplineQ2)s"
+            if (len(discipline) == 3):
+                discipline3 = discipline[2]
+                sql += "OR discipline = %(disciplineQ3)s"
+
+            sql += ")"
 
         #gemeenschappelijke sql uit de if else structuur gehaald.
         if (status == 1):
@@ -378,13 +377,15 @@ class DataAccess:
 
 
         cursor.execute(sql, dict(searchQueryQ="%"+ searchQuery +"%", researchGroupQ=researchGroup,
-                                 disciplineQ=discipline))
+                                 disciplineQ1=discipline1, disciplineQ2=discipline2, disciplineQ3=discipline3))
 
         projects= list()
         for row in cursor:
             project = self.get_project(row[0])
             projects.append(project)
         return projects
+
+
 
     def add_project(self, proj):
         cursor = self.dbconnect.get_cursor()
