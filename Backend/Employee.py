@@ -26,7 +26,7 @@ class InText(Enum):
 
 
 class Employee:
-    def __init__(self,id,name, email, office, research_group, title, interextern, active):
+    def __init__(self,id,name, email, office, research_group, title, interextern, active, promotor):
         """
         constructor for dbEmployee  where all varibales are given
         :param email: a string representing an email
@@ -35,6 +35,7 @@ class Employee:
         :param title: a title enum
         :param interextern:  a Intext enum
         :param active: a bool stating whether the employee is active or not
+        :param promotor: a bool stating whtether the employee is a promotor or not
         :return: a new dbEmployee object
         """
         self.ID=id
@@ -45,6 +46,7 @@ class Employee:
         self.title = title
         self.internOrExtern = interextern
         self.active = active
+        self.promotor = promotor
 
     def __str__(self):
-        return "id: "+self.ID+", name: "+self.name+", email: "+self.email+", office: "+self.office+", group: "+self.research_group+", title: "+self.title+", isintern:"+str(self.internOrExtern)+", active: "+str(self.active)
+        return "id: "+self.ID+", name: "+self.name+", email: "+self.email+", office: "+self.office+", group: "+self.research_group+", title: "+self.title+", isintern:"+str(self.internOrExtern)+", active: "+str(self.active)+", promotor: "+str(self.promotor)

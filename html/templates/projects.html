@@ -25,75 +25,68 @@
         </label>
 
 
-        <div class="dropdown">
-            <p>{{ _('Type') }}:</p>
-            <label>
-                <select name="Type">
-                    <option value="0">{{ _('All') }}</option>
-                    <option value="1">{{ _('Bachelor dissertation') }}</option>
-                    <option value="2">{{ _('Master thesis') }}</option>
-                    <option value="3">{{ _('Research internship 1') }}</option>
-                    <option value="4">{{ _('Research internship 2') }}</option>
-                </select>
-            </label>
-        </div>
+        <label class="dropdown">
+            {{ _('Type') }}:
+            <select name="Type">
+                <option value="0">{{ _('All') }}</option>
+                <option value="1">{{ _('Bachelor dissertation') }}</option>
+                <option value="2">{{ _('Master thesis') }}</option>
+                <option value="3">{{ _('Research internship 1') }}</option>
+                <option value="4">{{ _('Research internship 2') }}</option>
+            </select>
+        </label>
 
 
-        <div class="dropdown">
-            <p>{{ _('Disciplines') }}:</p>
-            <label>
-                <select name="Disciplines">
-                    <option value="0" >{{ _('All') }}</option>
-                    <option value="1" >{{ _('MathematicsCompSc') }}</option>
-                    <option value="2" >{{ _('Mathematics') }}</option>
-                    <option value="3" >{{ _('Computer Science') }}</option>
-                    <option value="4" >{{ _('MathematicsCompSc - Mathematics') }}</option>
-                    <option value="5" >{{ _('MathematicsCompSc - Computer Science') }}</option>
-                    <option value="6" >{{ _('Mathematics - Computer Science') }}</option>
-                    <option value="7" >{{ _('MathematicsCompSc - Mathematics - Computer Science') }}</option>
-                </select>
-            </label>
-        </div>
+        <label class="dropdown">
+            {{ _('Disciplines') }}:
+            <select name="Disciplines">
+                <option value="0" >{{ _('All') }}</option>
+                <option value="1" >{{ _('MathematicsCompSc') }}</option>
+                <option value="2" >{{ _('Mathematics') }}</option>
+                <option value="3" >{{ _('Computer Science') }}</option>
+                <option value="4" >{{ _('MathematicsCompSc - Mathematics') }}</option>
+                <option value="5" >{{ _('MathematicsCompSc - Computer Science') }}</option>
+                <option value="6" >{{ _('Mathematics - Computer Science') }}</option>
+                <option value="7" >{{ _('MathematicsCompSc - Mathematics - Computer Science') }}</option>
+            </select>
+        </label>
 
-        <div class="dropdown">
+
+        <label class="dropdown">
             {{ _('Research group') }}:
-            <label>
-                <select name="Research_group">
-                    <option value="0">{{ _('All') }}</option>
+            <select name="Research_group">
+                <option value="0">{{ _('All') }}</option>
 
 
-                    <!-- todo: check if this also can move to external file -->
-                    <script>
-                        var iter = 0;
-                    </script>
+                <!-- todo: check if this also can move to external file -->
+                <script>
+                    var iter = 0;
+                </script>
 
-                    {% for group in r_values %}
+                {% for group in r_researchGroups %}
 
-                    <option value="" id="noValue">{{ group[1] }}</option>
+                <option value="" id="noValue">{{ group.name }}</option>
 
-                    <script>
-                        iter++;
-                        document.getElementById("noValue").setAttribute("value", iter.toString(10));
-                        document.getElementById("noValue").removeAttribute("id");
-                    </script>
+                <script>
+                    iter++;
+                    document.getElementById("noValue").setAttribute("value", iter.toString(10));
+                    document.getElementById("noValue").removeAttribute("id");
+                </script>
 
-                    {% endfor %}
+                {% endfor %}
 
-                </select>
-            </label>
-        </div>
+            </select>
+        </label>
 
 
-        <div class="dropdown">
-            <p>{{ _('Status') }}:</p>
-            <label>
-                <select name="Status">
-                    <option value="0">{{ _('All') }}</option>
-                    <option value="1">{{ _('Available projects only') }}</option>
-                    <option value="2">{{ _('Assigned projects only') }}</option>
-                </select>
-            </label>
-        </div>
+        <label class="dropdown">
+            {{ _('Status') }}:
+            <select name="Status">
+                <option value="0">{{ _('All') }}</option>
+                <option value="1">{{ _('Available projects only') }}</option>
+                <option value="2">{{ _('Assigned projects only') }}</option>
+            </select>
+        </label>
 
         <input type="submit" value="{{ _('Search') }}">
 

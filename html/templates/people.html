@@ -21,7 +21,7 @@
     <form class="side-bar">
 
         <label class="side-bar-input">
-            <p>{{ _('Name') }}:</p>
+            {{ _('Name') }}:
             <input type="text" class="form-control-sm" name="Name">
         </label>
 
@@ -79,7 +79,13 @@
             <tr>
                 <td>{{ person[0] }}</td>
                 <td>{{ person[1] }}</td>
-                <td>{{ _('yes/no') }}</td> <!-- todo: vervang yes/no door een werkelijke waarde -->
+                <td>
+                    {% if person[2] == True %}
+                        &#10004;
+                    {% else %}
+                        &#10060;
+                    {% endif %}
+                </td>
             </tr>
 
             {% endfor %}

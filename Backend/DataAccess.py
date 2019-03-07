@@ -162,7 +162,7 @@ class DataAccess:
         cursor.execute('select * from employee')
         employees = list()
         for row in cursor:
-            employee = Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            employee = Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
             employees.append(employee)
         return employees
 
@@ -170,7 +170,7 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (id))
         row = cursor.fetchone()
-        return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+        return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
     def add_employee(self, empl):
         cursor = self.dbconnect.get_cursor()
@@ -350,36 +350,34 @@ class DataAccess:
         researchGroupDefined = "%(researchGroupQ)s"
         disciplineDefined = "%(disciplineQ)s"
 
-        if (type == "0"):
-            typeDefined = "type "
-        if (researchGroup == "0"):
-            researchGroupDefined = "name "
-        if (discipline == "0"):
-            disciplineDefined = "discipline "
+        if (type == ""):
+            typeDefined = "%"
+        if (researchGroup == ""):
+            researchGroupDefined = "%"
+        if (discipline == ""):
+            disciplineDefined = "%"
 
+        sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
+              "WHERE p.title LIKE %(searchQueryQ)s "
+
+        if (researchGroup != ""):
+            sql += "AND name = " + researchGroupDefined
+        if (discipline != ""):
+            sql += "AND discipline = " + disciplineDefined
+        if (type != ""):
+            sql += "AND type = " + typeDefined
+
+        #gemeenschappelijke sql uit de if else structuur gehaald.
         if (status == 1):
-            sql = "SELECT * FROM project INNER JOIN researchGroup ON researchGroup.groupID=project.researchGroup " \
-                  "WHERE title LIKE %(searchQueryQ)s " \
-                  "AND name = " + researchGroupDefined + \
-                  "AND discipline = " + disciplineDefined + \
-                  "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
-                    # "AND type = " + typeDefined + \
+
+            sql +="AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
+
         elif (status == 2):
-            sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
-                  "WHERE title LIKE %(searchQueryQ)s " \
-                  "AND name = " + researchGroupDefined + \
-                  "AND discipline = " + disciplineDefined + \
-                  "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
-                     # "AND type = " + typeDefined + \
-        else:
-            sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup "\
-                  "WHERE p.title LIKE %(searchQueryQ)s "
-            if(researchGroup!="0"):
-                sql+="AND name = " + researchGroupDefined
-            if(discipline!="0"):
-                sql+="AND discipline = " + disciplineDefined
-                 # "AND type = " + typeDefined + \
-            cursor.execute(sql, dict(searchQueryQ="%"+ searchQuery +"%", researchGroupQ=researchGroup,
+
+            sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
+
+
+        cursor.execute(sql, dict(searchQueryQ="%"+ searchQuery +"%", researchGroupQ=researchGroup,
                                  disciplineQ=discipline))
 
         projects= list()

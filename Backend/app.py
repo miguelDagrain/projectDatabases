@@ -95,9 +95,37 @@ def show_people():
     for person in people:
         for group in researchGroups:
             if (group.ID == person.research_group):
-                neededValuesPeoplePage.append([person.name, group.name])
+                neededValuesPeoplePage.append([person.name, group.name, person.promotor])
+
 
     return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
+
+
+@app.route("/people")
+def apply_filter_people():
+
+    access = DataAccess(connection)
+    researchGroups = access.get_researchGroups()
+    people = access.get_employees()
+
+    researchGroupOptions = [""]
+
+    for iter in researchGroups:
+        researchGroupOptions.append(iter.name)
+
+
+    name = request.form.get("Name")
+    groupNr = int(request.form.get("Research_group"))
+    group = researchGroupOptions[groupNr]
+    promotor = int(request.form.get("Promotor"))
+
+    neededValuesPeoplePage= access.filter
+
+    return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
+
+
+
+
 
 
 def helper_sort_values_projects(projects, researchGroups):
@@ -118,24 +146,42 @@ def show_projects():
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
-    return render_template("projects.html", r_values=neededValuesProject, page="projects")
+    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups, page="projects")
 
 
 @app.route("/projects", methods=["POST"])
 def apply_filter_projects():
+
     access = DataAccess(connection)
+    researchGroups = access.get_researchGroups()
+
+    typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
+    disciplineOptions = ["", ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"], ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"], ["MathematicsCompSc", "Mathematics", "Computer Science"]]
+    researchGroupOptions = [""]
+
+    for iter in researchGroups:
+        researchGroupOptions.append(iter.name)
+
+
     query = request.form.get("Search_query")
-    type = request.form.get("Type")
-    discipline = request.form.get("Disciplines")
-    group = request.form.get("Research_group")
-    status = request.form.get("Status")
+    # print(query, file=sys.stderr)
+    typeNr = int(request.form.get("Type"))
+    type = typeOptions[typeNr]
+    # print(type, file=sys.stderr)
+    disciplineNr = int(request.form.get("Disciplines"))
+    discipline = disciplineOptions[disciplineNr]
+    # print(discipline, file=sys.stderr)
+    groupNr = int(request.form.get("Research_group"))
+    group = researchGroupOptions[groupNr]
+    # print(group, file=sys.stderr)
+    status = int(request.form.get("Status"))
+    # print(status, file=sys.stderr)
 
     projects = access.filter_projects(query, type, discipline, group, status)
-    researchGroups = access.get_researchGroups()
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
-    return render_template("projects.html", r_values=neededValuesProject, page="projects")
+    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups, page="projects")
 
 
 @app.errorhandler(404)
