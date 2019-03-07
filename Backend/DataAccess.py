@@ -497,6 +497,24 @@ class DataAccess:
             prs.append(pr)
         return prs
 
+    def get_projectRegistrationsOnProject(self,projectID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectRegistration where project=%s',(projectID))
+        prs = list()
+        for row in cursor:
+            pr = ProjectRegistration(row[0], row[1], row[2])
+            prs.append(pr)
+        return prs
+
+    def get_projectRegistrationsOnStudent(self, studentID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectRegistration where student=%s', (studentID))
+        prs = list()
+        for row in cursor:
+            pr = ProjectRegistration(row[0], row[1], row[2])
+            prs.append(pr)
+        return prs
+
     # this function is pretty useless at the moment because to get a single registration you need al the data from it
     # def get_projectRegistration(self):
     #     cursor = self.dbconnect.get_cursor()
