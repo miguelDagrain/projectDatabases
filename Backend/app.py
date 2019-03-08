@@ -135,8 +135,6 @@ def apply_filter_people():
 
 
 
-
-
 def helper_sort_values_projects(projects, researchGroups):
     neededValuesProject = []
     for project in projects:
@@ -216,21 +214,17 @@ def load_user(user_id):
 def login():
     login_user(User(Session(1,1,0,0)))
     flash('Logged in successfully.')
-    next = request.args.get('next')
-    # flash("you are now logged in")
+    next = request.args.get('login')
+    flash("you are now logged in")
     return redirect(next or url_for('index'))
 
 @app.route("/logout", methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
-    next = request.args.get('next')
-    # flash("you are now logged out")
+    next = request.args.get('logout')
+    flash("you are now logged out")
     return  redirect(next or url_for('index'))
 
 if __name__ == "__main__":
-    # acces=DataAccess(connection)
-    # acces.manualDataHandling()
-    # temp=acces.get_projects()
-
     app.run(debug=True)
