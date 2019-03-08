@@ -9,6 +9,7 @@
 
 {% block body %}
 
+
     <div style="display: flex">
 
 
@@ -41,20 +42,6 @@
             <input type="submit" value="{{ _('Enter') }}">
         </form>
 
-
-        <div class="page-content">
-            <h1>{{ _('Hello') }}!</h1>
-            <a href="{{ url_for('show_people') }}/404">ERROR 404</a>
-
-            <form method="get" action="{{ url_for('pick_language') }}" class="inline">
-                <input type="hidden" name="lang" value="en">
-                <input type="submit" value="en">
-            </form>
-            <form method="get" action="{{ url_for('pick_language') }}" class="inline">
-                <input type="hidden" name="lang" value="nl">
-                <input type="submit" value="nl">
-            </form>
-
             <br><br><br><br><br><br><br>
 
             {% if send == True %}
@@ -72,7 +59,6 @@
 
         </div>
 
-    </div>
 
 
 

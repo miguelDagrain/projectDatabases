@@ -1,43 +1,43 @@
-DROP TABLE IF EXISTS sessionProjectClick ;
-DROP TABLE IF EXISTS sessionSearchQuery ;
-DROP TABLE IF EXISTS session CASCADE ;
-DROP TABLE IF EXISTS bookmark ;
-DROP TABLE IF EXISTS projectRegistration ;
-DROP TABLE IF EXISTS student ;
-DROP TABLE IF EXISTS projectDocument ;
-DROP TABLE IF EXISTS projectRelation ;
-DROP TABLE IF EXISTS projectTag ;
-DROP TABLE IF EXISTS projectPromotor ;
-DROP TABLE IF EXISTS projectTypeConnection ;
-DROP TABLE IF EXISTS projectType ;
-DROP TABLE IF EXISTS projectYearConnection ;
-drop table if exists projectYear ;
-DROP TABLE IF EXISTS project ;
-drop table if exists contactPerson;
-DROP TABLE IF EXISTS employee ;
-DROP TABLE IF EXISTS groupDescription ;
-DROP TABLE IF EXISTS researchGroup ;
-drop table if exists attachment ;
-DROP TABLE IF EXISTS document ;
-DROP DOMAIN IF EXISTS language ;
-DROP DOMAIN IF EXISTS registration ;
-DROP DOMAIN IF EXISTS typeResearch ;
-DROP DOMAIN IF EXISTS intext ;
-DROP DOMAIN IF EXISTS title ;
-DROP DOMAIN IF EXISTS subject ;
+DROP TABLE IF EXISTS sessionProjectClick;
+DROP TABLE IF EXISTS sessionSearchQuery;
+DROP TABLE IF EXISTS session CASCADE;
+DROP TABLE IF EXISTS bookmark;
+DROP TABLE IF EXISTS projectRegistration;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS projectDocument;
+DROP TABLE IF EXISTS projectRelation;
+DROP TABLE IF EXISTS projectTag;
+DROP TABLE IF EXISTS projectPromotor;
+DROP TABLE IF EXISTS projectTypeConnection;
+DROP TABLE IF EXISTS projectType;
+DROP TABLE IF EXISTS projectYearConnection;
+DROP TABLE IF EXISTS projectYear;
+DROP TABLE IF EXISTS project;
+DROP TABLE IF EXISTS contactPerson;
+DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS groupDescription;
+DROP TABLE IF EXISTS researchGroup;
+DROP TABLE IF EXISTS attachment;
+DROP TABLE IF EXISTS document;
+DROP DOMAIN IF EXISTS language;
+DROP DOMAIN IF EXISTS registration;
+DROP DOMAIN IF EXISTS typeResearch;
+DROP DOMAIN IF EXISTS INTEXT;
+DROP DOMAIN IF EXISTS title;
+DROP DOMAIN IF EXISTS SUBJECT;
 
 
-CREATE DOMAIN subject as TEXT
+CREATE DOMAIN SUBJECT as TEXT
   CHECK ( value = 'Computer Science' or value = 'Mathematics' or value = 'Engeneering');
 
 CREATE DOMAIN title as TEXT
   check (value = 'professor' or value = 'phd' or value = 'geen');
 
-CREATE DOMAIN intext as TEXT
-  check (value = 'intern' or value = 'extern');
+CREATE DOMAIN INTEXT as TEXT
+  check (value = 'INTern' or value = 'extern');
 
 CREATE DOMAIN typeResearch as TEXT
-  check (value = 'Master thesis' or value = 'Research internship');
+  check (value = 'Master thesis' or value = 'Research INTernship');
 
 CREATE DOMAIN registration as TEXT
   check (value = 'bezig' or value = 'geslaagd' or value = 'niet geslaagd');
@@ -47,161 +47,162 @@ CREATE DOMAIN language as TEXT
 
 CREATE TABLE document
 (
-  documentID SERIAL PRIMARY key,
+  documentID SERIAL PRIMARY KEY,
   lang       language,
   content    text
 );
 
 --dont yet know what the attachment should be so this is placeholder
-create table attachment
+CREATE TABLE attachment
 (
-  doc int references document(documentID),
-  attachment varchar(255),
-  primary key(doc,attachment)
+  doc        INT REFERENCES document (documentID),
+  attachment VARCHAR(255),
+  PRIMARY KEY (doc, attachment)
 );
 
 CREATE TABLE researchGroup
 (
   --needs logo (200x50)
   groupID      SERIAL PRIMARY KEY,
-  name         varchar(255) unique,
-  abbreviation varchar(25) unique,
-  discipline   subject,
-  active       boolean, --1 is active, 0 is not active
-  address      varchar(255),
-  telNr        varchar(255)
+  name         VARCHAR(255) UNIQUE,
+  abbreviation VARCHAR(25) UNIQUE,
+  discipline   SUBJECT,
+  active       BOOLEAN, --1 is active, 0 is not active
+  address      VARCHAR(255),
+  telNr        VARCHAR(255)
 );
 
 CREATE TABLE groupDescription
 (
-  groupID int references researchGroup (groupID),
-  docID   int references document (documentID),
-  primary key (groupID, docID)
+  groupID INT REFERENCES researchGroup (groupID),
+  docID   INT REFERENCES document (documentID),
+  PRIMARY KEY (groupID, docID)
 );
 
 CREATE TABLE employee
 (
   --needs picture (150x150)
   employeeID     SERIAL PRIMARY KEY,
-  name           varchar,
-  email          varchar(255) unique,
-  office         varchar(255), --thinking office is like 'M.G.005'
-  researchgroup  int references researchGroup (groupID),
+  name           VARCHAR,
+  email          VARCHAR(255) UNIQUE,
+  office         VARCHAR(255), --thinking office is like 'M.G.005'
+  researchgroup  INT REFERENCES researchGroup (groupID),
   title          title,
-  internORextern intext,
-  active         boolean,
-  promotor       boolean
+  INTernORextern INTEXT,
+  active         BOOLEAN,
+  promotor       BOOLEAN
 
 );
 
-create table contactPerson(
-  employee int references employee(employeeID),
-  rgroup int references researchGroup(groupID) unique,
-  primary key(rgroup)
+CREATE TABLE contactPerson
+(
+  employee INT REFERENCES employee (employeeID),
+  rgroup   INT REFERENCES researchGroup (groupID) UNIQUE,
+  PRIMARY KEY (rgroup)
 );
 
 CREATE TABLE project
 (
-  projectID      SERIAL PRIMARY KEY,
-  title          varchar(255)                                        not null,
-  maxStudents    INT                                                 NOT NULL,
-  active boolean,
-  researchGroup  int references researchGroup (groupID)
+  projectID     SERIAL PRIMARY KEY,
+  title         VARCHAR(255) NOT NULL,
+  maxStudents   INT          NOT NULL,
+  active        BOOLEAN,
+  researchGroup INT REFERENCES researchGroup (groupID)
 );
 
-create table projectYear
+CREATE TABLE projectYear
 (
-  year int check (Year < 2100 and Year > 1970) not null primary key
+  year INT check (Year < 2100 and Year > 1970) NOT NULL PRIMARY KEY
 );
 
-create table projectYearConnection
+CREATE TABLE projectYearConnection
 (
-  year int references projectYear(year),
-  projectID int references project(projectID),
-  primary key (year,projectID)
+  year      INT REFERENCES projectYear (year),
+  projectID INT REFERENCES project (projectID),
+  PRIMARY KEY (year, projectID)
 );
 
-create table projectType
+CREATE TABLE projectType
 (
-   type typeResearch not null primary key
+  type typeResearch NOT NULL PRIMARY KEY
 );
 
-create table projectTypeConnection
+CREATE TABLE projectTypeConnection
 (
-  type typeResearch references projectType(type),
-  projectID int references project(projectID),
-  primary key (type,projectId)
+  type      typeResearch REFERENCES projectType (type),
+  projectID INT REFERENCES project (projectID),
+  PRIMARY KEY (type, projectId)
 );
 
-create table projectPromotor
+CREATE TABLE projectPromotor
 (
-  employee int references employee(employeeID),
-  project int references project(projectID),
-  primary key (employee,project)
+  employee INT REFERENCES employee (employeeID),
+  project  INT REFERENCES project (projectID),
+  PRIMARY KEY (employee, project)
 );
 
-create table projectTag
+CREATE TABLE projectTag
 (
-  tag varchar(255),
-  project int references project(projectID),
-  primary key(project,tag)
+  tag     VARCHAR(255),
+  project INT REFERENCES project (projectID),
+  PRIMARY KEY (project, tag)
 );
 
-create table projectRelation
+CREATE TABLE projectRelation
 (
- project1 int references project(projectID),
- project2 int references project(projectID),
- primary key(project1,project2)
+  project1 INT REFERENCES project (projectID),
+  project2 INT REFERENCES project (projectID),
+  PRIMARY KEY (project1, project2)
 );
 
 CREATE TABLE projectDocument
 (
-  projectID int references project (projectID),
-  docID     int references document (documentID),
+  projectID INT REFERENCES project (projectID),
+  docID     INT REFERENCES document (documentID),
   PRIMARY KEY (projectID, docID)
 );
 
 CREATE TABLE student
 (
-  studentID SERIAL primary key,
-  name      varchar(70) NOT NULL
+  studentID SERIAL PRIMARY KEY,
+  name      VARCHAR(70) NOT NULL
 );
 
 CREATE TABLE projectRegistration
 (
-  project int references project (projectID),
+  project INT REFERENCES project (projectID),
   status  registration,
-  student int references student (studentID),
+  student INT REFERENCES student (studentID),
   PRIMARY KEY (project, status, student)
 );
 
 CREATE TABLE bookmark
 (
-  project int references project (projectID),
-  student int references student (studentID),
-  primary key (project, student)
+  project INT REFERENCES project (projectID),
+  student INT REFERENCES student (studentID),
+  PRIMARY KEY (project, student)
 );
 
 CREATE TABLE session
 (
-  sessionID          int PRIMARY KEY,
-  studentID          int references student(studentID) not null,
-  startTime          time,
-  startDate          date
+  sessionID INT PRIMARY KEY,
+  studentID INT REFERENCES student (studentID) NOT NULL,
+  startTime TIME,
+  startDate DATE
 );
 
-create table sessionSearchQuery
+CREATE TABLE sessionSearchQuery
 (
-  sessionID int references session(sessionID),
-  term VARCHAR(255),
-  searchTime time ,
-  primary key(sessionID,term,searchTime)
+  sessionID  INT REFERENCES session (sessionID),
+  term       VARCHAR(255),
+  searchTime TIME,
+  PRIMARY KEY (sessionID, term, searchTime)
 );
 
-create table sessionProjectClick
+CREATE TABLE sessionProjectClick
 (
-  sessionID int references session(sessionID),
-  project int references project(projectID),
-  searchTime time ,
-  primary key(sessionID,project,searchTime)
+  sessionID  INT REFERENCES session (sessionID),
+  project    INT REFERENCES project (projectID),
+  searchTime TIME,
+  PRIMARY KEY (sessionID, project, searchTime)
 );

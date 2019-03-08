@@ -14,23 +14,33 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" name="url picker">
+        $(document).ready(function () {
+            var elems = document.getElementsByName("url_redirect");
+            for (i = 0; i < elems.length; i++) {
+                elems[i].setAttribute("value", window.location.href);
+            }
+        })
+    </script>
+
 </head>
 <body>
 
 
-<div>
-    <div class="navbar-blue">
-        <div class="col-sm-4" id="drag-with-image" draggable="true">
-            <img class="banner" src="{{ url_for('static', filename='image/banner2.png') }}" alt="ESP banner">
-        </div>
-        <script>
-            document.getElementById("drag-with-image").addEventListener("dragstart", function (e) {
-                var img = document.createElement("img");
-                img.src = "{{ url_for('static', filename='image/wof.png') }}";
-                e.dataTransfer.setDragImage(img, 0, 0);
-            }, false);
-        </script>
-        <div class="float-right"  style="margin-bottom: 0px">
+<div class="container-fluid">
+    <div>
+        <div class="row navbar-blue">
+            <div class="col">
+                <img class="banner" src="{{ url_for('static', filename='image/banner2.png') }}" alt="ESP banner">
+            </div>
+            <div class="col float-right">
+                <form method="get" action="{{ url_for('pick_language') }}" class="float-right">
+                    <input type="hidden" name="url_redirect" value="">
+                    <button class="btn-lang" type="submit" value="nl" name="send">nl</button>
+                    <button class="btn-lang" type="submit" value="en" name="send">en</button>
+                </form>
+            </div>
+             <div class="float-right"  style="margin-bottom: 0px">
             {% if not current_user.is_authenticated %}
             <label style="display:flex;"><small>
                 {{ _('username') }}:
@@ -42,24 +52,38 @@
             </small></label>
             {% endif %}
         </div>
-    </div>
-    <nav class="navbar navbar-blue" style="margin-bottom: 0px">
-        <ul class="navbar-nav flex-row" id="nav">
-            <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">{{ _('Home') }}</a>
-            </li>
-            <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="projects" }}" href="{{ url_for('show_projects') }}">{{ _('Projects') }}</a>
-            </li>
-            <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="rgroups" }}"
-                   href="{{ url_for('show_research_groups') }}">{{ _('Research groups') }}</a>
-            </li>
-            <li class="nav-item text-element">
-                <a class="nav-link hyperlink {{ "active" if page=="people" }}" href="{{ url_for('show_people') }}">{{ _('People') }}</a>
-            </li>
-        </ul>
-        <div class="float-right"  style="margin-bottom: 0px">
+        </div>
+        <div class="row navbar-blue">
+            <div class="col-12">
+                <div class="row" style="padding: 1px">
+                    <div class="col-auto">
+                        <a class="col-auto hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">
+                            {{ _('Home') }}
+                        </a>
+                    </div>
+                    <div class="col-auto">
+                        <a class="col-auto hyperlink {{ "active" if page=="projects" }}"
+                           href="{{ url_for('show_projects') }}">
+                            {{ _('Projects') }}
+                        </a>
+                    </div>
+                    <div class="col-auto">
+                        <a class="col-auto hyperlink {{ "active" if page=="rgroups" }}"
+                           href="{{ url_for('show_research_groups') }}">
+                            {{ _('Research groups') }}
+                        </a>
+                    </div>
+                    <div class="col-auto">
+                        <a class="col-auto hyperlink {{ "active" if page=="people" }}"
+                           href="{{ url_for('show_people') }}">
+                            {{ _('People') }}
+                        </a>
+                    </div>
+                    <div class="col-12 float-right"><span class="float-right" style="text-align: right; color: white;">Login here</span>
+                    </div>
+                </div>
+            </div>
+             <div class="float-right"  style="margin-bottom: 0px">
             {% if current_user.is_authenticated %}
                 <p class="nav-item text-element">
                     <a class="nav-link hyperlink" href="{{ url_for('logout') }}">{{ _('logout') }}</a>
@@ -70,13 +94,15 @@
                 </p>
             {% endif %}
         </div>
-    </nav>
+        </div>
+    </div>
+
+
+    {% block body %}
+
+    {% endblock body %}
 
 </div>
-
-{% block body %}
-
-{% endblock body %}
 
 {% block scripts %}
 {% endblock scripts %}
