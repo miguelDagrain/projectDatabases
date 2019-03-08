@@ -28,7 +28,7 @@ def get_locale():
     if lang is not None:
         return lang
     else:
-        lang = request.accept_languages.best_match(['nl', 'en'])
+        lang = request.accept_languages.best_match(config_data['supported_langs'])
         return lang
 
 
@@ -195,16 +195,14 @@ def handle_404(e):
 
 @app.route("/lang", methods=["GET"])
 def pick_language():
-    lang = request.args.get('lang')
-    resp = make_response(redirect('/'))
+    lang = request.args.get('send')
+    url = request.args.get('url_redirect')
+    resp = make_response(redirect(url))
     resp.set_cookie('lang', lang)
     return resp
 
 
-
 if __name__ == "__main__":
-    # acces=DataAccess(connection)
-    # acces.manualDataHandling()
-    # temp=acces.get_projects()
-
-    app.run(debug=True)
+    ip = config_data['ip']
+    port = config_data['port']
+    app.run(debug=True, host=ip, port=port)
