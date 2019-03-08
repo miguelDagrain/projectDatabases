@@ -30,6 +30,18 @@
                 e.dataTransfer.setDragImage(img, 0, 0);
             }, false);
         </script>
+        <div class="float-right"  style="margin-bottom: 0px">
+            {% if not current_user.is_authenticated %}
+            <label style="display:flex;"><small>
+                {{ _('username') }}:
+                <input type="text" name="Search_query">
+            </small></label>
+            <label style="display:flex;"><small>
+                {{ _('password') }}:
+                <input type="text" name="Search_query">
+            </small></label>
+            {% endif %}
+        </div>
     </div>
     <nav class="navbar navbar-blue" style="margin-bottom: 0px">
         <ul class="navbar-nav flex-row" id="nav">
@@ -47,7 +59,19 @@
                 <a class="nav-link hyperlink {{ "active" if page=="people" }}" href="{{ url_for('show_people') }}">{{ _('People') }}</a>
             </li>
         </ul>
+        <div class="float-right"  style="margin-bottom: 0px">
+            {% if current_user.is_authenticated %}
+                <p class="nav-item text-element">
+                    <a class="nav-link hyperlink" href="{{ url_for('logout') }}">{{ _('logout') }}</a>
+                </p>
+            {%else%}
+                 <p class="nav-item text-element">
+                    <a class="nav-link hyperlink" href="{{ url_for('login') }}">{{ _('login') }}</a>
+                </p>
+            {% endif %}
+        </div>
     </nav>
+
 </div>
 
 {% block body %}

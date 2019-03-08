@@ -6,7 +6,13 @@ from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
 from Document import *
 from flask_babel import *
+from flask_login import login_user, login_required
+from flask_login import LoginManager
+from flask_login import logout_user
+from User import *
+from Session import *
 import sys
+
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
@@ -15,6 +21,8 @@ babel = Babel(app)
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                           dbhost=config_data['dbhost'])
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 @babel.localeselector
@@ -200,7 +208,25 @@ def pick_language():
     resp.set_cookie('lang', lang)
     return resp
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User(Session(1,user_id,0,0))
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    login_user(User(Session(1,1,0,0)))
+    flash('Logged in successfully.')
+    next = request.args.get('next')
+    # flash("you are now logged in")
+    return redirect(next or url_for('index'))
+
+@app.route("/logout", methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    next = request.args.get('next')
+    # flash("you are now logged out")
+    return  redirect(next or url_for('index'))
 
 if __name__ == "__main__":
     # acces=DataAccess(connection)
