@@ -123,21 +123,33 @@
         </div>
     </header>
 
-    <div class="modal fade-slow" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLabel" aria-hidden="true"
-         style="display: none;">
-
-        <div class="modal-dialog">
-            <div class="loginmodal-container">
-                <h1>Login to your account</h1>
-                <form>
-                    <input type="text" name="user" placeholder="Username">
-                    <input type="password" name="pass" placeholder="Password">
-                    <input type="submit" name="login" class="login loginmodal-submit" value="Login">
-                </form>
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Login</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="get" id="login">
+                        <div class="form-group">
+                            <label for="user" style="margin-bottom: 5px">{{ _('Username') }}</label>
+                            <input id="user" class="form-control" type="text" placeholder="{{ _('username') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass" style="margin-bottom: 5px">{{ _('Password') }}</label>
+                            <input id="pass" class="form-control" type="password" placeholder="{{ _('password') }}" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
             </div>
         </div>
-
-
     </div>
 
 
