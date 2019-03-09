@@ -140,6 +140,30 @@ def helper_sort_values_projects(projects, researchGroups):
 @app.route("/projects/", methods=["GET"])
 def show_projects():
     access = DataAccess(connection)
+    projects = access.get_projects()
+    researchGroups = access.get_researchGroups()
+
+    neededValuesProject = helper_sort_values_projects(projects, researchGroups)
+
+    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
+                           page="projects")\
+
+
+@app.route("/projects/<int:id>", methods = ['GET'])
+def project_page(id):
+    access = DataAccess(connection)
+    project = access.get_project(id)
+    document = access.get_projectDocuments(id)
+    #researchGroup = access.get_researchGroupOnID(id)
+    #description =
+
+    return render_template("project.html", r_project=project, r_document = document, #r_researchGroup = researchGroup,
+                           page="projects")
+
+
+@app.route("/projects/search", methods=["GET"])
+def apply_filter_projects():
+    access = DataAccess(connection)
     researchGroups = access.get_researchGroups()
 
 

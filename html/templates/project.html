@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ _('Projects') }}{% endblock title %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+
+{% endblock stylesheets %}
+
+
+{% block body %}
+
+
+<div style="display:flex;">
+{##}
+{#    <form class="side-bar" action="{{ url_for('apply_filter_projects') }}" method="get">#}
+{##}
+{##}
+{#        <label class="side-bar-input">#}
+{#          {{ _('Search query') }}:#}
+{#          <input type="text" class="form-control-sm" name="Search_query">#}
+{#        </label>#}
+
+
+    <!-- Vanaf hier komen de projecten -->
+
+    <div class="page-content">
+        <h1>{{ _('Project') }}</h1>
+
+        <p>{{ _('Explanations') }}</p>
+
+        <table class="content-table project-table">
+
+            <tr>
+                <th class="th-1">{{ _('title') }}</th>
+            </tr>
+            <tr>
+                <td>{{ r_project.title }}</td>
+            </tr>
+            <tr>
+                <th class="th-2">{{ _('promotor') }}</th>
+            </tr>
+            <tr>
+                <td>{{ r_project.promotor }}</td>
+            </tr>
+            <tr>
+                <th class="th-2">{{ _('maximum students') }}</th>
+            </tr>
+            <tr>
+                <td>{{ r_project.maxStudents }}</td>
+            </tr>
+            <tr>
+                <th class="th-3">{{ _('research group') }}</th>
+            </tr>
+{#            <tr>#}
+{#                <td>{{ r_researchGroup.discipline }}</td>#}
+{#            </tr>#}
+            <tr>
+                <th class="th-4">{{ _('description') }}</th>
+            </tr>
+            <tr>
+                <td>{{ r_document.text }}</td>
+            </tr>
+
+{#        {% for project in r_values %}#}
+{##}
+{#            <tr>#}
+{#                <td>{{ project[0] }}</td>#}
+{#                <td>{{ project[1] }}</td>#}
+{#                <td>[ 0 / {{ project[2] }} ]</td> <!-- todo: replace 0 by an parameter -->#}
+{#            </tr>#}
+{##}
+{#        {% endfor %}#}
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+
+{% endblock body %}
