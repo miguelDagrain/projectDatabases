@@ -34,10 +34,10 @@ CREATE DOMAIN title as TEXT
   check (value = 'professor' or value = 'phd' or value = 'geen');
 
 CREATE DOMAIN INTEXT as TEXT
-  check (value = 'INTern' or value = 'extern');
+  check (value = 'intern' or value = 'extern');
 
 CREATE DOMAIN typeResearch as TEXT
-  check (value = 'Master thesis' or value = 'Research INTernship');
+  check (value = 'Master thesis' or value = 'Research internship');
 
 CREATE DOMAIN registration as TEXT
   check (value = 'bezig' or value = 'geslaagd' or value = 'niet geslaagd');

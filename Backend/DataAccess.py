@@ -160,6 +160,7 @@ class DataAccess:
     def get_employees(self):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from employee')
+
         employees = list()
         for row in cursor:
             employee = Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
@@ -186,6 +187,28 @@ class DataAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('Unable to save Employee!')
+
+    def filter_employees(self, searchQuery="", researchGroup="", promotor=0,):
+        cursor = self.dbconnect.get_cursor()
+
+        sql = 'select * from employee e INNER JOIN researchGroup r ON r.groupID=e.researchGroup WHERE ' \
+              'e.name LIKE %(searchQueryQ)s'
+
+        if (researchGroup != ""):
+            sql += "AND r.name = %(researchGroupQ)s"
+
+        if (promotor == 1):
+            sql+= 'AND e.promotor = TRUE'
+        if (promotor == 2):
+            sql+= 'AND e.promotor = FALSE'
+
+        cursor.execute(sql, dict(searchQueryQ="%"+ searchQuery +"%", researchGroupQ=researchGroup))
+        employees = list()
+        for row in cursor:
+            employee = Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+            employees.append(employee)
+        return employees
+
 
     def get_projectDocuments(self, projectID):
         cursor = self.dbconnect.get_cursor()
