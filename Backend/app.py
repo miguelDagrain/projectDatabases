@@ -52,7 +52,7 @@ def index():
     return resp
 
 
-@app.route("/researchgroups")
+@app.route("/researchgroups/")
 def show_research_groups():
     '''
     Shows the research groups on the website
@@ -63,7 +63,7 @@ def show_research_groups():
     return render_template("researchgroups.html", r_groups=groups, page="rgroups")
 
 
-@app.route("/researchgroups", methods=["POST"])
+@app.route("/researchgroups/", methods=["POST"])
 def add_research_group():
     '''
     Adds a research group to the database
@@ -89,15 +89,32 @@ def add_research_group():
     return render_template("index.html", send=True, page="index")
 
 
-@app.route("/people")
+@app.route("/people/", methods=["GET"])
 def show_people():
     '''
     Shows a table of people on a webpage
     :return: Rendered template of people HTML
     '''
     access = DataAccess(connection)
-    people = access.get_employees()
     researchGroups = access.get_researchGroups()
+
+    if request.args.get("Name") is None:
+
+        people = access.get_employees()
+
+
+    else:
+        researchGroupOptions = [""]
+
+        for iter in researchGroups:
+            researchGroupOptions.append(iter.name)
+
+        name = request.args.get("Name")
+        groupNr = int(request.args.get("Research_group"))
+        group = researchGroupOptions[groupNr]
+        promotor = int(request.args.get("Promotor"))
+
+        people = access.filter_employees(name, group, promotor)
 
     neededValuesPeoplePage = []
     for person in people:
@@ -105,28 +122,9 @@ def show_people():
             if (group.ID == person.research_group):
                 neededValuesPeoplePage.append([person.name, group.name, person.promotor])
 
-    return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
+    return render_template("people.html", r_values=neededValuesPeoplePage, r_researchGroups=researchGroups,
+                           page="people")
 
-
-@app.route("/people", methods=["GET"])
-def apply_filter_people():
-    access = DataAccess(connection)
-    researchGroups = access.get_researchGroups()
-    people = access.get_employees()
-
-    researchGroupOptions = [""]
-
-    for iter in researchGroups:
-        researchGroupOptions.append(iter.name)
-
-    name = request.form.get("Name")
-    groupNr = int(request.form.get("Research_group"))
-    group = researchGroupOptions[groupNr]
-    promotor = int(request.form.get("Promotor"))
-
-    neededValuesPeoplePage = access.filter
-
-    return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
 
 
 def helper_sort_values_projects(projects, researchGroups):
@@ -139,46 +137,41 @@ def helper_sort_values_projects(projects, researchGroups):
     return neededValuesProject
 
 
-@app.route("/projects")
+@app.route("/projects/", methods=["GET"])
 def show_projects():
     access = DataAccess(connection)
-    projects = access.get_projects()
     researchGroups = access.get_researchGroups()
 
-    neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
-    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
-                           page="projects")
+    if request.args.get("Search_query") == None:
+
+        projects = access.get_projects()
 
 
-@app.route("/projects/search", methods=["GET"])
-def apply_filter_projects():
-    access = DataAccess(connection)
-    researchGroups = access.get_researchGroups()
+    else:
+        typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
+        disciplineOptions = [None, ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"],
+                             ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"],
+                             ["Mathematics", "Computer Science"], ["MathematicsCompSc", "Mathematics", "Computer Science"]]
+        researchGroupOptions = [""]
 
-    typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-    disciplineOptions = [None, ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"],
-                         ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"],
-                         ["Mathematics", "Computer Science"], ["MathematicsCompSc", "Mathematics", "Computer Science"]]
-    researchGroupOptions = [""]
+        for iter in researchGroups:
+            researchGroupOptions.append(iter.name)
 
-    for iter in researchGroups:
-        researchGroupOptions.append(iter.name)
+        query = request.args.get("Search_query")
+        print(query, file=sys.stderr)
+        typeNr = int(request.args.get("Type"))
+        type = typeOptions[typeNr]
+        disciplineNr = int(request.args.get("Disciplines"))
+        discipline = disciplineOptions[disciplineNr]
+        groupNr = int(request.args.get("Research_group"))
+        group = researchGroupOptions[groupNr]
+        status = int(request.args.get("Status"))
 
-    query = request.args.get("Search_query")
-    print(query, file=sys.stderr)
-    typeNr = int(request.args.get("Type"))
-    type = typeOptions[typeNr]
-    disciplineNr = int(request.args.get("Disciplines"))
-    discipline = disciplineOptions[disciplineNr]
-    groupNr = int(request.args.get("Research_group"))
-    group = researchGroupOptions[groupNr]
-    status = int(request.args.get("Status"))
+        projects = access.filter_projects(query, type, discipline, group, status)
 
-    projects = access.filter_projects(query, type, discipline, group, status)
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
-
     return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
                            page="projects")
 
@@ -193,7 +186,7 @@ def handle_404(e):
     return render_template("404.html"), 404
 
 
-@app.route("/lang", methods=["GET"])
+@app.route("/lang/", methods=["GET"])
 def pick_language():
     lang = request.args.get('send')
     url = request.args.get('url_redirect')
@@ -207,7 +200,7 @@ def load_user(user_id):
     return User(Session(1, user_id, 0, 0))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     login_user(User(Session(1, 1, 0, 0)))
     flash('Logged in successfully.')
@@ -216,7 +209,7 @@ def login():
     return redirect(next or url_for('index'))
 
 
-@app.route("/logout", methods=['GET', 'POST'])
+@app.route("/logout/", methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()

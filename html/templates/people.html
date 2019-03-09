@@ -13,12 +13,10 @@
 
 {% block body %}
 
-<script src="{{ url_for('static', filename='js/changeDrop.js') }}"></script>
-
 
 <div style="display: flex">
 
-    <form class="side-bar">
+    <form class="side-bar" action="{{ url_for('show_people') }}" method="get">
 
         <label class="side-bar-input">
             {{ _('Name') }}:
@@ -36,9 +34,9 @@
                     var iter = 0;
                 </script>
 
-                {% for group in r_values %}
+                {% for group in r_researchGroups %}
 
-                <option value="" id="noValue">{{ group[1] }}</option>
+                <option value="" id="noValue">{{ group.name }}</option>
 
                 <script>
                     iter++;
@@ -82,7 +80,7 @@
                 <td>
                     {% if person[2] == True %}
                         &#10004;
-                    {% else %}
+                    {% elif person[2] == False %}
                         &#10060;
                     {% endif %}
                 </td>
