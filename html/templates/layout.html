@@ -13,11 +13,17 @@
         color: white;
     }
 
-    .login-btn {
+    .btn-login {
+        text-decoration: none;
+        background: Transparent;
         border: none;
-        background: #405080;
         color: white;
     }
+
+    .btn-login:hover {
+        background: #191f33;
+    }
+
 </style>
 
 <html lang={{ lang }}>
@@ -107,7 +113,10 @@
             </div>
             <div class="col text-right">
 
-                <a href="#" data-toggle="modal" data-role="button" data-target="#login-modal" class="login-btn">Login</a>
+
+                <button class="btn-login" data-toggle="modal" data-target="#login-modal">
+                    Login
+                </button>
 
 
             </div>
