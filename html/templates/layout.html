@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <style>
-    #loginpopup{
-      display:none;
-       /*position:fixed;*/
-       /*left:90%;*/
-       /*height:200px;*/
-   }
- .showPopupButton{
-         border:none;
-         background:#405080;
-         color:white;
-  }
-    .loginKnop{
-        border:none;
-        background:#405080;
-        color:white;
-  }
+    #loginpopup {
+        display: none;
+        /*position:fixed;*/
+        /*left:90%;*/
+        /*height:200px;*/
+    }
+
+    .showPopupButton {
+        border: none;
+        background: #405080;
+        color: white;
+    }
+
+    .login-btn {
+        border: none;
+        background: #405080;
+        color: white;
+    }
 </style>
 
 <html lang={{ lang }}>
@@ -27,6 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login-popup.css') }}">
 
     {% block stylesheets %}{% endblock stylesheets %}
 
@@ -46,10 +49,12 @@
 
 
 <div class="container-fluid">
-    <div>
+
+
+    <header id="header">
         <div class="row navbar-blue">
-            <div class="col">
-                <img class="banner" src="{{ url_for('static', filename='image/banner2.png') }}" alt="ESP banner">
+            <div class="col" style="margin:0 ">
+                <img class="banner" src="{{ url_for('static', filename="image/banner2.png") }}" alt="ESP banner">
             </div>
             <div class="col float-right">
                 <form method="get" action="{{ url_for('pick_language') }}" class="float-right">
@@ -57,93 +62,179 @@
                     <button class="btn-lang" type="submit" value="nl" name="send">nl</button>
                     <button class="btn-lang" type="submit" value="en" name="send">en</button>
                 </form>
+
             </div>
         </div>
-        <div class="row navbar-blue">
-            <div class="col-12">
-                <div class="row" style="padding: 1px">
-                    <div class="col-auto">
-                        <a class="col-auto hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">
-                            {{ _('Home') }}
-                        </a>
+        <div class="row navbar-blue" style="padding-bottom: 0.5%">
+            <div class="col" style="padding-left: 0">
+                <nav class="navbar" style="padding: 2px">
+                    <div class="container">
+                        <ul class="nav navbar-nav flex-row flex-col">
+                            <li class="nav-item">
+                                <a class=" hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">
+                                    {{ _('Home') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class=" hyperlink {{ "active" if page=="projects" }}"
+                                   href="{{ url_for('show_projects') }}">
+                                    {{ _('Projects') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class=" hyperlink {{ "active" if page=="rgroups" }}"
+                                   href="{{ url_for('show_research_groups') }}">
+                                    {{ _('Research groups') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class=" hyperlink {{ "active" if page=="people" }}"
+                                   href="{{ url_for('show_people') }}">
+                                    {{ _('People') }}
+                                </a>
+                            </li>
+                            {% if current_user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class=" hyperlink {{ "active" if page=="bookmarks" }}"
+                                       href="{{ url_for('index') }}">
+                                        {{ _('Bookmarks') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </div>
-                    <div class="col-auto">
-                        <a class="col-auto hyperlink {{ "active" if page=="projects" }}"
-                           href="{{ url_for('show_projects') }}">
-                            {{ _('Projects') }}
-                        </a>
-                    </div>
-                    <div class="col-auto">
-                        <a class="col-auto hyperlink {{ "active" if page=="rgroups" }}"
-                           href="{{ url_for('show_research_groups') }}">
-                            {{ _('Research groups') }}
-                        </a>
-                    </div>
-                    <div class="col-auto">
-                        <a class="col-auto hyperlink {{ "active" if page=="people" }}"
-                           href="{{ url_for('show_people') }}">
-                            {{ _('People') }}
-                        </a>
-                    </div>
-                    <div class="col-12 float-right"><span class="float-right" style="text-align: right; color: white;">
-                        {% if current_user.is_authenticated %}
-                        <p class="nav-item text-element">
-                        <button class="loginKnop" style="font-size:20px;  width:200px; height:50px;"
-                                onclick="window.location.href='{{ url_for('logout') }}'">
-                                 logout
-                        </button>
-                         </p>
-                        {%else%}
-                        <p class="nav-item text-element">
-                            <!--on click it display the loginpopup and sets visibilty of other button on inline and hides itself-->
-                        <button id="knop1" class="showPopupButton" style="font-size:20px;  width:200px; height:50px;"
-                                onclick="document.getElementById('loginpopup').style.display='block';
-                                document.getElementById('knop2').style.display='inline';
-                                this.style.display = 'none'">
-                            login
-                        </button>
-                        </p>
-                         <p class="nav-item text-element">
-                             <!--on click it goes to login page and changes visibility of first button to inline and hides itself-->
-                        <button id="knop2" class="loginKnop" style="font-size:20px;  width:200px; height:50px;"
-                                onclick="window.location.href='{{ url_for('login') }}';
-                                document.getElementById('knop1').style.display='inline';
-                                this.style.display = 'none'">
-                            login
-                        </button>
-                             <!--make second button invinsible when first opening-->
-                             <script>
-                                document.getElementById('knop2').style.display='none'
-                             </script>
-                        </p>
-                    {% endif %}
-                    </span>
-                    </div>
-                </div>
+                </nav>
             </div>
+            <div class="col text-right">
+
+                <a href="#" data-toggle="modal" data-role="button" data-target="#login-modal" class="login-btn">Login</a>
+
+
+            </div>
+        </div>
+    </header>
+
+    <div class="modal fade-slow" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLabel" aria-hidden="true"
+         style="display: none;">
+
+        <div class="modal-dialog">
+            <div class="loginmodal-container">
+                <h1>Login to your account</h1>
+                <form>
+                    <input type="text" name="user" placeholder="Username">
+                    <input type="password" name="pass" placeholder="Password">
+                    <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    {#    <div>#}
+    {#        <div class="row navbar-blue">#}
+    {#            <div class="col">#}
+    {#                <img class="banner" src="{{ url_for('static', filename='image/banner2.png') }}" alt="ESP banner">#}
+    {#            </div>#}
+    {#            <div class="col float-right">#}
+    {#                <form method="get" action="{{ url_for('pick_language') }}" class="float-right">#}
+    {#                    <input type="hidden" name="url_redirect" value="">#}
+    {#                    <button class="btn-lang" type="submit" value="nl" name="send">nl</button>#}
+    {#                    <button class="btn-lang" type="submit" value="en" name="send">en</button>#}
+    {#                </form>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#        <div class="row navbar-blue">#}
+    {#            <div class="col-12">#}
+    {#                <div class="row" style="padding: 1px">#}
+    {#                    <div class="col-auto">#}
+    {#                        <a class="col-auto hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">#}
+    {#                            {{ _('Home') }}#}
+    {#                        </a>#}
+    {#                    </div>#}
+    {#                    <div class="col-auto">#}
+    {#                        <a class="col-auto hyperlink {{ "active" if page=="projects" }}"#}
+    {#                           href="{{ url_for('show_projects') }}">#}
+    {#                            {{ _('Projects') }}#}
+    {#                        </a>#}
+    {#                    </div>#}
+    {#                    <div class="col-auto">#}
+    {#                        <a class="col-auto hyperlink {{ "active" if page=="rgroups" }}"#}
+    {#                           href="{{ url_for('show_research_groups') }}">#}
+    {#                            {{ _('Research groups') }}#}
+    {#                        </a>#}
+    {#                    </div>#}
+    {#                    <div class="col-auto">#}
+    {#                        <a class="col-auto hyperlink {{ "active" if page=="people" }}"#}
+    {#                           href="{{ url_for('show_people') }}">#}
+    {#                            {{ _('People') }}#}
+    {#                        </a>#}
+    {#                    </div>#}
+    {#                    <div class="col-12 float-right"><span class="float-right" style="text-align: right; color: white;">#}
+    {#                        {% if current_user.is_authenticated %}#}
+    {#                            <p class="nav-item text-element">#}
+    {#                        <button class="loginKnop" style="font-size:20px;  width:200px; height:50px;"#}
+    {#                                onclick="window.location.href='{{ url_for('logout') }}'">#}
+    {#                                 logout#}
+    {#                        </button>#}
+    {#                         </p>#}
+    {#                        {% else %}#}
+    {#                            <p class="nav-item text-element">#}
+    {#                            <!--on click it display the loginpopup and sets visibilty of other button on inline and hides itself-->#}
+    {#                        <button id="knop1" class="showPopupButton" style="font-size:20px;  width:200px; height:50px;"#}
+    {#                                onclick="document.getElementById('loginpopup').style.display='block';#}
+    {#                                document.getElementById('knop2').style.display='inline';#}
+    {#                                this.style.display = 'none'">#}
+    {#                            login#}
+    {#                        </button>#}
+    {#                        </p>#}
+    {#                            <p class="nav-item text-element">#}
+    {#                             <!--on click it goes to login page and changes visibility of first button to inline and hides itself-->#}
+    {#                        <button id="knop2" class="loginKnop" style="font-size:20px;  width:200px; height:50px;"#}
+    {#                                onclick="window.location.href='{{ url_for('login') }}';#}
+    {#                                        document.getElementById('knop1').style.display='inline';#}
+    {#                                        this.style.display = 'none'">#}
+    {#                            login#}
+    {#                        </button>#}
+    {#                                <!--make second button invinsible when first opening-->#}
+    {#                             <script>#}
+    {#                                document.getElementById('knop2').style.display = 'none'#}
+    {#                             </script>#}
+    {#                        </p>#}
+    {#                        {% endif %}#}
+    {#                    </span>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+
+    <!-- login popup -->
+    <div class="col-14 float-right" id="loginpopup">
+        <div class="float-right" style="margin-bottom: 0">
+            {% if not current_user.is_authenticated %}
+                <label style="display:flex;">
+                    <small>
+                        {{ _('username') }}:
+                        <input type="text" name="Search_query">
+                    </small>
+                </label>
+                <label style="display:flex;">
+                    <small>
+                        {{ _('password') }}:
+                        <input type="text" name="Search_query">
+                    </small>
+                </label>
+            {% endif %}
         </div>
     </div>
 
-    <div class="col-14 float-right" id="loginpopup" >
-      <div class="float-right"  style="margin-bottom: 0px">
-        {% if not current_user.is_authenticated %}
-        <label style="display:flex;"><small>
-            {{ _('username') }}:
-            <input type="text" name="Search_query">
-        </small></label>
-        <label style="display:flex;"><small>
-            {{ _('password') }}:
-            <input type="text" name="Search_query">
-        </small></label>
-        {% endif %}
-        </div>
-    </div>
-    </div>
     {% block body %}
 
     {% endblock body %}
-
 </div>
+
 {% block scripts %}
 {% endblock scripts %}
 </body>

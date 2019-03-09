@@ -13,7 +13,6 @@ from User import *
 from Session import *
 import sys
 
-
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
@@ -106,13 +105,11 @@ def show_people():
             if (group.ID == person.research_group):
                 neededValuesPeoplePage.append([person.name, group.name, person.promotor])
 
-
     return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
 
 
 @app.route("/people", methods=["GET"])
 def apply_filter_people():
-
     access = DataAccess(connection)
     researchGroups = access.get_researchGroups()
     people = access.get_employees()
@@ -122,17 +119,14 @@ def apply_filter_people():
     for iter in researchGroups:
         researchGroupOptions.append(iter.name)
 
-
     name = request.form.get("Name")
     groupNr = int(request.form.get("Research_group"))
     group = researchGroupOptions[groupNr]
     promotor = int(request.form.get("Promotor"))
 
-    neededValuesPeoplePage= access.filter
+    neededValuesPeoplePage = access.filter
 
     return render_template("people.html", r_values=neededValuesPeoplePage, page="people")
-
-
 
 
 def helper_sort_values_projects(projects, researchGroups):
@@ -153,23 +147,23 @@ def show_projects():
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
-    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups, page="projects")
+    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
+                           page="projects")
 
 
 @app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
-
     access = DataAccess(connection)
     researchGroups = access.get_researchGroups()
 
     typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-    disciplineOptions = [None, ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"], ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"], ["Mathematics", "Computer Science"],["MathematicsCompSc", "Mathematics", "Computer Science"]]
+    disciplineOptions = [None, ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"],
+                         ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"],
+                         ["Mathematics", "Computer Science"], ["MathematicsCompSc", "Mathematics", "Computer Science"]]
     researchGroupOptions = [""]
 
     for iter in researchGroups:
         researchGroupOptions.append(iter.name)
-
-
 
     query = request.args.get("Search_query")
     print(query, file=sys.stderr)
@@ -185,8 +179,8 @@ def apply_filter_projects():
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
-
-    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups, page="projects")
+    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
+                           page="projects")
 
 
 @app.errorhandler(404)
@@ -207,17 +201,20 @@ def pick_language():
     resp.set_cookie('lang', lang)
     return resp
 
+
 @login_manager.user_loader
 def load_user(user_id):
-    return User(Session(1,user_id,0,0))
+    return User(Session(1, user_id, 0, 0))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    login_user(User(Session(1,1,0,0)))
+    login_user(User(Session(1, 1, 0, 0)))
     flash('Logged in successfully.')
     next = request.args.get('login')
     flash("you are now logged in")
     return redirect(next or url_for('index'))
+
 
 @app.route("/logout", methods=['GET', 'POST'])
 @login_required
@@ -225,7 +222,8 @@ def logout():
     logout_user()
     next = request.args.get('logout')
     flash("you are now logged out")
-    return  redirect(next or url_for('index'))
+    return redirect(next or url_for('index'))
+
 
 if __name__ == "__main__":
     ip = config_data['ip']
