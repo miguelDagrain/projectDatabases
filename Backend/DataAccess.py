@@ -113,7 +113,7 @@ class DataAccess:
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
         cursor.execute('select * from contactPerson where rgroup=%s',(str(rgroup.ID)))
         if(cursor.rowcount>0):
-            rgroup.contactID=cursor[0][0]
+            rgroup.contactID=cursor.fetchone()[0]
         return rgroup
 
     def get_researchGroupOnID(self, id):
@@ -124,7 +124,7 @@ class DataAccess:
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
         cursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
         if (cursor.rowcount > 0):
-            rgroup.contactID = row[0][0]
+            rgroup.contactID = cursor.fetchone()[0]
         return rgroup
 
     def checkContactPerson(self,eid,groupID):
@@ -134,7 +134,7 @@ class DataAccess:
             if(cursor.rowcount==0):
                 cursor.execute('insert into contactperson values(%s,%s)',(eid,groupID))
             else:
-                if(cursor[0][0]!=eid):
+                if(cursor.fetchone()[0]!=eid):
                     cursor.execute('update contactPerson SET employee=%s where rgroup=%s',(eid,groupID))
             self.dbconnect.commit()
         except:
