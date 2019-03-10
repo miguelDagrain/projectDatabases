@@ -19,16 +19,17 @@ DROP TABLE IF EXISTS groupDescription;
 DROP TABLE IF EXISTS researchGroup;
 DROP TABLE IF EXISTS attachment;
 DROP TABLE IF EXISTS document;
+drop table if exists discipline;
 DROP DOMAIN IF EXISTS language;
 DROP DOMAIN IF EXISTS registration;
 DROP DOMAIN IF EXISTS typeResearch;
 DROP DOMAIN IF EXISTS INTEXT;
 DROP DOMAIN IF EXISTS title;
-DROP DOMAIN IF EXISTS SUBJECT;
+DROP DOMAIN IF EXISTS subject;
 
 
-CREATE DOMAIN SUBJECT as TEXT
-  CHECK ( value = 'Computer Science' or value = 'Mathematics' or value = 'Engeneering');
+-- CREATE DOMAIN SUBJECT as TEXT
+--   CHECK ( value = 'Computer Science' or value = 'Mathematics' or value = 'Engeneering');
 
 CREATE DOMAIN title as TEXT
   check (value = 'professor' or value = 'phd' or value = 'geen');
@@ -44,6 +45,14 @@ CREATE DOMAIN registration as TEXT
 
 CREATE DOMAIN language as TEXT
   check (value = 'nederlands' or value = 'engels');
+
+create table discipline
+(
+  subject varchar(255) primary key
+);
+insert into discipline values('Computer Science');
+insert into discipline values('Mathematics');
+insert into discipline values('Engeneering');
 
 CREATE TABLE document
 (
@@ -66,7 +75,7 @@ CREATE TABLE researchGroup
   groupID      SERIAL PRIMARY KEY,
   name         VARCHAR(255) UNIQUE,
   abbreviation VARCHAR(25) UNIQUE,
-  discipline   SUBJECT,
+  discipline   varchar(255) references discipline(subject),
   active       BOOLEAN, --1 is active, 0 is not active
   address      VARCHAR(255),
   telNr        VARCHAR(255)

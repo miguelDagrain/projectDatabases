@@ -630,3 +630,21 @@ class DataAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('Unable to save session!')
+
+
+    def add_discipline(self,discipline):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO discipline values(%s)',(discipline))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to add discipline!')
+
+    def get_disciplines(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from discipline')
+        disciplines = list()
+        for row in cursor:
+            disciplines.append(row[0])
+        return disciplines
