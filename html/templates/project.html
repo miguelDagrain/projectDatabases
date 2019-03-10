@@ -44,7 +44,7 @@
                 <th class="th-2">{{ _('promotor') }}</th>
             </tr>
             <tr>
-                <td>{{ r_project.promotor }}</td>
+                <td>{{ r_promotor.name }}</td>
             </tr>
             <tr>
                 <th class="th-2">{{ _('maximum students') }}</th>
@@ -55,14 +55,14 @@
             <tr>
                 <th class="th-3">{{ _('research group') }}</th>
             </tr>
-{#            <tr>#}
-{#                <td>{{ r_researchGroup.discipline }}</td>#}
-{#            </tr>#}
+            <tr>
+                <td>{{ r_researchGroup.name }}</td>
+            </tr>
             <tr>
                 <th class="th-4">{{ _('description') }}</th>
             </tr>
             <tr>
-                <td>{{ r_document.text }}</td>
+                <td>{{ r_document[0].text }}</td>
             </tr>
 
 {#        {% for project in r_values %}#}

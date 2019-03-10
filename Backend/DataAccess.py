@@ -35,6 +35,7 @@ class DataAccess:
         cursorAttachment.execute('select * from attachment where %s=doc',(str(document.ID)))
         for att in cursorAttachment:
             document.attachment.append(Attachment(att[0], att[1]))
+        return document
 
     def add_attachment(self,attachment):
         try:
@@ -285,7 +286,7 @@ class DataAccess:
     def add_projectPromotor(self,projectID,employeeId):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('select * from projectPromoter where employee=%s and project=%s',(str(employeeId),str(projectID))
+            cursor.execute('select * from projectPromoter where employee=%s and project=%s',(str(employeeId),str(projectID)))
             if(cursor.rowcount==0):
                 cursor.execute('insert into projectPromotor values(%s,%s)',(str(employeeId),str(projectID)))
         except:

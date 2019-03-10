@@ -154,10 +154,14 @@ def project_page(id):
     access = DataAccess(connection)
     project = access.get_project(id)
     document = access.get_projectDocuments(id)
-    #researchGroup = access.get_researchGroupOnID(id)
+    promotor = access.get_projectPromotors(id)
+    #res = access.get_researchGroups()
+    #get_employee(promotor)
+    researchGroup = access.get_researchGroupOnID(project.researchGroup)
     #description =
 
-    return render_template("project.html", r_project=project, r_document = document, #r_researchGroup = researchGroup,
+    return render_template("project.html", r_project=project, r_document = document, r_promotor = promotor,
+                           r_researchGroup = researchGroup,
                            page="projects")
 
 
@@ -246,5 +250,5 @@ if __name__ == "__main__":
     ip = config_data['ip']
     port = config_data['port']
     access = DataAccess(connection)
-    temp=access.researchGroupOnID(1)
+    temp=access.get_researchGroupOnID(1)
     app.run(debug=True, host=ip, port=port)
