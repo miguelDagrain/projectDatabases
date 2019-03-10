@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-08 18:20+0100\n"
-"PO-Revision-Date: 2019-03-08 18:20+0100\n"
+"POT-Creation-Date: 2019-03-10 16:16+0100\n"
+"PO-Revision-Date: 2019-03-10 16:16+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
 "Language-Team: nl <LL@li.org>\n"
@@ -17,4 +17,215 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
+
+#: html/templates/404.html:8
+msgid "Page not found"
+msgstr ""
+
+#: html/templates/index.html:18
+msgid "Group name"
+msgstr ""
+
+#: html/templates/index.html:23 html/templates/researchgroups.html:40
+msgid "Abbreviation"
+msgstr ""
+
+#: html/templates/index.html:28 html/templates/researchgroups.html:46
+msgid "Active"
+msgstr ""
+
+#: html/templates/index.html:33
+msgid "Address"
+msgstr ""
+
+#: html/templates/index.html:38
+msgid "Telephone number"
+msgstr ""
+
+#: html/templates/index.html:42
+msgid "Enter"
+msgstr ""
+
+#: html/templates/index.html:50
+msgid "Added research group to the database"
+msgstr ""
+
+#: html/templates/index.html:57
+msgid "add research group"
+msgstr ""
+
+#: html/templates/layout.html:81
+msgid "Home"
+msgstr ""
+
+#: html/templates/layout.html:87 html/templates/project.html:3
+#: html/templates/projects.html:3 html/templates/projects.html:99
+msgid "Projects"
+msgstr ""
+
+#: html/templates/layout.html:93 html/templates/researchgroups.html:2
+#: html/templates/researchgroups.html:31
+msgid "Research groups"
+msgstr ""
+
+#: html/templates/layout.html:99 html/templates/people.html:12
+#: html/templates/people.html:66
+msgid "People"
+msgstr ""
+
+#: html/templates/layout.html:106
+msgid "Bookmarks"
+msgstr ""
+
+#: html/templates/layout.html:138
+msgid "Username"
+msgstr ""
+
+#: html/templates/layout.html:139 html/templates/layout.html:240
+msgid "username"
+msgstr ""
+
+#: html/templates/layout.html:142
+msgid "Password"
+msgstr ""
+
+#: html/templates/layout.html:143 html/templates/layout.html:246
+msgid "password"
+msgstr ""
+
+#: html/templates/people.html:22 html/templates/people.html:70
+#: html/templates/researchgroups.html:37
+msgid "Name"
+msgstr ""
+
+#: html/templates/people.html:27 html/templates/people.html:71
+#: html/templates/projects.html:56
+msgid "Research group"
+msgstr ""
+
+#: html/templates/people.html:29 html/templates/people.html:55
+#: html/templates/projects.html:31 html/templates/projects.html:43
+#: html/templates/projects.html:58 html/templates/projects.html:85
+msgid "All"
+msgstr ""
+
+#: html/templates/people.html:53 html/templates/people.html:72
+msgid "Promotor"
+msgstr ""
+
+#: html/templates/people.html:56
+msgid "Yes"
+msgstr ""
+
+#: html/templates/people.html:57
+msgid "No"
+msgstr ""
+
+#: html/templates/people.html:61 html/templates/projects.html:91
+msgid "Search"
+msgstr ""
+
+#: html/templates/project.html:31
+msgid "Project"
+msgstr ""
+
+#: html/templates/project.html:33 html/templates/projects.html:101
+msgid "Explanations"
+msgstr ""
+
+#: html/templates/project.html:38 html/templates/projects.html:106
+msgid "title"
+msgstr ""
+
+#: html/templates/project.html:44
+msgid "promotor"
+msgstr ""
+
+#: html/templates/project.html:50
+msgid "maximum students"
+msgstr ""
+
+#: html/templates/project.html:56 html/templates/projects.html:107
+msgid "research group"
+msgstr ""
+
+#: html/templates/project.html:62
+msgid "description"
+msgstr ""
+
+#: html/templates/projects.html:23
+msgid "Search query"
+msgstr ""
+
+#: html/templates/projects.html:29
+msgid "Type"
+msgstr ""
+
+#: html/templates/projects.html:32
+msgid "Bachelor dissertation"
+msgstr ""
+
+#: html/templates/projects.html:33
+msgid "Master thesis"
+msgstr ""
+
+#: html/templates/projects.html:34
+msgid "Research internship 1"
+msgstr ""
+
+#: html/templates/projects.html:35
+msgid "Research internship 2"
+msgstr ""
+
+#: html/templates/projects.html:41
+msgid "Disciplines"
+msgstr ""
+
+#: html/templates/projects.html:44
+msgid "MathematicsCompSc"
+msgstr ""
+
+#: html/templates/projects.html:45
+msgid "Mathematics"
+msgstr ""
+
+#: html/templates/projects.html:46
+msgid "Computer Science"
+msgstr ""
+
+#: html/templates/projects.html:47
+msgid "MathematicsCompSc - Mathematics"
+msgstr ""
+
+#: html/templates/projects.html:48
+msgid "MathematicsCompSc - Computer Science"
+msgstr ""
+
+#: html/templates/projects.html:49
+msgid "Mathematics - Computer Science"
+msgstr ""
+
+#: html/templates/projects.html:50
+msgid "MathematicsCompSc - Mathematics - Computer Science"
+msgstr ""
+
+#: html/templates/projects.html:83
+msgid "Status"
+msgstr ""
+
+#: html/templates/projects.html:86
+msgid "Available projects only"
+msgstr ""
+
+#: html/templates/projects.html:87
+msgid "Assigned projects only"
+msgstr ""
+
+#: html/templates/projects.html:108
+msgid "assigned students"
+msgstr ""
+
+#: html/templates/researchgroups.html:43
+msgid "Discipline"
+msgstr ""
 

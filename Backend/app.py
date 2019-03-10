@@ -251,4 +251,5 @@ if __name__ == "__main__":
     port = config_data['port']
     access = DataAccess(connection)
     temp=access.get_researchGroupOnID(1)
+    temp2=access.get_projectPromotors(1)
     app.run(debug=True, host=ip, port=port)
