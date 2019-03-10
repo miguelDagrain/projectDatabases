@@ -57,7 +57,7 @@ class Project:
         self.tag = list()
         self.ID = id
         self.relatedProject = list()
-        self.promoter = list()
+        self.promotor = list()
 
     def __str__(self):
         return "title: "+self.title+", max students: "+str(self.maxStudents)+", description"+self.desc+", group: "+self.researchGroup+", year: "+self.activeYear+", type: "+self.type+", tag: "+self.tag+", id: "+str(self.ID)+", related project: "+self.relatedProject
