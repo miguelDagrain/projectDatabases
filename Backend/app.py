@@ -148,19 +148,18 @@ def show_projects():
     return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
                            page="projects")\
 
-
+# TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods = ['GET'])
 def project_page(id):
     access = DataAccess(connection)
     project = access.get_project(id)
     document = access.get_projectDocuments(id)
-    promotor = access.get_projectPromotors(id)
-    #res = access.get_researchGroups()
-    #get_employee(promotor)
-    researchGroup = access.get_researchGroupOnID(project.researchGroup)
-    #description =
+    promotors = access.get_projectPromotors(id)
+    emp = access.get_employee(promotors[0])
 
-    return render_template("project.html", r_project=project, r_document = document, r_promotor = promotor,
+    researchGroup = access.get_researchGroupOnID(project.researchGroup)
+
+    return render_template("project.html", r_project=project, r_document = document, r_promotor = emp,
                            r_researchGroup = researchGroup,
                            page="projects")
 
