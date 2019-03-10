@@ -41,7 +41,7 @@ class DataAccess:
             cursor =self.dbconnect.get_cursor()
             cursor.execute('select * from attachment where doc=%s and attachment=%s',(str(attachment.docid),attachment.content))
             if(cursor.rowcount==0):
-                cursor.execute('insert into attachment values(%s,%s)',(str(attachment.docid),attachment.content))
+                cursor.execute('insert into attachment values(%s,%s)',(str(attachment.docid),str(attachment.content)))
                 self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -57,7 +57,7 @@ class DataAccess:
                 id = doc.ID
 
             else:
-                cursor.execute('INSERT INTO document VALUES(default ,%s,%s)', (doc.language, doc.text,))
+                cursor.execute('INSERT INTO document VALUES(default ,%s,%s)', (doc.language, str(doc.text)))
                 cursor.execute('SELECT LASTVAL()')
                 id = cursor.fetchone()[0]
                 doc.ID=id
@@ -118,7 +118,7 @@ class DataAccess:
 
     def get_researchGroupOnID(self, id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (id))
+        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (str(id)))
         row = cursor.fetchone()
         rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
@@ -130,12 +130,12 @@ class DataAccess:
     def checkContactPerson(self,eid,groupID):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('SELECT * FROM contactPerson WHERE groupID=%s', (groupID))
+            cursor.execute('SELECT * FROM contactPerson WHERE groupID=%s', (str(groupID)))
             if(cursor.rowcount==0):
-                cursor.execute('insert into contactperson values(%s,%s)',(eid,groupID))
+                cursor.execute('insert into contactperson values(%s,%s)',(str(eid),str(groupID)))
             else:
                 if(cursor.fetchone()[0]!=eid):
-                    cursor.execute('update contactPerson SET employee=%s where rgroup=%s',(eid,groupID))
+                    cursor.execute('update contactPerson SET employee=%s where rgroup=%s',(str(eid),str(groupID)))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -144,7 +144,7 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO researchGroup values(default ,%s,%s,%s,%s,%s,%s)',
-                           (group.name, group.abbreviation, group.discipline, group.active, group.address, group.telNr))
+                           (group.name, group.abbreviation, group.discipline, group.active, group.address, str(group.telNr)))
             cursor.execute('SELECT LASTVAL()')
             gid = cursor.fetchone()[0]
             group.ID = gid
@@ -169,7 +169,7 @@ class DataAccess:
 
     def get_employee(self, id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (id))
+        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (str(id)))
         row = cursor.fetchone()
         return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
@@ -244,9 +244,9 @@ class DataAccess:
             cursor.execute('select * from projectYear where year=%s',(str(year)))
             if(cursor.rowcount==0):
                 cursor.execute('insert into projectYear values(%s)',(str(year)))
-            cursor.execute('select * from projectYearConnection where year=%s and projectID=%s',(year,projectId))
+            cursor.execute('select * from projectYearConnection where year=%s and projectID=%s',(str(year),str(projectId)))
             if(cursor.rowcount==0):
-                cursor.execute('insert into projectYearConnection values(%s,%s)',(year,projectId))
+                cursor.execute('insert into projectYearConnection values(%s,%s)',(str(year),str(projectId)))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -266,9 +266,9 @@ class DataAccess:
             cursor.execute('select * from projectType where year=%s', (str(type)))
             if (cursor.rowcount == 0):
                 cursor.execute('insert into projectType values(%s)', (str(type)))
-            cursor.execute('select * from projectTypeConnection where type=%s and projectID=%s', (type, projectId))
+            cursor.execute('select * from projectTypeConnection where type=%s and projectID=%s', (str(type), str(projectId)))
             if (cursor.rowcount == 0):
-                cursor.execute('insert into projectTypeConnection values(%s,%s)', (type, projectId))
+                cursor.execute('insert into projectTypeConnection values(%s,%s)', (str(type), str(projectId)))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -285,9 +285,9 @@ class DataAccess:
     def add_projectPromotor(self,projectID,employeeId):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('select * from projectPromoter where employee=%s and project=%s',employeeId,projectID)
+            cursor.execute('select * from projectPromoter where employee=%s and project=%s',(str(employeeId),str(projectID))
             if(cursor.rowcount==0):
-                cursor.execute('insert into projectPromotor values(%s,%s)',(employeeId,projectID))
+                cursor.execute('insert into projectPromotor values(%s,%s)',(str(employeeId),str(projectID)))
         except:
             self.dbconnect.rollback()
             print("unable to safe promotor")
@@ -521,7 +521,7 @@ class DataAccess:
 
     def get_projectRegistrationsOnProject(self,projectID):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectRegistration where project=%s',(projectID))
+        cursor.execute('select * from projectRegistration where project=%s',(str(projectID)))
         prs = list()
         for row in cursor:
             pr = ProjectRegistration(row[0], row[1], row[2])
@@ -530,7 +530,7 @@ class DataAccess:
 
     def get_projectRegistrationsOnStudent(self, studentID):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectRegistration where student=%s', (studentID))
+        cursor.execute('select * from projectRegistration where student=%s', (str(studentID)))
         prs = list()
         for row in cursor:
             pr = ProjectRegistration(row[0], row[1], row[2])

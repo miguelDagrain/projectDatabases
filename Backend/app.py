@@ -245,4 +245,6 @@ def logout():
 if __name__ == "__main__":
     ip = config_data['ip']
     port = config_data['port']
+    access = DataAccess(connection)
+    temp=access.researchGroupOnID(1)
     app.run(debug=True, host=ip, port=port)
