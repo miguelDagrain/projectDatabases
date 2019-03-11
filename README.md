@@ -38,3 +38,12 @@ If you have translated it copy the messages.po to babel/translations/nl/LC_MESSA
 Compile translations
 
 >pybabel compile -d babel/translations
+
+# starting application #
+
+Go to source file
+
+>cd Backend
+
+Run the application on http://localhost:5000
+>python app.py
