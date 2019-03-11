@@ -9,6 +9,13 @@
 
 {% endblock stylesheets%}
 
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+
+{% endblock scripts%}
+
 {% block title %}{{ _('People') }}{% endblock title %}
 
 {% block body %}
@@ -92,6 +99,7 @@
     </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+<script>setUpDropdowns()</script>
+
 
 {% endblock body %}
