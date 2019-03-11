@@ -10,7 +10,6 @@ insert into document values(default,'engels','<p>In een CDN (Content Distributio
 insert into attachment values(1,'jos heeft ook een attachment');
 insert into attachment values(1,'jos heeft zelfs 2 attachments');
 insert into attachment values(2,'de groep heeft ook een attachment');
-insert into attachment values(3,'attachments zijn voor losers');
 
 
 insert into researchGroup values (default,'No research group','NONE','Computer Science',true,'middelheim','0');

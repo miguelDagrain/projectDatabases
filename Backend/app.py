@@ -12,7 +12,7 @@ from flask_login import logout_user
 from User import *
 from Session import *
 import sys
-import ldap
+# import ldap
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
@@ -253,31 +253,31 @@ def load_user(user_id):
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    ldap_server = "ldap://localhost:389"
-    username = "someuser"
-    password = "somepassword"
-    # the following is the user_dn format provided by the ldap server
-    user_dn = "uid=" + username + ",ou=someou,dc=somedc,dc=local"
-    # adjust this to your base dn for searching
-    base_dn = "dc=somedc,dc=local"
-    connect = ldap.initialize(ldap_server)
-    search_filter = "uid=" + username
-    try:
-        # if authentication successful, get the full user data
-        connect.bind_s(user_dn, password)
-        result = connect.search_s(base_dn, ldap.SCOPE_SUBTREE, search_filter)
-        # return all user data results
-        connect.unbind_s()
-        print(result)
-        login_user(User(Session(1, 1, 0, 0)))
-        flash('Logged in successfully.')
-
-        flash("you are now logged in")
-    except:
-        connect.unbind_s()
-        print("authentication error")
-
-    next = request.args.get('login')
+    # ldap_server = "ldap://localhost:389"
+    # username = "someuser"
+    # password = "somepassword"
+    # # the following is the user_dn format provided by the ldap server
+    # user_dn = "uid=" + username + ",ou=someou,dc=somedc,dc=local"
+    # # adjust this to your base dn for searching
+    # base_dn = "dc=somedc,dc=local"
+    # connect = ldap.initialize(ldap_server)
+    # search_filter = "uid=" + username
+    # try:
+    #     # if authentication successful, get the full user data
+    #     connect.bind_s(user_dn, password)
+    #     result = connect.search_s(base_dn, ldap.SCOPE_SUBTREE, search_filter)
+    #     # return all user data results
+    #     connect.unbind_s()
+    #     print(result)
+    #     login_user(User(Session(1, 1, 0, 0)))
+    #     flash('Logged in successfully.')
+    #
+    #     flash("you are now logged in")
+    # except:
+    #     connect.unbind_s()
+    #     print("authentication error")
+    #
+    # next = request.args.get('login')
     return redirect(next or url_for('index'))
 
 
