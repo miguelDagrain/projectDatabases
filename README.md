@@ -39,6 +39,8 @@ Compile translations
 
 >pybabel compile -d babel/translations
 
+# starting application #
+
 Go to source file
 
 >cd Backend
