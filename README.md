@@ -39,7 +39,9 @@ Compile translations
 
 >pybabel compile -d babel/translations
 
-Run the application on http://localhost:5000
+Go to source file
 
 >cd Backend
+
+Run the application on http://localhost:5000
 >python app.py
