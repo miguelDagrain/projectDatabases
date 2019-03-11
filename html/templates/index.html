@@ -12,38 +12,6 @@
 
     <div style="display: flex">
 
-
-        <form class="side-bar" action="{{ url_for('add_research_group') }}" method="post">
-            <label>
-                {{ _('Group name') }}:
-                <input type="text" name="name">
-            </label>
-
-            <label>
-                {{ _('Abbreviation') }}:
-                <input type="text" name="abbreviation">
-            </label>
-
-            <label>
-                {{ _('Active') }}:
-                <input type="checkbox" name="active"><br>
-            </label>
-
-            <label>
-                {{ _('Address') }}:
-                <input type="text" name="address"><br>
-            </label>
-
-            <label>
-                {{ _('Telephone number') }}:
-                <input type="text" name="telephone"><br>
-            </label>
-
-            <input type="submit" value="{{ _('Enter') }}">
-        </form>
-
-            <br><br><br><br><br><br><br>
-
             {% if send == True %}
                 <div class="center-block" align="center">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">

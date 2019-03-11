@@ -63,32 +63,6 @@ def show_research_groups():
     return render_template("researchgroups.html", r_groups=groups, page="rgroups")
 
 
-@app.route("/researchgroups/", methods=["POST"])
-def add_research_group():
-    '''
-    Adds a research group to the database
-    This function is called whenever the user uses the POST method on the
-    research group page
-    :return: Rendered template of the index with a send message
-    '''
-    name = request.form.get("name")
-    abbrev = request.form.get("abbreviation")
-    discipline = request.form.get("discipline")
-    active = True if request.form.get("active") == 'on' else False
-    address = request.form.get("address")
-    telephone = request.form.get("telephone")
-    # desc = request.form.get("description")
-    desc = list()
-    desc.append(Document(1, language.NEDERLANDS,
-                         'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
-
-    discipline = "Mathematics"  # TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
-    r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
-    access = DataAccess(connection)
-    access.add_researchGroup(r)
-    return render_template("index.html", send=True, page="index")
-
-
 @app.route("/people/", methods=["GET"])
 def show_people():
     '''
@@ -142,11 +116,12 @@ def show_projects():
     access = DataAccess(connection)
     projects = access.get_projects()
     researchGroups = access.get_researchGroups()
+    disciplines = access.get_disciplines()
 
     neededValuesProject = helper_sort_values_projects(projects, researchGroups)
 
     return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
-                           page="projects")\
+                           r_disciplines=disciplines, page="projects")\
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods = ['GET'])
@@ -160,26 +135,22 @@ def project_page(id):
     researchGroup = access.get_researchGroupOnID(project.researchGroup)
 
     return render_template("project.html", r_project=project, r_document = document, r_promotor = emp,
-                           r_researchGroup = researchGroup,
-                           page="projects")
+                           r_researchGroup = researchGroup, page="projects")
 
 
 @app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
-    access = DataAccess(connection)
-    researchGroups = access.get_researchGroups()
-
 
     if request.args.get("Search_query") == None:
 
-        projects = access.get_projects()
+        return show_projects()
 
 
     else:
+        access = DataAccess(connection)
+        researchGroups = access.get_researchGroups()
         typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-        disciplineOptions = [None, ["MathematicsCompSc"], ["Mathematics"], ["Computer Science"],
-                             ["MathematicsCompSc", "Mathematics"], ["MathematicsCompSc", "Computer Science"],
-                             ["Mathematics", "Computer Science"], ["MathematicsCompSc", "Mathematics", "Computer Science"]]
+        disciplineOptions = access.get_disciplines()
         researchGroupOptions = [""]
 
         for iter in researchGroups:
@@ -189,8 +160,17 @@ def apply_filter_projects():
         print(query, file=sys.stderr)
         typeNr = int(request.args.get("Type"))
         type = typeOptions[typeNr]
-        disciplineNr = int(request.args.get("Disciplines"))
-        discipline = disciplineOptions[disciplineNr]
+
+        disciplineNrs = request.args.getlist("Disciplines")
+        discipline = list()
+        if("0" in disciplineNrs):
+            discipline = None
+        else:
+            for iterSelected in disciplineNrs:
+                discipline.append(disciplineOptions[int(iterSelected)-1])
+
+
+
         groupNr = int(request.args.get("Research_group"))
         group = researchGroupOptions[groupNr]
         status = int(request.args.get("Status"))
@@ -198,9 +178,52 @@ def apply_filter_projects():
         projects = access.filter_projects(query, type, discipline, group, status)
 
 
-    neededValuesProject = helper_sort_values_projects(projects, researchGroups)
-    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
-                           page="projects")
+        neededValuesProject = helper_sort_values_projects(projects, researchGroups)
+        return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
+                               r_disciplines=disciplineOptions, page="projects")
+
+
+@app.route("/administration/")
+def get_administration():
+
+    return render_template("administration.html", page="administration");
+
+
+@app.route("/administration/add_research_group", methods=["GET"])
+def form_add_research_group():
+    access = DataAccess(connection)
+    disciplines = access.get_disciplines()
+
+    return render_template("administration-add-group.html", r_disciplines=disciplines, send=False, page="administration")
+
+@app.route("/administration/add_research_group", methods=["POST"])
+def add_research_group():
+    '''
+    Adds a research group to the database
+    This function is called whenever the user uses the POST method on the
+    research group page
+    :return: Rendered template of the index with a send message
+    '''
+    if request.form.get("name") is None:
+        return form_add_research_group()
+
+    name = request.form.get("name")
+    abbrev = request.form.get("abbreviation")
+    discipline = request.form.get("discipline")
+    active = True if request.form.get("active") == 'on' else False
+    address = request.form.get("address")
+    telephone = request.form.get("telephone")
+    # desc = request.form.get("description")
+    desc = list()
+    desc.append(Document(1, language.NEDERLANDS,
+                         'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+
+    discipline = "Mathematics"  # TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
+    r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
+    access = DataAccess(connection)
+    access.add_researchGroup(r)
+    disciplines = access.get_disciplines()
+    return render_template("administration-add-group.html", r_disciplines=disciplines, send=True, page="administration")
 
 
 @app.errorhandler(404)

@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ _('Projects') }}{% endblock title %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+
+
+{% endblock stylesheets %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+<script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
+
+{% endblock scripts %}
+
+{% block body %}
+
+    <div class="side-bar">
+
+        <div>
+            {{_('Research groups')}}:
+            <a class="side-bar-button" href="{{ url_for('form_add_research_group') }}">{{_('add group')}}</a>
+            <a class="side-bar-button">{{_('remove group')}}</a>
+            <a class="side-bar-button">{{_('modify groups')}}</a>
+        </div>
+
+        <div>
+            {{_('Collaborators')}}:
+            <a class="side-bar-button">{{_('add collaborator')}}</a>
+            <a class="side-bar-button">{{_('remove collaborator')}}</a>
+            <a class="side-bar-button">{{_('modify collaborators')}}</a>
+        </div>
+
+        <div>
+            {{_('Projects')}}:
+            <a class="side-bar-button">{{_('modify disciplines')}}</a>
+            <a class="side-bar-button">{{_('modify types')}}</a>
+        </div>
+
+    </div>
+
+
+    <div class="page-content">
+        {% block administration_content %}
+
+        {% endblock administration_content %}
+    </div>
+
+<script>setUpMultiSelection()</script>
+
+{% endblock body %}

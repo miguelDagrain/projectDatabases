@@ -29,7 +29,7 @@ DROP DOMAIN IF EXISTS subject;
 
 
 -- CREATE DOMAIN SUBJECT as TEXT
---   CHECK ( value = 'Computer Science' or value = 'Mathematics' or value = 'Engeneering');
+--   CHECK ( value = 'Computer Science' or value = 'Mathematics' or value = 'Engineering');
 
 CREATE DOMAIN title as TEXT
   check (value = 'professor' or value = 'phd' or value = 'geen');
@@ -52,7 +52,7 @@ create table discipline
 );
 insert into discipline values('Computer Science');
 insert into discipline values('Mathematics');
-insert into discipline values('Engeneering');
+insert into discipline values('Engineering');
 
 CREATE TABLE document
 (

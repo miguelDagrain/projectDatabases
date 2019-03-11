@@ -1,0 +1,37 @@
+.administration-form {
+    position: relative;
+    background-color: rgba(0, 51, 102, 0.5);;
+    border: 2px solid #003366;
+    width: 60%;
+    height: 100%;
+    margin-top: 30px;
+}
+
+.administration-form > div {
+    position: relative;
+    display: inline-block;
+    width: 60%;
+}
+
+
+.administration-form > label {
+    position: relative;
+    display: inline-block;
+    margin-left: 3%;
+    width: 30%;
+    margin-right: 5%;
+}
+
+.administration-form  input {
+    position: relative;
+    display: inline-block;
+    color: #003366;
+    width: 60%;
+}
+
+.administration-form-submit {
+    position: relative;
+    display: block;
+    margin-left: 38.455%; /* zelfde lijn als andere blokken: 3 + 30 + 5 die .455 heb ik geen idee van*/
+    margin-bottom: 3%;
+}

@@ -1,10 +1,11 @@
 .side-bar {
-    position: sticky;
+    position: fixed;
     display: inline-flex;
     flex-direction: column;
     width: 10%;
-    height: 1000px;
+    height: 100%;
     background-color:#D3D3D3;
+    margin-left: 0;
     margin-top: 0;
 }
 
@@ -34,6 +35,22 @@
     width: 100%;
 }
 
+.side-bar-button {
+    display: inline-block;
+    color: #003366;
+    background-color: white;
+    padding:6px;
+    cursor: pointer;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 40px;
+    width: 100%;
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .side-bar > div > p::selection, label::selection {
     color: white;
     background: #003366;
@@ -44,12 +61,13 @@
     background: #003366;
 }
 
-.side-bar-input > input::selection {
+.side-bar-input > input::selection, .side-bar-button::selection {
     background-color:#003366;
     color:white;
 }
 
-.side-bar-input > input::-moz-selection {
+.side-bar-input > input::-moz-selection, .side-bar-button::-moz-selection {
     background-color:#003366;
     color:white;
 }
+

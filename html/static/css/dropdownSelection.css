@@ -1,6 +1,6 @@
 .dropdown {
     margin-top: 10px;
-    display: inline-block;
+    display: block;
     width: 90%;
     color: #003366;
     position: relative;
@@ -12,7 +12,6 @@
 }
 
 .dropdown-selected {
-    background-color: white;
     -moz-appearance: none;
     -webkit-appearance: none;
     border-radius: 5px;
@@ -24,20 +23,20 @@
 
 .dropdown-items, .dropdown-selected {
     color: #003366;
+    background-color: white;
     padding:6px;
     cursor: pointer;
 }
 
 .dropdown-items {
     position: absolute;
-    background-color: white;
     top: 100%;
     left: 0;
     right: 0;
     z-index: 1;
 }
 
-.dropdown-items > div {
+.dropdown-items  div {
     border: 1px solid;
     border-color: transparent transparent #003366 transparent;
 }

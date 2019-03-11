@@ -368,27 +368,23 @@ class DataAccess:
               "WHERE p.title LIKE %(searchQueryQ)s "
 
         if (researchGroup != ""):
-            sql += "AND name = %(researchGroupQ)s"
+            sql += "AND name = %(researchGroupQ)s "
         if (type != ""):
-            sql += "AND type = %(typeQ)s"
+            sql += "AND type = %(typeQ)s "
 
-        discipline1 = ""
-        discipline2 = ""
-        discipline3 = ""
+        disciplineValue = ""
 
         if (discipline != None):
 
-            if (len(discipline) >= 1):
-                discipline1 = discipline[0]
-                sql += "AND (discipline = %(disciplineQ1)s"
-            if (len(discipline) >= 2):
-                discipline2 = discipline[1]
-                sql += "OR discipline = %(disciplineQ2)s"
-            if (len(discipline) == 3):
-                discipline3 = discipline[2]
-                sql += "OR discipline = %(disciplineQ3)s"
+            sql += "AND discipline IN ( "
 
-            sql += ")"
+            for iterDiscipline in discipline:
+                sql += "'" + iterDiscipline + "', "
+
+            sql = sql[0:len(sql)-2]
+            sql += " ) "
+
+
 
         #gemeenschappelijke sql uit de if else structuur gehaald.
         if (status == 1):
@@ -400,8 +396,7 @@ class DataAccess:
             sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
 
 
-        cursor.execute(sql, dict(searchQueryQ="%"+ searchQuery +"%", researchGroupQ=researchGroup,
-                                 disciplineQ1=discipline1, disciplineQ2=discipline2, disciplineQ3=discipline3))
+        cursor.execute(sql, dict(searchQueryQ="%"+ searchQuery +"%", researchGroupQ=researchGroup))
 
         projects= list()
         for row in cursor:

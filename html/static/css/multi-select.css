@@ -1,0 +1,68 @@
+.multi-select {
+    margin-top: 10px;
+    display: inline-block;
+    width: 90%;
+    color: #003366;
+    position: relative;
+}
+
+.multi-select select {
+    display: none;
+}
+
+.multi-select-button {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 40px;
+}
+
+.multi-select-items {
+    position: absolute;
+    background-color: white; /*soort van achtergrond waarop de alpha afbeelt*/
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.multi-select-items-not-selected {
+    border: 1px solid;
+    border-color: transparent transparent #003366 transparent;
+}
+
+.multi-select-items > .multi-select-items-not-selected:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.multi-select-items-selected {
+    color: white;
+    background-color: #003366;
+}
+
+.multi-select-items-selected {
+    border: 1px solid;
+    border-color: transparent transparent white transparent;
+}
+
+
+.multi-select-items > .multi-select-items-selected:hover {
+    background-color: rgba(0, 51, 102, 0.8);
+}
+
+.multi-select-hide {
+    display: none;
+}
+
+.multi-select-items-not-selected, .multi-select-button {
+    color: #003366;
+    background-color: white;
+}
+
+
+.multi-select-items, .multi-select-button {
+    padding:6px;
+    cursor: pointer;
+}

@@ -1,0 +1,54 @@
+{% extends "administration.html" %}
+
+{% block administration_content %}
+
+<h1>Add Research Group</h1>
+
+<form class="administration-form" action="{{ url_for('add_research_group') }}" method="post">
+
+    <label for="administration-form-name">{{ _('Group name') }}:</label>
+    <input type="text" id="administration-form-name" name="Name">
+
+    <label for="administration-form-abbreviation">{{ _('Abbreviation') }}: </label>
+    <input type="text" id="administration-form-abbreviation" name="Abbreviation">
+
+    <label for="administration-form-disciplines">{{ _('Disciplines') }}:</label>
+    <div class="multi-select">
+        <select name="Disciplines" id="administration-form-disciplines" multiple>
+            <option value="0" >{{ _('All') }}</option>
+
+            <script>
+                var iter = 0;
+            </script>
+
+            {% for discip in r_disciplines %}
+
+            <option value="" id="noValueDis">{{ discip }}</option>
+
+            <script>
+                iter++;
+                document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                document.getElementById("noValueDis").removeAttribute("id");
+            </script>
+
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <label for="administration-form-active">{{ _('Active') }}:</label>
+    <input type="checkbox" id="administration-form-active" name="Active"><br>
+
+
+    <label for="administration-form-address">{{ _('Address') }}:</label>
+    <input type="text" id="administration-form-address" name="Address"><br>
+
+
+    <label for="administration-form-telephone">{{ _('Telephone number') }}:</label>
+    <input type="text" id="administration-form-telephone" name="Telephone"><br>
+
+
+    <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+</form>
+
+{% endblock administration_content %}

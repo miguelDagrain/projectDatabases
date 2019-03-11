@@ -7,19 +7,27 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
 
 {% endblock stylesheets %}
 
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+<script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
+
+{% endblock scripts %}
 
 {% block body %}
 
 
 <div style="display:flex;">
 
-    <form class="side-bar" action="{{ url_for('show_projects') }}" method="get">
+    <form class="side-bar" action="{{ url_for('apply_filter_projects') }}" method="get">
 
 
-        <label class="side-bar-input">
+        <label>
           {{ _('Search query') }}:
           <input type="text" class="form-control-sm" name="Search_query">
         </label>
@@ -37,19 +45,32 @@
         </label>
 
 
-        <label class="dropdown">
+
+        <label class="multi-select">
             {{ _('Disciplines') }}:
-            <select name="Disciplines">
+            <select name="Disciplines" multiple>
                 <option value="0" >{{ _('All') }}</option>
-                <option value="1" >{{ _('MathematicsCompSc') }}</option>
-                <option value="2" >{{ _('Mathematics') }}</option>
-                <option value="3" >{{ _('Computer Science') }}</option>
-                <option value="4" >{{ _('MathematicsCompSc - Mathematics') }}</option>
-                <option value="5" >{{ _('MathematicsCompSc - Computer Science') }}</option>
-                <option value="6" >{{ _('Mathematics - Computer Science') }}</option>
-                <option value="7" >{{ _('MathematicsCompSc - Mathematics - Computer Science') }}</option>
+
+                <script>
+                    var iter = 0;
+                </script>
+
+                {% for discip in r_disciplines %}
+
+                <option value="" id="noValueDis">{{ discip }}</option>
+
+                <script>
+                    iter++;
+                    document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                    document.getElementById("noValueDis").removeAttribute("id");
+                </script>
+
+                {% endfor %}
+
             </select>
         </label>
+
+
 
 
         <label class="dropdown">
@@ -58,9 +79,8 @@
                 <option value="0">{{ _('All') }}</option>
 
 
-                <!-- todo: check if this also can move to external file -->
                 <script>
-                    var iter = 0;
+                    iter = 0;
                 </script>
 
                 {% for group in r_researchGroups %}
@@ -124,7 +144,7 @@
 
 </div>
 
-
-<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+<script>setUpDropdowns()</script>
+<script>setUpMultiSelection()</script>
 
 {% endblock body %}
