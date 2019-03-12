@@ -64,7 +64,9 @@
     <header id="header">
         <div class="row navbar-blue">
             <div class="col" style="margin:0 ">
-                <img class="banner" src="{{ url_for('static', filename="image/banner2.png") }}" alt="ESP banner">
+                <a href="{{ url_for('index') }}">
+                    <img class="banner" src="{{ url_for('static', filename="image/banner2.png") }}" alt="ESP banner">
+                </a>
             </div>
             <div class="col float-right">
                 <form method="get" action="{{ url_for('pick_language') }}" class="float-right">
@@ -122,13 +124,9 @@
                 </nav>
             </div>
             <div class="col text-right">
-
-
                 <button class="btn-login" data-toggle="modal" data-target="#login-modal">
                     Login
                 </button>
-
-
             </div>
         </div>
     </header>
@@ -146,11 +144,13 @@
                     <form method="get" id="login">
                         <div class="form-group">
                             <label for="user" style="margin-bottom: 5px">{{ _('Username') }}</label>
-                            <input id="user" class="form-control" type="text" placeholder="{{ _('username') }}" required>
+                            <input id="user" class="form-control" type="text" placeholder="{{ _('username') }}"
+                                   required>
                         </div>
                         <div class="form-group">
                             <label for="pass" style="margin-bottom: 5px">{{ _('Password') }}</label>
-                            <input id="pass" class="form-control" type="password" placeholder="{{ _('password') }}" required>
+                            <input id="pass" class="form-control" type="password" placeholder="{{ _('password') }}"
+                                   required>
                         </div>
                     </form>
                 </div>

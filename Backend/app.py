@@ -290,6 +290,13 @@ def logout():
     return redirect(next or url_for('index'))
 
 
+@app.route("/people/<int:id>", methods=["GET", "POST"])
+def get_person(id):
+    database = DataAccess(connection)
+    person = database.get_employee(id)
+    return render_template("person.html", person=person, page="people")
+
+
 if __name__ == "__main__":
     ip = config_data['ip']
     port = config_data['port']
