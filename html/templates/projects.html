@@ -118,8 +118,6 @@
     <div class="page-content">
         <h1>{{ _('Projects') }}</h1>
 
-        <p>{{ _('Explanations') }}</p>
-
         <table class="content-table project-table">
 
             <tr>
@@ -131,9 +129,9 @@
         {% for project in r_values %}
 
             <tr>
-                <td>{{ project.title }}</td>
-                <td>{{ project.getMyResearchGroup.name }}</td>
-                <td>[ 0 / {{ project.maxStudents }} ]</td> <!-- todo: replace 0 by an parameter -->
+                <td>{{ project[0] }}</td>
+                <td>{{ project[1] }}</td>
+                <td>[ 0 / {{ project[2] }} ]</td> <!-- todo: replace 0 by an parameter -->
             </tr>
 
         {% endfor %}
