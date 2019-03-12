@@ -1,24 +1,3 @@
-# create table project(
-#   title varchar(255) not null ,
-#   maxStudents INT NOT NULL,
-#   description text references document(content),
-#   researchGroup varchar(255) references researchGroup(name),
-#   activeYear int check(activeYear<2100 and activeYear>1970) NOT NULL, --random years within realm of possibilities
-#   type typeResearch,
-#   tag varchar,  --e.g. "Databases" later list with possible things
-#   projectID int not null UNIQUE PRIMARY KEY,
-#   relatedProject int references project(projectID)
-# );
-
-from enum import Enum
-
-
-class ResearchType(Enum):
-    UNDEFINED = 0
-    MASTER_THESIS = 1
-    RESEARCH_INTERNSHIP = 2
-
-
 class Project:
     def __init__(self,id, title, max_students, research_group, active_year, type, tag,
                  related_project, description):

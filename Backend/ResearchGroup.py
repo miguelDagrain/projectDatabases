@@ -1,26 +1,3 @@
-# CREATE TABLE researchGroup(
-#   --needs logo (200x50)
-#   name varchar(255) unique ,
-#   abbreviation varchar(25) unique ,
-#   discipline subject,
-#   active bit,     --1 is active, 0 is not active
-#   adress varchar(255),
-#   telNr varchar(255) ,
-#   groupDescription text,
-#   foreign key (groupDescription) references document (content),
-#   primary key (name, abbreviation)
-#   );
-
-from enum import Enum
-
-
-class Subject(Enum):
-    Undefined = 0
-    ComputerScience = 1
-    Mathematics = 2
-    Engineering = 3
-
-
 class ResearchGroup:
     def __init__(self,id, name, abbreviation, discipline, active, address, telephone, desc):
         """

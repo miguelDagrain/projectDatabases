@@ -20,6 +20,11 @@ DROP TABLE IF EXISTS researchGroup;
 DROP TABLE IF EXISTS attachment;
 DROP TABLE IF EXISTS document;
 drop table if exists discipline;
+drop table if exists language;
+drop table if exists title;
+drop table if exists intext;
+drop table if exists typeResearch;
+drop table if exists registration;
 DROP DOMAIN IF EXISTS language;
 DROP DOMAIN IF EXISTS registration;
 DROP DOMAIN IF EXISTS typeResearch;
@@ -31,20 +36,46 @@ DROP DOMAIN IF EXISTS subject;
 -- CREATE DOMAIN SUBJECT as TEXT
 --   CHECK ( value = 'Computer Science' or value = 'Mathematics' or value = 'Engineering');
 
-CREATE DOMAIN title as TEXT
-  check (value = 'professor' or value = 'phd' or value = 'geen');
+-- CREATE DOMAIN title as TEXT
+--   check (value = 'professor' or value = 'phd' or value = 'geen');
 
-CREATE DOMAIN INTEXT as TEXT
-  check (value = 'intern' or value = 'extern');
+-- CREATE DOMAIN INTEXT as TEXT
+--   check (value = 'intern' or value = 'extern');
 
-CREATE DOMAIN typeResearch as TEXT
-  check (value = 'Master thesis' or value = 'Research internship');
+-- CREATE DOMAIN typeResearch as TEXT
+--   check (value = 'Master thesis' or value = 'Research internship');
 
-CREATE DOMAIN registration as TEXT
-  check (value = 'bezig' or value = 'geslaagd' or value = 'niet geslaagd');
+-- CREATE DOMAIN registration as TEXT
+--   check (value = 'bezig' or value = 'geslaagd' or value = 'niet geslaagd');
 
-CREATE DOMAIN language as TEXT
-  check (value = 'nederlands' or value = 'engels');
+-- CREATE DOMAIN language as TEXT
+--   check (value = 'nederlands' or value = 'engels');
+create table title(
+  title varchar(255) primary key
+);
+insert into title values('professor');
+insert into title values('phd');
+insert into title values('none');
+
+create table intext(
+  origin varchar(255) primary key
+);
+insert into intext values ('intern');
+insert into intext values ('extern');
+
+create table registration(
+  status varchar(255) primary key
+);
+insert into registration values ('busy');
+insert into registration values ('succeeded');
+insert into registration values ('failed');
+
+create table language(
+  lang varchar(255) primary key
+);
+insert into language values ('dutch');
+insert into language values ('english');
+
 
 create table discipline
 (
@@ -57,7 +88,7 @@ insert into discipline values('Engineering');
 CREATE TABLE document
 (
   documentID SERIAL PRIMARY KEY,
-  lang       language,
+  lang    varchar(255) references language(lang),
   content    text
 );
 
@@ -96,8 +127,8 @@ CREATE TABLE employee
   email          VARCHAR(255) UNIQUE,
   office         VARCHAR(255), --thinking office is like 'M.G.005'
   researchgroup  INT REFERENCES researchGroup (groupID),
-  title          title,
-  INTernORextern INTEXT,
+  title          varchar(255) references title(title),
+  INTernORextern varchar(255) references intext(origin),
   active         BOOLEAN,
   promotor       BOOLEAN
 
@@ -133,12 +164,14 @@ CREATE TABLE projectYearConnection
 
 CREATE TABLE projectType
 (
-  type typeResearch NOT NULL PRIMARY KEY
+  type varchar(255) PRIMARY KEY
 );
+insert into projectType values ('Master thesis');
+insert into projectType values ('Research internship');
 
 CREATE TABLE projectTypeConnection
 (
-  type      typeResearch REFERENCES projectType (type),
+  type      varchar(255) REFERENCES projectType (type),
   projectID INT REFERENCES project (projectID),
   PRIMARY KEY (type, projectId)
 );
@@ -180,7 +213,7 @@ CREATE TABLE student
 CREATE TABLE projectRegistration
 (
   project INT REFERENCES project (projectID),
-  status  registration,
+  status  varchar(255) references registration(status),
   student INT REFERENCES student (studentID),
   PRIMARY KEY (project, status, student)
 );

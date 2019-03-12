@@ -1,10 +1,3 @@
-# create table student(
-#   name varchar(70) NOT NULL ,
-#   studentID int not null unique primary key,
-#   likedProject int references project(projectID),
-#   session int references session(sessionID)
-# );
-
 class Student:
     def __init__(self, student_id,name):
         """

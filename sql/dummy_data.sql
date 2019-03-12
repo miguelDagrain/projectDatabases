@@ -1,7 +1,7 @@
-INSERT into document values(default ,'nederlands','ik ben jos het document');
-insert into document values(default ,'nederlands','wij zijn een groep');
-insert into document values(default ,'nederlands','vandaag is de dag dat de wereld samenkomt en eindelijk belgie wat groter maakt');
-insert into document values(default ,'engels','today is the day the world unites and finally makes belgium a bit bigger');
+INSERT into document values(default ,'dutch','ik ben jos het document');
+insert into document values(default ,'dutch','wij zijn een groep');
+insert into document values(default ,'dutch','vandaag is de dag dat de wereld samenkomt en eindelijk belgie wat groter maakt');
+insert into document values(default ,'english','today is the day the world unites and finally makes belgium a bit bigger');
 
 insert into attachment values(1,'jos heeft ook een attachment');
 insert into attachment values(1,'jos heeft zelfs 2 attachments');
@@ -12,7 +12,7 @@ Insert into researchGroup values(default ,'de grote groep','dgr','Computer Scien
 
 insert into groupDescription values(1,2);
 
-insert into employee values(default,'joske','joske@mailke.com','oppuurseSteenweg 7',1,'geen','intern',true,false);
+insert into employee values(default,'joske','joske@mailke.com','oppuurseSteenweg 7',1,'none','intern',true,false);
 
 insert into contactPerson values(1,1);
 
@@ -26,9 +26,6 @@ insert into projectYear values(1973);
 insert into projectYearConnection values(1971,1);
 insert into projectYearConnection values(1972,1);
 insert into projectYearConnection values(1973,2);
-
-insert into projectType values('Master thesis');
-insert into projectType values('Research internship');
 
 insert into projectTypeConnection values('Master thesis',1);
 insert into projectTypeConnection values('Research internship',2);
@@ -46,7 +43,7 @@ insert into projectDocument values(2,4);
 
 insert into student values(default,'jefke vande nabelen');
 
-insert into projectRegistration values(1,'bezig',1);
+insert into projectRegistration values(1,'busy',1);
 
 insert into bookmark values(1,1);
 insert into bookmark values(2,1);

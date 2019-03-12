@@ -1,19 +1,3 @@
-# create table projectRegistration(
-#   project int references project(projectID),
-#   status registration,
-#   student int references student(studentID),
-#   PRIMARY KEY (project, status, student)
-# );
-from enum import Enum
-
-
-class Registration(Enum):
-    UNDEFINED = 0
-    BUSY = 1
-    FINISHED = 2
-    NOT_FINISHED = 3
-
-
 class ProjectRegistration:
     def __init__(self, project, status, student):
         """

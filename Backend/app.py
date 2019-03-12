@@ -12,7 +12,7 @@ from flask_login import logout_user
 from User import *
 from Session import *
 import sys
-# import ldap
+import ldap
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
@@ -216,7 +216,7 @@ def add_research_group():
     telephone = request.form.get("telephone")
     # desc = request.form.get("description")
     desc = list()
-    desc.append(Document(1, language.NEDERLANDS,
+    desc.append(Document(1, 'dutch'
                          'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
     discipline = "Mathematics"  # TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
@@ -227,14 +227,14 @@ def add_research_group():
     return render_template("administration-add-group.html", r_disciplines=disciplines, send=True, page="administration")
 
 
-@app.errorhandler(404)
-def handle_404(e):
-    '''
-    Handles error 404 (missing page)
-    :param e: Exception container
-    :return: Rendered template of the 404.html file
-    '''
-    return render_template("404.html"), 404
+# @app.errorhandler(404)
+# def handle_404(e):
+#     '''
+#     Handles error 404 (missing page)
+#     :param e: Exception container
+#     :return: Rendered template of the 404.html file
+#     '''
+#     return render_template("404.html"), 404
 
 
 @app.route("/lang/", methods=["GET"])
@@ -253,14 +253,20 @@ def load_user(user_id):
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    # ldap_server = "ldap://localhost:389"
-    # username = "someuser"
-    # password = "somepassword"
+    # ldap_server = "192.168.0.175"
+    # username = "user"
+    # password = "pass"
     # # the following is the user_dn format provided by the ldap server
     # user_dn = "uid=" + username + ",ou=someou,dc=somedc,dc=local"
     # # adjust this to your base dn for searching
     # base_dn = "dc=somedc,dc=local"
     # connect = ldap.initialize(ldap_server)
+    # connect.set_option(ldap.OPT_REFERRALS, 0)
+    # connect.simple_bind_s('Manager', 'secret')
+    # result = connect.search_s('cn=Manager,dc=maxcrc,dc=com',
+    #                           ldap.SCOPE_SUBTREE,
+    #                           'userPrincipalName=user@somedomain.com',
+    #                           ['memberOf'])
     # search_filter = "uid=" + username
     # try:
     #     # if authentication successful, get the full user data

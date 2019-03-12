@@ -1,13 +1,3 @@
-# create table session(
-#   sessionID int unique not null,
-#   startTime timestamp,
-#   searchword varchar,
-#   searchwordtime time,
-#   clickedProject int references project(projectID),
-#   clickedProjectTime time
-# );
-
-
 class Session:
     def __init__(self, session_id, student_id,start_time,start_date):
         """

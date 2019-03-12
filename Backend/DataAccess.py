@@ -253,7 +253,7 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save projectYear!')
 
-    def get_projectTypes(self, projectID):
+    def get_typesFromProject(self, projectID):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectYearConnection where projectID=%s', (str(projectID)))
         types = list()
@@ -261,12 +261,9 @@ class DataAccess:
             types.append(i[0])
         return types
 
-    def add_projectType(self, projectId, type):
+    def add_projectTypeConnection(self, projectId, type):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('select * from projectType where year=%s', (str(type)))
-            if (cursor.rowcount == 0):
-                cursor.execute('insert into projectType values(%s)', (str(type)))
             cursor.execute('select * from projectTypeConnection where type=%s and projectID=%s', (str(type), str(projectId)))
             if (cursor.rowcount == 0):
                 cursor.execute('insert into projectTypeConnection values(%s,%s)', (str(type), str(projectId)))
@@ -369,8 +366,9 @@ class DataAccess:
 
         if (researchGroup != ""):
             sql += "AND name = %(researchGroupQ)s "
-        if (type != ""):
-            sql += "AND type = %(typeQ)s "
+        #TODO hier is een fout typeQ wordt nooit vervangen
+        # if (type != ""):
+        #     sql += "AND type = %(typeQ)s "
 
         disciplineValue = ""
 
@@ -419,7 +417,7 @@ class DataAccess:
             for i in proj.activeYear:
                 self.add_projectYears(gid,i)
             for i in proj.type:
-                self.add_projectType(gid,i)
+                self.add_projectTypeConnection(gid, i)
             for i in proj.tag:
                 self.add_projectTag(gid,i)
             for i  in proj.relatedProject:
@@ -643,3 +641,88 @@ class DataAccess:
         for row in cursor:
             disciplines.append(row[0])
         return disciplines
+
+    def add_title(self,title):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO title values(%s)',(title))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to add title!')
+
+    def get_titles(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from title')
+        titles = list()
+        for row in cursor:
+            titles.append(row[0])
+        return titles
+
+    def add_intextOrigin(self,origin):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO INTEXT values(%s)',(origin))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to add intext origin!')
+
+    def get_intextOrigin(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from INTEXT')
+        origins = list()
+        for row in cursor:
+            origins.append(row[0])
+        return origins
+
+    def add_registrationStatus(self,status):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO registration values(%s)',(status))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to add registration status!')
+
+    def get_registrationStatus(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from registration')
+        status = list()
+        for row in cursor:
+            status.append(row[0])
+        return status
+
+    def add_language(self, lang):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO language values(%s)', (lang))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to add language!')
+
+    def get_languages(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from language')
+        langs = list()
+        for row in cursor:
+            langs.append(row[0])
+        return langs
+
+    def add_projectType(self, type):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO projectType values(%s)', (type))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to add projectType!')
+
+    def get_projectType(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectType ')
+        types = list()
+        for i in cursor:
+            types.append(i[0])
+        return types

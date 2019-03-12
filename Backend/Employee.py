@@ -1,30 +1,3 @@
-# create table employee(
-#   --needs picture (150x150)
-#   name varchar,
-#   email varchar(255) unique,
-#   office varchar(255), --thinking office is like 'M.G.005'
-#   researchgroup varchar(255) references researchGroup(name),
-#   title title,
-#   internORextern intext,
-#   active bit,  --1 is active 0 is inactive
-#   PRIMARY KEY(email)
-# );
-
-from enum import Enum
-
-
-class Title(Enum):
-    none = 0
-    professor = 1
-    PHD = 2
-
-
-class InText(Enum):
-    Undefined = 0
-    Intern = 1
-    Extern = 2
-
-
 class Employee:
     def __init__(self, id, name, email, office, research_group, title, interextern, active, promotor):
         """
