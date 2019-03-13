@@ -12,7 +12,7 @@ from flask_login import logout_user
 from User import *
 from Session import *
 import sys
-import ldap
+
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
@@ -309,4 +309,5 @@ if __name__ == "__main__":
     access = DataAccess(connection)
     # temp=access.get_researchGroupOnID(1)
     # temp2=access.get_projectPromotors(1)
-    app.run(debug=True, host=ip, port=port )
+    # app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )
+    app.run(debug=True, host=ip, port=port)
