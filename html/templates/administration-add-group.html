@@ -2,7 +2,7 @@
 
 {% block administration_content %}
 
-<h1>Add Research Group</h1>
+<h1>{{ _('Add Research Group') }}</h1>
 
 <form class="administration-form" action="{{ url_for('add_research_group') }}" method="post">
 
@@ -12,10 +12,9 @@
     <label for="administration-form-abbreviation">{{ _('Abbreviation') }}: </label>
     <input type="text" id="administration-form-abbreviation" name="Abbreviation">
 
-    <label for="administration-form-disciplines">{{ _('Disciplines') }}:</label>
-    <div class="multi-select">
-        <select name="Disciplines" id="administration-form-disciplines" multiple>
-            <option value="0" >{{ _('All') }}</option>
+    <label for="administration-form-discipline">{{ _('Disciplines') }}:</label>
+    <div class="dropdown">
+        <select id="administration-form-discipline" name="Discipline">
 
             <script>
                 var iter = 0;
@@ -26,9 +25,9 @@
             <option value="" id="noValueDis">{{ discip }}</option>
 
             <script>
-                iter++;
                 document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
                 document.getElementById("noValueDis").removeAttribute("id");
+                iter++;
             </script>
 
             {% endfor %}

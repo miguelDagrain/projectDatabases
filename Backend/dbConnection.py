@@ -23,3 +23,6 @@ class DBConnection:
     
     def rollback(self):
         return self.conn.rollback()
+
+    def get_error(self):
+        return psycopg2.Error

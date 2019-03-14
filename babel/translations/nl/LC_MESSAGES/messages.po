@@ -22,41 +22,14 @@ msgstr ""
 msgid "Page not found"
 msgstr "Pagina niet gevonden"
 
-#: html/templates/index.html:17
-msgid "Group name"
-msgstr "Naam onderzoeksgroep"
-
-#: html/templates/index.html:22 html/templates/researchgroups.html:40
-msgid "Abbreviation"
-msgstr "Afkorting"
-
-#: html/templates/index.html:27 html/templates/researchgroups.html:46
+#: html/templates/administration-add-group.html html/templates/researchgroups.html
 msgid "Active"
 msgstr "Actief"
 
-#: html/templates/index.html:32
-msgid "Address"
-msgstr "Adres"
-
-#: html/templates/index.html:37
-msgid "Telephone number"
-msgstr "Telefoonnummer"
 
 #: html/templates/index.html:41
 msgid "Enter"
 msgstr "Verstuur"
-
-#: html/templates/index.html:46
-msgid "Hello"
-msgstr "Hallo"
-
-#: html/templates/index.html:53
-msgid "Added research group to the database"
-msgstr "Onderzoeksgroep toegevoegd aan databank"
-
-#: html/templates/index.html:60
-msgid "add research group"
-msgstr "Voeg onderzoeksgroep toe"
 
 #: html/templates/layout.html:37
 msgid "Home"
@@ -86,37 +59,7 @@ msgstr "Naam"
 msgid "Research group"
 msgstr "Onderzoeksgroep"
 
-msgid "Research groups"
-msgstr "Onderzoeksgroepen"
-
-msgid "Collaberators"
-msgstr "Medewerkers"
-
-msgid "add group"
-msgstr "voeg groep toe"
-
-msgid "remove group"
-msgstr "verwijder groep"
-
-msgid "modify groups"
-msgstr "pas groupen aan"
-
-msgid "add collaborator"
-msgstr "voeg medewerker toe"
-
-msgid "remove collaborator"
-msgstr "verwijder medewerker"
-
-msgid "modify collaborators"
-msgstr "pas medewerkers aan"
-
-msgid "modify disciplines"
-msgstr "pas disciplines aan"
-
-msgid "modify types"
-msgstr "pas types aan"
-
-
+#: elke multi-select
 #: html/templates/people.html:31 html/templates/people.html:57
 #: html/templates/projects.html:32 html/templates/projects.html:46
 #: html/templates/projects.html:62 html/templates/projects.html:91
@@ -167,7 +110,7 @@ msgstr "Onderzoeksstage 1"
 msgid "Research internship 2"
 msgstr "Onderzoeksstage 2"
 
-#: html/templates/projects.html:43
+#: html/templates/projects.html html/templates/administration-add-group.html
 msgid "Disciplines"
 msgstr "Disciplines"
 
@@ -195,10 +138,6 @@ msgstr "Enkel beschikbare projecten"
 msgid "Assigned projects only"
 msgstr "Enkel toegewezen projecten"
 
-#: html/templates/projects.html:108
-msgid "Explanations"
-msgstr "Uitleg"
-
 #: html/templates/projects.html:113
 msgid "title"
 msgstr "titel"
@@ -215,12 +154,95 @@ msgstr "toegewezen studenten"
 msgid "Research groups"
 msgstr "Onderzoeksgroepen"
 
-#: html/templates/researchgroups.html:43
+#: html/templates/researchgroups.html:43 html/templates/administration-modify-disciplines.html
 msgid "Discipline"
 msgstr "Discipline"
 
+
+#: html/templates/administration.html
+msgid "Research groups"
+msgstr "Onderzoeksgroepen"
+
+#: html/templates/administration.html
+msgid "Staff"
+msgstr "Medewerkers"
+
+#: html/templates/administration.html
+msgid "add group"
+msgstr "voeg groep toe"
+
+#: html/templates/administration.html
+msgid "remove group"
+msgstr "verwijder groep"
+
+#: html/templates/administration.html
+msgid "modify groups"
+msgstr "pas groupen aan"
+
+#: html/templates/administration.html
+msgid "add staff"
+msgstr "voeg medewerker toe"
+
+#: html/templates/administration.html
+msgid "remove staff"
+msgstr "verwijder medewerker"
+
+#: html/templates/administration.html
+msgid "modify staff"
+msgstr "pas medewerkers aan"
+
+#: html/templates/administration.html
+msgid "modify disciplines"
+msgstr "pas disciplines aan"
+
+#: html/templates/administration.html
+msgid "modify types"
+msgstr "pas types aan"
+
+#: html/templates/administration-add-group.html
+msgid "Add Research Group"
+msgstr "Toevoegen Onderzoeksgroep"
+
+#: html/templates/administration-add-group.html
+msgid "Group name"
+msgstr "Naam onderzoeksgroep"
+
+#: html/templates/administration-add-group.html html/templates/researchgroups.html
+msgid "Abbreviation"
+msgstr "Afkorting"
+
+#: html/templates/administration-add-group.html
+msgid "Address"
+msgstr "Adres"
+
+#: html/templates/administration-add-group.html
+msgid "Telephone number"
+msgstr "Telefoonnummer"
+
+#: html/templates/administration-add-staff.html
+msgid "Add Staff"
+msgstr "Toevoegen Medewerkers"
+
+#: html/templates/administration-modify-disciplines.html
+msgid "Modify Disciplines"
+msgstr "Aanpassen Disciplines"
+
+#: html/templates/administration-modify-disciplines.html
+msgid "Add Discipline"
+msgstr "Toevoegen Discipline"
+
+#: html/templates/administration-modify-disciplines.html
+msgid "Remove Discipline"
+msgstr "Verwijderen Discipline"
+
+#: html/templates/administration-modify-disciplines.html
+msgid "New discipline"
+msgstr "Nieuwe discipline"
+
+#: elke multi-select knop
 msgid "None"
 msgstr "Geen"
 
+#: elke multi-select knop
 msgid "Selection"
 msgstr "Selectie"

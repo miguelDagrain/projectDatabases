@@ -4,7 +4,9 @@ from config import config_data
 from dbConnection import *
 from DataAccess import DataAccess
 from ResearchGroup import ResearchGroup
+from Employee import Employee
 from Document import *
+from helperFunc import *
 from flask_babel import *
 from flask_login import login_user, login_required
 from flask_login import LoginManager
@@ -102,16 +104,6 @@ def show_people():
 
 
 
-def helper_sort_values_projects(projects, researchGroups):
-    neededValuesProject = []
-    for project in projects:
-        for group in researchGroups:
-            if (group.ID == project.researchGroup):
-                neededValuesProject.append([project.title, group.name, project.maxStudents])
-
-    return neededValuesProject
-
-
 @app.route("/projects/", methods=["GET"])
 def show_projects():
     access = DataAccess(connection)
@@ -163,12 +155,7 @@ def apply_filter_projects():
         type = typeOptions[typeNr]
 
         disciplineNrs = request.args.getlist("Disciplines")
-        discipline = list()
-        if("0" in disciplineNrs):
-            discipline = None
-        else:
-            for iterSelected in disciplineNrs:
-                discipline.append(disciplineOptions[int(iterSelected)-1])
+        discipline = helper_get_discipline_multi_choice(disciplineNrs, disciplineOptions)
 
 
 
@@ -202,30 +189,120 @@ def add_research_group():
     '''
     Adds a research group to the database
     This function is called whenever the user uses the POST method on the
-    research group page
-    :return: Rendered template of the index with a send message
+    add research group page
+    :return: Rendered template of the administration-add-group with disciplines and a send message
     '''
-    if request.form.get("name") is None:
+    if request.form.get("Name") is None:
         return form_add_research_group()
 
-    name = request.form.get("name")
-    abbrev = request.form.get("abbreviation")
-    discipline = request.form.get("discipline")
-    active = True if request.form.get("active") == 'on' else False
-    address = request.form.get("address")
-    telephone = request.form.get("telephone")
+    access = DataAccess(connection)
+    disciplines = access.get_disciplines()
+
+    name = request.form.get("Name")
+    abbrev = request.form.get("Abbreviation")
+    disciplineNr = request.form.get("Discipline")
+    discipline = disciplines[int(disciplineNr)]
+
+    active = True if request.form.get("Active") == 'on' else False
+    address = request.form.get("Address")
+    telephone = request.form.get("Telephone")
     # desc = request.form.get("description")
     desc = list()
     desc.append(Document(1, 'dutch'
                          'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
-    discipline = "Mathematics"  # TODO : ervoor zorgen dat je hier meerdere dinges kan invullen (mischien drop down menu?)
     r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
-    access = DataAccess(connection)
     access.add_researchGroup(r)
-    disciplines = access.get_disciplines()
     return render_template("administration-add-group.html", r_disciplines=disciplines, send=True, page="administration")
 
+@app.route("/administration/add_staff", methods=["GET"])
+def form_add_staff():
+    access = DataAccess(connection)
+    researchGroups = access.get_researchGroups()
+
+    return render_template("administration-add-staff.html", r_researchGroups=researchGroups , send=False,
+                           page="administration")
+
+@app.route("/administration/add_staff", methods=["POST"])
+def add_staff():
+    '''
+    function that adds a staff member to the database, is called everytime the user uses the POST method on the
+    add staf page
+    :return: Rendered template of the administration-add-staff with researchgroups and send message
+    '''
+    access = DataAccess(connection)
+    researchGroups = access.get_researchGroups()
+
+    name = request.form.get("Name")
+    email = request.form.get("Email")
+    office = request.form.get("Office")
+    researchgroupNr = request.form.get("Researchgroup")
+    research_group = researchGroups[int(researchgroupNr)]
+    titleOptions = access.get_titles()
+    titleNr = request.form.get("Title")
+    title = titleOptions[int(titleNr)]
+    roleOptions = access.get_intextOrigin()
+    roleNr = request.form.get("Role")
+    role = roleOptions[int(roleNr)]
+    active = True if request.form.get("Active") == 'on' else False
+    promotor = True if request.form.get("Promotor") == 'on' else False
+
+    emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
+    access.add_employee(emp)
+    return render_template("administration-add-staff.html", r_researchGroups=researchGroups, send=True,
+                           page="administration")
+
+
+@app.route("/administration/modify_disciplines", methods=["GET"])
+def form_modify_disciplines():
+    '''
+    function that returns a form to modify disciplines
+    :return: Rendered template of the administration-modify-disciplines with disciplines
+    '''
+    access = DataAccess(connection)
+    disciplines = access.get_disciplines()
+
+    return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=False)
+
+@app.route("/administration/modify_disciplines", methods=["POST"])
+def modify_disciplines():
+    '''
+    function that adds a discipline to the possible disciplines
+    :return: Rendered template of the administration-modify-disciplines with disciplines
+    '''
+    access = DataAccess(connection)
+    disciplines = access.get_disciplines()
+
+    value = request.form.get("Name")
+    if(value):
+        access.add_discipline(value)
+    else:
+        value = request.form.get("Discipline")
+        if(value):
+            discipline = disciplines[int(value)]
+            access.remove_discipline(discipline)
+
+    disciplines = access.get_disciplines()
+
+    return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=True)
+
+@app.route("/administration/modify_types", methods=["GET"])
+def form_modify_types():
+    '''
+    function that returns a form to modify types
+    :return: Rendered template of the administration-modify-templates with types
+    '''
+    access = DataAccess
+    types = access
+
+    return render_template("administration-modify-types.html", r_types=types, send=False)
+
+@app.route("/administration/modify_types", methods=["POST"])
+def modify_types():
+    '''
+    function that modifies
+    :return:
+    '''
 
 # @app.errorhandler(404)
 # def handle_404(e):
