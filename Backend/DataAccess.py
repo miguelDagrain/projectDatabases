@@ -9,6 +9,7 @@ from Student import *
 from Attachment import *
 
 
+
 class DataAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
@@ -178,16 +179,16 @@ class DataAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s)',
-                           (empl.name, empl.email, empl.office, empl.researchGruoup, empl.title, empl.internOrExtern,
-                            empl.active))
+                           (empl.name, empl.email, empl.office, empl.research_group.ID, empl.title, empl.internOrExtern,
+                            empl.active, empl.promotor))
             cursor.execute('SELECT LASTVAL()')
             eid = cursor.fetchone()[0]
             empl.Id = eid
             # get id and return updated object
             self.dbconnect.commit()
-        except:
+        except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            raise Exception('Unable to save Employee!')
+            raise Exception('\nUnable to save Employee!\n(%s)' % (error))
 
     def filter_employees(self, searchQuery="", researchGroup="", promotor=0,):
         cursor = self.dbconnect.get_cursor()
@@ -628,11 +629,20 @@ class DataAccess:
     def add_discipline(self,discipline):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO discipline values(%s)',(discipline))
+            cursor.execute("INSERT INTO discipline (subject) VALUES (%s)", (discipline,))
             self.dbconnect.commit()
-        except:
+        except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            raise Exception('Unable to add discipline!')
+            raise Exception('\nUnable to add discipline!\n(%s)' % (error))
+
+    def remove_discipline(self, discipline):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute("DELETE FROM discipline WHERE subject = (%s)", (discipline,))
+            self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback()
+            raise Exception('\nUnable to remove discipline!:\n(%s)' % (error))
 
     def get_disciplines(self):
         cursor = self.dbconnect.get_cursor()
