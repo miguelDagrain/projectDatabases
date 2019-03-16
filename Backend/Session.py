@@ -16,6 +16,3 @@ class Session:
         #both list of tuples
         self.searchWords=list()
         self.clickedProjects = list()
-
-    def __str__(self):
-        return "id: "+str(self.sessionId)+", startTime: "+self.startTime+", searchWordTime: "+self.searchWordTime+", clickedProject: "+self.clickedProject+", clickedProjectTime: "+self.clickedProjectTime

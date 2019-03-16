@@ -10,6 +10,3 @@ class Document:
         self.text = text
         self.attachment=list()
 
-
-    def __str__(self):
-        return "id"+self.ID+", content:"+self.text

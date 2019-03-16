@@ -8,12 +8,7 @@ from Session import *
 from Student import *
 from Attachment import *
 
-
-
-
-
-
-class DocumentAcces:
+class DocumentAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
@@ -38,15 +33,15 @@ class DocumentAcces:
         cursorAttachment = self.dbconnect.get_cursor()
         cursorAttachment.execute('select * from attachment where %s=doc',(str(document.ID)))
         for att in cursorAttachment:
-            document.attachment.append(Attachment(att[0], att[1]))
+            document.attachment.append(att[1])
         return document
 
-    def add_attachment(self,attachment):
+    def add_attachment(self,documentID,attachment):
         try:
             cursor =self.dbconnect.get_cursor()
-            cursor.execute('select * from attachment where doc=%s and attachment=%s',(str(attachment.docid),attachment.content))
+            cursor.execute('select * from attachment where doc=%s and attachment=%s',(str(documentID),str(attachment)))
             if(cursor.rowcount==0):
-                cursor.execute('insert into attachment values(%s,%s)',(str(attachment.docid),str(attachment.content)))
+                cursor.execute('insert into attachment values(%s,%s)',(str(documentID),str(attachment)))
                 self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -76,10 +71,31 @@ class DocumentAcces:
             self.dbconnect.rollback()
             raise Exception('Unable to save document!')
 
-class ResearchGroupAcces:
+    def change_Document(self,document):
+        try:
+            if(document.ID!=None):
+                cursor = self.dbconnect.get_cursor()
+                cursor.execute('select * from document where documentID=%s',(str(document.ID)))
+                if(cursor.rowcount==0):
+                    raise Exception('no document with that ID found')
+                cursor.execute('update document set lang=%s, content=%s where documentID=%s',(document.language,document.text,str(document.ID)))
+
+                cursor.execute('delete from attachment where doc=%s',(str(document.ID)))
+                for i in document.attachment:
+                    self.add_attachment(document.ID,i)
+                self.dbconnect.commit()
+
+            else:
+                raise Exception('Document doesnt have ID')
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to change document!')
+
+
+class ResearchGroupAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-        self.doc=DocumentAcces(self.dbconnect)
+        self.doc=DocumentAccess(self.dbconnect)
 
 
     def get_researchgroupDescriptions(self, groupid):
@@ -169,7 +185,25 @@ class ResearchGroupAcces:
             self.dbconnect.rollback()
             raise Exception('Unable to save researchgroup!')
 
-class EmployeeAcces:
+    def change_researchGroup(self,group):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            if(group.ID==None):
+                raise Exception('no id given')
+            cursor.execute('select * from researchgroup where groupID=%s',(group.ID))
+            if(cursor.rowcount==0):
+                raise Exception('no researchGroup found with that id')
+            cursor.execute('update researchGroup set name=%s,abbreviation=%s,discipline=%s,active=%s,address=%s,telNr=%s where groupId=%s',
+                           (group.name, group.abbreviation, group.discipline, group.active, group.address, str(group.telNr)),str(group.ID))
+            cursor.execute('delete from groupDescription where researchGroup=%s',str(group.ID))
+            for i in group.desc:
+                self.add_researchGroupDescription(i, gid)
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to change researchGroup')
+
+
+class EmployeeAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
@@ -225,10 +259,10 @@ class EmployeeAcces:
             employees.append(employee)
         return employees
 
-class ProjectAcces:
+class ProjectAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-        self.doc=DocumentAcces(self.dbconnect)
+        self.doc=DocumentAccess(self.dbconnect)
 
     def get_projectDocuments(self, projectID):
         cursor = self.dbconnect.get_cursor()
@@ -448,10 +482,10 @@ class ProjectAcces:
             self.dbconnect.rollback()
             raise Exception('Unable to save project!')
 
-class StudentAcces:
+class StudentAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-        self.project=ProjectAcces(self.dbconnect)
+        self.project=ProjectAccess(self.dbconnect)
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
         cursor = self.dbconnect.get_cursor()
@@ -573,7 +607,7 @@ class StudentAcces:
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
 
-class SessionAcces:
+class SessionAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
     def get_sessionSearches(self, sessionID):
@@ -648,7 +682,7 @@ class SessionAcces:
             self.dbconnect.rollback()
             raise Exception('Unable to save session!')
 
-class DomainAcces:
+class DomainAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
@@ -763,13 +797,13 @@ class DomainAcces:
             types.append(i[0])
         return types
 
-class FullDataAccess(DocumentAcces,DomainAcces,EmployeeAcces,ProjectAcces,SessionAcces,StudentAcces,ResearchGroupAcces):
+class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, SessionAccess, StudentAccess, ResearchGroupAccess):
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-        DomainAcces.__init__(self,self.dbconnect)
-        DocumentAcces.__init__(self,self.dbconnect)
-        EmployeeAcces.__init__(self,self.dbconnect)
-        ProjectAcces.__init__(self,self.dbconnect)
-        SessionAcces.__init__(self,self.dbconnect)
-        StudentAcces.__init__(self,self.dbconnect)
-        ResearchGroupAcces.__init__(self,self.dbconnect)
+        DomainAccess.__init__(self, self.dbconnect)
+        DocumentAccess.__init__(self, self.dbconnect)
+        EmployeeAccess.__init__(self, self.dbconnect)
+        ProjectAccess.__init__(self, self.dbconnect)
+        SessionAccess.__init__(self, self.dbconnect)
+        StudentAccess.__init__(self, self.dbconnect)
+        ResearchGroupAccess.__init__(self, self.dbconnect)

@@ -61,7 +61,7 @@ def show_research_groups():
     Shows the research groups on the website
     :return: Rendered template containing all research groups
     '''
-    access = ResearchGroupAcces(connection)
+    access = ResearchGroupAccess(connection)
     groups = access.get_researchGroups()
     return render_template("researchgroups.html", r_groups=groups, page="rgroups")
 
@@ -72,11 +72,11 @@ def show_people():
     Shows a table of people on a webpage
     :return: Rendered template of people HTML
     '''
-    Raccess = ResearchGroupAcces(connection)
+    Raccess = ResearchGroupAccess(connection)
     researchGroups = Raccess.get_researchGroups()
 
     if request.args.get("Name") is None:
-        Eaccess = EmployeeAcces(connection)
+        Eaccess = EmployeeAccess(connection)
         people = Eaccess.get_employees()
 
 
@@ -119,14 +119,14 @@ def show_projects():
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods = ['GET'])
 def project_page(id):
-    Paccess = ProjectAcces(connection)
+    Paccess = ProjectAccess(connection)
     project = Paccess.get_project(id)
     document = Paccess.get_projectDocuments(id)
     promotors = Paccess.get_projectPromotors(id)
-    Eaccess = EmployeeAcces(connection)
+    Eaccess = EmployeeAccess(connection)
     emp = Eaccess.get_employee(promotors[0])
 
-    Raccess = ResearchGroupAcces(connection)
+    Raccess = ResearchGroupAccess(connection)
     researchGroup = Raccess.get_researchGroupOnID(project.researchGroup)
 
     return render_template("project.html", r_project=project, r_document = document, r_promotor = emp,
@@ -142,10 +142,10 @@ def apply_filter_projects():
 
 
     else:
-        Raccess = ResearchGroupAcces(connection)
+        Raccess = ResearchGroupAccess(connection)
         researchGroups = Raccess.get_researchGroups()
         typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-        Daccess = DomainAcces(connection)
+        Daccess = DomainAccess(connection)
         disciplineOptions = Daccess.get_disciplines()
         researchGroupOptions = [""]
 
@@ -166,7 +166,7 @@ def apply_filter_projects():
         group = researchGroupOptions[groupNr]
         status = int(request.args.get("Status"))
 
-        Paccess = ProjectAcces(connection)
+        Paccess = ProjectAccess(connection)
         projects = Paccess.filter_projects(query, type, discipline, group, status)
 
 
@@ -183,7 +183,7 @@ def get_administration():
 
 @app.route("/administration/add_research_group", methods=["GET"])
 def form_add_research_group():
-    access = DomainAcces(connection)
+    access = DomainAccess(connection)
     disciplines = access.get_disciplines()
 
     return render_template("administration-add-group.html", r_disciplines=disciplines, send=False, page="administration")
@@ -199,7 +199,7 @@ def add_research_group():
     if request.form.get("Name") is None:
         return form_add_research_group()
 
-    Daccess = DomainAcces(connection)
+    Daccess = DomainAccess(connection)
     disciplines = Daccess.get_disciplines()
 
     name = request.form.get("Name")
@@ -216,13 +216,13 @@ def add_research_group():
                          'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
     r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
-    Raccess=ResearchGroupAcces(connection)
+    Raccess=ResearchGroupAccess(connection)
     Raccess.add_researchGroup(r)
     return render_template("administration-add-group.html", r_disciplines=disciplines, send=True, page="administration")
 
 @app.route("/administration/add_staff", methods=["GET"])
 def form_add_staff():
-    access = ResearchGroupAcces(connection)
+    access = ResearchGroupAccess(connection)
     researchGroups = access.get_researchGroups()
 
     return render_template("administration-add-staff.html", r_researchGroups=researchGroups , send=False,
@@ -235,7 +235,7 @@ def add_staff():
     add staf page
     :return: Rendered template of the administration-add-staff with researchgroups and send message
     '''
-    Raccess = ResearchGroupAcces(connection)
+    Raccess = ResearchGroupAccess(connection)
     researchGroups = Raccess.get_researchGroups()
 
     name = request.form.get("Name")
@@ -253,7 +253,7 @@ def add_staff():
     promotor = True if request.form.get("Promotor") == 'on' else False
 
     emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
-    Eaccess= EmployeeAcces(connection)
+    Eaccess= EmployeeAccess(connection)
     Eaccess.add_employee(emp)
     return render_template("administration-add-staff.html", r_researchGroups=researchGroups, send=True,
                            page="administration")
@@ -265,7 +265,7 @@ def form_modify_disciplines():
     function that returns a form to modify disciplines
     :return: Rendered template of the administration-modify-disciplines with disciplines
     '''
-    access = DomainAcces(connection)
+    access = DomainAccess(connection)
     disciplines = access.get_disciplines()
 
     return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=False)
@@ -276,7 +276,7 @@ def modify_disciplines():
     function that adds a discipline to the possible disciplines
     :return: Rendered template of the administration-modify-disciplines with disciplines
     '''
-    access = DomainAcces(connection)
+    access = DomainAccess(connection)
     disciplines = access.get_disciplines()
 
     value = request.form.get("Name")
@@ -381,7 +381,7 @@ def logout():
 
 @app.route("/people/<int:id>", methods=["GET", "POST"])
 def get_person(id):
-    database = EmployeeAcces(connection)
+    database = EmployeeAccess(connection)
     person = database.get_employee(id)
     return render_template("person.html", person=person, page="people")
 

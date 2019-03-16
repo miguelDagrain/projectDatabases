@@ -21,6 +21,3 @@ class ResearchGroup:
         self.desc = desc
         self.contactID=None
 
-    def __str__(self):
-        return "name: "+self.name+", abbreviation: "+self.abbreviation+", discipline: "+self.discipline+\
-               ", active: "+str(self.active)+", address: "+self.address+", telNr: "+self.telNr+", desc: "+self.desc
