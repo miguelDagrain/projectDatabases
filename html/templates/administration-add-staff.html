@@ -1,0 +1,67 @@
+{% extends "administration.html" %}
+
+{% block administration_content %}
+
+<h1>{{ _('Add Staff') }}</h1>
+
+<form class="administration-form" action="{{ url_for('add_staff') }}" method="post">
+
+    <label for="administration-form-name">{{ _('Name') }}:</label>
+    <input type="text" id="administration-form-name" name="Name">
+
+    <label for="administration-form-email">{{ _('E-mail') }}:</label>
+    <input type="text" id="administration-form-email" name="Email">
+
+    <label for="administration-form-office">{{ _('Office address') }}:</label>
+    <input type="text" id="administration-form-office" name="Office">
+
+    <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
+    <div class="dropdown">
+        <select name="Researchgroup" id="administration-form-researchgroup">
+
+            <script>
+                    iter = 0;
+            </script>
+
+            {% for group in r_researchGroups %}
+
+            <option value="" id="noValue">{{ group.name }}</option>
+
+            <script>
+                document.getElementById("noValue").setAttribute("value", iter.toString(10));
+                document.getElementById("noValue").removeAttribute("id");
+                iter++;
+            </script>
+
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <label for="administration-form-title">{{ _('Title') }}:</label>
+    <div class="dropdown">
+        <select name="Title" id="administration-form-title">
+            <option value="0">{{ _('professor') }}</option>
+            <option value="1">{{ _('phd') }}</option>
+            <option value="2">{{ _('none') }}</option>
+        </select>
+    </div>
+
+    <label for="administration-form-role">{{ _('Role') }}:</label>
+    <div class="dropdown">
+        <select name="Role" id="administration-form-role">
+            <option value="0">{{ _('intern') }}</option>
+            <option value="1">{{ _('extern') }}</option>
+        </select>
+    </div>
+
+    <label for="administration-form-active">{{ _('Active') }}:</label>
+    <input type="checkbox" id="administration-form-active" name="Active">
+
+    <label for="administration-form-promotor">{{ _('Promotor') }}:</label>
+    <input type="checkbox" id="administration-form-promotor" name="Promotor">
+
+    <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+</form>
+
+{% endblock administration_content %}
