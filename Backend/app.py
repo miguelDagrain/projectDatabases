@@ -2,7 +2,7 @@ from flask import *
 from flask.templating import render_template
 from config import config_data
 from dbConnection import *
-from DataAccess import DataAccess
+from DataAccess import *
 from ResearchGroup import ResearchGroup
 from Employee import Employee
 from Document import *
@@ -61,7 +61,7 @@ def show_research_groups():
     Shows the research groups on the website
     :return: Rendered template containing all research groups
     '''
-    access = DataAccess(connection)
+    access = ResearchGroupAcces(connection)
     groups = access.get_researchGroups()
     return render_template("researchgroups.html", r_groups=groups, page="rgroups")
 
@@ -72,12 +72,12 @@ def show_people():
     Shows a table of people on a webpage
     :return: Rendered template of people HTML
     '''
-    access = DataAccess(connection)
-    researchGroups = access.get_researchGroups()
+    Raccess = ResearchGroupAcces(connection)
+    researchGroups = Raccess.get_researchGroups()
 
     if request.args.get("Name") is None:
-
-        people = access.get_employees()
+        Eaccess = EmployeeAcces(connection)
+        people = Eaccess.get_employees()
 
 
     else:
@@ -91,7 +91,7 @@ def show_people():
         group = researchGroupOptions[groupNr]
         promotor = int(request.args.get("Promotor"))
 
-        people = access.filter_employees(name, group, promotor)
+        people = Raccess.filter_employees(name, group, promotor)
 
     neededValuesPeoplePage = []
     for person in people:
@@ -106,7 +106,7 @@ def show_people():
 
 @app.route("/projects/", methods=["GET"])
 def show_projects():
-    access = DataAccess(connection)
+    access = FullDataAccess(connection)
     projects = access.get_projects()
     researchGroups = access.get_researchGroups()
     disciplines = access.get_disciplines()
@@ -119,13 +119,15 @@ def show_projects():
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods = ['GET'])
 def project_page(id):
-    access = DataAccess(connection)
-    project = access.get_project(id)
-    document = access.get_projectDocuments(id)
-    promotors = access.get_projectPromotors(id)
-    emp = access.get_employee(promotors[0])
+    Paccess = ProjectAcces(connection)
+    project = Paccess.get_project(id)
+    document = Paccess.get_projectDocuments(id)
+    promotors = Paccess.get_projectPromotors(id)
+    Eaccess = EmployeeAcces(connection)
+    emp = Eaccess.get_employee(promotors[0])
 
-    researchGroup = access.get_researchGroupOnID(project.researchGroup)
+    Raccess = ResearchGroupAcces(connection)
+    researchGroup = Raccess.get_researchGroupOnID(project.researchGroup)
 
     return render_template("project.html", r_project=project, r_document = document, r_promotor = emp,
                            r_researchGroup = researchGroup, page="projects")
@@ -140,10 +142,11 @@ def apply_filter_projects():
 
 
     else:
-        access = DataAccess(connection)
-        researchGroups = access.get_researchGroups()
+        Raccess = ResearchGroupAcces(connection)
+        researchGroups = Raccess.get_researchGroups()
         typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-        disciplineOptions = access.get_disciplines()
+        Daccess = DomainAcces(connection)
+        disciplineOptions = Daccess.get_disciplines()
         researchGroupOptions = [""]
 
         for iter in researchGroups:
@@ -163,7 +166,8 @@ def apply_filter_projects():
         group = researchGroupOptions[groupNr]
         status = int(request.args.get("Status"))
 
-        projects = access.filter_projects(query, type, discipline, group, status)
+        Paccess = ProjectAcces(connection)
+        projects = Paccess.filter_projects(query, type, discipline, group, status)
 
 
         neededValuesProject = helper_sort_values_projects(projects, researchGroups)
@@ -179,7 +183,7 @@ def get_administration():
 
 @app.route("/administration/add_research_group", methods=["GET"])
 def form_add_research_group():
-    access = DataAccess(connection)
+    access = DomainAcces(connection)
     disciplines = access.get_disciplines()
 
     return render_template("administration-add-group.html", r_disciplines=disciplines, send=False, page="administration")
@@ -195,8 +199,8 @@ def add_research_group():
     if request.form.get("Name") is None:
         return form_add_research_group()
 
-    access = DataAccess(connection)
-    disciplines = access.get_disciplines()
+    Daccess = DomainAcces(connection)
+    disciplines = Daccess.get_disciplines()
 
     name = request.form.get("Name")
     abbrev = request.form.get("Abbreviation")
@@ -212,12 +216,13 @@ def add_research_group():
                          'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
     r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
-    access.add_researchGroup(r)
+    Raccess=ResearchGroupAcces(connection)
+    Raccess.add_researchGroup(r)
     return render_template("administration-add-group.html", r_disciplines=disciplines, send=True, page="administration")
 
 @app.route("/administration/add_staff", methods=["GET"])
 def form_add_staff():
-    access = DataAccess(connection)
+    access = ResearchGroupAcces(connection)
     researchGroups = access.get_researchGroups()
 
     return render_template("administration-add-staff.html", r_researchGroups=researchGroups , send=False,
@@ -230,25 +235,26 @@ def add_staff():
     add staf page
     :return: Rendered template of the administration-add-staff with researchgroups and send message
     '''
-    access = DataAccess(connection)
-    researchGroups = access.get_researchGroups()
+    Raccess = ResearchGroupAcces(connection)
+    researchGroups = Raccess.get_researchGroups()
 
     name = request.form.get("Name")
     email = request.form.get("Email")
     office = request.form.get("Office")
     researchgroupNr = request.form.get("Researchgroup")
     research_group = researchGroups[int(researchgroupNr)]
-    titleOptions = access.get_titles()
+    titleOptions = Raccess.get_titles()
     titleNr = request.form.get("Title")
     title = titleOptions[int(titleNr)]
-    roleOptions = access.get_intextOrigin()
+    roleOptions = Raccess.get_intextOrigin()
     roleNr = request.form.get("Role")
     role = roleOptions[int(roleNr)]
     active = True if request.form.get("Active") == 'on' else False
     promotor = True if request.form.get("Promotor") == 'on' else False
 
     emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
-    access.add_employee(emp)
+    Eaccess= EmployeeAcces(connection)
+    Eaccess.add_employee(emp)
     return render_template("administration-add-staff.html", r_researchGroups=researchGroups, send=True,
                            page="administration")
 
@@ -259,7 +265,7 @@ def form_modify_disciplines():
     function that returns a form to modify disciplines
     :return: Rendered template of the administration-modify-disciplines with disciplines
     '''
-    access = DataAccess(connection)
+    access = DomainAcces(connection)
     disciplines = access.get_disciplines()
 
     return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=False)
@@ -270,7 +276,7 @@ def modify_disciplines():
     function that adds a discipline to the possible disciplines
     :return: Rendered template of the administration-modify-disciplines with disciplines
     '''
-    access = DataAccess(connection)
+    access = DomainAcces(connection)
     disciplines = access.get_disciplines()
 
     value = request.form.get("Name")
@@ -292,7 +298,7 @@ def form_modify_types():
     function that returns a form to modify types
     :return: Rendered template of the administration-modify-templates with types
     '''
-    access = DataAccess
+    access = FullDataAccess
     types = access
 
     return render_template("administration-modify-types.html", r_types=types, send=False)
@@ -330,35 +336,35 @@ def load_user(user_id):
 
 @app.route('/login/', methods=[ 'POST'])
 def login():
-    ldap_server = "192.168.0.175"
-    username = "user"
-    password = "pass"
-    # the following is the user_dn format provided by the ldap server
-    user_dn = "uid=" + username + ",ou=someou,dc=somedc,dc=local"
-    # adjust this to your base dn for searching
-    base_dn = "dc=somedc,dc=local"
-    connect = ldap.initialize(ldap_server)
-    connect.set_option(ldap.OPT_REFERRALS, 0)
-    connect.simple_bind_s('Manager', 'secret')
-    result = connect.search_s('cn=Manager,dc=maxcrc,dc=com',
-                              ldap.SCOPE_SUBTREE,
-                              'userPrincipalName=user@somedomain.com',
-                              ['memberOf'])
-    search_filter = "uid=" + username
-    try:
-        # if authentication successful, get the full user data
-        connect.bind_s(user_dn, password)
-        result = connect.search_s(base_dn, ldap.SCOPE_SUBTREE, search_filter)
-        # return all user data results
-        connect.unbind_s()
-        print(result)
-        login_user(User(Session(1, 1, 0, 0)))
-        flash('Logged in successfully.')
-
-        flash("you are now logged in")
-    except:
-        connect.unbind_s()
-        print("authentication error")
+    # ldap_server = "192.168.0.175"
+    # username = "user"
+    # password = "pass"
+    # # the following is the user_dn format provided by the ldap server
+    # user_dn = "uid=" + username + ",ou=someou,dc=somedc,dc=local"
+    # # adjust this to your base dn for searching
+    # base_dn = "dc=somedc,dc=local"
+    # connect = ldap.initialize(ldap_server)
+    # connect.set_option(ldap.OPT_REFERRALS, 0)
+    # connect.simple_bind_s('Manager', 'secret')
+    # result = connect.search_s('cn=Manager,dc=maxcrc,dc=com',
+    #                           ldap.SCOPE_SUBTREE,
+    #                           'userPrincipalName=user@somedomain.com',
+    #                           ['memberOf'])
+    # search_filter = "uid=" + username
+    # try:
+    #     # if authentication successful, get the full user data
+    #     connect.bind_s(user_dn, password)
+    #     result = connect.search_s(base_dn, ldap.SCOPE_SUBTREE, search_filter)
+    #     # return all user data results
+    #     connect.unbind_s()
+    #     print(result)
+    #     login_user(User(Session(1, 1, 0, 0)))
+    #     flash('Logged in successfully.')
+    #
+    #     flash("you are now logged in")
+    # except:
+    #     connect.unbind_s()
+    #     print("authentication error")
 
     next = request.args.get('login')
     return redirect(next or url_for('index'))
@@ -375,7 +381,7 @@ def logout():
 
 @app.route("/people/<int:id>", methods=["GET", "POST"])
 def get_person(id):
-    database = DataAccess(connection)
+    database = EmployeeAcces(connection)
     person = database.get_employee(id)
     return render_template("person.html", person=person, page="people")
 
@@ -383,7 +389,6 @@ def get_person(id):
 if __name__ == "__main__":
     ip = config_data['ip']
     port = config_data['port']
-    access = DataAccess(connection)
     # temp=access.get_researchGroupOnID(1)
     # temp2=access.get_projectPromotors(1)
     # app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )

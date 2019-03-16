@@ -10,7 +10,10 @@ from Attachment import *
 
 
 
-class DataAccess:
+
+
+
+class DocumentAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
@@ -73,18 +76,24 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save document!')
 
+class ResearchGroupAcces:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        self.doc=DocumentAcces(self.dbconnect)
+
+
     def get_researchgroupDescriptions(self, groupid):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from groupDescription where groupID=%s', (str(groupid)))
         desc = list()
         for row in cursor:
-            desc.append(self.get_document(row[1]))
+            desc.append(self.doc.get_document(row[1]))
         return desc
 
     def add_researchGroupDescription(self, document, groupid):
         cursor = self.dbconnect.get_cursor()
         try:
-            docid = self.add_document(document)
+            docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO groupDescription values(%s,%s)',
                            (str(groupid), str(docid)))
             # get id and return updated object
@@ -137,6 +146,7 @@ class DataAccess:
                 cursor.execute('insert into contactperson values(%s,%s)',(str(eid),str(groupID)))
             else:
                 if(cursor.fetchone()[0]!=eid):
+                    #waarom zegt pycharm hier constant dat hem '=' verwacht terwijl dat er staat ???
                     cursor.execute('update contactPerson SET employee=%s where rgroup=%s',(str(eid),str(groupID)))
             self.dbconnect.commit()
         except:
@@ -158,6 +168,10 @@ class DataAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('Unable to save researchgroup!')
+
+class EmployeeAcces:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
 
     def get_employees(self):
         cursor = self.dbconnect.get_cursor()
@@ -211,19 +225,23 @@ class DataAccess:
             employees.append(employee)
         return employees
 
+class ProjectAcces:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        self.doc=DocumentAcces(self.dbconnect)
 
     def get_projectDocuments(self, projectID):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectDocument where projectID=%s', (str(projectID)))
         desc = list()
         for row in cursor:
-            desc.append(self.get_document(row[1]))
+            desc.append(self.doc.get_document(row[1]))
         return desc
 
     def add_projectDocument(self, document, projectID):
         cursor = self.dbconnect.get_cursor()
         try:
-            docid = self.add_document(document)
+            docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO projectDocument values(%s,%s)',
                            (str(projectID), str(docid)))
             # get id and return updated object
@@ -430,8 +448,10 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save project!')
 
-
-
+class StudentAcces:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        self.project=ProjectAcces(self.dbconnect)
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
         cursor = self.dbconnect.get_cursor()
@@ -448,7 +468,7 @@ class DataAccess:
         cursor.execute('select * from bookmark where student=%s', (str(studentId)))
         projects = list()
         for row in cursor:
-            projects.append(self.get_project(row[0]))
+            projects.append(self.project.get_project(row[0]))
         return projects
 
     # returns all bookmarks to a certain project
@@ -457,7 +477,7 @@ class DataAccess:
         cursor.execute('select * from bookmark where project=%s', (str(projectId)))
         bookmarks = list()
         for row in cursor:
-            bookmark = bookmark(row[0], row[1])
+            bookmark = Bookmark(row[0], row[1])
             bookmarks.append(bookmark)
         return bookmarks
 
@@ -553,6 +573,9 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
 
+class SessionAcces:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
     def get_sessionSearches(self, sessionID):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from sessionSearchQuery where sessionID=%s', (str(sessionID)))
@@ -625,6 +648,9 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save session!')
 
+class DomainAcces:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
 
     def add_discipline(self,discipline):
         cursor = self.dbconnect.get_cursor()
@@ -736,3 +762,14 @@ class DataAccess:
         for i in cursor:
             types.append(i[0])
         return types
+
+class FullDataAccess(DocumentAcces,DomainAcces,EmployeeAcces,ProjectAcces,SessionAcces,StudentAcces,ResearchGroupAcces):
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        DomainAcces.__init__(self,self.dbconnect)
+        DocumentAcces.__init__(self,self.dbconnect)
+        EmployeeAcces.__init__(self,self.dbconnect)
+        ProjectAcces.__init__(self,self.dbconnect)
+        SessionAcces.__init__(self,self.dbconnect)
+        StudentAcces.__init__(self,self.dbconnect)
+        ResearchGroupAcces.__init__(self,self.dbconnect)
