@@ -197,7 +197,7 @@ class ResearchGroupAccess:
                            (group.name, group.abbreviation, group.discipline, group.active, group.address, str(group.telNr)),str(group.ID))
             cursor.execute('delete from groupDescription where researchGroup=%s',str(group.ID))
             for i in group.desc:
-                self.add_researchGroupDescription(i, gid)
+                self.add_researchGroupDescription(i, str(group.ID))
         except:
             self.dbconnect.rollback()
             raise Exception('unable to change researchGroup')
