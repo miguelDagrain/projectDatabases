@@ -66,6 +66,7 @@
                     if(data === "true") {
                         console.log("ingelogd");
                         $("#login-modal").modal("hide");
+                        document.location.reload(true)
                     }
                     else{
                         var failed = document.getElementById("login-failed");
@@ -147,11 +148,19 @@
                     </div>
                 </nav>
             </div>
+            {% if current_user.is_authenticated %}#}
+              <div class="col text-right">
+                <button class="btn-login" data-toggle="modal" onclick="window.location.href='{{ url_for('logout') }}'">
+                    Logout
+                </button>
+            </div>
+            {% else %}#}
             <div class="col text-right">
                 <button class="btn-login" data-toggle="modal" data-target="#login-modal">
                     Login
                 </button>
             </div>
+            {% endif %}#}
         </div>
     </header>
 
@@ -231,7 +240,7 @@
     {#                        </a>#}
     {#                    </div>#}
     {#                    <div class="col-12 float-right"><span class="float-right" style="text-align: right; color: white;">#}
-    {#                        {% if current_user.is_authenticated %}#}
+    {#
     {#                            <p class="nav-item text-element">#}
     {#                        <button class="loginKnop" style="font-size:20px;  width:200px; height:50px;"#}
     {#                                onclick="window.location.href='{{ url_for('logout') }}'">#}
@@ -288,7 +297,6 @@
             {% endif %}
         </div>
     </div>
-
 </div>
 
 {% block body %}
