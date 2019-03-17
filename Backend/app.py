@@ -377,13 +377,13 @@ def login():
     # next = request.args.get('login')
     username = request.form["username"]
     password = request.form["password"]
-    print(username + " - " + password)
-
-    # Als user name == test enkel dan ben je ingelogd voorlopig
-
-    if username=='test':
+    try:
+        login_user(User(Session(1, 1, 0, 0)))
+        flash('Logged in successfully.')
+        flash("you are now logged in")
         return "true"
-    else:
+    except:
+        print("authentication error")
         return "false"
 
 
