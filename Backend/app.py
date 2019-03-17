@@ -8,9 +8,10 @@ from Employee import Employee
 from Document import *
 from helperFunc import *
 from flask_babel import *
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required,logout_user,current_user
 from flask_login import LoginManager
-from flask_login import logout_user
+from functools import wraps
+
 from User import *
 from Session import *
 import sys
@@ -26,6 +27,20 @@ app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
+#overriding the login manager of flask login to support roles, inspired from https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes
+def login_required(role="ANY"):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+            temp=current_user
+            if not current_user.is_authenticated():
+              return login_manager.unauthorized()
+            if ((role not in current_user.roles) and (role != "ANY")):
+                return login_manager.unauthorized()
+            return fn(*args, **kwargs)
+        return decorated_view
+    return wrapper
 
 @babel.localeselector
 def get_locale():
@@ -218,9 +233,9 @@ def apply_filter_projects():
 
 
 @app.route("/administration/")
+@login_required(role='admin')
 def get_administration():
-
-    return render_template("administration.html", page="administration");
+    return render_template("administration.html", page="administration")
 
 
 @app.route("/administration/add_staff", methods=["GET"])
@@ -332,58 +347,41 @@ def pick_language():
     return resp
 
 
+
 @login_manager.user_loader
 def load_user(user_id):
-    return User(Session(1, user_id, 0, 0))
+    us= User(Session(user_id, 1, 0, 0))
+    eAcces=EmployeeAccess(connection)
+    if(user_id!='None'):
+        us.roles=eAcces.get_employeeRoles(user_id)
+    us.auth=True
+    us.active=True
+    return us
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect(url_for('index'))
 
 @app.route('/login/', methods=[ 'POST'])
 def login():
-    # ldap_server = "192.168.0.175"
-    # username = "user"
-    # password = "pass"
-    # # the following is the user_dn format provided by the ldap server
-    # user_dn = "uid=" + username + ",ou=someou,dc=somedc,dc=local"
-    # # adjust this to your base dn for searching
-    # base_dn = "dc=somedc,dc=local"
-    # connect = ldap.initialize(ldap_server)
-    # connect.set_option(ldap.OPT_REFERRALS, 0)
-    # connect.simple_bind_s('Manager', 'secret')
-    # result = connect.search_s('cn=Manager,dc=maxcrc,dc=com',
-    #                           ldap.SCOPE_SUBTREE,
-    #                           'userPrincipalName=user@somedomain.com',
-    #                           ['memberOf'])
-    # search_filter = "uid=" + username
-    # try:
-    #     # if authentication successful, get the full user data
-    #     connect.bind_s(user_dn, password)
-    #     result = connect.search_s(base_dn, ldap.SCOPE_SUBTREE, search_filter)
-    #     # return all user data results
-    #     connect.unbind_s()
-    #     print(result)
-    #     login_user(User(Session(1, 1, 0, 0)))
-    #     flash('Logged in successfully.')
-    #
-    #     flash("you are now logged in")
-    # except:
-    #     connect.unbind_s()
-    #     print("authentication error")
-    #
-    # next = request.args.get('login')
+    us=User(Session(0, 1, 0, 0))
     username = request.form["username"]
     password = request.form["password"]
     try:
-        login_user(User(Session(1, 1, 0, 0)))
-        flash('Logged in successfully.')
-        flash("you are now logged in")
-        return "true"
+        if(us.login(username,password)):
+            login_user(us)
+            temp=current_user
+            flash('Logged in successfully.')
+            flash("you are now logged in")
+            return "true"
+        else:
+            raise Exception('unable to log in, did you type your ussername or password correctly?')
     except:
         print("authentication error")
         return "false"
 
 
 @app.route("/logout/", methods=['GET', 'POST'])
-@login_required
 def logout():
     logout_user()
     next = request.args.get('logout')

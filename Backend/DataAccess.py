@@ -259,6 +259,26 @@ class EmployeeAccess:
             employees.append(employee)
         return employees
 
+    def add_employeeRole(self,id,role):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO employeeRoles values(%s,%s)',
+                           (str(id),role))
+            # get id and return updated object
+            self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback()
+            raise Exception('\nUnable to save EmployeeRole!\n(%s)' % (error))
+
+    def get_employeeRoles(self,id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from employeeRoles where employee=%s',(str(id)))
+        roles = list()
+        for row in cursor:
+          roles.append(row[1])
+        return roles
+
+
 class ProjectAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect

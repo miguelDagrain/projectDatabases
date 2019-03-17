@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS projectYearConnection;
 DROP TABLE IF EXISTS projectYear;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS contactPerson;
+DROP TABLE IF EXISTS employeeRoles;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS groupDescription;
 DROP TABLE IF EXISTS researchGroup;
@@ -132,6 +133,13 @@ CREATE TABLE employee
   active         BOOLEAN,
   promotor       BOOLEAN
 
+);
+
+create table employeeRoles
+(
+  employee int references employee (employeeID),
+  role     varchar(255),
+  primary key (role, employee)
 );
 
 CREATE TABLE contactPerson

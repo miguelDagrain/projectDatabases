@@ -138,12 +138,14 @@
                                     </a>
                                 </li>
                             {% endif %}
+                            {% if 'admin' in current_user.roles %}
                             <li class="nav-item">
                                 <a class=" hyperlink {{ "active" if page=="administration" }}"
                                    href="{{ url_for( 'get_administration' ) }}">
                                     {{ _('Administration') }}
                                 </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </nav>
@@ -198,86 +200,6 @@
             </div>
         </div>
     </div>
-
-
-    {#    <div>#}
-    {#        <div class="row navbar-blue">#}
-    {#            <div class="col">#}
-    {#                <img class="banner" src="{{ url_for('static', filename='image/banner2.png') }}" alt="ESP banner">#}
-    {#            </div>#}
-    {#            <div class="col float-right">#}
-    {#                <form method="get" action="{{ url_for('pick_language') }}" class="float-right">#}
-    {#                    <input type="hidden" name="url_redirect" value="">#}
-    {#                    <button class="btn-lang" type="submit" value="nl" name="send">nl</button>#}
-    {#                    <button class="btn-lang" type="submit" value="en" name="send">en</button>#}
-    {#                </form>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#        <div class="row navbar-blue">#}
-    {#            <div class="col-12">#}
-    {#                <div class="row" style="padding: 1px">#}
-    {#                    <div class="col-auto">#}
-    {#                        <a class="col-auto hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">#}
-    {#                            {{ _('Home') }}#}
-    {#                        </a>#}
-    {#                    </div>#}
-    {#                    <div class="col-auto">#}
-    {#                        <a class="col-auto hyperlink {{ "active" if page=="projects" }}"#}
-    {#                           href="{{ url_for('show_projects') }}">#}
-    {#                            {{ _('Projects') }}#}
-    {#                        </a>#}
-    {#                    </div>#}
-    {#                    <div class="col-auto">#}
-    {#                        <a class="col-auto hyperlink {{ "active" if page=="rgroups" }}"#}
-    {#                           href="{{ url_for('show_research_groups') }}">#}
-    {#                            {{ _('Research groups') }}#}
-    {#                        </a>#}
-    {#                    </div>#}
-    {#                    <div class="col-auto">#}
-    {#                        <a class="col-auto hyperlink {{ "active" if page=="people" }}"#}
-    {#                           href="{{ url_for('show_people') }}">#}
-    {#                            {{ _('People') }}#}
-    {#                        </a>#}
-    {#                    </div>#}
-    {#                    <div class="col-12 float-right"><span class="float-right" style="text-align: right; color: white;">#}
-    {#
-    {#                            <p class="nav-item text-element">#}
-    {#                        <button class="loginKnop" style="font-size:20px;  width:200px; height:50px;"#}
-    {#                                onclick="window.location.href='{{ url_for('logout') }}'">#}
-    {#                                 logout#}
-    {#                        </button>#}
-    {#                         </p>#}
-    {#                        {% else %}#}
-    {#                            <p class="nav-item text-element">#}
-    {#                            <!--on click it display the loginpopup and sets visibilty of other button on inline and hides itself-->#}
-    {#                        <button id="knop1" class="showPopupButton" style="font-size:20px;  width:200px; height:50px;"#}
-    {#                                onclick="document.getElementById('loginpopup').style.display='block';#}
-    {#                                document.getElementById('knop2').style.display='inline';#}
-    {#                                this.style.display = 'none'">#}
-    {#                            login#}
-    {#                        </button>#}
-    {#                        </p>#}
-    {#                            <p class="nav-item text-element">#}
-    {#                             <!--on click it goes to login page and changes visibility of first button to inline and hides itself-->#}
-    {#                        <button id="knop2" class="loginKnop" style="font-size:20px;  width:200px; height:50px;"#}
-    {#                                onclick="window.location.href='{{ url_for('login') }}';#}
-    {#                                        document.getElementById('knop1').style.display='inline';#}
-    {#                                        this.style.display = 'none'">#}
-    {#                            login#}
-    {#                        </button>#}
-    {#                                <!--make second button invinsible when first opening-->#}
-    {#                             <script>#}
-    {#                                document.getElementById('knop2').style.display = 'none'#}
-    {#                             </script>#}
-    {#                        </p>#}
-    {#                        {% endif %}#}
-    {#                    </span>#}
-    {#                    </div>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
-
     <!-- login popup -->
     <div class="col-14 float-right" id="loginpopup">
         <div class="float-right" style="margin-bottom: 0">
