@@ -6,8 +6,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
 {% endblock stylesheets %}
+
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+<script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+
+{% endblock scripts %}
 
 <script>
     $(document).ready(function () {
@@ -29,6 +41,61 @@
         <div class="page-content">
 
             <h1>{{ _('Research groups') }}</h1>
+
+            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-group">{{ _('add group') }}</button>
+
+            <div id="modal-form-group" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form class="modal-body administration-form" action="{{ url_for('add_research_group') }}" method="post">
+                                <label for="administration-form-name">{{ _('Group name') }}:</label>
+                                <input type="text" id="administration-form-name" name="Name">
+
+                                <label for="administration-form-abbreviation">{{ _('Abbreviation') }}: </label>
+                                <input type="text" id="administration-form-abbreviation" name="Abbreviation">
+
+                                <label for="administration-form-discipline">{{ _('Disciplines') }}:</label>
+                                <div class="dropdown">
+                                    <select id="administration-form-discipline" name="Discipline">
+
+                                        <script>
+                                            var iter = 0;
+                                        </script>
+
+                                        {% for discip in r_disciplines %}
+
+                                        <option value="" id="noValueDis">{{ discip }}</option>
+
+                                        <script>
+                                            document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                                            document.getElementById("noValueDis").removeAttribute("id");
+                                            iter++;
+                                        </script>
+
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+
+                                <label for="administration-form-active">{{ _('Active') }}:</label>
+                                <input type="checkbox" id="administration-form-active" name="Active"><br>
+
+
+                                <label for="administration-form-address">{{ _('Address') }}:</label>
+                                <input type="text" id="administration-form-address" name="Address"><br>
+
+
+                                <label for="administration-form-telephone">{{ _('Telephone number') }}:</label>
+                                <input type="text" id="administration-form-telephone" name="Telephone"><br>
+
+
+                                <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <table class="content-table group-table table-sm" id="verticalScroll" >
                 <thead>
@@ -73,4 +140,9 @@
 
         </div>
     </div>
+
+
+<script>setUpDropdowns()</script>
+<script>setUpMultiSelection()</script>
+
 {% endblock body %}

@@ -63,7 +63,42 @@ def show_research_groups():
     '''
     access = ResearchGroupAccess(connection)
     groups = access.get_researchGroups()
-    return render_template("researchgroups.html", r_groups=groups, page="rgroups")
+    access = DomainAccess(connection)
+    disciplines = access.get_disciplines()
+    return render_template("researchgroups.html", r_groups=groups, r_disciplines=disciplines, page="rgroups")
+
+@app.route("/researchgroups/", methods=["POST"])
+def add_research_group():
+    '''
+    Adds a research group to the database
+    This function is called whenever the user uses the POST method on the
+    add research group page
+    :return: Rendered template of the administration-add-group with disciplines and a send message
+    '''
+    if request.form.get("Name") is None:
+        return show_research_groups()
+
+    Daccess = DomainAccess(connection)
+    disciplines = Daccess.get_disciplines()
+
+    name = request.form.get("Name")
+    abbrev = request.form.get("Abbreviation")
+    disciplineNr = request.form.get("Discipline")
+    discipline = disciplines[int(disciplineNr)]
+
+    active = True if request.form.get("Active") == 'on' else False
+    address = request.form.get("Address")
+    telephone = request.form.get("Telephone")
+    # desc = request.form.get("Description")
+    desc = list()
+    desc.append(Document(1, 'dutch',
+                         'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+
+    r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
+    Raccess=ResearchGroupAccess(connection)
+    Raccess.add_researchGroup(r)
+    researchGroups = Raccess.get_researchGroups()
+    return render_template("researchgroups.html", r_groups=researchGroups, r_disciplines=disciplines, page="rgroups")
 
 
 @app.route("/people/", methods=["GET"])
@@ -178,8 +213,7 @@ def apply_filter_projects():
         projects = Paccess.filter_projects(query, type, discipline, group, status)
 
 
-        neededValuesProject = helper_sort_values_projects(projects, researchGroups)
-        return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
+        return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
                                r_disciplines=disciplineOptions, page="projects")
 
 
@@ -188,45 +222,6 @@ def get_administration():
 
     return render_template("administration.html", page="administration");
 
-
-@app.route("/administration/add_research_group", methods=["GET"])
-def form_add_research_group():
-    access = DomainAccess(connection)
-    disciplines = access.get_disciplines()
-
-    return render_template("administration-add-group.html", r_disciplines=disciplines, send=False, page="administration")
-
-@app.route("/administration/add_research_group", methods=["POST"])
-def add_research_group():
-    '''
-    Adds a research group to the database
-    This function is called whenever the user uses the POST method on the
-    add research group page
-    :return: Rendered template of the administration-add-group with disciplines and a send message
-    '''
-    if request.form.get("Name") is None:
-        return form_add_research_group()
-
-    Daccess = DomainAccess(connection)
-    disciplines = Daccess.get_disciplines()
-
-    name = request.form.get("Name")
-    abbrev = request.form.get("Abbreviation")
-    disciplineNr = request.form.get("Discipline")
-    discipline = disciplines[int(disciplineNr)]
-
-    active = True if request.form.get("Active") == 'on' else False
-    address = request.form.get("Address")
-    telephone = request.form.get("Telephone")
-    # desc = request.form.get("description")
-    desc = list()
-    desc.append(Document(1, 'dutch'
-                         'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
-
-    r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
-    Raccess=ResearchGroupAccess(connection)
-    Raccess.add_researchGroup(r)
-    return render_template("administration-add-group.html", r_disciplines=disciplines, send=True, page="administration")
 
 @app.route("/administration/add_staff", methods=["GET"])
 def form_add_staff():

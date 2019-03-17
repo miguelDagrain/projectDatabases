@@ -166,6 +166,9 @@ msgstr "Onderzoeksgroepen"
 msgid "Discipline"
 msgstr "Discipline"
 
+#: html/templates/researchgroups.html
+msgid "Description"
+msgstr "Omschrijving"
 
 #: html/templates/administration.html
 msgid "Research groups"
