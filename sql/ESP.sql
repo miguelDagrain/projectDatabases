@@ -178,8 +178,8 @@ CREATE TABLE projectTypeConnection
 
 CREATE TABLE projectPromotor
 (
-  employee INT REFERENCES employee (employeeID),
-  project  INT REFERENCES project (projectID),
+  employee INT REFERENCES employee (employeeID) ON DELETE NO ACTION,
+  project  INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (employee, project)
 );
 
@@ -199,7 +199,7 @@ CREATE TABLE projectRelation
 
 CREATE TABLE projectDocument
 (
-  projectID INT REFERENCES project (projectID),
+  projectID INT REFERENCES project (projectID) ON DELETE CASCADE,
   docID     INT REFERENCES document (documentID),
   PRIMARY KEY (projectID, docID)
 );

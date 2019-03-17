@@ -129,8 +129,16 @@ def project_page(id):
     Raccess = ResearchGroupAccess(connection)
     researchGroup = Raccess.get_researchGroupOnID(project.researchGroup)
 
+    id = project.ID
+    remove_url = url_for('remove_project', id=id)
+
     return render_template("project.html", r_project=project, r_document = document, r_promotor = emp,
-                           r_researchGroup = researchGroup, page="projects")
+                           r_researchGroup = researchGroup, remove_url=remove_url, page="projects")
+
+
+@app.route("/projects/<int:id>", methods=["POST"])
+def remove_project(id):
+    return redirect(url_for('show_projects'))
 
 
 @app.route("/projects/search", methods=["GET"])

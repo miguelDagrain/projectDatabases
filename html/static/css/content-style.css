@@ -45,3 +45,30 @@
 .content-table > tr, th, td {
     color: #003366;
 }
+
+.page-content-button {
+    display: inline-block;
+    color: white;
+    background-color: #003366;
+    padding:6px;
+    cursor: pointer;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 40px;
+    width: 10%;
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.page-content > .page-content-button::selection {
+    background-color: white;
+    color: #003366;
+}
+
+.page-content > .page-content-button::-moz-selection {
+    background-color: white;
+    color: #003366;
+}

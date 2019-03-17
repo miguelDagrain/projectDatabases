@@ -15,20 +15,16 @@
 
 
 <div style="display:flex;">
-{##}
-{#    <form class="side-bar" action="{{ url_for('apply_filter_projects') }}" method="get">#}
-{##}
-{##}
-{#        <label class="side-bar-input">#}
-{#          {{ _('Search query') }}:#}
-{#          <input type="text" class="form-control-sm" name="Search_query">#}
-{#        </label>#}
 
-
-    <!-- Vanaf hier komen de projecten -->
 
     <div class="page-content">
         <h1>{{ _('Project') }}</h1>
+
+        <!-- todo: omringen met if else voor administrator en medewerker -->
+
+        <form action="{{ url_for('remove_project', id=1) }}" method="post">
+            <button class="page-content-button" name="remove" type="submit">{{ _('remove project') }}</button>
+        </form>
 
         <p>{{ _('Explanations') }}</p>
 
@@ -65,19 +61,10 @@
                 <td>{{ r_document[0].text | safe }}</td>
             </tr>
 
-{#        {% for project in r_values %}#}
-{##}
-{#            <tr>#}
-{#                <td>{{ project[0] }}</td>#}
-{#                <td>{{ project[1] }}</td>#}
-{#                <td>[ 0 / {{ project[2] }} ]</td> <!-- todo: replace 0 by an parameter -->#}
-{#            </tr>#}
-{##}
-{#        {% endfor %}#}
 
         </table>
 
-    </div>
+    </button>
 
 </div>
 
