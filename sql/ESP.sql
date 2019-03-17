@@ -158,7 +158,7 @@ CREATE TABLE projectYear
 CREATE TABLE projectYearConnection
 (
   year      INT REFERENCES projectYear (year),
-  projectID INT REFERENCES project (projectID),
+  projectID INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (year, projectID)
 );
 
@@ -172,7 +172,7 @@ insert into projectType values ('Research internship');
 CREATE TABLE projectTypeConnection
 (
   type      varchar(255) REFERENCES projectType (type),
-  projectID INT REFERENCES project (projectID),
+  projectID INT REFERENCES project (projectID) ON DELETE CASCADE ,
   PRIMARY KEY (type, projectId)
 );
 
@@ -186,14 +186,14 @@ CREATE TABLE projectPromotor
 CREATE TABLE projectTag
 (
   tag     VARCHAR(255),
-  project INT REFERENCES project (projectID),
+  project INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (project, tag)
 );
 
 CREATE TABLE projectRelation
 (
-  project1 INT REFERENCES project (projectID),
-  project2 INT REFERENCES project (projectID),
+  project1 INT REFERENCES project (projectID) ON DELETE CASCADE,
+  project2 INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (project1, project2)
 );
 
@@ -212,7 +212,7 @@ CREATE TABLE student
 
 CREATE TABLE projectRegistration
 (
-  project INT REFERENCES project (projectID),
+  project INT REFERENCES project (projectID) ON DELETE CASCADE,
   status  varchar(255) references registration(status),
   student INT REFERENCES student (studentID),
   PRIMARY KEY (project, status, student)
@@ -220,8 +220,8 @@ CREATE TABLE projectRegistration
 
 CREATE TABLE bookmark
 (
-  project INT REFERENCES project (projectID),
-  student INT REFERENCES student (studentID),
+  project INT REFERENCES project (projectID) ON DELETE CASCADE,
+  student INT REFERENCES student (studentID) ON DELETE CASCADE,
   PRIMARY KEY (project, student)
 );
 
@@ -241,10 +241,12 @@ CREATE TABLE sessionSearchQuery
   PRIMARY KEY (sessionID, term, searchTime)
 );
 
-CREATE TABLE sessionProjectClick
-(
-  sessionID  INT REFERENCES session (sessionID),
-  project    INT REFERENCES project (projectID),
-  searchTime TIME,
-  PRIMARY KEY (sessionID, project, searchTime)
-);
+-- Dit is niet nodig omdat sessie's met cookies worden bijgehouden
+--
+-- CREATE TABLE sessionProjectClick
+-- (
+--   sessionID  INT REFERENCES session (sessionID),
+--   project    INT REFERENCES project (projectID),
+--   searchTime TIME,
+--   PRIMARY KEY (sessionID, project, searchTime)
+-- );

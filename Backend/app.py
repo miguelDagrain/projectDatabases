@@ -133,7 +133,11 @@ def project_page(id):
 
 
 @app.route("/projects/<int:id>", methods=["POST"])
-def remove_project(id):
+def apply_remove_project(id):
+
+    Paccess = ProjectAccess(connection)
+    Paccess.remove_project(id)
+
     return redirect(url_for('show_projects'))
 
 

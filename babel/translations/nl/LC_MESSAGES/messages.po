@@ -154,6 +154,10 @@ msgstr "toegewezen studenten"
 msgid "remove project"
 msgstr "verwijder project"
 
+#: html/templates/project.html
+msgid "Are you sure you want to delete this project?"
+msgstr "Ben je zeker dat je dit project wilt verwijderen?"
+
 #: html/templates/researchgroups.html:2 html/templates/researchgroups.html:31
 msgid "Research groups"
 msgstr "Onderzoeksgroepen"

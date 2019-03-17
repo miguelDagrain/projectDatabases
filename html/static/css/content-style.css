@@ -50,16 +50,14 @@
     display: inline-block;
     color: white;
     background-color: #003366;
-    padding:6px;
     cursor: pointer;
     border-radius: 5px;
     overflow: hidden;
     white-space: nowrap;
-    height: 40px;
-    width: 10%;
+    height: 3.5%;
     position: relative;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 

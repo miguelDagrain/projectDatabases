@@ -410,6 +410,11 @@ class ProjectAccess:
         project.relatedProject = self.get_projectRelations(project.ID)
         return project
 
+    def remove_project(self, ID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('DELETE FROM project WHERE projectID=%s', (str(ID)))
+        return
+
     def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
         cursor = self.dbconnect.get_cursor()
 
