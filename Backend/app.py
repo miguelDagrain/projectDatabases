@@ -373,9 +373,18 @@ def login():
     # except:
     #     connect.unbind_s()
     #     print("authentication error")
+    #
+    # next = request.args.get('login')
+    username = request.form["username"]
+    password = request.form["password"]
+    print(username + " - " + password)
 
-    next = request.args.get('login')
-    return redirect(next or url_for('index'))
+    # Als user name == test enkel dan ben je ingelogd voorlopig
+
+    if username=='test':
+        return "true"
+    else:
+        return "false"
 
 
 @app.route("/logout/", methods=['GET', 'POST'])
