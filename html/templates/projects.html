@@ -126,12 +126,12 @@
                 <th class="th-3">{{ _('assigned students') }}</th>
             </tr>
 
-        {% for project in r_values %}
+        {% for project in r_projects %}
 
             <tr>
-                <td>{{ project[0] }}</td>
-                <td>{{ project[1] }}</td>
-                <td>[ 0 / {{ project[2] }} ]</td> <!-- todo: replace 0 by an parameter -->
+                <td><a href="{{ url_for('project_page', id=project.ID) }}">"{{ project.title }}"</a></td>
+                <td>{{ project.researchGroup }}</td>
+                <td>[ 0 / {{ project.maxStudents }} ]</td> <!-- todo: replace 0 by an parameter -->
             </tr>
 
         {% endfor %}

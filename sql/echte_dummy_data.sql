@@ -57,7 +57,7 @@ insert into projectRelation values(1,2);
 
 insert into projectDocument values(1,6);
 insert into projectDocument values(2,7);
-insert into projectDocument values(2,8);
+insert into projectDocument values(3,8);
 
 insert into student values (default,'Van Leuvenhaege Matthias');
 insert into student values (default,'Molderez Tim');

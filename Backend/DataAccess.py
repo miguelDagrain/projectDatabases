@@ -419,7 +419,8 @@ class ProjectAccess:
 
         if (researchGroup != ""):
             sql += "AND name = %(researchGroupQ)s "
-        #TODO hier is een fout typeQ wordt nooit vervangen
+        # hier is een fout typeQ wordt nooit vervangen
+        # todo: implementeren van type in sql.
         # if (type != ""):
         #     sql += "AND type = %(typeQ)s "
 

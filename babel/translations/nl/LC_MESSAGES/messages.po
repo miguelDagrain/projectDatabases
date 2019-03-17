@@ -150,6 +150,10 @@ msgstr "onderzoeksgroep"
 msgid "assigned students"
 msgstr "toegewezen studenten"
 
+#: html/templates/project.html
+msgid "remove project"
+msgstr "verwijder project"
+
 #: html/templates/researchgroups.html:2 html/templates/researchgroups.html:31
 msgid "Research groups"
 msgstr "Onderzoeksgroepen"

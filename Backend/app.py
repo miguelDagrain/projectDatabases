@@ -111,9 +111,7 @@ def show_projects():
     researchGroups = access.get_researchGroups()
     disciplines = access.get_disciplines()
 
-    neededValuesProject = helper_sort_values_projects(projects, researchGroups)
-
-    return render_template("projects.html", r_values=neededValuesProject, r_researchGroups=researchGroups,
+    return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
                            r_disciplines=disciplines, page="projects")\
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
@@ -129,8 +127,14 @@ def project_page(id):
     Raccess = ResearchGroupAccess(connection)
     researchGroup = Raccess.get_researchGroupOnID(project.researchGroup)
 
+
     return render_template("project.html", r_project=project, r_document = document, r_promotor = emp,
                            r_researchGroup = researchGroup, page="projects")
+
+
+@app.route("/projects/<int:id>", methods=["POST"])
+def remove_project(id):
+    return redirect(url_for('show_projects'))
 
 
 @app.route("/projects/search", methods=["GET"])
