@@ -22,7 +22,7 @@
 
         <!-- todo: omringen met if else voor administrator en medewerker -->
 
-        <form action="{{ url_for('remove_project', id=1) }}" method="post">
+        <form action="{{ url_for('remove_project', id=r_project.ID) }}" method="post">
             <button class="page-content-button" name="remove" type="submit">{{ _('remove project') }}</button>
         </form>
 
