@@ -42,6 +42,8 @@
 
             <h1>{{ _('Research groups') }}</h1>
 
+            {% if 'admin' in current_user.roles %}
+
             <button class="page-content-button" data-toggle="modal" data-target="#modal-form-group">{{ _('add group') }}</button>
 
             <div id="modal-form-group" class="modal fade" tabindex="-1" role="dialog">
@@ -96,6 +98,8 @@
                     </div>
                 </div>
             </div>
+
+            {% endif %}
 
             <table class="content-table group-table table-sm" id="verticalScroll" >
                 <thead>

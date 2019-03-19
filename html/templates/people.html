@@ -73,6 +73,8 @@
     <div class="page-content">
         <h1>{{ _('People') }}</h1>
 
+        {% if 'admin' in current_user.roles %}
+
         <button class="page-content-button" data-toggle="modal" data-target="#modal-form-staff">{{ _('add staf') }}</button>
 
         <div id="modal-form-staff" class="modal fade" tabindex="-1" role="dialog">
@@ -143,6 +145,7 @@
             </div>
         </div>
 
+        {% endif %}
 
         <table class="content-table ">
             <tr>

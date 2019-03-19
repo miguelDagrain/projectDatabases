@@ -32,14 +32,13 @@
 
         <div>
             {{_('Staff')}}:
-            <a class="side-bar-button">{{_('remove staff')}}</a>
             <a class="side-bar-button">{{_('modify staff')}}</a>
         </div>
 
         <div>
             {{_('Projects')}}:
-            <a class="side-bar-button" href="{{ url_for('modify_disciplines')}}">{{_('modify disciplines')}}</a>
-            <a class="side-bar-button">{{_('modify types')}}</a>
+            <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{_('modify disciplines')}}</a>
+            <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{_('modify types')}}</a>
         </div>
 
     </div>

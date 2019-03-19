@@ -150,19 +150,19 @@
                     </div>
                 </nav>
             </div>
-            {% if current_user.is_authenticated %}#}
+            {% if current_user.is_authenticated %}
               <div class="col text-right">
                 <button class="btn-login" data-toggle="modal" onclick="window.location.href='{{ url_for('logout') }}'">
                     Logout
                 </button>
             </div>
-            {% else %}#}
+            {% else %}
             <div class="col text-right">
                 <button class="btn-login" data-toggle="modal" data-target="#login-modal">
                     Login
                 </button>
             </div>
-            {% endif %}#}
+            {% endif %}
         </div>
     </header>
 
