@@ -174,6 +174,14 @@ msgstr "Omschrijving"
 msgid "Research group"
 msgstr "Onderzoeksgroep"
 
+#: html/templates/researchgroup
+msgid "remove group"
+msgstr "verwijder groep"
+
+#: html/templates/researchgroup
+msgid "Are you sure you want to delete this research group?"
+msgstr "Ben je zeker dat je deze onderzoeksgroep wilt verwijderen?"
+
 #: html/templates/administration.html
 msgid "Research groups"
 msgstr "Onderzoeksgroepen"

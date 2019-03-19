@@ -146,7 +146,22 @@ def group_page(id):
         if(doc.language == language):
             description = doc.text
 
-    return render_template("researchgroup.html", r_groupName=researchGroup.name, r_description=description, r_researchers=researchers, r_contactPersons=contactPersons, r_projects=projects)
+    return render_template("researchgroup.html", r_groupName=researchGroup.name, r_groupID=researchGroup.ID,
+                           r_description=description, r_researchers=researchers, r_contactPersons=contactPersons,
+                           r_projects=projects)
+
+@app.route("/researchgroups/<int:id>", methods=["POST"])
+def apply_remove_group(id):
+    '''
+    function that removes a research group and redirects to the researchgroups page
+    :param id: id of the group to be removed
+    :return: redirection to researchgroups page
+    '''
+
+    Racces = ResearchGroupAccess(connection)
+    Racces.remove_researchGroup(id)
+
+    return redirect(url_for('show_research_groups'))
 
 @app.route("/people/", methods=["GET"])
 def show_people():

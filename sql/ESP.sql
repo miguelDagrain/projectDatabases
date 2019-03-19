@@ -96,7 +96,7 @@ CREATE TABLE document
 --dont yet know what the attachment should be so this is placeholder
 CREATE TABLE attachment
 (
-  doc        INT REFERENCES document (documentID),
+  doc        INT REFERENCES document (documentID) ON DELETE CASCADE,
   attachment VARCHAR(255),
   PRIMARY KEY (doc, attachment)
 );
@@ -113,10 +113,11 @@ CREATE TABLE researchGroup
   telNr        VARCHAR(255)
 );
 
+
 CREATE TABLE groupDescription
 (
-  groupID INT REFERENCES researchGroup (groupID),
-  docID   INT REFERENCES document (documentID),
+  groupID INT REFERENCES researchGroup (groupID) ON DELETE CASCADE ,
+  docID   INT REFERENCES document (documentID) ON DELETE CASCADE ,
   PRIMARY KEY (groupID, docID)
 );
 
@@ -144,7 +145,7 @@ create table employeeRoles
 
 CREATE TABLE contactPerson
 (
-  employee INT REFERENCES employee (employeeID),
+  employee INT REFERENCES employee (employeeID) ON DELETE CASCADE,
   rgroup   INT REFERENCES researchGroup (groupID) UNIQUE,
   PRIMARY KEY (rgroup)
 );
@@ -232,3 +233,29 @@ CREATE TABLE bookmark
   student INT REFERENCES student (studentID) ON DELETE CASCADE,
   PRIMARY KEY (project, student)
 );
+
+CREATE FUNCTION researchGroup_del_func() RETURNS trigger AS $action$
+BEGIN
+    UPDATE employee
+    SET researchgroup = 1
+    WHERE researchgroup = old.groupID;
+
+    UPDATE project
+    SET researchGroup = 1
+    WHERE researchGroup = old.groupID;
+
+    DELETE FROM document
+     WHERE documentID = (SELECT docID
+                       FROM groupDescription NATURAL JOIN researchGroup rG
+                       WHERE rG.groupID = old.groupID);
+
+    RETURN old;
+END
+$action$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER researchGroup_del_tr
+BEFORE DELETE ON researchGroup
+FOR EACH ROW
+WHEN (old.groupID <> 1)
+EXECUTE PROCEDURE researchGroup_del_func();

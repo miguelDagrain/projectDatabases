@@ -154,6 +154,12 @@ class ResearchGroupAccess:
             rgroup.contactID = cursor.fetchone()[0]
         return rgroup
 
+    def remove_researchGroup(self, id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('DELETE FROM researchGroup WHERE groupID=%s', (str(id)))
+        self.dbconnect.commit()
+        return
+
     def checkContactPerson(self,eid,groupID):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -433,6 +439,7 @@ class ProjectAccess:
     def remove_project(self, ID):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('DELETE FROM project WHERE projectID=%s', (str(ID)))
+        self.dbconnect.commit()
         return
 
     def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
