@@ -230,11 +230,29 @@ def add_staff():
     return redirect( url_for('show_people') )
 
 
-@app.route("/people/<int:id>", methods=["GET", "POST"])
+@app.route("/people/<int:id>", methods=["GET"])
 def get_person(id):
+    '''
+    function that return a tab of the person whose id agrees with the given id
+    :param id: id of the person whose tab we like to visit
+    :return: rendered template of person.html with the person as attribute
+    '''
     database = EmployeeAccess(connection)
     person = database.get_employee(id)
-    return render_template("person.html", person=person, page="people")
+    return render_template("person.html", r_person=person, page="people")
+
+@app.route("/people/<int:id>", methods=["POST"])
+def apply_remove_person(id):
+    '''
+    function that removes the person on whose id agrees with the given id
+    :param id: id of the person to be removed
+    :return: redirection to show_people
+    '''
+    Eaccess = EmployeeAccess(connection)
+    Eaccess.remove_employee(id)
+
+    return redirect( url_for('show_people') )
+
 
 
 @app.route("/projects/", methods=["GET"])

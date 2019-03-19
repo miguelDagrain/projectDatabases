@@ -244,6 +244,15 @@ class EmployeeAccess:
             self.dbconnect.rollback()
             raise Exception('\nUnable to save Employee!\n(%s)' % (error))
 
+    def remove_employee(self, id):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('DELETE FROM employee WHERE employeeID=%s', (str(id)))
+            self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback
+            raise Exception('\nUnable to remove Employee!\n(%s)' % (error))
+
     def filter_employees(self, searchQuery="", researchGroup="", promotor=0,):
         cursor = self.dbconnect.get_cursor()
 

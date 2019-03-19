@@ -138,7 +138,7 @@ CREATE TABLE employee
 
 create table employeeRoles
 (
-  employee int references employee (employeeID),
+  employee int references employee (employeeID) ON DELETE CASCADE,
   role     varchar(255),
   primary key (role, employee)
 );
@@ -187,7 +187,7 @@ CREATE TABLE projectTypeConnection
 
 CREATE TABLE projectPromotor
 (
-  employee INT REFERENCES employee (employeeID) ON DELETE NO ACTION,
+  employee INT REFERENCES employee (employeeID) ON DELETE CASCADE,
   project  INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (employee, project)
 );

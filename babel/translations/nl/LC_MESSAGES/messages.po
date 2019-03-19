@@ -72,11 +72,13 @@ msgstr "Promotor"
 
 #: html/templates/people.html:58
 #: html/templates/researchgroup.html
+#: html/templates/person.html
 msgid "Yes"
 msgstr "Ja"
 
 #: html/templates/people.html:59
 #: html/templates/researchgroup.html
+#: html/templates/person.html
 msgid "No"
 msgstr "Nee"
 
@@ -103,6 +105,19 @@ msgstr "kantooradres"
 #: html/templates/people.html
 msgid "professor"
 msgstr "professor"
+
+#: html/templates/person.html
+msgid "Employee"
+msgstr "Medewerker"
+
+#: html/templates/person.html
+msgid "remove employee"
+msgstr "verwijder medewerker"
+
+#: html/templates/person.html
+msgid "Are you sure you want to remove this employee?"
+msgstr "Ben je zeker dat je deze medewerker wilt verwijderen?"
+
 
 #: html/templates/projects.html:23
 msgid "Search query"
@@ -225,10 +240,6 @@ msgstr "pas groupen aan"
 #: html/templates/administration.html
 msgid "add staff"
 msgstr "voeg medewerker toe"
-
-#: html/templates/administration.html
-msgid "remove staff"
-msgstr "verwijder medewerker"
 
 #: html/templates/administration.html
 msgid "modify staff"
