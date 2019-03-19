@@ -194,11 +194,47 @@ def show_people():
     for person in people:
         for group in researchGroups:
             if (group.ID == person.research_group):
-                neededValuesPeoplePage.append([person.name, group.name, person.promotor])
+                neededValuesPeoplePage.append([person.name, group.name, person.promotor, person.id])
 
     return render_template("people.html", r_values=neededValuesPeoplePage, r_researchGroups=researchGroups,
                            page="people")
 
+@app.route("/people/", methods=["POST"])
+def add_staff():
+    '''
+    function that adds a staff member to the database, is called everytime the user uses the POST method on the
+    add staf form of the people page
+    :return: redirection to show people
+    '''
+    Raccess = ResearchGroupAccess(connection)
+    researchGroups = Raccess.get_researchGroups()
+
+    Daccess = DomainAccess(connection)
+    name = request.form.get("Name")
+    email = request.form.get("Email")
+    office = request.form.get("Office")
+    researchgroupNr = request.form.get("Researchgroup")
+    research_group = researchGroups[int(researchgroupNr)]
+    titleOptions = Daccess.get_titles()
+    titleNr = request.form.get("Title")
+    title = titleOptions[int(titleNr)]
+    roleOptions = Daccess.get_intextOrigin()
+    roleNr = request.form.get("Role")
+    role = roleOptions[int(roleNr)]
+    active = True if request.form.get("Active") == 'on' else False
+    promotor = True if request.form.get("Promotor") == 'on' else False
+
+    emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
+    Eaccess= EmployeeAccess(connection)
+    Eaccess.add_employee(emp)
+    return redirect( url_for('show_people') )
+
+
+@app.route("/people/<int:id>", methods=["GET", "POST"])
+def get_person(id):
+    database = EmployeeAccess(connection)
+    person = database.get_employee(id)
+    return render_template("person.html", person=person, page="people")
 
 
 @app.route("/projects/", methods=["GET"])
@@ -284,44 +320,6 @@ def apply_filter_projects():
 def get_administration():
     return render_template("administration.html", page="administration")
 
-
-@app.route("/administration/add_staff", methods=["GET"])
-def form_add_staff():
-    access = ResearchGroupAccess(connection)
-    researchGroups = access.get_researchGroups()
-
-    return render_template("administration-add-staff.html", r_researchGroups=researchGroups , send=False,
-                           page="administration")
-
-@app.route("/administration/add_staff", methods=["POST"])
-def add_staff():
-    '''
-    function that adds a staff member to the database, is called everytime the user uses the POST method on the
-    add staf page
-    :return: Rendered template of the administration-add-staff with researchgroups and send message
-    '''
-    Raccess = ResearchGroupAccess(connection)
-    researchGroups = Raccess.get_researchGroups()
-
-    name = request.form.get("Name")
-    email = request.form.get("Email")
-    office = request.form.get("Office")
-    researchgroupNr = request.form.get("Researchgroup")
-    research_group = researchGroups[int(researchgroupNr)]
-    titleOptions = Raccess.get_titles()
-    titleNr = request.form.get("Title")
-    title = titleOptions[int(titleNr)]
-    roleOptions = Raccess.get_intextOrigin()
-    roleNr = request.form.get("Role")
-    role = roleOptions[int(roleNr)]
-    active = True if request.form.get("Active") == 'on' else False
-    promotor = True if request.form.get("Promotor") == 'on' else False
-
-    emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
-    Eaccess= EmployeeAccess(connection)
-    Eaccess.add_employee(emp)
-    return render_template("administration-add-staff.html", r_researchGroups=researchGroups, send=True,
-                           page="administration")
 
 
 @app.route("/administration/modify_disciplines", methods=["GET"])
@@ -434,13 +432,6 @@ def logout():
     next = request.args.get('logout')
     flash("you are now logged out")
     return redirect(next or url_for('index'))
-
-
-@app.route("/people/<int:id>", methods=["GET", "POST"])
-def get_person(id):
-    database = EmployeeAccess(connection)
-    person = database.get_employee(id)
-    return render_template("person.html", person=person, page="people")
 
 
 if __name__ == "__main__":

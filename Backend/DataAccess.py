@@ -232,7 +232,7 @@ class EmployeeAccess:
     def add_employee(self, empl):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s)',
+            cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s,%s)',
                            (empl.name, empl.email, empl.office, empl.research_group.ID, empl.title, empl.internOrExtern,
                             empl.active, empl.promotor))
             cursor.execute('SELECT LASTVAL()')
