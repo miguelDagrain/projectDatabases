@@ -109,31 +109,39 @@
                     <th class="th-sm">
                         <strong>{{ _('Discipline') }}</strong>
                     </th>
-                    <th class="th-4">
-                        <strong>{{ _('Active') }}</strong>
-                    </th>
+                    {% if 'admin' in current_user.roles %}
+                        <th class="th-sm">
+                            <strong>{{ _('Active') }}</strong>
+                        </th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
                 {% for group in r_groups %}
-                    <tr>
-                        <td>
-                            {{ group.name }}
-                        </td>
-                        <td>
-                            {{ group.abbreviation }}
-                        </td>
-                        <td>
-                            {{ group.discipline }}
-                        </td>
-                        <td>
-                            {% if group.active == True %}
-                                &#10004;
-                            {% else %}
-                                &#10060;
+
+                    {% if (group.active == True or 'admin' in current_user.roles) %}
+                        <tr>
+                            <td>
+                                {{ group.name }}
+                            </td>
+                            <td>
+                                {{ group.abbreviation }}
+                            </td>
+                            <td>
+                                {{ group.discipline }}
+                            </td>
+
+                            {% if 'admin' in current_user.roles %}
+                                <td>
+                                    {% if group.active == True %}
+                                        &#10004;
+                                    {% elif group.active == False %}
+                                        &#10060;
+                                    {% endif %}
+                                </td>
                             {% endif %}
-                        </td>
-                    </tr>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

@@ -24,6 +24,10 @@
     padding-top: 10px;
 }
 
+.page-content ul {
+    list-style-type: none;
+}
+
 .content-table {
     table-layout: fixed;
     border-collapse: collapse;

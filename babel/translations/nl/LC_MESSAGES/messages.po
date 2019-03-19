@@ -170,6 +170,10 @@ msgstr "Discipline"
 msgid "Description"
 msgstr "Omschrijving"
 
+#: html/templates/researchgroup.html
+msgid "Research group"
+msgstr "Onderzoeksgroep"
+
 #: html/templates/administration.html
 msgid "Research groups"
 msgstr "Onderzoeksgroepen"
@@ -181,10 +185,6 @@ msgstr "Medewerkers"
 #: html/templates/administration.html
 msgid "add group"
 msgstr "voeg groep toe"
-
-#: html/templates/administration.html
-msgid "remove group"
-msgstr "verwijder groep"
 
 #: html/templates/administration.html
 msgid "modify groups"

@@ -115,6 +115,38 @@ def add_research_group():
     researchGroups = Raccess.get_researchGroups()
     return render_template("researchgroups.html", r_groups=researchGroups, r_disciplines=disciplines, page="rgroups")
 
+@app.route("/researchgroups/<int:id>", methods=["GET"])
+def group_page(id):
+    '''
+    Renders a template with the description of a project
+    :param id: the id of the researchgroup
+    :return: rendered template of the group
+    '''
+    Racces = ResearchGroupAccess(connection)
+    researchGroup = Racces.get_researchGroupOnID(id)
+
+    Eacces = EmployeeAccess(connection)
+    researchers = list()
+    contactPersons = list()
+    for empl in Eacces.get_employees():
+        if empl.research_group == researchGroup.ID:
+            researchers.append(empl)
+        if empl.id == researchGroup.contactID:
+            contactPersons.append(empl)
+
+    Pacces = ProjectAccess(connection)
+    projects = list()
+    for project in Pacces.get_projects():
+        if project.researchGroup == researchGroup.ID:
+            projects.append(project)
+
+    language = request.cookies.get('lang')
+    description = None
+    for doc in researchGroup.desc:
+        if(doc.language == language):
+            description = doc.text
+
+    return render_template("researchgroup.html", r_groupName=researchGroup.name, r_description=description, r_researchers=researchers, r_contactPersons=contactPersons, r_projects=projects)
 
 @app.route("/people/", methods=["GET"])
 def show_people():

@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ _('Research group') }}{% endblock title %}
+
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+
+{% endblock stylesheets %}
+
+
+{% block scripts %}{% endblock scripts %}
+
+{% block body %}
+
+    <div style="display:flex;">
+
+
+    <div class="page-content">
+        <h1>{{ r_groupName }}</h1>
+
+        {% if r_description is not none %}
+            <p>{{ r_description }}</p>
+        {% endif %}
+
+        <table class="content-table">
+            <tr>
+                <th>{{ _('Researchers') }}</th>
+            </tr>
+            <tr>
+                <td>
+                    <ul>
+                        {% for researcher in r_researchers %}
+                            <li>{{ researcher.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% if r_contactPersons|length > 0 %}
+                <tr>
+                    <th>
+                        {% if r_contactPersons|length == 1 %}
+                            {{ _('Contact person') }}
+                        {% else %}
+                            {{ _('Contact persons') }}
+                        {% endif %}
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul>
+                            {% for contactPerson in r_contactPersons %}
+                                <li>{{ contactPerson.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>
+                    {{ _('Projects') }}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <ul>
+                        {% for project in r_projects %}
+                            <li>{{ project.title }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    </div>
+
+{% endblock body %}
