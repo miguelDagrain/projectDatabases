@@ -122,7 +122,7 @@
                     {% if (group.active == True or 'admin' in current_user.roles) %}
                         <tr>
                             <td>
-                                {{ group.name }}
+                                <a href="{{ url_for('group_page', id=group.ID) }}">{{ group.name }}</a>
                             </td>
                             <td>
                                 {{ group.abbreviation }}

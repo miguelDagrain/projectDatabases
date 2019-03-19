@@ -81,16 +81,20 @@
 
 .page-content a:link {
     color: #003366;
+    text-decoration: none;
 }
 
 .page-content a:visited {
     color: rgba(0, 51, 102, 0.7);
+    text-decoration: none;
 }
 
 .page-content a:hover {
     color: #660033;
+    text-decoration: none;
 }
 
 .page-content a:active {
     color: rgba(102, 0, 51, 0.7);
+    text-decoration: none;
 }
