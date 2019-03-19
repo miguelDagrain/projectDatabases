@@ -77,12 +77,4 @@ insert into projectRegistration values (3,'busy',3);
 insert into bookmark values(1,1);
 insert into bookmark values(2,1);
 
-insert into session values(10,1,'12:24:52','2019-04-03');
-
-insert into sessionSearchQuery values(10,'prototype','12:29:52');
-insert into sessionSearchQuery values(10,'modeleren','12:31:52');
-
--- insert into sessionProjectClick values(10,1,'12:29:59');
--- insert into sessionProjectClick values(10,2,'12:31:59');
-
 

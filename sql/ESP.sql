@@ -232,29 +232,3 @@ CREATE TABLE bookmark
   student INT REFERENCES student (studentID) ON DELETE CASCADE,
   PRIMARY KEY (project, student)
 );
-
-CREATE TABLE session
-(
-  sessionID INT PRIMARY KEY,
-  studentID INT REFERENCES student (studentID) NOT NULL,
-  startTime TIME,
-  startDate DATE
-);
-
-CREATE TABLE sessionSearchQuery
-(
-  sessionID  INT REFERENCES session (sessionID),
-  term       VARCHAR(255),
-  searchTime TIME,
-  PRIMARY KEY (sessionID, term, searchTime)
-);
-
--- Dit is niet nodig omdat sessie's met cookies worden bijgehouden
---
--- CREATE TABLE sessionProjectClick
--- (
---   sessionID  INT REFERENCES session (sessionID),
---   project    INT REFERENCES project (projectID),
---   searchTime TIME,
---   PRIMARY KEY (sessionID, project, searchTime)
--- );

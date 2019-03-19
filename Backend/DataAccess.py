@@ -633,81 +633,6 @@ class StudentAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
 
-class SessionAccess:
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
-    def get_sessionSearches(self, sessionID):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from sessionSearchQuery where sessionID=%s', (str(sessionID)))
-        searchs = list()
-        for row in cursor:
-            searchs.append((row[1],row[2]))
-        return searchs
-
-    def add_sessionSearch(self, sessionId, search):
-        cursor = self.dbconnect.get_cursor()
-        try:
-            cursor.execute('select * from sessionSearchQuery where sessionID=%s and term=%s and searchtTime=%s',(str(sessionId),search[0],search[1] ))
-            if (cursor.rowcount == 0):
-                cursor.execute('insert into sessionSearchQuery values(%s,%s,%s)', (str(sessionId),search[0],search[1] ))
-        except:
-            self.dbconnect.rollback()
-            print("unable to save sessionsearch")
-
-    def get_sessionProjectClicks(self, sessionID):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from sessionProjectClick where sessionID=%s', (str(sessionID)))
-        clicks = list()
-        for row in cursor:
-            clicks.append((row[1],row[2]))
-        return clicks
-
-    def add_sessionProjectClick(self, sessionId, click):
-        cursor = self.dbconnect.get_cursor()
-        try:
-            cursor.execute('select * from sessionProjectClick where sessionID=%s and project=%s and searchtTime=%s',(str(sessionId),str(click[0]),click[1] ))
-            if (cursor.rowcount == 0):
-                cursor.execute('insert into sessionProjectClick values(%s,%s,%s)', (str(sessionId),str(click[0]),click[1] ) )
-        except:
-            self.dbconnect.rollback()
-            print("unable to save sessionClick")
-
-    def get_sessions(self):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from session')
-        sessions = list()
-        for row in cursor:
-            session = Session(row[0], row[1], row[2], row[3])
-            session.searchWords=self.get_sessionSearches(session.sessionId)
-            session.clickedProjects=self.get_sessionProjectClicks(session.sessionId)
-            sessions.append(session)
-        return sessions
-
-    def get_session(self, ID):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE sessionID=%s ', (ID))
-        row = cursor.fetchone()
-        session= Session(row[0], row[1], row[2], row[3])
-        session.searchWords = self.get_sessionSearches(session.sessionId)
-        session.clickedProjects = self.get_sessionProjectClicks(session.sessionId)
-        return session
-
-    def add_session(self, ses):
-        cursor = self.dbconnect.get_cursor()
-        try:
-            cursor.execute('INSERT INTO session values(%s,%s,%s,%s)',
-                           (str(ses.sessionId), str(ses.studentId),ses.startTime,ses.startDate))
-
-            for i in ses.searchWords:
-                self.add_sessionSearch(ses.sessionId,i)
-            for i in ses.clickedProjects:
-                self.add_sessionProjectClick(ses.sessionId,i)
-            # get id and return updated object
-            self.dbconnect.commit()
-        except:
-            self.dbconnect.rollback()
-            raise Exception('Unable to save session!')
-
 class DomainAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
@@ -823,13 +748,12 @@ class DomainAccess:
             types.append(i[0])
         return types
 
-class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, SessionAccess, StudentAccess, ResearchGroupAccess):
+class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
         DomainAccess.__init__(self, self.dbconnect)
         DocumentAccess.__init__(self, self.dbconnect)
         EmployeeAccess.__init__(self, self.dbconnect)
         ProjectAccess.__init__(self, self.dbconnect)
-        SessionAccess.__init__(self, self.dbconnect)
         StudentAccess.__init__(self, self.dbconnect)
         ResearchGroupAccess.__init__(self, self.dbconnect)
