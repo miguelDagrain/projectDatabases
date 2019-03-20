@@ -196,7 +196,7 @@ class ResearchGroupAccess:
         try:
             if(group.ID==None):
                 raise Exception('no id given')
-            cursor.execute('select * from researchgroup where groupID=%s',(group.ID))
+            cursor.execute('select * from researchgroup where groupID=%s',(str(group.ID)))
             if(cursor.rowcount==0):
                 raise Exception('no researchGroup found with that id')
             cursor.execute('update researchGroup set name=%s,abbreviation=%s,discipline=%s,active=%s,address=%s,telNr=%s where groupId=%s',
@@ -204,6 +204,7 @@ class ResearchGroupAccess:
             cursor.execute('delete from groupDescription where researchGroup=%s',str(group.ID))
             for i in group.desc:
                 self.add_researchGroupDescription(i, str(group.ID))
+            self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
             raise Exception('unable to change researchGroup')
@@ -293,6 +294,22 @@ class EmployeeAccess:
           roles.append(row[1])
         return roles
 
+    def change_employee(self, employee):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            if (employee.ID == None):
+                raise Exception('no id given')
+            cursor.execute('select * from employee where employeeID=%s', (str(employee.ID)))
+            if (cursor.rowcount == 0):
+                raise Exception('no employee found with that id')
+            cursor.execute(
+                'update employee set name=%s,email=%s,office=%s,researchgroup=%s,title=%s,INTernORextern=%s,active=%s,promotor=%s where employeeID=%s',
+                (employee.name,employee.email,employee.office,str(employee.research_group),employee.title,employee.internOrExtern,employee.active,str(employee.promotor),str(employee.ID)))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to change employee')
+
 
 class ProjectAccess:
     def __init__(self, dbconnect):
@@ -307,7 +324,7 @@ class ProjectAccess:
             desc.append(self.doc.get_document(row[1]))
         return desc
 
-    def add_projectDocument(self, document, projectID):
+    def add_projectDocument(self,  projectID,document):
         cursor = self.dbconnect.get_cursor()
         try:
             docid = self.doc.add_document(document)
@@ -508,7 +525,7 @@ class ProjectAccess:
             gid = cursor.fetchone()[0]
             proj.ID = gid
             for i in proj.desc:
-                self.add_projectDocument(i, proj.projectId)
+                self.add_projectDocument( proj.projectId,i)
             for i in proj.activeYear:
                 self.add_projectYears(gid,i)
             for i in proj.type:
@@ -523,6 +540,46 @@ class ProjectAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('Unable to save project!')
+
+    def change_project(self, project):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            if (project.ID == None):
+                raise Exception('no id given')
+            cursor.execute('select * from project where projectID=%s', (str(project.ID)))
+            if (cursor.rowcount == 0):
+                raise Exception('no project found with that id')
+            cursor.execute(
+                'update project set title=%s,maxStudents=%s,active=%s,researchGroup=%s where projectID=%s',
+                (project.title,str(project.maxStudents),project.active,str(project.researchGroup),str(project.ID)))
+
+            cursor.execute('delete from projectYearConnection where projectID=%s', str(project.ID))
+            for i in project.activeYear:
+                self.add_projectYears(str(project.ID),i)
+
+            cursor.execute('delete from projectTypeConnection where projectID=%s', str(project.ID))
+            for i in project.type:
+                self.add_projectTypeConnection(str(project.ID), i)
+
+            cursor.execute('delete from projectPromotor where project=%s', str(project.ID))
+            for i in project.promotor:
+                self.add_projectPromotor(str(project.ID), i)
+
+            cursor.execute('delete from projectTag where project=%s', str(project.ID))
+            for i in project.tag:
+                self.add_projectTag(str(project.ID), i)
+
+            cursor.execute('delete from projectRelation where project1=%s', str(project.ID))
+            for i in project.relatedProject:
+                self.add_projectRelation(str(project.ID), i)
+
+            cursor.execute('delete from projectDocument where projectID²=%s', str(project.ID))
+            for i in project.desc:
+                self.add_projectDocument(str(project.ID), i)
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to change project')
 
 class StudentAccess:
     def __init__(self, dbconnect):
@@ -648,6 +705,24 @@ class StudentAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
+
+    def change_student(self,student):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            if(student.studentID==None):
+                raise Exception('no id given')
+            cursor.execute('select * from student where studentID=%s',(str(student.studentID)))
+            if(cursor.rowcount==0):
+                raise Exception('no student found with that id')
+            cursor.execute('update  student set name=%s where studentId=%s',(student.name,str(student.studentID)))
+
+            cursor.execute('delete from bookmark where student=%s',str(student.studentID))
+            for i in student.likedProject:
+                self.add_bookmark(i, str(student.studentID))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to change student')
 
 class DomainAccess:
     def __init__(self, dbconnect):
