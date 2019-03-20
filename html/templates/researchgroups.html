@@ -6,8 +6,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
 {% endblock stylesheets %}
+
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+<script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+
+{% endblock scripts %}
 
 <script>
     $(document).ready(function () {
@@ -22,13 +34,66 @@
 
     <div style="display:flex;">
 
-{#        <div class="side-bar">#}
-{##}
-{#        </div>#}
-
         <div class="page-content">
 
             <h1>{{ _('Research groups') }}</h1>
+
+            {% if 'admin' in current_user.roles %}
+
+            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-group">{{ _('add group') }}</button>
+
+            <div id="modal-form-group" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form class="modal-body administration-form" action="{{ url_for('add_research_group') }}" method="post">
+                            <label for="administration-form-name">{{ _('Group name') }}:</label>
+                            <input type="text" id="administration-form-name" name="Name">
+
+                            <label for="administration-form-abbreviation">{{ _('Abbreviation') }}: </label>
+                            <input type="text" id="administration-form-abbreviation" name="Abbreviation">
+
+                            <label for="administration-form-discipline">{{ _('Disciplines') }}:</label>
+                            <div class="dropdown">
+                                <select id="administration-form-discipline" name="Discipline">
+
+                                    <script>
+                                        var iter = 0;
+                                    </script>
+
+                                    {% for discip in r_disciplines %}
+
+                                    <option value="" id="noValueDis">{{ discip }}</option>
+
+                                    <script>
+                                        document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                                        document.getElementById("noValueDis").removeAttribute("id");
+                                        iter++;
+                                    </script>
+
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+
+                            <label for="administration-form-active">{{ _('Active') }}:</label>
+                            <input type="checkbox" id="administration-form-active" name="Active"><br>
+
+
+                            <label for="administration-form-address">{{ _('Address') }}:</label>
+                            <input type="text" id="administration-form-address" name="Address"><br>
+
+
+                            <label for="administration-form-telephone">{{ _('Telephone number') }}:</label>
+                            <input type="text" id="administration-form-telephone" name="Telephone"><br>
+
+
+                            <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
 
             <table class="content-table group-table table-sm" id="verticalScroll" >
                 <thead>
@@ -42,35 +107,48 @@
                     <th class="th-sm">
                         <strong>{{ _('Discipline') }}</strong>
                     </th>
-                    <th class="th-4">
-                        <strong>{{ _('Active') }}</strong>
-                    </th>
+                    {% if 'admin' in current_user.roles %}
+                        <th class="th-sm">
+                            <strong>{{ _('Active') }}</strong>
+                        </th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
                 {% for group in r_groups %}
-                    <tr>
-                        <td>
-                            {{ group.name }}
-                        </td>
-                        <td>
-                            {{ group.abbreviation }}
-                        </td>
-                        <td>
-                            {{ group.discipline }}
-                        </td>
-                        <td>
-                            {% if group.active == True %}
-                                &#10004;
-                            {% else %}
-                                &#10060;
+
+                    {% if (group.active == True or 'admin' in current_user.roles) and (group.ID != 1) %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('group_page', id=group.ID) }}">{{ group.name }}</a>
+                            </td>
+                            <td>
+                                {{ group.abbreviation }}
+                            </td>
+                            <td>
+                                {{ group.discipline }}
+                            </td>
+
+                            {% if 'admin' in current_user.roles %}
+                                <td>
+                                    {% if group.active == True %}
+                                        &#10004;
+                                    {% elif group.active == False %}
+                                        &#10060;
+                                    {% endif %}
+                                </td>
                             {% endif %}
-                        </td>
-                    </tr>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
 
         </div>
     </div>
+
+
+<script>setUpDropdowns()</script>
+<script>setUpMultiSelection()</script>
+
 {% endblock body %}

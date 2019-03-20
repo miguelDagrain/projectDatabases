@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
-
 {% endblock stylesheets %}
 
 {% block scripts %}
@@ -27,22 +26,17 @@
 
         <div>
             {{_('Research groups')}}:
-            <a class="side-bar-button" href="{{ url_for('form_add_research_group') }}">{{_('add group')}}</a>
-            <a class="side-bar-button">{{_('remove group')}}</a>
             <a class="side-bar-button">{{_('modify groups')}}</a>
         </div>
 
         <div>
             {{_('Staff')}}:
-            <a class="side-bar-button" href="{{ url_for('form_add_staff') }}">{{_('add staff')}}</a>
-            <a class="side-bar-button">{{_('remove staff')}}</a>
             <a class="side-bar-button">{{_('modify staff')}}</a>
         </div>
 
         <div>
-            {{_('Projects')}}:
-            <a class="side-bar-button" href="{{ url_for('modify_disciplines')}}">{{_('modify disciplines')}}</a>
-            <a class="side-bar-button">{{_('modify types')}}</a>
+            <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{_('modify disciplines')}}</a>
+            <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{_('modify types')}}</a>
         </div>
 
     </div>

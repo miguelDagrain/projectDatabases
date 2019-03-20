@@ -22,7 +22,7 @@ msgstr ""
 msgid "Page not found"
 msgstr "Pagina niet gevonden"
 
-#: html/templates/administration-add-group.html html/templates/researchgroups.html
+#: html/templates/people.html html/templates/researchgroups.html
 msgid "Active"
 msgstr "Actief"
 
@@ -66,15 +66,19 @@ msgstr "Onderzoeksgroep"
 msgid "All"
 msgstr "Alles"
 
-#: html/templates/people.html:55 html/templates/people.html:74
+#: html/templates/people.html
 msgid "Promotor"
 msgstr "Promotor"
 
 #: html/templates/people.html:58
+#: html/templates/researchgroup.html
+#: html/templates/person.html
 msgid "Yes"
 msgstr "Ja"
 
 #: html/templates/people.html:59
+#: html/templates/researchgroup.html
+#: html/templates/person.html
 msgid "No"
 msgstr "Nee"
 
@@ -85,6 +89,35 @@ msgstr "Zoeken"
 #: html/templates/people.html:82
 msgid "yes/no"
 msgstr "ja/nee"
+
+#: html/templates/people.html
+msgid "add staff"
+msgstr "toevoegen medewerkers"
+
+#: html/templates/people.html
+msgid "E-mail"
+msgstr "E-mailadres"
+
+#: html/templates/people.html
+msgid "Office address"
+msgstr "kantooradres"
+
+#: html/templates/people.html
+msgid "professor"
+msgstr "professor"
+
+#: html/templates/person.html
+msgid "Employee"
+msgstr "Medewerker"
+
+#: html/templates/person.html
+msgid "remove employee"
+msgstr "verwijder medewerker"
+
+#: html/templates/person.html
+msgid "Are you sure you want to remove this employee?"
+msgstr "Ben je zeker dat je deze medewerker wilt verwijderen?"
+
 
 #: html/templates/projects.html:23
 msgid "Search query"
@@ -139,6 +172,7 @@ msgid "Assigned projects only"
 msgstr "Enkel toegewezen projecten"
 
 #: html/templates/projects.html:113
+#: html/templates/people.html
 msgid "title"
 msgstr "titel"
 
@@ -150,6 +184,14 @@ msgstr "onderzoeksgroep"
 msgid "assigned students"
 msgstr "toegewezen studenten"
 
+#: html/templates/project.html
+msgid "remove project"
+msgstr "verwijder project"
+
+#: html/templates/project.html
+msgid "Are you sure you want to delete this project?"
+msgstr "Ben je zeker dat je dit project wilt verwijderen?"
+
 #: html/templates/researchgroups.html:2 html/templates/researchgroups.html:31
 msgid "Research groups"
 msgstr "Onderzoeksgroepen"
@@ -158,6 +200,26 @@ msgstr "Onderzoeksgroepen"
 msgid "Discipline"
 msgstr "Discipline"
 
+#: html/templates/researchgroups.html
+msgid "Description"
+msgstr "Omschrijving"
+
+#: html/templates/researchgroup.html
+#: html/templates/people.html
+msgid "Research group"
+msgstr "Onderzoeksgroep"
+
+#: html/templates/researchgroup
+msgid "remove group"
+msgstr "verwijder groep"
+
+#: html/templates/researchgroup
+msgid "Are you sure you want to delete this research group?"
+msgstr "Ben je zeker dat je deze onderzoeksgroep wilt verwijderen?"
+
+#: html/templates/researchgroup
+msgid "Researchers"
+msgstr "Onderzoekers"
 
 #: html/templates/administration.html
 msgid "Research groups"
@@ -172,20 +234,12 @@ msgid "add group"
 msgstr "voeg groep toe"
 
 #: html/templates/administration.html
-msgid "remove group"
-msgstr "verwijder groep"
-
-#: html/templates/administration.html
 msgid "modify groups"
 msgstr "pas groupen aan"
 
 #: html/templates/administration.html
 msgid "add staff"
 msgstr "voeg medewerker toe"
-
-#: html/templates/administration.html
-msgid "remove staff"
-msgstr "verwijder medewerker"
 
 #: html/templates/administration.html
 msgid "modify staff"
@@ -218,10 +272,6 @@ msgstr "Adres"
 #: html/templates/administration-add-group.html
 msgid "Telephone number"
 msgstr "Telefoonnummer"
-
-#: html/templates/administration-add-staff.html
-msgid "Add Staff"
-msgstr "Toevoegen Medewerkers"
 
 #: html/templates/administration-modify-disciplines.html
 msgid "Modify Disciplines"

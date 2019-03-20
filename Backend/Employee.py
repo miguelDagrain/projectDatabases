@@ -21,7 +21,10 @@ class Employee:
         self.active = active
         self.promotor = promotor
 
-
-    def __str__(self):
-        return "id: " + self.id + ", name: " + self.name + ", email: " + self.email + ", office: " + self.office + ", group: " + self.research_group + ", title: " + self.title + ", isintern:" + str(
-            self.internOrExtern) + ", active: " + str(self.active) + ", promotor: " + str(self.promotor)
+    # def getResearchGroup(self,dbConnect):
+    #     res=ResearchGroupAccess(dbConnect)
+    #     return res.get_researchGroupOnID(self.research_group)
+    #
+    # def getPromotor(self,dbConnect):
+    #     emp=EmployeeAccess(dbConnect)
+    #     return emp.get_employee(self.promotor)

@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS projectYearConnection;
 DROP TABLE IF EXISTS projectYear;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS contactPerson;
+DROP TABLE IF EXISTS employeeRoles;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS groupDescription;
 DROP TABLE IF EXISTS researchGroup;
@@ -95,7 +96,7 @@ CREATE TABLE document
 --dont yet know what the attachment should be so this is placeholder
 CREATE TABLE attachment
 (
-  doc        INT REFERENCES document (documentID),
+  doc        INT REFERENCES document (documentID) ON DELETE CASCADE,
   attachment VARCHAR(255),
   PRIMARY KEY (doc, attachment)
 );
@@ -112,10 +113,11 @@ CREATE TABLE researchGroup
   telNr        VARCHAR(255)
 );
 
+
 CREATE TABLE groupDescription
 (
-  groupID INT REFERENCES researchGroup (groupID),
-  docID   INT REFERENCES document (documentID),
+  groupID INT REFERENCES researchGroup (groupID) ON DELETE CASCADE ,
+  docID   INT REFERENCES document (documentID) ON DELETE CASCADE ,
   PRIMARY KEY (groupID, docID)
 );
 
@@ -134,9 +136,16 @@ CREATE TABLE employee
 
 );
 
+create table employeeRoles
+(
+  employee int references employee (employeeID) ON DELETE CASCADE,
+  role     varchar(255),
+  primary key (role, employee)
+);
+
 CREATE TABLE contactPerson
 (
-  employee INT REFERENCES employee (employeeID),
+  employee INT REFERENCES employee (employeeID) ON DELETE CASCADE,
   rgroup   INT REFERENCES researchGroup (groupID) UNIQUE,
   PRIMARY KEY (rgroup)
 );
@@ -158,7 +167,7 @@ CREATE TABLE projectYear
 CREATE TABLE projectYearConnection
 (
   year      INT REFERENCES projectYear (year),
-  projectID INT REFERENCES project (projectID),
+  projectID INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (year, projectID)
 );
 
@@ -172,34 +181,34 @@ insert into projectType values ('Research internship');
 CREATE TABLE projectTypeConnection
 (
   type      varchar(255) REFERENCES projectType (type),
-  projectID INT REFERENCES project (projectID),
+  projectID INT REFERENCES project (projectID) ON DELETE CASCADE ,
   PRIMARY KEY (type, projectId)
 );
 
 CREATE TABLE projectPromotor
 (
-  employee INT REFERENCES employee (employeeID),
-  project  INT REFERENCES project (projectID),
+  employee INT REFERENCES employee (employeeID) ON DELETE CASCADE,
+  project  INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (employee, project)
 );
 
 CREATE TABLE projectTag
 (
   tag     VARCHAR(255),
-  project INT REFERENCES project (projectID),
+  project INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (project, tag)
 );
 
 CREATE TABLE projectRelation
 (
-  project1 INT REFERENCES project (projectID),
-  project2 INT REFERENCES project (projectID),
+  project1 INT REFERENCES project (projectID) ON DELETE CASCADE,
+  project2 INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (project1, project2)
 );
 
 CREATE TABLE projectDocument
 (
-  projectID INT REFERENCES project (projectID),
+  projectID INT REFERENCES project (projectID) ON DELETE CASCADE,
   docID     INT REFERENCES document (documentID),
   PRIMARY KEY (projectID, docID)
 );
@@ -212,7 +221,7 @@ CREATE TABLE student
 
 CREATE TABLE projectRegistration
 (
-  project INT REFERENCES project (projectID),
+  project INT REFERENCES project (projectID) ON DELETE CASCADE,
   status  varchar(255) references registration(status),
   student INT REFERENCES student (studentID),
   PRIMARY KEY (project, status, student)
@@ -220,31 +229,33 @@ CREATE TABLE projectRegistration
 
 CREATE TABLE bookmark
 (
-  project INT REFERENCES project (projectID),
-  student INT REFERENCES student (studentID),
+  project INT REFERENCES project (projectID) ON DELETE CASCADE,
+  student INT REFERENCES student (studentID) ON DELETE CASCADE,
   PRIMARY KEY (project, student)
 );
 
-CREATE TABLE session
-(
-  sessionID INT PRIMARY KEY,
-  studentID INT REFERENCES student (studentID) NOT NULL,
-  startTime TIME,
-  startDate DATE
-);
+CREATE FUNCTION researchGroup_del_func() RETURNS trigger AS $action$
+BEGIN
+    UPDATE employee
+    SET researchgroup = 1
+    WHERE researchgroup = old.groupID;
 
-CREATE TABLE sessionSearchQuery
-(
-  sessionID  INT REFERENCES session (sessionID),
-  term       VARCHAR(255),
-  searchTime TIME,
-  PRIMARY KEY (sessionID, term, searchTime)
-);
+    UPDATE project
+    SET researchGroup = 1
+    WHERE researchGroup = old.groupID;
 
-CREATE TABLE sessionProjectClick
-(
-  sessionID  INT REFERENCES session (sessionID),
-  project    INT REFERENCES project (projectID),
-  searchTime TIME,
-  PRIMARY KEY (sessionID, project, searchTime)
-);
+    DELETE FROM document
+     WHERE documentID = (SELECT docID
+                       FROM groupDescription NATURAL JOIN researchGroup rG
+                       WHERE rG.groupID = old.groupID);
+
+    RETURN old;
+END
+$action$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER researchGroup_del_tr
+BEFORE DELETE ON researchGroup
+FOR EACH ROW
+WHEN (old.groupID <> 1)
+EXECUTE PROCEDURE researchGroup_del_func();

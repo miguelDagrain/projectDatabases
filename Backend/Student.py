@@ -11,6 +11,3 @@ class Student:
         self.name = name
         self.studentID = student_id
         self.likedProject = list()
-
-    def __str__(self):
-        return "name: "+self.name+", Id: "+str(self.studentID)+", likedProject: "+str(self.likedProject)+", session: "+str(self.session)

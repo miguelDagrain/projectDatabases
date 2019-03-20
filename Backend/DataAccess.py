@@ -8,9 +8,7 @@ from Session import *
 from Student import *
 from Attachment import *
 
-
-
-class DataAccess:
+class DocumentAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
@@ -35,15 +33,15 @@ class DataAccess:
         cursorAttachment = self.dbconnect.get_cursor()
         cursorAttachment.execute('select * from attachment where %s=doc',(str(document.ID)))
         for att in cursorAttachment:
-            document.attachment.append(Attachment(att[0], att[1]))
+            document.attachment.append(att[1])
         return document
 
-    def add_attachment(self,attachment):
+    def add_attachment(self,documentID,attachment):
         try:
             cursor =self.dbconnect.get_cursor()
-            cursor.execute('select * from attachment where doc=%s and attachment=%s',(str(attachment.docid),attachment.content))
+            cursor.execute('select * from attachment where doc=%s and attachment=%s',(str(documentID),str(attachment)))
             if(cursor.rowcount==0):
-                cursor.execute('insert into attachment values(%s,%s)',(str(attachment.docid),str(attachment.content)))
+                cursor.execute('insert into attachment values(%s,%s)',(str(documentID),str(attachment)))
                 self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -73,18 +71,45 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save document!')
 
+    def change_Document(self,document):
+        try:
+            if(document.ID!=None):
+                cursor = self.dbconnect.get_cursor()
+                cursor.execute('select * from document where documentID=%s',(str(document.ID)))
+                if(cursor.rowcount==0):
+                    raise Exception('no document with that ID found')
+                cursor.execute('update document set lang=%s, content=%s where documentID=%s',(document.language,document.text,str(document.ID)))
+
+                cursor.execute('delete from attachment where doc=%s',(str(document.ID)))
+                for i in document.attachment:
+                    self.add_attachment(document.ID,i)
+                self.dbconnect.commit()
+
+            else:
+                raise Exception('Document doesnt have ID')
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to change document!')
+
+
+class ResearchGroupAccess:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        self.doc=DocumentAccess(self.dbconnect)
+
+
     def get_researchgroupDescriptions(self, groupid):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from groupDescription where groupID=%s', (str(groupid)))
         desc = list()
         for row in cursor:
-            desc.append(self.get_document(row[1]))
+            desc.append(self.doc.get_document(row[1]))
         return desc
 
     def add_researchGroupDescription(self, document, groupid):
         cursor = self.dbconnect.get_cursor()
         try:
-            docid = self.add_document(document)
+            docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO groupDescription values(%s,%s)',
                            (str(groupid), str(docid)))
             # get id and return updated object
@@ -129,6 +154,12 @@ class DataAccess:
             rgroup.contactID = cursor.fetchone()[0]
         return rgroup
 
+    def remove_researchGroup(self, id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('DELETE FROM researchGroup WHERE groupID=%s', (str(id)))
+        self.dbconnect.commit()
+        return
+
     def checkContactPerson(self,eid,groupID):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -137,6 +168,7 @@ class DataAccess:
                 cursor.execute('insert into contactperson values(%s,%s)',(str(eid),str(groupID)))
             else:
                 if(cursor.fetchone()[0]!=eid):
+                    #waarom zegt pycharm hier constant dat hem '=' verwacht terwijl dat er staat ???
                     cursor.execute('update contactPerson SET employee=%s where rgroup=%s',(str(eid),str(groupID)))
             self.dbconnect.commit()
         except:
@@ -159,6 +191,28 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save researchgroup!')
 
+    def change_researchGroup(self,group):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            if(group.ID==None):
+                raise Exception('no id given')
+            cursor.execute('select * from researchgroup where groupID=%s',(group.ID))
+            if(cursor.rowcount==0):
+                raise Exception('no researchGroup found with that id')
+            cursor.execute('update researchGroup set name=%s,abbreviation=%s,discipline=%s,active=%s,address=%s,telNr=%s where groupId=%s',
+                           (group.name, group.abbreviation, group.discipline, group.active, group.address, str(group.telNr)),str(group.ID))
+            cursor.execute('delete from groupDescription where researchGroup=%s',str(group.ID))
+            for i in group.desc:
+                self.add_researchGroupDescription(i, str(group.ID))
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to change researchGroup')
+
+
+class EmployeeAccess:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+
     def get_employees(self):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from employee')
@@ -178,7 +232,7 @@ class DataAccess:
     def add_employee(self, empl):
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s)',
+            cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s,%s)',
                            (empl.name, empl.email, empl.office, empl.research_group.ID, empl.title, empl.internOrExtern,
                             empl.active, empl.promotor))
             cursor.execute('SELECT LASTVAL()')
@@ -189,6 +243,15 @@ class DataAccess:
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
             raise Exception('\nUnable to save Employee!\n(%s)' % (error))
+
+    def remove_employee(self, id):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('DELETE FROM employee WHERE employeeID=%s', (str(id)))
+            self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback
+            raise Exception('\nUnable to remove Employee!\n(%s)' % (error))
 
     def filter_employees(self, searchQuery="", researchGroup="", promotor=0,):
         cursor = self.dbconnect.get_cursor()
@@ -211,19 +274,43 @@ class DataAccess:
             employees.append(employee)
         return employees
 
+    def add_employeeRole(self,id,role):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO employeeRoles values(%s,%s)',
+                           (str(id),role))
+            # get id and return updated object
+            self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback()
+            raise Exception('\nUnable to save EmployeeRole!\n(%s)' % (error))
+
+    def get_employeeRoles(self,id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from employeeRoles where employee=%s',(str(id)))
+        roles = list()
+        for row in cursor:
+          roles.append(row[1])
+        return roles
+
+
+class ProjectAccess:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        self.doc=DocumentAccess(self.dbconnect)
 
     def get_projectDocuments(self, projectID):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectDocument where projectID=%s', (str(projectID)))
         desc = list()
         for row in cursor:
-            desc.append(self.get_document(row[1]))
+            desc.append(self.doc.get_document(row[1]))
         return desc
 
     def add_projectDocument(self, document, projectID):
         cursor = self.dbconnect.get_cursor()
         try:
-            docid = self.add_document(document)
+            docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO projectDocument values(%s,%s)',
                            (str(projectID), str(docid)))
             # get id and return updated object
@@ -358,6 +445,12 @@ class DataAccess:
         project.relatedProject = self.get_projectRelations(project.ID)
         return project
 
+    def remove_project(self, ID):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('DELETE FROM project WHERE projectID=%s', (str(ID)))
+        self.dbconnect.commit()
+        return
+
     def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
         cursor = self.dbconnect.get_cursor()
 
@@ -367,7 +460,8 @@ class DataAccess:
 
         if (researchGroup != ""):
             sql += "AND name = %(researchGroupQ)s "
-        #TODO hier is een fout typeQ wordt nooit vervangen
+        # hier is een fout typeQ wordt nooit vervangen
+        # todo: implementeren van type in sql.
         # if (type != ""):
         #     sql += "AND type = %(typeQ)s "
 
@@ -430,8 +524,10 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save project!')
 
-
-
+class StudentAccess:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        self.project=ProjectAccess(self.dbconnect)
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
         cursor = self.dbconnect.get_cursor()
@@ -448,7 +544,7 @@ class DataAccess:
         cursor.execute('select * from bookmark where student=%s', (str(studentId)))
         projects = list()
         for row in cursor:
-            projects.append(self.get_project(row[0]))
+            projects.append(self.project.get_project(row[0]))
         return projects
 
     # returns all bookmarks to a certain project
@@ -457,7 +553,7 @@ class DataAccess:
         cursor.execute('select * from bookmark where project=%s', (str(projectId)))
         bookmarks = list()
         for row in cursor:
-            bookmark = bookmark(row[0], row[1])
+            bookmark = Bookmark(row[0], row[1])
             bookmarks.append(bookmark)
         return bookmarks
 
@@ -553,78 +649,9 @@ class DataAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
 
-    def get_sessionSearches(self, sessionID):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from sessionSearchQuery where sessionID=%s', (str(sessionID)))
-        searchs = list()
-        for row in cursor:
-            searchs.append((row[1],row[2]))
-        return searchs
-
-    def add_sessionSearch(self, sessionId, search):
-        cursor = self.dbconnect.get_cursor()
-        try:
-            cursor.execute('select * from sessionSearchQuery where sessionID=%s and term=%s and searchtTime=%s',(str(sessionId),search[0],search[1] ))
-            if (cursor.rowcount == 0):
-                cursor.execute('insert into sessionSearchQuery values(%s,%s,%s)', (str(sessionId),search[0],search[1] ))
-        except:
-            self.dbconnect.rollback()
-            print("unable to save sessionsearch")
-
-    def get_sessionProjectClicks(self, sessionID):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from sessionProjectClick where sessionID=%s', (str(sessionID)))
-        clicks = list()
-        for row in cursor:
-            clicks.append((row[1],row[2]))
-        return clicks
-
-    def add_sessionProjectClick(self, sessionId, click):
-        cursor = self.dbconnect.get_cursor()
-        try:
-            cursor.execute('select * from sessionProjectClick where sessionID=%s and project=%s and searchtTime=%s',(str(sessionId),str(click[0]),click[1] ))
-            if (cursor.rowcount == 0):
-                cursor.execute('insert into sessionProjectClick values(%s,%s,%s)', (str(sessionId),str(click[0]),click[1] ) )
-        except:
-            self.dbconnect.rollback()
-            print("unable to save sessionClick")
-
-    def get_sessions(self):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from session')
-        sessions = list()
-        for row in cursor:
-            session = Session(row[0], row[1], row[2], row[3])
-            session.searchWords=self.get_sessionSearches(session.sessionId)
-            session.clickedProjects=self.get_sessionProjectClicks(session.sessionId)
-            sessions.append(session)
-        return sessions
-
-    def get_session(self, ID):
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE sessionID=%s ', (ID))
-        row = cursor.fetchone()
-        session= Session(row[0], row[1], row[2], row[3])
-        session.searchWords = self.get_sessionSearches(session.sessionId)
-        session.clickedProjects = self.get_sessionProjectClicks(session.sessionId)
-        return session
-
-    def add_session(self, ses):
-        cursor = self.dbconnect.get_cursor()
-        try:
-            cursor.execute('INSERT INTO session values(%s,%s,%s,%s)',
-                           (str(ses.sessionId), str(ses.studentId),ses.startTime,ses.startDate))
-
-            for i in ses.searchWords:
-                self.add_sessionSearch(ses.sessionId,i)
-            for i in ses.clickedProjects:
-                self.add_sessionProjectClick(ses.sessionId,i)
-            # get id and return updated object
-            self.dbconnect.commit()
-        except:
-            self.dbconnect.rollback()
-            raise Exception('Unable to save session!')
-
+class DomainAccess:
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
 
     def add_discipline(self,discipline):
         cursor = self.dbconnect.get_cursor()
@@ -736,3 +763,13 @@ class DataAccess:
         for i in cursor:
             types.append(i[0])
         return types
+
+class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
+    def __init__(self, dbconnect):
+        self.dbconnect = dbconnect
+        DomainAccess.__init__(self, self.dbconnect)
+        DocumentAccess.__init__(self, self.dbconnect)
+        EmployeeAccess.__init__(self, self.dbconnect)
+        ProjectAccess.__init__(self, self.dbconnect)
+        StudentAccess.__init__(self, self.dbconnect)
+        ResearchGroupAccess.__init__(self, self.dbconnect)

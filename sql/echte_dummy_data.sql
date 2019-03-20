@@ -68,6 +68,13 @@ insert into employee values(default,'Bart Braem','bart.braem@uantwerpen.be','opp
 insert into employee values(default,'Jeroen Avonts','jeroen.avonts@uantwerpen.be','oppuurseSteenweg 7',2,'phd','intern',true,true);
 insert into employee values(default,'Johan Bergs','johan.bergs@uantwerpen.be','oppuurseSteenweg 7',2,'phd','intern',true,true);
 
+insert into employeeRoles values(1,'admin');
+insert into employeeRoles values(1,'user');
+insert into employeeRoles values(2,'user');
+insert into employeeRoles values(3,'user');
+insert into employeeRoles values(4,'admin');
+
+
 insert into contactPerson values(2,1);
 
 insert into project values (default,'PROTOTYPE XML DOCUMENT SERVER',1,true,1);
@@ -101,7 +108,7 @@ insert into projectRelation values(1,2);
 
 insert into projectDocument values(1,6);
 insert into projectDocument values(2,7);
-insert into projectDocument values(2,8);
+insert into projectDocument values(3,8);
 
 insert into student values (default,'Van Leuvenhaege Matthias');
 insert into student values (default,'Molderez Tim');
@@ -113,13 +120,5 @@ insert into projectRegistration values (3,'bezig',3);
 
 insert into bookmark values(1,1);
 insert into bookmark values(2,1);
-
-insert into session values(10,1,'12:24:52','2019-04-03');
-
-insert into sessionSearchQuery values(10,'prototype','12:29:52');
-insert into sessionSearchQuery values(10,'modeleren','12:31:52');
-
-insert into sessionProjectClick values(10,1,'12:29:59');
-insert into sessionProjectClick values(10,2,'12:31:59');
 
 
