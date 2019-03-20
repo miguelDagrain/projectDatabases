@@ -34,10 +34,6 @@
 
     <div style="display:flex;">
 
-{#        <div class="side-bar">#}
-{##}
-{#        </div>#}
-
         <div class="page-content">
 
             <h1>{{ _('Research groups') }}</h1>
@@ -48,53 +44,51 @@
 
             <div id="modal-form-group" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form class="modal-body administration-form" action="{{ url_for('add_research_group') }}" method="post">
-                                <label for="administration-form-name">{{ _('Group name') }}:</label>
-                                <input type="text" id="administration-form-name" name="Name">
+                    <div class="modal-content">
+                        <form class="modal-body administration-form" action="{{ url_for('add_research_group') }}" method="post">
+                            <label for="administration-form-name">{{ _('Group name') }}:</label>
+                            <input type="text" id="administration-form-name" name="Name">
 
-                                <label for="administration-form-abbreviation">{{ _('Abbreviation') }}: </label>
-                                <input type="text" id="administration-form-abbreviation" name="Abbreviation">
+                            <label for="administration-form-abbreviation">{{ _('Abbreviation') }}: </label>
+                            <input type="text" id="administration-form-abbreviation" name="Abbreviation">
 
-                                <label for="administration-form-discipline">{{ _('Disciplines') }}:</label>
-                                <div class="dropdown">
-                                    <select id="administration-form-discipline" name="Discipline">
+                            <label for="administration-form-discipline">{{ _('Disciplines') }}:</label>
+                            <div class="dropdown">
+                                <select id="administration-form-discipline" name="Discipline">
 
-                                        <script>
-                                            var iter = 0;
-                                        </script>
+                                    <script>
+                                        var iter = 0;
+                                    </script>
 
-                                        {% for discip in r_disciplines %}
+                                    {% for discip in r_disciplines %}
 
-                                        <option value="" id="noValueDis">{{ discip }}</option>
+                                    <option value="" id="noValueDis">{{ discip }}</option>
 
-                                        <script>
-                                            document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
-                                            document.getElementById("noValueDis").removeAttribute("id");
-                                            iter++;
-                                        </script>
+                                    <script>
+                                        document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                                        document.getElementById("noValueDis").removeAttribute("id");
+                                        iter++;
+                                    </script>
 
-                                        {% endfor %}
+                                    {% endfor %}
 
-                                    </select>
-                                </div>
+                                </select>
+                            </div>
 
-                                <label for="administration-form-active">{{ _('Active') }}:</label>
-                                <input type="checkbox" id="administration-form-active" name="Active"><br>
-
-
-                                <label for="administration-form-address">{{ _('Address') }}:</label>
-                                <input type="text" id="administration-form-address" name="Address"><br>
+                            <label for="administration-form-active">{{ _('Active') }}:</label>
+                            <input type="checkbox" id="administration-form-active" name="Active"><br>
 
 
-                                <label for="administration-form-telephone">{{ _('Telephone number') }}:</label>
-                                <input type="text" id="administration-form-telephone" name="Telephone"><br>
+                            <label for="administration-form-address">{{ _('Address') }}:</label>
+                            <input type="text" id="administration-form-address" name="Address"><br>
 
 
-                                <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
-                            </form>
-                        </div>
+                            <label for="administration-form-telephone">{{ _('Telephone number') }}:</label>
+                            <input type="text" id="administration-form-telephone" name="Telephone"><br>
+
+
+                            <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -123,7 +117,7 @@
                 <tbody>
                 {% for group in r_groups %}
 
-                    {% if (group.active == True or 'admin' in current_user.roles) %}
+                    {% if (group.active == True or 'admin' in current_user.roles) and (group.ID != 1) %}
                         <tr>
                             <td>
                                 <a href="{{ url_for('group_page', id=group.ID) }}">{{ group.name }}</a>

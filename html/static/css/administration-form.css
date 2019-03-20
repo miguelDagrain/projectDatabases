@@ -29,6 +29,19 @@
     width: 60%;
 }
 
+.administration-form > .administration-form-textarea {
+    position: relative;
+    display: block;
+    color: #003366;
+    height: 400px;
+    width: 95.5%;
+    margin-left: 3%;
+    margin-right: 1.5%;
+    margin-bottom: 20px;
+}
+
+
+
 .administration-form-submit {
     position: relative;
     display: block;

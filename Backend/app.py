@@ -261,9 +261,10 @@ def show_projects():
     projects = access.get_projects()
     researchGroups = access.get_researchGroups()
     disciplines = access.get_disciplines()
+    types = access.get_projectType()
 
     return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                           r_disciplines=disciplines, page="projects")\
+                           r_disciplines=disciplines, r_types=types, page="projects")
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods = ['GET'])
@@ -297,15 +298,15 @@ def apply_filter_projects():
 
     if request.args.get("Search_query") == None:
 
-        return show_projects()
+        return redirect(url_for('show_projects'))
 
 
     else:
         Raccess = ResearchGroupAccess(connection)
         researchGroups = Raccess.get_researchGroups()
-        typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
         Daccess = DomainAccess(connection)
         disciplineOptions = Daccess.get_disciplines()
+        typeOptions = Daccess.get_projectType()
         researchGroupOptions = [""]
 
         for iter in researchGroups:
@@ -313,11 +314,11 @@ def apply_filter_projects():
 
         query = request.args.get("Search_query")
         print(query, file=sys.stderr)
-        typeNr = int(request.args.get("Type"))
-        type = typeOptions[typeNr]
+        typeNrs = request.args.get("Type")
+        type = helper_get_selected_multi_choice(typeNrs, typeOptions)
 
         disciplineNrs = request.args.getlist("Disciplines")
-        discipline = helper_get_discipline_multi_choice(disciplineNrs, disciplineOptions)
+        discipline = helper_get_selected_multi_choice(disciplineNrs, disciplineOptions)
 
 
 
@@ -328,9 +329,8 @@ def apply_filter_projects():
         Paccess = ProjectAccess(connection)
         projects = Paccess.filter_projects(query, type, discipline, group, status)
 
-
         return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                               r_disciplines=disciplineOptions, page="projects")
+                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects")
 
 
 @app.route("/administration/")

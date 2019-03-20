@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
-
 {% endblock stylesheets %}
 
 {% block scripts %}
@@ -36,7 +35,6 @@
         </div>
 
         <div>
-            {{_('Projects')}}:
             <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{_('modify disciplines')}}</a>
             <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{_('modify types')}}</a>
         </div>

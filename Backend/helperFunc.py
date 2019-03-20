@@ -1,16 +1,16 @@
 
-def helper_get_discipline_multi_choice(disciplineNrs, disciplines):
+def helper_get_selected_multi_choice(selectedNrs, options):
     """
     functie om aangeduide disciplines terug te geven, vertrekkende vanuit een multiple choice select van een form
-    :param disciplineNrs: nummers van de aangeduide opties, dit is een lijst van strings
-    :param disciplines: lijst van alle mogelijke disciplines
+    :param selectedNrs: nummers van de aangeduide opties, dit is een lijst van strings
+    :param options: lijst van alle mogelijke disciplines
     :return:
     """
-    discipline = list()
-    if ("0" in disciplineNrs):
+    selected = list()
+    if ("0" in selectedNrs):
         return None
     else:
-        for iterSelected in disciplineNrs:
-            discipline.append(disciplines[int(iterSelected) - 1])
+        for iterSelected in selectedNrs:
+            selected.append(options[int(iterSelected) - 1])
 
-    return discipline
+    return selected
