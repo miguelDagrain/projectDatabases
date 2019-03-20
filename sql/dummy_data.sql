@@ -53,8 +53,8 @@ insert into session values(10,1,'12:24:52','2019-04-03');
 insert into sessionSearchQuery values(10,'veroveren','12:29:52');
 insert into sessionSearchQuery values(10,'nederland','12:31:52');
 
-insert into sessionProjectClick values(10,1,'12:29:59');
-insert into sessionProjectClick values(10,2,'12:31:59');
+-- insert into sessionProjectClick values(10,1,'12:29:59');
+-- insert into sessionProjectClick values(10,2,'12:31:59');
 
 
 -- insert into session values(1251,'2011-01-01 00:00:00'::TIMESTAMP,'feest vieren','00:00:00',1,'24:00:00');

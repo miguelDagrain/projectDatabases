@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
 {% endblock stylesheets %}
 
@@ -17,10 +16,6 @@
 <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
 <script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
-
-<script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
-
 
 {% endblock scripts %}
 
@@ -38,26 +33,15 @@
         </label>
 
 
-        <label class="multi-select">
+        <label class="dropdown">
+
             {{ _('Type') }}:
-            <select name="Type" multiple>
-                <option value="0" >{{ _('All') }}</option>
-
-                <script>
-                    var iter = 0;
-                </script>
-
-                {% for type in r_types %}
-
-                <option value="" id="noValueType">{{ type }}</option>
-
-                <script>
-                    iter++;
-                    document.getElementById("noValueType").setAttribute("value", iter.toString(10));
-                    document.getElementById("noValueType").removeAttribute("id");
-                </script>
-
-                {% endfor %}
+            <select id="typeSelect" name="Type" onchange="callTest()">
+                <option value="0">{{ _('All') }}</option>
+                <option value="1">{{ _('Bachelor dissertation') }}</option>
+                <option value="2">{{ _('Master thesis') }}</option>
+                <option value="3">{{ _('Research internship 1') }}</option>
+                <option value="4">{{ _('Research internship 2') }}</option>
 
             </select>
         </label>
@@ -135,93 +119,6 @@
 
     <div class="page-content">
         <h1>{{ _('Projects') }}</h1>
-
-         {% if 'admin' in current_user.roles %}
-
-            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('add project') }}</button>
-
-            <div id="modal-form-project" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <form class="modal-body administration-form" action="" method="post">
-                            <label for="administration-form-title">{{ _('Title') }}:</label>
-                            <input type="text" id="administration-form-title" name="Title">
-
-                            <label for="administration-form-max">{{ _('Maxstudents') }}:</label>
-                            <input type="number" id="administration-form-max" name="Maxstudents">
-
-                            <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
-                            <div class="dropdown">
-                                <select name="Researchgroup" id="administration-form-researchgroup">
-
-                                    <script>
-                                        iter = 0;
-                                    </script>
-
-                                    {% for group in r_researchGroups %}
-
-                                    <option value="" id="noGroupName">{{ group.name }}</option>
-
-                                    <script>
-                                        document.getElementById("noGroupName").setAttribute("value", iter.toString(10));
-                                        document.getElementById("noGroupName").removeAttribute("id");
-                                        iter++;
-                                    </script>
-
-                                    {% endfor %}
-
-                                </select>
-                            </div>
-
-                            <label for="administration-form-description">{{ _('description') }}:</label>
-                            <div class="administration-form-textarea">
-                                <textarea class="tinymce" id="administration-form-description" name="Description"></textarea>
-                            </div>
-
-                            <label for="administration-form-type">{{ _('Type') }}:</label>
-                            <div class="multi-select">
-                                <select id="administration-form-type" name="Type">
-                                    <option value="0" >{{ _('All') }}</option>
-
-                                    <script>
-                                        iter = 0;
-                                    </script>
-
-                                    {% for type in r_types %}
-
-                                    <option value="" id="noType">{{ type }}</option>
-
-                                    <script>
-                                        iter++;
-                                        document.getElementById("noType").setAttribute("value", iter.toString(10));
-                                        document.getElementById("noType").removeAttribute("id");
-                                    </script>
-
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <!-- todo: vervangen zodat er meer promotors kunnen zijn -->
-                            <label for="administration-form-promotor">{{ _('Promotors') }}:</label>
-                            <input type="text" id="administration-form-promotor" name="Promotor">
-
-                            <!-- todo: vervangen zodat er meerdere tags kunnen zijn -->
-                            <label for="administration-form-tags">{{ _('Tags') }}</label>
-                            <input type="text" id="administration-form-tags" name="Tags">
-
-                            <label for="administration-form-related">{{ _('Related projects') }}</label>
-                            <input type="text" id="administration-form-related" name="Related">
-
-                            <label for="administration-form-active">{{ _('Active') }}:</label>
-                            <input type="checkbox" id="administration-form-active" name="Active"><br>
-
-                            <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-        {% endif %}
 
         <table class="content-table project-table">
 
