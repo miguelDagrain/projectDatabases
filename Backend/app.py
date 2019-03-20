@@ -11,7 +11,7 @@ from flask_babel import *
 from flask_login import login_user, login_required,logout_user,current_user
 from flask_login import LoginManager
 from functools import wraps
-
+import re
 from User import *
 from Session import *
 import sys
@@ -284,8 +284,8 @@ def show_projects():
         projData.append(pjson)
 
     return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                           r_disciplines=disciplines, page="projects", alt = json.dumps(projData, default=lambda x: x.__dict__))\
-                           r_disciplines=disciplines, r_types=types, page="projects")
+                           r_disciplines=disciplines, r_types=types, page="projects", alt = json.dumps(projData, default=lambda x: x.__dict__))
+
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods = ['GET'])
@@ -352,8 +352,8 @@ def apply_filter_projects():
 
 
         return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                               r_disciplines=disciplineOptions, page="projects", alt = json.dumps(projects, default=lambda x: x.__dict__))
-                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects")
+                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects", alt = json.dumps(projects, default=lambda x: x.__dict__))
+
 
 
 @app.route("/administration/")

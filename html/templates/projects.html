@@ -29,14 +29,14 @@
 
         <label>
           {{ _('Search query') }}:
-          <input type="text" class="form-control-sm" name="Search_query">
+          <input id="SQInput" type="text" class="form-control-sm" name="Search_query" onKeyUp="filterProjects()">
         </label>
 
 
         <label class="dropdown">
 
             {{ _('Type') }}:
-            <select id="typeSelect" name="Type" onchange="callTest()">
+            <select id="typeSelect" onchange="callTest()" onkeyup="callTest()" ng-keyup="callTest()">
                 <option value="0">{{ _('All') }}</option>
                 <option value="1">{{ _('Bachelor dissertation') }}</option>
                 <option value="2">{{ _('Master thesis') }}</option>
@@ -46,11 +46,9 @@
             </select>
         </label>
 
-
-
         <label class="multi-select">
             {{ _('Disciplines') }}:
-            <select name="Disciplines" multiple>
+            <select id="disciplines" name="Disciplines" multiple>
                 <option value="0" >{{ _('All') }}</option>
 
                 <script>
@@ -120,9 +118,9 @@
     <div class="page-content">
         <h1>{{ _('Projects') }}</h1>
 
-        <table class="content-table project-table">
+        <table id="project_list" class="content-table project-table">
 
-            <tr>
+         <!--   <tr>
                 <th class="th-1">{{ _('title') }}</th>
                 <th class="th-2">{{ _('research group') }}</th>
                 <th class="th-3">{{ _('assigned students') }}</th>
@@ -133,17 +131,137 @@
             <tr>
                 <td><a href="{{ url_for('project_page', id=project.ID) }}">"{{ project.title }}"</a></td>
                 <td>{{ project.researchGroup }}</td>
-                <td>[ 0 / {{ project.maxStudents }} ]</td> <!-- todo: replace 0 by an parameter -->
+                <td>[ 0 / {{ project.maxStudents }} ]</td> <!-- todo: replace 0 by an parameter
             </tr>
 
         {% endfor %}
-
+        -->
         </table>
 
     </div>
 
 </div>
 
+<script type="text/javascript">
+
+    var Data  = {{alt|tojson|safe}};
+    obj = JSON.parse(Data);
+
+    var k = 0;
+    {% for project in r_projects %}
+
+    obj[k].href ="{{ url_for('project_page', id=project.ID) }}"
+    k++;
+
+    {% endfor %}
+
+    function callTest(){
+        console.log("calls");
+    }
+
+    function countOccurances(str, search){
+        return (str.match( new RegExp(search, "gi")) || []).length;
+    }
+
+    function filterProjects(){
+
+        console.log("called");
+        var searchQ = document.getElementById("SQInput").value;
+
+        // Init
+        var result = obj;
+        var sq = searchQ.trim();
+        var tokens = sq.split(" ");
+        var tokenCount = [];
+        var totalTokenCount = [];
+        var tokenProjectCount = [];
+
+        for( var i in tokens) {
+            tokenProjectCount[i] = 0;
+            totalTokenCount[i] = 0;
+            tokenCount[i] = [];
+        }
+
+        // Count Occurances
+        for ( var i in result){
+            result[i].relevance = 0;
+            for( var j in tokens) {
+
+                // Check in title
+                if (countOccurances(result[i].title, tokens[j])) {
+                    result[i].relevance ++;
+
+                }
+
+                // Check in description
+                var count = 0;
+                for (word in result[i].words){
+                    if (countOccurances(word, tokens[j]) > 0){
+                        count += result[i].words[word];
+                    }
+                }
+
+                tokenCount[j][i] = count;   // tokenCount for this project
+
+                if (count > 0){
+                    totalTokenCount[j] += count;    // total token count
+                    tokenProjectCount[j] += 1;
+                }
+
+
+            }
+        }
+
+        var disciplines = "";
+        var skillsSelect = document.getElementById("disciplines");
+        if ( skillsSelect.selectedIndex >= 0) {
+
+            disciplines = skillsSelect.options[skillsSelect.selectedIndex].text;
+        }
+
+        // Weighted relevance for each token
+        for ( var i in result){
+            if (!disciplines.includes(result[i].discipline) && skillsSelect.selectedIndex > 0 ){
+                result[i].relevance = 0;
+                continue;
+            }
+
+            for( var j in tokens) {
+                if (tokenCount[j][i] && tokenProjectCount[j] !== 0){
+
+                    result[i].relevance += tokenCount[j][i] / totalTokenCount[j] / tokenProjectCount[j];
+                }
+            }
+
+        }
+
+        // Sort by relevance
+        result.sort(function(a, b){return b.relevance - a.relevance});
+
+        // Update page content
+        var doc = document.getElementById("project_list");
+        doc.innerHTML =
+            '<tr>' +
+                '<th class="th-1">{{ _('title') }}</th>' +
+                '<th class="th-2">{{ _('research group') }}</th>' +
+                '<th class="th-3">{{ _('assigned students') }}</th>' +
+                '<th class="th-4">{{ _('assigned students') }}</th>' +
+            '</tr>';
+
+        for (var i in result) {
+            if (result[i].relevance == 0){break;}
+
+            doc.innerHTML += '<tr>' +
+                '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' +
+                '<td>' + result[i].researchGroup + '</td>' +
+                '<td>[ 0 / ' + result[i].maxStudents + ']</td> ' + // todo: replace 0 by an parameter
+                '</tr>' ;
+
+        }
+    }
+
+    filterProjects();
+</script>
 <script>setUpDropdowns()</script>
 <script>setUpMultiSelection()</script>
 
