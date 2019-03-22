@@ -30,26 +30,6 @@ class User(UserMixin):
         return self.roles
 
     def login(self,userName,password,conn):
-        # if(userName=='admin' and password=="hunter1"):
-        #     self.session.studentId=1
-        #     self.auth=True
-        #     self.roles=('admin','user')
-        #     self.active = True
-        #     self.anon = False
-        #     return True
-        # elif(userName=='user' and password=='hunter2'):
-        #     self.session.studentId = 2
-        #     self.auth=True
-        #     self.roles=('user')
-        #     self.active = True
-        #     self.anon = False
-        #     return True
-        # else:
-        #     self.auth = False
-        #     self.roles=None
-        #     self.active = False
-        #     self.anon = False
-        #     return False
         ldap_server = 'ldap:///ldap.pdbldap.com/'
         ldap_conn = ldap.initialize(ldap_server)
         user_dn = "uid=" + userName + ",ou=People,dc=pdbldap,dc=com"
