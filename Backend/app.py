@@ -454,7 +454,7 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
     try:
-        if(us.login(username,password)):
+        if(us.login(username,password,connection)):
             login_user(us)
             temp=current_user
             flash('Logged in successfully.')
