@@ -47,3 +47,38 @@ Go to source file
 
 Run the application on http://localhost:5000
 >python app.py
+
+###setting up ldap server
+install ldap
+
+>sudo apt install slapd ldap-utils
+
+during installation you will be asked for a password
+
+set up server
+
+>sudo dpkg-reconfigure slapd
+
+now you will be promted with a gui
+
+say no for the first question
+
+if asked for domain name type pdbldap.com
+
+as organization name choose pdblda
+ 
+choose MDB, then answer no for a question and yes for the last question
+
+got to the ldapFiles folder and run following commands to populate database with user and admin users
+
+>ldapadd -x -D cn=admin,dc=pdbldap,dc=com -W -f pdbldap_data_.ldif
+
+>ldapadd -x -D cn=admin,dc=pdbldap,dc=com -W -f pdbldapUsers_.ldif
+
+install python ldap dependencies
+
+>sudo apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev
+
+install python ldap itself
+
+>sudo pip install python-ldap
