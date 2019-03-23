@@ -21,7 +21,6 @@
 <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
 
-
 {% endblock scripts %}
 
 {% block body %}
@@ -34,7 +33,7 @@
 
         <label>
           {{ _('Search query') }}:
-          <input type="text" class="form-control-sm" name="Search_query">
+          <input id="SQInput" type="text" class="form-control-sm" name="Search_query" onKeyUp="filterProjects()">
         </label>
 
 
@@ -43,30 +42,28 @@
             <select name="Type" multiple>
                 <option value="0" >{{ _('All') }}</option>
 
-                <script>
+                 <script>
                     var iter = 0;
                 </script>
 
-                {% for type in r_types %}
+                 {% for type in r_types %}
 
-                <option value="" id="noValueType">{{ type }}</option>
+                 <option value="" id="noValueType">{{ type }}</option>
 
-                <script>
+                 <script>
                     iter++;
                     document.getElementById("noValueType").setAttribute("value", iter.toString(10));
                     document.getElementById("noValueType").removeAttribute("id");
                 </script>
 
-                {% endfor %}
 
+                 {% endfor %}
             </select>
         </label>
 
-
-
         <label class="multi-select">
             {{ _('Disciplines') }}:
-            <select name="Disciplines" multiple>
+            <select id="disciplines" name="Disciplines" multiple>
                 <option value="0" >{{ _('All') }}</option>
 
                 <script>
@@ -136,96 +133,96 @@
     <div class="page-content">
         <h1>{{ _('Projects') }}</h1>
 
-         {% if 'admin' in current_user.roles %}
+          {% if 'admin' in current_user.roles %}
 
-            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('add project') }}</button>
+             <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('add project') }}</button>
 
-            <div id="modal-form-project" class="modal fade" tabindex="-1" role="dialog">
+             <div id="modal-form-project" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <form class="modal-body administration-form" action="" method="post">
                             <label for="administration-form-title">{{ _('Title') }}:</label>
                             <input type="text" id="administration-form-title" name="Title">
 
-                            <label for="administration-form-max">{{ _('Maxstudents') }}:</label>
+                             <label for="administration-form-max">{{ _('Maxstudents') }}:</label>
                             <input type="number" id="administration-form-max" name="Maxstudents">
 
-                            <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
+                             <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
                             <div class="dropdown">
                                 <select name="Researchgroup" id="administration-form-researchgroup">
 
-                                    <script>
+                                     <script>
                                         iter = 0;
                                     </script>
 
-                                    {% for group in r_researchGroups %}
+                                     {% for group in r_researchGroups %}
 
-                                    <option value="" id="noGroupName">{{ group.name }}</option>
+                                     <option value="" id="noGroupName">{{ group.name }}</option>
 
-                                    <script>
+                                     <script>
                                         document.getElementById("noGroupName").setAttribute("value", iter.toString(10));
                                         document.getElementById("noGroupName").removeAttribute("id");
                                         iter++;
                                     </script>
 
-                                    {% endfor %}
+                                     {% endfor %}
 
-                                </select>
+                                 </select>
                             </div>
 
-                            <label for="administration-form-description">{{ _('description') }}:</label>
+                             <label for="administration-form-description">{{ _('description') }}:</label>
                             <div class="administration-form-textarea">
                                 <textarea class="tinymce" id="administration-form-description" name="Description"></textarea>
                             </div>
 
-                            <label for="administration-form-type">{{ _('Type') }}:</label>
+                             <label for="administration-form-type">{{ _('Type') }}:</label>
                             <div class="multi-select">
                                 <select id="administration-form-type" name="Type">
                                     <option value="0" >{{ _('All') }}</option>
 
-                                    <script>
+                                     <script>
                                         iter = 0;
                                     </script>
 
-                                    {% for type in r_types %}
+                                     {% for type in r_types %}
 
-                                    <option value="" id="noType">{{ type }}</option>
+                                     <option value="" id="noType">{{ type }}</option>
 
-                                    <script>
+                                     <script>
                                         iter++;
                                         document.getElementById("noType").setAttribute("value", iter.toString(10));
                                         document.getElementById("noType").removeAttribute("id");
                                     </script>
 
-                                    {% endfor %}
+                                     {% endfor %}
                                 </select>
                             </div>
 
-                            <!-- todo: vervangen zodat er meer promotors kunnen zijn -->
+                             <!-- todo: vervangen zodat er meer promotors kunnen zijn -->
                             <label for="administration-form-promotor">{{ _('Promotors') }}:</label>
                             <input type="text" id="administration-form-promotor" name="Promotor">
 
-                            <!-- todo: vervangen zodat er meerdere tags kunnen zijn -->
+                             <!-- todo: vervangen zodat er meerdere tags kunnen zijn -->
                             <label for="administration-form-tags">{{ _('Tags') }}</label>
                             <input type="text" id="administration-form-tags" name="Tags">
 
-                            <label for="administration-form-related">{{ _('Related projects') }}</label>
+                             <label for="administration-form-related">{{ _('Related projects') }}</label>
                             <input type="text" id="administration-form-related" name="Related">
 
-                            <label for="administration-form-active">{{ _('Active') }}:</label>
+                             <label for="administration-form-active">{{ _('Active') }}:</label>
                             <input type="checkbox" id="administration-form-active" name="Active"><br>
 
-                            <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                             <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
                         </form>
                     </div>
                 </div>
             </div>
 
-        {% endif %}
+         {% endif %}
 
-        <table class="content-table project-table">
+        <table id="project_list" class="content-table project-table">
 
-            <tr>
+         <!--   <tr>
                 <th class="th-1">{{ _('title') }}</th>
                 <th class="th-2">{{ _('research group') }}</th>
                 <th class="th-3">{{ _('assigned students') }}</th>
@@ -236,17 +233,137 @@
             <tr>
                 <td><a href="{{ url_for('project_page', id=project.ID) }}">"{{ project.title }}"</a></td>
                 <td>{{ project.researchGroup }}</td>
-                <td>[ 0 / {{ project.maxStudents }} ]</td> <!-- todo: replace 0 by an parameter -->
+                <td>[ 0 / {{ project.maxStudents }} ]</td> <!-- todo: replace 0 by an parameter
             </tr>
 
         {% endfor %}
-
+        -->
         </table>
 
     </div>
 
 </div>
 
+<script type="text/javascript">
+
+    var Data  = {{alt|tojson|safe}};
+    obj = JSON.parse(Data);
+
+    var k = 0;
+    {% for project in r_projects %}
+
+    obj[k].href ="{{ url_for('project_page', id=project.ID) }}"
+    k++;
+
+    {% endfor %}
+
+    function callTest(){
+        console.log("calls");
+    }
+
+    function countOccurances(str, search){
+        return (str.match( new RegExp(search, "gi")) || []).length;
+    }
+
+    function filterProjects(){
+
+        console.log("called");
+        var searchQ = document.getElementById("SQInput").value;
+
+        // Init
+        var result = obj;
+        var sq = searchQ.trim();
+        var tokens = sq.split(" ");
+        var tokenCount = [];
+        var totalTokenCount = [];
+        var tokenProjectCount = [];
+
+        for( var i in tokens) {
+            tokenProjectCount[i] = 0;
+            totalTokenCount[i] = 0;
+            tokenCount[i] = [];
+        }
+
+        // Count Occurances
+        for ( var i in result){
+            result[i].relevance = 0;
+            for( var j in tokens) {
+
+                // Check in title
+                if (countOccurances(result[i].title, tokens[j])) {
+                    result[i].relevance ++;
+
+                }
+
+                // Check in description
+                var count = 0;
+                for (word in result[i].words){
+                    if (countOccurances(word, tokens[j]) > 0){
+                        count += result[i].words[word];
+                    }
+                }
+
+                tokenCount[j][i] = count;   // tokenCount for this project
+
+                if (count > 0){
+                    totalTokenCount[j] += count;    // total token count
+                    tokenProjectCount[j] += 1;
+                }
+
+
+            }
+        }
+
+        var disciplines = "";
+        var skillsSelect = document.getElementById("disciplines");
+        if ( skillsSelect.selectedIndex >= 0) {
+
+            disciplines = skillsSelect.options[skillsSelect.selectedIndex].text;
+        }
+
+        // Weighted relevance for each token
+        for ( var i in result){
+            if (!disciplines.includes(result[i].discipline) && skillsSelect.selectedIndex > 0 ){
+                result[i].relevance = 0;
+                continue;
+            }
+
+            for( var j in tokens) {
+                if (tokenCount[j][i] && tokenProjectCount[j] !== 0){
+
+                    result[i].relevance += tokenCount[j][i] / totalTokenCount[j] / tokenProjectCount[j];
+                }
+            }
+
+        }
+
+        // Sort by relevance
+        result.sort(function(a, b){return b.relevance - a.relevance});
+
+        // Update page content
+        var doc = document.getElementById("project_list");
+        doc.innerHTML =
+            '<tr>' +
+                '<th class="th-1">{{ _('title') }}</th>' +
+                '<th class="th-2">{{ _('research group') }}</th>' +
+                '<th class="th-3">{{ _('assigned students') }}</th>' +
+                '<th class="th-4">{{ _('assigned students') }}</th>' +
+            '</tr>';
+
+        for (var i in result) {
+            if (result[i].relevance == 0){break;}
+
+            doc.innerHTML += '<tr>' +
+                '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' +
+                '<td>' + result[i].researchGroup + '</td>' +
+                '<td>[ 0 / ' + result[i].maxStudents + ']</td> ' + // todo: replace 0 by an parameter
+                '</tr>' ;
+
+        }
+    }
+
+    filterProjects();
+</script>
 <script>setUpDropdowns()</script>
 <script>setUpMultiSelection()</script>
 

@@ -11,7 +11,7 @@ from flask_babel import *
 from flask_login import login_user, login_required,logout_user,current_user
 from flask_login import LoginManager
 from functools import wraps
-
+import re
 from User import *
 from Session import *
 import sys
@@ -262,9 +262,30 @@ def show_projects():
     researchGroups = access.get_researchGroups()
     disciplines = access.get_disciplines()
     types = access.get_projectType()
+    projData = []
+
+    for proj in projects:
+        discipline = "";
+        for rg in researchGroups:
+            if (rg.ID == proj.researchGroup):
+                discipline = rg.discipline
+                break
+
+
+        pjson = {"ID" : proj.ID, "title": proj.title , "type": proj.type, "tag":proj.tag, "discipline": discipline, "researchGroup" : proj.researchGroup, "maxStudents" : proj.maxStudents, 'words' : {}}
+        str = proj.desc[0].text
+        rgx = re.compile("(\w[\w']*\w|\w)")
+        list = rgx.findall(str);
+        for word in list:
+            if word in pjson['words']:
+                pjson['words'][word] += 1
+            else:
+                pjson['words'][word] = 1
+        projData.append(pjson)
 
     return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                           r_disciplines=disciplines, r_types=types, page="projects")
+                           r_disciplines=disciplines, r_types=types, page="projects", alt = json.dumps(projData, default=lambda x: x.__dict__))
+
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods = ['GET'])
@@ -298,15 +319,15 @@ def apply_filter_projects():
 
     if request.args.get("Search_query") == None:
 
-        return redirect(url_for('show_projects'))
+        return show_projects()
 
 
     else:
         Raccess = ResearchGroupAccess(connection)
         researchGroups = Raccess.get_researchGroups()
+        typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
         Daccess = DomainAccess(connection)
         disciplineOptions = Daccess.get_disciplines()
-        typeOptions = Daccess.get_projectType()
         researchGroupOptions = [""]
 
         for iter in researchGroups:
@@ -314,11 +335,11 @@ def apply_filter_projects():
 
         query = request.args.get("Search_query")
         print(query, file=sys.stderr)
-        typeNrs = request.args.get("Type")
-        type = helper_get_selected_multi_choice(typeNrs, typeOptions)
+        typeNr = int(request.args.get("Type"))
+        type = typeOptions[typeNr]
 
         disciplineNrs = request.args.getlist("Disciplines")
-        discipline = helper_get_selected_multi_choice(disciplineNrs, disciplineOptions)
+        discipline = helper_get_discipline_multi_choice(disciplineNrs, disciplineOptions)
 
 
 
@@ -329,8 +350,10 @@ def apply_filter_projects():
         Paccess = ProjectAccess(connection)
         projects = Paccess.filter_projects(query, type, discipline, group, status)
 
+
         return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects")
+                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects", alt = json.dumps(projects, default=lambda x: x.__dict__))
+
 
 
 @app.route("/administration/")
