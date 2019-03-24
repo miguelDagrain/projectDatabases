@@ -7,14 +7,27 @@
     border-radius: 2px;
 }
 
-.administration-form > div {
+.administration-form .input-block {
     position: relative;
     display: inline-block;
     width: 60%;
 }
 
 
-.administration-form > label {
+.administration-form > .multi-text-input > .input-block > input {
+    position: relative;
+    display: inline-block;
+    width: 83%;
+    margin-right: 3%;
+}
+
+.administration-form > .multi-text-input > .input-block > button {
+    position: relative;
+    display: inline-block;
+    width: 13%;
+}
+
+.administration-form label {
     position: relative;
     display: inline-block;
     margin-left: 3%;
