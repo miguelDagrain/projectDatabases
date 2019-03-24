@@ -11,3 +11,11 @@ class Student:
         self.name = name
         self.studentID = student_id
         self.likedProject = list()
+
+    def get_likedProjects(self,dbconnect):
+        access = __import__('DataAccess', fromlist=['ProjectAccess'])
+        pro = access.ProjectAccess(dbconnect)
+        projects=list()
+        for i in self.likedProject:
+            projects.append(pro.get_project(i))
+        return projects

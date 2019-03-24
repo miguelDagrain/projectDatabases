@@ -39,6 +39,7 @@ class Project:
         self.relatedProject = list()
         self.promotor = list()
 
-    # def get_researchGroup(self,dbConnect):
-    #     res=ResearchGroupAccess(dbConnect)
-    #     return res.get_researchGroupOnID(self.researchGroup)
+    def get_researchGroup(self,dbConnect):
+        access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])
+        res=access.ResearchGroupAccess(dbConnect)
+        return res.get_researchGroupOnID(self.researchGroup)

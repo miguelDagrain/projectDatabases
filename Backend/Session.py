@@ -16,3 +16,16 @@ class Session:
         #both list of tuples
         self.searchWords=list()
         self.clickedProjects = list()
+
+    def get_clickedProjects(self,dbconnect):
+        access = __import__('DataAccess', fromlist=['ProjectAccess'])
+        pro = access.ProjectAccess(dbconnect)
+        projects=list()
+        for i in self.clickedProjects:
+            projects.append(pro.get_project(i))
+        return projects
+
+    def get_student(self,dbconnect):
+        access = __import__('DataAccess', fromlist=['StudentAccess'])
+        sa = access.StudentAccess(dbconnect)
+        return sa.get_student(self.studentId)

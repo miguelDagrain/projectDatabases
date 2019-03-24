@@ -21,3 +21,7 @@ class ResearchGroup:
         self.desc = desc
         self.contactID=None
 
+    def get_contactPerson(self,dbConnect):
+        access = __import__('DataAccess', fromlist=['EmployeeAccess'])
+        emp = access.EmployeeAccess(dbConnect)
+        return emp.get_employee(self.contactID)
