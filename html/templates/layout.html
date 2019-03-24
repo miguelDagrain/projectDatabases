@@ -138,7 +138,7 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if 'admin' in current_user.rolesi %}
+                            {% if 'admin' in current_user.roles %}
                             <li class="nav-item">
                                 <a class=" hyperlink {{ "active" if page=="administration" }}"
                                    href="{{ url_for( 'get_administration' ) }}">
