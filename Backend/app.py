@@ -15,6 +15,7 @@ import re
 from User import *
 from Session import *
 import sys
+import json
 
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
@@ -432,6 +433,27 @@ def pick_language():
     resp.set_cookie('lang', lang)
     return resp
 
+
+
+# alles onder de check is om vragen uit javascript te beantwoorden met json (gegevens uit de database), het
+# is niet de bedoeling dat een je deze url gebruikt vanuit de website, dan zullen ze doorsturen naar de home page
+@app.route("/check/empl_names", methods=["GET"])
+def check_empl_names():
+    Eacces = EmployeeAccess(connection)
+    employees = Eacces.get_employees()
+
+    given_letters = request.args.get("letters")
+
+    possibilities = list()
+
+    for empl in employees:
+        if given_letters in empl.name:
+            possibilities.append(empl.name)
+            if len(possibilities) > 4:
+                break
+
+
+    return jsonify(possibilities)
 
 
 @login_manager.user_loader

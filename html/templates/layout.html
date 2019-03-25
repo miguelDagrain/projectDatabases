@@ -43,13 +43,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    {% block scripts %}{% endblock scripts %}
+
     <script type="text/javascript" name="url picker">
         $(document).ready(function () {
             var elems = document.getElementsByName("url_redirect");
             for (i = 0; i < elems.length; i++) {
                 elems[i].setAttribute("value", window.location.href);
             }
-        })
+
+            {% block onReadyCalls %}{% endblock onReadyCalls %}
+        });
+    </script>
+
+     <!-- nodig om in javascript files de locatie van files enzovoort te kunnen specifieren -->
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}
     </script>
 
     <script type="text/javascript" name="login">
@@ -77,11 +87,10 @@
         }
     </script>
 
-    {% block scripts %}{% endblock scripts %}
+
 
 </head>
 <body>
-
 
 <div class="container-fluid">
 
@@ -138,12 +147,12 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if 'admin' in current_user.rolesi %}
+                            {% if 'admin' in current_user.roles %}
                             <li class="nav-item">
                                 <a class=" hyperlink {{ "active" if page=="administration" }}"
                                    href="{{ url_for( 'get_administration' ) }}">
                                     {{ _('Administration') }}
-                                </a>
+                                 </a>
                             </li>
                             {% endif %}
                         </ul>
