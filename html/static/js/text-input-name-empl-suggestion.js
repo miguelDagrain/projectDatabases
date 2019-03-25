@@ -7,6 +7,7 @@ function giveNameSuggestions(elemInput, elemDropdown) {
         letters: $(elemInput).val()
         },
         function(data){
+            $(elemDropdown).empty();
             $(elemDropdown).removeClass('dropdown-hide');
             $.each(data, function(index, value){
                 var dropdownItem = document.createElement('div');
@@ -14,7 +15,7 @@ function giveNameSuggestions(elemInput, elemDropdown) {
                 $(dropdownItem).bind('click', function (event) {
                     event.preventDefault();
 
-                    elemInput.innerHTML = dropdownItem.innerHTML;
+                    $(elemInput).val(this.innerHTML);
 
                     //leeg het parentelement
                     $(this.parentElement).addClass('dropdown-hide');
@@ -31,13 +32,7 @@ function giveNameSuggestions(elemInput, elemDropdown) {
 function setUpNameSuggestions(elemInput, elemDropdown) {
 
     $(elemInput).bind('input', function(){
-        $(elemDropdown).empty();
         giveNameSuggestions(this, elemDropdown);
-    });
-
-    $(elemInput).bind('blur', function () {
-        $(elemDropdown).empty();
-        $(elemDropdown).addClass('dropdown-hide');
     });
 }
 
