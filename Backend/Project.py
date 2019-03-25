@@ -38,6 +38,8 @@ class Project:
         self.ID = id
         self.relatedProject = list()
         self.promotor = list()
+        self.discipline = list()
+        self.registeredStudents = 0
 
     def get_researchGroup(self,dbConnect):
         access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])

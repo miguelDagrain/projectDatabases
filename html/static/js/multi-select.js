@@ -12,6 +12,7 @@ function setUpMultiSelection() {
         var button = document.createElement("div");
         button.setAttribute("class", "multi-select-button");
         button.innerHTML = "_('All')";
+        button.onchange = selectMain.onchange;
         selector.appendChild(button);
 
         //maak een menu
@@ -19,12 +20,11 @@ function setUpMultiSelection() {
         menu.setAttribute("class", "multi-select-items multi-select-hide");
         selector.appendChild(menu);
 
-
         //voeg het All item toe
         var allOption = document.createElement("div");
         allOption.setAttribute("class", "multi-select-all multi-select-items-not-selected");
         allOption.innerHTML = selectMain.options[0].innerHTML;
-
+        allOption.onchange = selectMain.onchange;
         //maak het mogelijk om alle opties ineens te selecteren
         allOption.addEventListener("click", function (evt) {
              evt.preventDefault();
@@ -61,6 +61,8 @@ function setUpMultiSelection() {
 
                  this.parentElement.previousElementSibling.innerHTML = "None";
              }
+            this.onchange();
+
         });
 
         menu.appendChild(allOption);
@@ -70,7 +72,10 @@ function setUpMultiSelection() {
         for(var nrSelect = 1; nrSelect < selectMain.length; nrSelect++){
             var newItem =  document.createElement("div");
             newItem.setAttribute("class", "multi-select-items-not-selected");
+            newItem.onchange = selectMain.onchange;
             newItem.innerHTML = selectMain.options[nrSelect].innerHTML;
+
+
 
             //voeg de mogelijkheid toe om item te selecteren
             newItem.addEventListener("click", function (evt) {
@@ -103,6 +108,7 @@ function setUpMultiSelection() {
 
                         if(select.options[nrSelect].innerHTML === this.innerHTML){
                             select.options[nrSelect].toggleAttribute("selected");
+
                         }
                     }
 
@@ -121,6 +127,9 @@ function setUpMultiSelection() {
                     this.classList.remove("multi-select-items-selected");
                     this.classList.add("class", "multi-select-items-not-selected");
                 }
+
+                this.onchange();
+
             });
 
             menu.appendChild(newItem);
@@ -133,6 +142,7 @@ function setUpMultiSelection() {
 
            closeAllSelected(this);
            this.nextSibling.classList.toggle("multi-select-hide");
+
         });
     }
 }

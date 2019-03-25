@@ -259,7 +259,7 @@ def apply_remove_person(id):
 @app.route("/projects/", methods=["GET"])
 def show_projects():
     access = FullDataAccess(connection)
-    projects = access.get_projects()
+    projects = access.get_project_filter_data()
     researchGroups = access.get_researchGroups()
     disciplines = access.get_disciplines()
     types = access.get_projectType()
@@ -272,16 +272,16 @@ def show_projects():
                 discipline = rg.discipline
                 break
 
-
-        pjson = {"ID" : proj.ID, "title": proj.title , "type": proj.type, "tag":proj.tag, "discipline": discipline, "researchGroup" : proj.researchGroup, "maxStudents" : proj.maxStudents, 'words' : {}}
-        str = proj.desc[0].text
-        rgx = re.compile("(\w[\w']*\w|\w)")
-        list = rgx.findall(str);
-        for word in list:
-            if word in pjson['words']:
-                pjson['words'][word] += 1
-            else:
-                pjson['words'][word] = 1
+        pjson = {"ID" : proj.ID, "title": proj.title, "status":proj.active, "type": proj.type, "tag":proj.tag, "discipline": proj.discipline, "researchGroup" : proj.researchGroup, "maxStudents" : proj.maxStudents, "registeredStudents":proj.registeredStudents, 'words' : {}}
+        for d in proj.desc:
+            str = d.text
+            rgx = re.compile("(\w[\w']*\w|\w)")
+            list = rgx.findall(str);
+            for word in list:
+                if word in pjson['words']:
+                    pjson['words'][word] += 1
+                else:
+                    pjson['words'][word] = 1
         projData.append(pjson)
 
     return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
