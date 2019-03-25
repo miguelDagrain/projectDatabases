@@ -58,19 +58,3 @@ insert into sessionSearchQuery values(10,'nederland','12:31:52');
 
 
 -- insert into session values(1251,'2011-01-01 00:00:00'::TIMESTAMP,'feest vieren','00:00:00',1,'24:00:00');
-
-SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (
-        SELECT
-            COUNT(*)
-        FROM
-            projectregistration pr
-        WHERE
-            pr.project=p.projectid
-    ) as cnt FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)
-            INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID;
-
-SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (
-                SELECT COUNT(*) FROM projectregistration pr
-                    WHERE pr.project=p.projectid) as cnt
-              FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)
-                    INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID
