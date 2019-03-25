@@ -1,18 +1,10 @@
-from Bookmark import *
-from Document import *
-from ResearchGroup import *
-from Employee import *
-from Project import *
-from ProjectRegistration import *
-from Session import *
-from Student import *
-from Attachment import *
-
 class DocumentAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
     def get_documents(self):
+        from Document import Document
+        from Attachment import Attachment
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document')
         documents=list()
@@ -26,6 +18,7 @@ class DocumentAccess:
         return documents
 
     def get_document(self, id):
+        from Document import Document
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document WHERE documentID=%s', (str(id) ))
         row= cursor.fetchone()
@@ -119,6 +112,7 @@ class ResearchGroupAccess:
             raise Exception('Unable to save researchgroupdescription!')
 
     def get_researchGroups(self):
+        from ResearchGroup import ResearchGroup
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from researchGroup')
         rgroups = list()
@@ -133,6 +127,7 @@ class ResearchGroupAccess:
         return rgroups
 
     def get_researchGroupOnName(self, name):
+        from ResearchGroup import ResearchGroup
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM researchGorup WHERE name=%s', (name))
         row = cursor.fetchone()
@@ -144,6 +139,7 @@ class ResearchGroupAccess:
         return rgroup
 
     def get_researchGroupOnID(self, id):
+        from ResearchGroup import ResearchGroup
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (str(id)))
         row = cursor.fetchone()
@@ -211,10 +207,12 @@ class ResearchGroupAccess:
 
 
 class EmployeeAccess:
+    from Employee import Employee
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
     def get_employees(self):
+        from Employee import Employee
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from employee')
 
@@ -225,6 +223,7 @@ class EmployeeAccess:
         return employees
 
     def get_employee(self, id):
+        from Employee import Employee
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (str(id)))
         row = cursor.fetchone()
@@ -255,6 +254,7 @@ class EmployeeAccess:
             raise Exception('\nUnable to remove Employee!\n(%s)' % (error))
 
     def filter_employees(self, searchQuery="", researchGroup="", promotor=0,):
+        from Employee import Employee
         cursor = self.dbconnect.get_cursor()
 
         sql = 'select * from employee e INNER JOIN researchGroup r ON r.groupID=e.researchGroup WHERE ' \
@@ -436,6 +436,7 @@ class ProjectAccess:
             print("unable to save tag")
 
     def get_projects(self):
+        from Project import Project
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from project')
         projects = list()
@@ -451,6 +452,7 @@ class ProjectAccess:
         return projects
 
     def get_project(self, ID):
+        from Project import Project
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (str(ID)))
         row = cursor.fetchone()
@@ -587,6 +589,7 @@ class StudentAccess:
         self.project=ProjectAccess(self.dbconnect)
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
+        from Bookmark import Bookmark
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from bookmark where student=%s', (str(studentId)))
         bookmarks = list()
@@ -606,6 +609,7 @@ class StudentAccess:
 
     # returns all bookmarks to a certain project
     def get_projectBookmarks(self, projectId):
+        from Bookmark import Bookmark
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from bookmark where project=%s', (str(projectId)))
         bookmarks = list()
@@ -621,6 +625,7 @@ class StudentAccess:
             cursor.execute('insert into bookmark values(%s,%s)', (str(projectId), str(studentId)))
 
     def get_students(self):
+        from Student import Student
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from student')
         students = list()
@@ -631,6 +636,7 @@ class StudentAccess:
         return students
 
     def get_student(self, ID):
+        from Student import Student
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM employee WHERE studentID=%s ', (str(ID)))
         row = cursor.fetchone()
@@ -659,6 +665,7 @@ class StudentAccess:
             raise Exception('Unable to save session!')
 
     def get_projectRegistrations(self):
+        from ProjectRegistration import ProjectRegistration
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectRegistration')
         prs = list()
@@ -668,6 +675,7 @@ class StudentAccess:
         return prs
 
     def get_projectRegistrationsOnProject(self,projectID):
+        from ProjectRegistration import ProjectRegistration
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectRegistration where project=%s',(str(projectID)))
         prs = list()
@@ -677,6 +685,7 @@ class StudentAccess:
         return prs
 
     def get_projectRegistrationsOnStudent(self, studentID):
+        from ProjectRegistration import ProjectRegistration
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectRegistration where student=%s', (str(studentID)))
         prs = list()

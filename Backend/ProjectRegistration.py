@@ -10,3 +10,12 @@ class ProjectRegistration:
         self.project = project
         self.status = status
         self.student = student
+    def get_student(self,connect):
+        access = __import__('DataAccess', fromlist=['StudentAccess'])
+        sa=access.StudentAccess(connect)
+        return sa.get_student(self.student)
+
+    def getProject(self,dbconnect):
+        access = __import__('DataAccess', fromlist=['ProjectAccess'])
+        pro=access.ProjectAccess(dbconnect)
+        return pro.get_project(self.project)
