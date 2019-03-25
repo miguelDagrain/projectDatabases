@@ -32,8 +32,8 @@
    setUpDropdowns();
    setUpMultiSelection();
    setUpMultipleTextInput();
+   filterProjects();
 {% endblock onReadyCalls %}
-
 
 {% block body %}
 
@@ -51,7 +51,7 @@
 
         <label class="multi-select">
             {{ _('Type') }}:
-            <select name="Type" multiple>
+            <select id="type" name="Type" onchange="filterProjects()" multiple>
                 <option value="0" >{{ _('All') }}</option>
 
                  <script>
@@ -75,7 +75,7 @@
 
         <label class="multi-select">
             {{ _('Disciplines') }}:
-            <select id="disciplines" name="Disciplines" multiple>
+            <select id="disciplines" name="Disciplines" onchange="filterProjects()" multiple>
                 <option value="0" >{{ _('All') }}</option>
 
                 <script>
@@ -102,7 +102,7 @@
 
         <label class="dropdown">
             {{ _('Research group') }}:
-            <select name="Research_group">
+            <select id="researchGroup" name="Research_group" onchange="filterProjects()">
                 <option value="0">{{ _('All') }}</option>
 
 
@@ -128,7 +128,7 @@
 
         <label class="dropdown">
             {{ _('Status') }}:
-            <select name="Status">
+            <select id="status" name="Status" onchange="filterProjects()">
                 <option value="0">{{ _('All') }}</option>
                 <option value="1">{{ _('Available projects only') }}</option>
                 <option value="2">{{ _('Assigned projects only') }}</option>
@@ -288,10 +288,6 @@
 
     {% endfor %}
 
-    function callTest(){
-        console.log("calls");
-    }
-
     function countOccurances(str, search){
         return (str.match( new RegExp(search, "gi")) || []).length;
     }
@@ -341,22 +337,72 @@
                     tokenProjectCount[j] += 1;
                 }
 
-
             }
         }
 
-        var disciplines = "";
-        var skillsSelect = document.getElementById("disciplines");
-        if ( skillsSelect.selectedIndex >= 0) {
+        var disc = "";
+        var types = document.getElementById("type");
+        var disciplines = document.getElementById("disciplines");
+        var status = document.getElementById("status");
+        var rg = document.getElementById("researchGroup");
+        var ms = document.getElementsByClassName("multi-select");
 
-            disciplines = skillsSelect.options[skillsSelect.selectedIndex].text;
+        // get selected types
+        var selectedTypes = [];
+        for(var i = 0; i < ms[0].children[2].children.length; i++){
+            if (!ms[0].children[2].children[i].className.includes("not-selected")){
+                selectedTypes.push(ms[0].children[2].children[i].textContent);
+            }
         }
+
+        // get selected disciplines
+        var selectedDisciplines = [];
+        for(var i = 0; i < ms[1].children[2].children.length; i++){
+            if (!ms[1].children[2].children[i].className.includes("not-selected")){
+                selectedDisciplines.push(ms[1].children[2].children[i].textContent);
+            }
+        }
+
+        console.log(selectedTypes);
+        console.log(selectedDisciplines);
+        console.log(rg.options[rg.selectedIndex].text);
+        console.log(status.options[status.selectedIndex].text);
+
+        if ( disciplines.selectedIndex >= 0) {
+
+            disc = disciplines.options[disciplines.selectedIndex];
+        }
+
 
         // Weighted relevance for each token
         for ( var i in result){
-            if (!disciplines.includes(result[i].discipline) && skillsSelect.selectedIndex > 0 ){
+            if (!selectedDisciplines.includes("All") && !selectedDisciplines.includes(result[i].discipline) ){
                 result[i].relevance = 0;
                 continue;
+            }
+            if (!selectedTypes.includes("All") && !selectedTypes.includes(result[i].type) ){
+                result[i].relevance = 0;
+                continue;
+            }
+
+            if (result[i].researchGroup !== rg.options[rg.selectedIndex].text && rg.selectedIndex>0){
+                result[i].relevance = 0;
+                continue;
+            }
+
+            switch (status.selectedIndex) {
+                case 1:
+                    if (result[i].maxStudents <= result[i].registeredStudents){
+                        result[i].relevance = 0;
+                        continue;
+                    }
+                    break;
+                case 2:
+                    if (result[i].maxStudents > result[i].registeredStudents){
+                        result[i].relevance = 0;
+                        continue;
+                    }
+                    break;
             }
 
             for( var j in tokens) {
@@ -378,7 +424,6 @@
                 '<th class="th-1">{{ _('title') }}</th>' +
                 '<th class="th-2">{{ _('research group') }}</th>' +
                 '<th class="th-3">{{ _('assigned students') }}</th>' +
-                '<th class="th-4">{{ _('assigned students') }}</th>' +
             '</tr>';
 
         for (var i in result) {
@@ -387,13 +432,12 @@
             doc.innerHTML += '<tr>' +
                 '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' +
                 '<td>' + result[i].researchGroup + '</td>' +
-                '<td>[ 0 / ' + result[i].maxStudents + ']</td> ' + // todo: replace 0 by an parameter
+                '<td>[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']</td> ' + // todo: replace 0 by an parameter
                 '</tr>' ;
 
         }
     }
 
-    filterProjects();
 </script>
 
 

@@ -58,5 +58,3 @@ insert into sessionSearchQuery values(10,'nederland','12:31:52');
 
 
 -- insert into session values(1251,'2011-01-01 00:00:00'::TIMESTAMP,'feest vieren','00:00:00',1,'24:00:00');
-
-

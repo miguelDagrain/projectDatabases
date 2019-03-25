@@ -11,7 +11,6 @@ insert into attachment values(1,'jos heeft ook een attachment');
 insert into attachment values(1,'jos heeft zelfs 2 attachments');
 insert into attachment values(2,'de groep heeft ook een attachment');
 
-
 insert into researchGroup values (default,'No research group','NONE','Computer Science',true,'middelheim','0');
 insert into researchGroup values (default,'Modelling of Systems and Internet Communication','MOSAIC','Computer Science',true,'middelheim','0');
 insert into researchGroup values (default,'Advanced Database Research and Modelling','ADReM','Computer Science',true,'middelheim','0');

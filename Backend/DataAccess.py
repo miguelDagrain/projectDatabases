@@ -456,7 +456,7 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (str(ID)))
         row = cursor.fetchone()
-        project=Project(row[0], row[1], row[2], row[3],row[4])
+        project = Project(row[0], row[1], row[2], row[3],row[4])
         project.desc = self.get_projectDocuments(str(project.ID))
         project.activeYear = self.get_projectYears(project.ID)
         project.promotor = self.get_projectPromotors(project.ID)
@@ -470,9 +470,31 @@ class ProjectAccess:
         self.dbconnect.commit()
         return
 
+    def get_project_filter_data(self):
+        from Project import Project
+        cursor = self.dbconnect.get_cursor()
+        sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
+            "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
+
+        sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (" \
+                "SELECT COUNT(*) FROM projectregistration pr WHERE pr.project=p.projectid) as cnt " \
+              "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)"\
+                    "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
+
+
+        cursor.execute(sql);
+        projects= list()
+        for row in cursor:
+            project = Project(row[0], row[1], row[2], row[3],row[4])
+            project.type = row[6]
+            project.desc = self.get_projectDocuments(str(project.ID))
+            project.discipline = row[5]
+            project.registeredStudents = row[7]
+            projects.append(project)
+        return projects
+
     def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
         cursor = self.dbconnect.get_cursor()
-
 
         sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
               "WHERE p.title LIKE %(searchQueryQ)s "
