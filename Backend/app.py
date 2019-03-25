@@ -439,8 +439,8 @@ def pick_language():
 # is niet de bedoeling dat een je deze url gebruikt vanuit de website, dan zullen ze doorsturen naar de home page
 @app.route("/check/empl_names", methods=["GET"])
 def check_empl_names():
-    Eacces = EmployeeAccess(connection)
-    employees = Eacces.get_employees()
+    Eaccess = EmployeeAccess(connection)
+    employees = Eaccess.get_employees()
 
     given_letters = request.args.get("letters")
 
@@ -455,6 +455,18 @@ def check_empl_names():
 
     return jsonify(possibilities)
 
+@app.route("/check/empl_name_correct", methods=["GET"])
+def check_empl_name_correct():
+    Eaccess = EmployeeAccess(connection)
+    employees = Eaccess.get_employees()
+
+    given_name = request.args.get('name')
+
+    for empl in employees:
+        if given_name == empl.name:
+            return jsonify(True)
+
+    return jsonify(False)
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -18,7 +18,7 @@ function setUpMultipleTextInput() {
         $(selected).addClass('given-input-block');
         multiTextInput.appendChild(selected);
 
-        $(addButton).bind("click", function(){
+        $(addButton).bind("acceptAndAdd", function(){
 
             var newItem = document.createElement('div');
             $(newItem).css({'display':'inline-block', 'color':'#003366', 'background-color':'rgba(255, 255, 255, 0.8)',

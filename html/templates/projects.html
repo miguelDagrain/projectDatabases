@@ -221,7 +221,8 @@
                                         <script>setUpNameSuggestions($("#administration-form-promotor"), $("#administration-form-promotor-suggestions"))</script>
                                     </div>
 
-                                    <button>{{ _('add') }}</button>
+                                    <button id="administration-form-promotor-add">{{ _('add') }}</button>
+                                    <script>setUpOnlyAcceptNames($("#administration-form-promotor"), $("#administration-form-promotor-add"))</script>
                                 </div>
                             </div>
 
