@@ -1,8 +1,18 @@
+import dbConnection
+
 class DocumentAccess:
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
+    def __init__(self):
+        """
+        basic initialiser for a documentAcces
+        :param dbconnect:
+        """
+        self.dbconnect = dbConnection.connection
 
     def get_documents(self):
+        """
+        gets all documents from the connected database
+        :return: a list of documents
+        """
         from Document import Document
         from Attachment import Attachment
         cursor = self.dbconnect.get_cursor()
@@ -18,6 +28,11 @@ class DocumentAccess:
         return documents
 
     def get_document(self, id):
+        """
+        gets a single document on a given id
+        :param id: an id (will be casted to string)
+        :return: a single doucment
+        """
         from Document import Document
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document WHERE documentID=%s', (str(id)))
@@ -30,6 +45,11 @@ class DocumentAccess:
         return document
 
     def add_attachment(self, documentID, attachment):
+        """
+        adds a new attachment to the database an couples it with a document
+        :param documentID: the doucment id (will be casted to a string)
+        :param attachment: the attachment
+        """
         try:
             cursor = self.dbconnect.get_cursor()
             cursor.execute('select * from attachment where doc=%s and attachment=%s',
@@ -88,9 +108,9 @@ class DocumentAccess:
 
 
 class ResearchGroupAccess:
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
-        self.doc = DocumentAccess(self.dbconnect)
+    def __init__(self):
+        self.dbconnect = dbConnection.connection
+        self.doc = DocumentAccess()
 
     def get_researchgroupDescriptions(self, groupid):
         cursor = self.dbconnect.get_cursor()
@@ -212,8 +232,8 @@ class ResearchGroupAccess:
 
 
 class EmployeeAccess:
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
+    def __init__(self):
+        self.dbconnect = dbConnection.connection
 
     def get_employees(self):
         from Employee import Employee
@@ -317,9 +337,9 @@ class EmployeeAccess:
 
 
 class ProjectAccess:
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
-        self.doc = DocumentAccess(self.dbconnect)
+    def __init__(self):
+        self.dbconnect = dbConnection.connection
+        self.doc = DocumentAccess()
 
     def get_projectDocuments(self, projectID):
         cursor = self.dbconnect.get_cursor()
@@ -610,9 +630,9 @@ class ProjectAccess:
 
 
 class StudentAccess:
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
-        self.project = ProjectAccess(self.dbconnect)
+    def __init__(self):
+        self.dbconnect = dbConnection.connection
+        self.project = ProjectAccess()
 
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
@@ -762,8 +782,8 @@ class StudentAccess:
 
 
 class DomainAccess:
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
+    def __init__(self):
+        self.dbconnect = dbConnection.connection
 
     def add_discipline(self, discipline):
         cursor = self.dbconnect.get_cursor()
@@ -878,11 +898,11 @@ class DomainAccess:
 
 
 class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
-    def __init__(self, dbconnect):
-        self.dbconnect = dbconnect
-        DomainAccess.__init__(self, self.dbconnect)
-        DocumentAccess.__init__(self, self.dbconnect)
-        EmployeeAccess.__init__(self, self.dbconnect)
-        ProjectAccess.__init__(self, self.dbconnect)
-        StudentAccess.__init__(self, self.dbconnect)
-        ResearchGroupAccess.__init__(self, self.dbconnect)
+    def __init__(self):
+
+        DomainAccess.__init__(self )
+        DocumentAccess.__init__(self)
+        EmployeeAccess.__init__(self)
+        ProjectAccess.__init__(self)
+        StudentAccess.__init__(self)
+        ResearchGroupAccess.__init__(self)
