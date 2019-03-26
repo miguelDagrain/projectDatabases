@@ -101,8 +101,7 @@ def add_research_group():
     abbrev = request.form.get("Abbreviation")
     disciplineNr = request.form.get("Discipline")
     discipline = disciplines[int(disciplineNr)]
-
-    active = True if request.form.get("Active") == 'on' else False
+    active = True #active wordt gebruikt voor leesbaarheid
     address = request.form.get("Address")
     telephone = request.form.get("Telephone")
     # desc = request.form.get("Description")
@@ -222,7 +221,7 @@ def add_staff():
     roleOptions = Daccess.get_intextOrigin()
     roleNr = request.form.get("Role")
     role = roleOptions[int(roleNr)]
-    active = True if request.form.get("Active") == 'on' else False
+    active = True #active wordt gebruikt voor leesbaarheid
     promotor = True if request.form.get("Promotor") == 'on' else False
 
     emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
