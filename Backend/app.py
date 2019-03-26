@@ -248,9 +248,13 @@ def get_person(id):
     :param id: id of the person whose tab we like to visit
     :return: rendered template of person.html with the person as attribute
     """
-    database = EmployeeAccess(connection)
-    person = database.get_employee(id)
-    return render_template("person.html", r_person=person, page="people")
+    Eacces = EmployeeAccess(connection)
+    person = Eacces.get_employee(id)
+
+    Racces = ResearchGroupAccess(connection)
+    group = Racces.get_researchGroupOnID(person.research_group)
+
+    return render_template("person.html", r_person=person, r_group=group, page="people")
 
 
 @app.route("/people/<int:id>", methods=["POST"])
