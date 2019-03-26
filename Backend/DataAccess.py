@@ -1020,6 +1020,10 @@ class DomainAccess:
         self.dbconnect = dbConnection.connection
 
     def add_discipline(self, discipline):
+        """
+        adds a discipline to the list of disciplines
+        :param discipline: the new discipline
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute("INSERT INTO discipline (subject) VALUES (%s)", (discipline,))
@@ -1029,6 +1033,10 @@ class DomainAccess:
             raise Exception('\nUnable to add discipline!\n(%s)' % (error))
 
     def remove_discipline(self, discipline):
+        """
+        removes a discipline
+        :param discipline:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute("DELETE FROM discipline WHERE subject = (%s)", (discipline,))
@@ -1038,6 +1046,10 @@ class DomainAccess:
             raise Exception('\nUnable to remove discipline!:\n(%s)' % (error))
 
     def get_disciplines(self):
+        """
+        gets all disciplines
+        :return: a list of disciplines
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from discipline')
         disciplines = list()
@@ -1046,6 +1058,10 @@ class DomainAccess:
         return disciplines
 
     def add_title(self, title):
+        """
+        adds a title to the list of titles
+        :param title:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO title values(%s)', (title))
@@ -1055,6 +1071,10 @@ class DomainAccess:
             raise Exception('Unable to add title!')
 
     def get_titles(self):
+        """
+        gets all titles out of the database
+        :return: a list of titles
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from title')
         titles = list()
@@ -1063,6 +1083,10 @@ class DomainAccess:
         return titles
 
     def add_intextOrigin(self, origin):
+        """
+        adds a new intextOrigin to the database
+        :param origin: the new thing
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO INTEXT values(%s)', (origin))
@@ -1072,6 +1096,10 @@ class DomainAccess:
             raise Exception('Unable to add intext origin!')
 
     def get_intextOrigin(self):
+        """
+        gets all intextorigins out of the database
+        :return: a list of origins (intern, extern, etc
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from INTEXT')
         origins = list()
@@ -1080,6 +1108,10 @@ class DomainAccess:
         return origins
 
     def add_registrationStatus(self, status):
+        """
+        adds a new refistration status to the list
+        :param status: the new status
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO registration values(%s)', (status))
@@ -1089,6 +1121,10 @@ class DomainAccess:
             raise Exception('Unable to add registration status!')
 
     def get_registrationStatus(self):
+        """
+        gets all registrationStatusses
+        :return: a list of statusses
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from registration')
         status = list()
@@ -1097,6 +1133,10 @@ class DomainAccess:
         return status
 
     def add_language(self, lang):
+        """
+        adds a new language to the list of languages
+        :param lang: the new language
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO language values(%s)', (lang))
@@ -1106,6 +1146,10 @@ class DomainAccess:
             raise Exception('Unable to add language!')
 
     def get_languages(self):
+        """
+        gets all languages out of the database
+        :return: a list of languages
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from language')
         langs = list()
@@ -1114,6 +1158,10 @@ class DomainAccess:
         return langs
 
     def add_projectType(self, type):
+        """
+        adds a new projectType to the database
+        :param type: the new type
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO projectType values(%s)', (type))
@@ -1123,6 +1171,10 @@ class DomainAccess:
             raise Exception('Unable to add projectType!')
 
     def get_projectType(self):
+        """
+        gets all projectTyppes out of the database
+        :return: a list of projecTypes
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectType ')
         types = list()
@@ -1133,6 +1185,9 @@ class DomainAccess:
 
 class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
     def __init__(self):
+        """
+        this constructor makes a FullDataAccess object that has access to all the access classes
+        """
 
         DomainAccess.__init__(self )
         DocumentAccess.__init__(self)
