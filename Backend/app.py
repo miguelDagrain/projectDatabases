@@ -18,6 +18,8 @@ from User import *
 from config import config_data
 from dbConnection import *
 
+from helperFunc import *
+
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
@@ -345,7 +347,7 @@ def apply_filter_projects():
         type = typeOptions[typeNr]
 
         disciplineNrs = request.args.getlist("Disciplines")
-        discipline = helper_get_discipline_multi_choice(disciplineNrs, disciplineOptions)
+        discipline = helper_get_selected_multi_choice(disciplineNrs, disciplineOptions)
 
         groupNr = int(request.args.get("Research_group"))
         group = researchGroupOptions[groupNr]
