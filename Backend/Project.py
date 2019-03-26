@@ -1,5 +1,5 @@
 class Project:
-    #ik weet niet of deze init nog gebruikt wordt
+    # ik weet niet of deze init nog gebruikt wordt
     # def __init__(self,id, title, max_students, research_group, active_year, type, tag,
     #              related_project, description):
     #     """
@@ -26,12 +26,12 @@ class Project:
     #     self.relatedProject = related_project
     #     self.promotor=list()
 
-    def __init__(self, id, title, max_students,active, research_group):
+    def __init__(self, id, title, max_students, active, research_group):
         self.title = title
         self.maxStudents = max_students
         self.desc = list()
         self.researchGroup = research_group
-        self.active=active
+        self.active = active
         self.activeYear = list()
         self.type = list()
         self.tag = list()
@@ -41,7 +41,7 @@ class Project:
         self.discipline = list()
         self.registeredStudents = 0
 
-    def get_researchGroup(self,dbConnect):
+    def get_researchGroup(self, dbConnect):
         access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])
-        res=access.ResearchGroupAccess(dbConnect)
+        res = access.ResearchGroupAccess(dbConnect)
         return res.get_researchGroupOnID(self.researchGroup)

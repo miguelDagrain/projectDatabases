@@ -1,22 +1,22 @@
+import json
+import re
+import sys
+from functools import wraps
+
 from flask import *
 from flask.templating import render_template
+from flask_babel import *
+from flask_login import LoginManager
+from flask_login import login_user, logout_user, current_user
+
+from DataAccess import *
+from Document import *
+from Employee import Employee
+from ResearchGroup import ResearchGroup
+from Session import *
+from User import *
 from config import config_data
 from dbConnection import *
-from DataAccess import *
-from ResearchGroup import ResearchGroup
-from Employee import Employee
-from Document import *
-from helperFunc import *
-from flask_babel import *
-from flask_login import login_user, login_required,logout_user,current_user
-from flask_login import LoginManager
-from functools import wraps
-import re
-from User import *
-from Session import *
-import sys
-import json
-
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
@@ -29,27 +29,31 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-#overriding the login manager of flask login to support roles, inspired from https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes
+# overriding the login manager of flask login to support roles, inspired from 
+# https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes 
 def login_required(role="ANY"):
     def wrapper(fn):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
-            temp=current_user
+            temp = current_user
             if not current_user.is_authenticated():
-              return login_manager.unauthorized()
+                return login_manager.unauthorized()
             if ((role not in current_user.roles) and (role != "ANY")):
                 return login_manager.unauthorized()
             return fn(*args, **kwargs)
+
         return decorated_view
+
     return wrapper
+
 
 @babel.localeselector
 def get_locale():
-    '''
+    """
     If the language cookie is set, use its value
     Else determine the language that fits best based on the user's accept header
     :return: Language code
-    '''
+    """
     lang = request.cookies.get('lang')
     if lang is not None:
         return lang
@@ -60,10 +64,10 @@ def get_locale():
 
 @app.route("/")
 def index():
-    '''
+    """
     Renders the index template
     :return: Rendered index template
-    '''
+    """
     resp = make_response(render_template("index.html", page="index"))
     if request.cookies.get('lang') is None:
         lang = get_locale()
@@ -73,24 +77,25 @@ def index():
 
 @app.route("/researchgroups/")
 def show_research_groups():
-    '''
+    """
     Shows the research groups on the website
     :return: Rendered template containing all research groups
-    '''
+    """
     access = ResearchGroupAccess(connection)
     groups = access.get_researchGroups()
     access = DomainAccess(connection)
     disciplines = access.get_disciplines()
     return render_template("researchgroups.html", r_groups=groups, r_disciplines=disciplines, page="rgroups")
 
+
 @app.route("/researchgroups/", methods=["POST"])
 def add_research_group():
-    '''
+    """
     Adds a research group to the database
     This function is called whenever the user uses the POST method on the
     add research group page
     :return: Rendered template of the administration-add-group with disciplines and a send message
-    '''
+    """
     if request.form.get("Name") is None:
         return show_research_groups()
 
@@ -110,18 +115,19 @@ def add_research_group():
                          'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
     r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
-    Raccess=ResearchGroupAccess(connection)
+    Raccess = ResearchGroupAccess(connection)
     Raccess.add_researchGroup(r)
     researchGroups = Raccess.get_researchGroups()
     return render_template("researchgroups.html", r_groups=researchGroups, r_disciplines=disciplines, page="rgroups")
 
+
 @app.route("/researchgroups/<int:id>", methods=["GET"])
 def group_page(id):
-    '''
+    """
     Renders a template with the description of a project
     :param id: the id of the researchgroup
     :return: rendered template of the group
-    '''
+    """
     Racces = ResearchGroupAccess(connection)
     researchGroup = Racces.get_researchGroupOnID(id)
 
@@ -143,32 +149,34 @@ def group_page(id):
     language = request.cookies.get('lang')
     description = None
     for doc in researchGroup.desc:
-        if(doc.language == language):
+        if doc.language == language:
             description = doc.text
 
     return render_template("researchgroup.html", r_groupName=researchGroup.name, r_groupID=researchGroup.ID,
                            r_description=description, r_researchers=researchers, r_contactPersons=contactPersons,
                            r_projects=projects)
 
+
 @app.route("/researchgroups/<int:id>", methods=["POST"])
 def apply_remove_group(id):
-    '''
+    """
     function that removes a research group and redirects to the researchgroups page
     :param id: id of the group to be removed
     :return: redirection to researchgroups page
-    '''
+    """
 
     Racces = ResearchGroupAccess(connection)
     Racces.remove_researchGroup(id)
 
     return redirect(url_for('show_research_groups'))
 
+
 @app.route("/people/", methods=["GET"])
 def show_people():
-    '''
+    """
     Shows a table of people on a webpage
     :return: Rendered template of people HTML
-    '''
+    """
     Raccess = ResearchGroupAccess(connection)
     researchGroups = Raccess.get_researchGroups()
 
@@ -193,19 +201,20 @@ def show_people():
     neededValuesPeoplePage = []
     for person in people:
         for group in researchGroups:
-            if (group.ID == person.research_group):
+            if group.ID == person.research_group:
                 neededValuesPeoplePage.append([person.name, group.name, person.promotor, person.id])
 
     return render_template("people.html", r_values=neededValuesPeoplePage, r_researchGroups=researchGroups,
                            page="people")
 
+
 @app.route("/people/", methods=["POST"])
 def add_staff():
-    '''
+    """
     function that adds a staff member to the database, is called everytime the user uses the POST method on the
     add staf form of the people page
     :return: redirection to show people
-    '''
+    """
     Raccess = ResearchGroupAccess(connection)
     researchGroups = Raccess.get_researchGroups()
 
@@ -225,34 +234,34 @@ def add_staff():
     promotor = True if request.form.get("Promotor") == 'on' else False
 
     emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
-    Eaccess= EmployeeAccess(connection)
+    Eaccess = EmployeeAccess(connection)
     Eaccess.add_employee(emp)
-    return redirect( url_for('show_people') )
+    return redirect(url_for('show_people'))
 
 
 @app.route("/people/<int:id>", methods=["GET"])
 def get_person(id):
-    '''
+    """
     function that return a tab of the person whose id agrees with the given id
     :param id: id of the person whose tab we like to visit
     :return: rendered template of person.html with the person as attribute
-    '''
+    """
     database = EmployeeAccess(connection)
     person = database.get_employee(id)
     return render_template("person.html", r_person=person, page="people")
 
+
 @app.route("/people/<int:id>", methods=["POST"])
 def apply_remove_person(id):
-    '''
+    """
     function that removes the person on whose id agrees with the given id
     :param id: id of the person to be removed
     :return: redirection to show_people
-    '''
+    """
     Eaccess = EmployeeAccess(connection)
     Eaccess.remove_employee(id)
 
-    return redirect( url_for('show_people') )
-
+    return redirect(url_for('show_people'))
 
 
 @app.route("/projects/", methods=["GET"])
@@ -265,13 +274,15 @@ def show_projects():
     projData = []
 
     for proj in projects:
-        discipline = "";
+        discipline = ""
         for rg in researchGroups:
-            if (rg.ID == proj.researchGroup):
+            if rg.ID == proj.researchGroup:
                 discipline = rg.discipline
                 break
 
-        pjson = {"ID" : proj.ID, "title": proj.title, "status":proj.active, "type": proj.type, "tag":proj.tag, "discipline": proj.discipline, "researchGroup" : proj.researchGroup, "maxStudents" : proj.maxStudents, "registeredStudents":proj.registeredStudents, 'words' : {}}
+        pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": proj.type, "tag": proj.tag,
+                 "discipline": proj.discipline, "researchGroup": proj.researchGroup, "maxStudents": proj.maxStudents,
+                 "registeredStudents": proj.registeredStudents, 'words': {}}
         for d in proj.desc:
             str = d.text
             rgx = re.compile("(\w[\w']*\w|\w)")
@@ -284,11 +295,12 @@ def show_projects():
         projData.append(pjson)
 
     return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                           r_disciplines=disciplines, r_types=types, page="projects", alt = json.dumps(projData, default=lambda x: x.__dict__))
+                           r_disciplines=disciplines, r_types=types, page="projects",
+                           alt=json.dumps(projData, default=lambda x: x.__dict__))
 
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
-@app.route("/projects/<int:id>", methods = ['GET'])
+@app.route("/projects/<int:id>", methods=['GET'])
 def project_page(id):
     Paccess = ProjectAccess(connection)
     project = Paccess.get_project(id)
@@ -300,14 +312,12 @@ def project_page(id):
     Raccess = ResearchGroupAccess(connection)
     researchGroup = Raccess.get_researchGroupOnID(project.researchGroup)
 
-
-    return render_template("project.html", r_project=project, r_document = document, r_promotor = emp,
-                           r_researchGroup = researchGroup, page="projects")
+    return render_template("project.html", r_project=project, r_document=document, r_promotor=emp,
+                           r_researchGroup=researchGroup, page="projects")
 
 
 @app.route("/projects/<int:id>", methods=["POST"])
 def apply_remove_project(id):
-
     Paccess = ProjectAccess(connection)
     Paccess.remove_project(id)
 
@@ -316,12 +326,8 @@ def apply_remove_project(id):
 
 @app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
-
-    if request.args.get("Search_query") == None:
-
+    if request.args.get("Search_query") is None:
         return show_projects()
-
-
     else:
         Raccess = ResearchGroupAccess(connection)
         researchGroups = Raccess.get_researchGroups()
@@ -341,8 +347,6 @@ def apply_filter_projects():
         disciplineNrs = request.args.getlist("Disciplines")
         discipline = helper_get_discipline_multi_choice(disciplineNrs, disciplineOptions)
 
-
-
         groupNr = int(request.args.get("Research_group"))
         group = researchGroupOptions[groupNr]
         status = int(request.args.get("Status"))
@@ -350,10 +354,9 @@ def apply_filter_projects():
         Paccess = ProjectAccess(connection)
         projects = Paccess.filter_projects(query, type, discipline, group, status)
 
-
         return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects", alt = json.dumps(projects, default=lambda x: x.__dict__))
-
+                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects",
+                               alt=json.dumps(projects, default=lambda x: x.__dict__))
 
 
 @app.route("/administration/")
@@ -362,33 +365,33 @@ def get_administration():
     return render_template("administration.html", page="administration")
 
 
-
 @app.route("/administration/modify_disciplines", methods=["GET"])
 def form_modify_disciplines():
-    '''
+    """
     function that returns a form to modify disciplines
     :return: Rendered template of the administration-modify-disciplines with disciplines
-    '''
+    """
     access = DomainAccess(connection)
     disciplines = access.get_disciplines()
 
     return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=False)
 
+
 @app.route("/administration/modify_disciplines", methods=["POST"])
 def modify_disciplines():
-    '''
+    """
     function that adds a discipline to the possible disciplines
     :return: Rendered template of the administration-modify-disciplines with disciplines
-    '''
+    """
     access = DomainAccess(connection)
     disciplines = access.get_disciplines()
 
     value = request.form.get("Name")
-    if(value):
+    if value:
         access.add_discipline(value)
     else:
         value = request.form.get("Discipline")
-        if(value):
+        if value:
             discipline = disciplines[int(value)]
             access.remove_discipline(discipline)
 
@@ -396,23 +399,26 @@ def modify_disciplines():
 
     return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=True)
 
+
 @app.route("/administration/modify_types", methods=["GET"])
 def form_modify_types():
-    '''
+    """
     function that returns a form to modify types
     :return: Rendered template of the administration-modify-templates with types
-    '''
+    """
     access = FullDataAccess
     types = access
 
     return render_template("administration-modify-types.html", r_types=types, send=False)
 
+
 @app.route("/administration/modify_types", methods=["POST"])
 def modify_types():
-    '''
+    """
     function that modifies
     :return:
-    '''
+    """
+
 
 # @app.errorhandler(404)
 # def handle_404(e):
@@ -433,7 +439,6 @@ def pick_language():
     return resp
 
 
-
 # alles onder de check is om vragen uit javascript te beantwoorden met json (gegevens uit de database), het
 # is niet de bedoeling dat een je deze url gebruikt vanuit de website, dan zullen ze doorsturen naar de home page
 @app.route("/check/empl_names", methods=["GET"])
@@ -451,8 +456,8 @@ def check_empl_names():
             if len(possibilities) > 4:
                 break
 
-
     return jsonify(possibilities)
+
 
 @app.route("/check/empl_name_correct", methods=["GET"])
 def check_empl_name_correct():
@@ -467,29 +472,32 @@ def check_empl_name_correct():
 
     return jsonify(False)
 
+
 @login_manager.user_loader
 def load_user(user_id):
-    us= User(Session(user_id, 1, 0, 0))
-    eAcces=EmployeeAccess(connection)
-    if(user_id!='None'):
-        us.roles=eAcces.get_employeeRoles(user_id)
-    us.auth=True
-    us.active=True
+    us = User(Session(user_id, 1, 0, 0))
+    eAcces = EmployeeAccess(connection)
+    if user_id != 'None':
+        us.roles = eAcces.get_employeeRoles(user_id)
+    us.auth = True
+    us.active = True
     return us
+
 
 @login_manager.unauthorized_handler
 def unauthorized():
     return redirect(url_for('index'))
 
-@app.route('/login/', methods=[ 'POST'])
+
+@app.route('/login/', methods=['POST'])
 def login():
-    us=User(Session(0, 1, 0, 0))
+    us = User(Session(0, 1, 0, 0))
     username = request.form["username"]
     password = request.form["password"]
     try:
-        if(us.login(username,password)):
+        if us.login(username, password):
             login_user(us)
-            temp=current_user
+            temp = current_user
             flash('Logged in successfully.')
             flash("you are now logged in")
             return "true"
