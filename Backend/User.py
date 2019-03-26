@@ -1,11 +1,13 @@
 from flask_login import UserMixin
+
+
 class User(UserMixin):
-    def __init__(self,session):
-        self.session=session
-        self.auth=False
-        self.active=True
-        self.anon=False
-        self.roles=list
+    def __init__(self, session):
+        self.session = session
+        self.auth = False
+        self.active = True
+        self.anon = False
+        self.roles = list
 
     def is_active(self):
         return self.active
@@ -26,24 +28,24 @@ class User(UserMixin):
     def get_roles(self):
         return self.roles
 
-    def login(self,userName,password):
-        if(userName=='admin' and password=="hunter1"):
-            self.session.studentId=1
-            self.auth=True
-            self.roles=('admin','user')
+    def login(self, userName, password):
+        if userName == 'admin' and password == "hunter1":
+            self.session.studentId = 1
+            self.auth = True
+            self.roles = ('admin', 'user')
             self.active = True
             self.anon = False
             return True
-        elif(userName=='user' and password=='hunter2'):
+        elif userName == 'user' and password == 'hunter2':
             self.session.studentId = 2
-            self.auth=True
-            self.roles=('user')
+            self.auth = True
+            self.roles = ('user')
             self.active = True
             self.anon = False
             return True
         else:
             self.auth = False
-            self.roles=None
+            self.roles = None
             self.active = False
             self.anon = False
             return False

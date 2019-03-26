@@ -1,5 +1,5 @@
 class ResearchGroup:
-    def __init__(self,id, name, abbreviation, discipline, active, address, telephone, desc):
+    def __init__(self, id, name, abbreviation, discipline, active, address, telephone, desc):
         """
         constructor for a dbResearchGroup
         :param name: a string representing a name for the researchGroup
@@ -11,7 +11,7 @@ class ResearchGroup:
         :param desc: an all the documents that are this groups descriptions
         :return:a new dbResearchGroup object
         """
-        self.ID=id
+        self.ID = id
         self.name = name
         self.abbreviation = abbreviation
         self.discipline = discipline
@@ -19,9 +19,9 @@ class ResearchGroup:
         self.address = address
         self.telNr = telephone
         self.desc = desc
-        self.contactID=None
+        self.contactID = None
 
-    def get_contactPerson(self,dbConnect):
+    def get_contactPerson(self, dbConnect):
         access = __import__('DataAccess', fromlist=['EmployeeAccess'])
         emp = access.EmployeeAccess(dbConnect)
         return emp.get_employee(self.contactID)

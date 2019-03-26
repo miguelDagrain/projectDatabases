@@ -283,7 +283,7 @@
     var k = 0;
     {% for project in r_projects %}
 
-    obj[k].href ="{{ url_for('project_page', id=project.ID) }}"
+    obj[k].href ="{{ url_for('project_page', id=project.ID) }}";
     k++;
 
     {% endfor %}

@@ -1,4 +1,3 @@
-
 def helper_get_selected_multi_choice(selectedNrs, options):
     """
     functie om aangeduide disciplines terug te geven, vertrekkende vanuit een multiple choice select van een form
@@ -7,7 +6,7 @@ def helper_get_selected_multi_choice(selectedNrs, options):
     :return:
     """
     selected = list()
-    if ("0" in selectedNrs):
+    if "0" in selectedNrs:
         return None
     else:
         for iterSelected in selectedNrs:
