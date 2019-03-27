@@ -165,7 +165,9 @@ CREATE TABLE projectType
   type varchar(255) PRIMARY KEY
 );
 insert into projectType values ('Master thesis');
-insert into projectType values ('Research internship');
+insert into projectType values ('Research internship 2');
+insert into projectType values ('Research internship 1');
+insert into projectType values ('Bachelor dissertation');
 
 CREATE TABLE projectTypeConnection
 (
