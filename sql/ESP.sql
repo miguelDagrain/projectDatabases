@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS projectTypeConnection;
 DROP TABLE IF EXISTS projectType;
 DROP TABLE IF EXISTS projectYearConnection;
 DROP TABLE IF EXISTS projectYear;
+drop table if exists projectResearchgroup;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS contactPerson;
 DROP TABLE IF EXISTS employeeRoles;
@@ -137,7 +138,6 @@ CREATE TABLE project
   projectID     SERIAL PRIMARY KEY,
   title         VARCHAR(255) NOT NULL,
   maxStudents   INT          NOT NULL,
-  active        BOOLEAN
   active        BOOLEAN
 );
 
