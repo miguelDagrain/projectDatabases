@@ -86,7 +86,7 @@ insert into projects (id, name, studentnumber) values (94,'Velkeneers Pieter',20
 insert into projects (id, name, studentnumber) values (95,'Belmans Pieter',20070758);
 insert into projects (id, name, studentnumber) values (96,'ibens Wouter',20070138);
 insert into projects (id, name, studentnumber) values (97,'Van Brussel Thomas',20070225);
-insert into projects (id, name, studentnumber) values (98,'d\'Hoine Barry',20062793);
+insert into projects (id, name, studentnumber) values (98,'Hoine Barry',20062793);
 insert into projects (id, name, studentnumber) values (99,'De Smedt Philip',20061649);
 insert into projects (id, name, studentnumber) values (100,'Wuytjens Gino',20061835);
 insert into projects (id, name, studentnumber) values (101,'Deckx Niel',20070183);
