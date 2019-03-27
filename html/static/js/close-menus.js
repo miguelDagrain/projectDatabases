@@ -10,6 +10,7 @@ function closeAllSelected(clickedBox) {
     for(iterMenu = 0; iterMenu < menus.length; ++iterMenu){
         if(clickedBox !== entrees[iterMenu]){
             menus[iterMenu].classList.add("dropdown-hide");
+            $($(menus[iterMenu]).hasClass('text-suggestion-input-dropdown')).empty();
         }
     }
 

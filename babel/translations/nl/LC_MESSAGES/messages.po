@@ -206,6 +206,7 @@ msgstr "Omschrijving"
 
 #: html/templates/researchgroup.html
 #: html/templates/people.html
+#: html/templates/person.html
 msgid "Research group"
 msgstr "Onderzoeksgroep"
 
