@@ -423,6 +423,38 @@ class EmployeeAccess:
             self.dbconnect.rollback()
             raise Exception('unable to change employee')
 
+    def get_employeeProjects(self, id):
+        """
+        get all the projects of an employee IMPORTANT  not all fields will be completed only the fields in the project table and that of the activeYears
+        :param id: the id of the employee
+        :return: a list of all the projects where the employee is a promotor
+        """
+        from Project import Project
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select project from projectpromotor where employee=%s', str(id))
+
+        projectsId = list()
+        for row in cursor:
+            projectsId.append(row[0])
+
+        projects = list()
+        for projId in projectsId:
+            cursor.execute('select * from project where projectID=%s', str(projId)) #returns exactly one row from the table
+            row = cursor.fetchone()
+            project = Project(row[0], row[1], row[2], row[3], row[4])
+
+            cursor.execute('select year from projectYearConnection where projectID=%s', str(projId))
+
+            years = list()
+            for row in cursor:
+                years.append(row[0])
+
+            project.activeYear = years
+
+            projects.append(project)
+
+        return projects
+
 
 class ProjectAccess:
     def __init__(self):

@@ -246,13 +246,28 @@ def get_person(id):
     :param id: id of the person whose tab we like to visit
     :return: rendered template of person.html with the person as attribute
     """
-    Eacces = EmployeeAccess()
-    person = Eacces.get_employee(id)
+    Eaccess = EmployeeAccess()
+    person = Eaccess.get_employee(id)
 
-    Racces = ResearchGroupAccess()
-    group = Racces.get_researchGroupOnID(person.research_group)
+    Raccess = ResearchGroupAccess()
+    group = Raccess.get_researchGroupOnID(person.research_group)
 
-    return render_template("person.html", r_person=person, r_group=group, page="people")
+    projects = person.getProjects()
+
+    yearAndProject = dict()
+
+    for project in projects:
+        for year in project.activeYear:
+            if(year in yearAndProject):
+                yearAndProject[year].append(project)
+            else:
+                yearAndProject[year] = list()
+                yearAndProject[year].append(project)
+
+    orderedYearAndProject = sorted(yearAndProject.items(), key= lambda k : k[0], reverse=True)
+
+    return render_template("person.html", r_person=person, r_groupName=group.name,
+                           r_projectAndYear=orderedYearAndProject, page="people")
 
 
 @app.route("/people/<int:id>", methods=["POST"])

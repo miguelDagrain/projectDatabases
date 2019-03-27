@@ -38,9 +38,30 @@
         {% endif %}
 
 
-        <p>{{ _('Research group') }}: <a href="{{ url_for('group_page', id=r_person.research_group ) }}">{{ r_group.name }}</a></p>
+        <p>{{ _('Research group') }}: <a href="{{ url_for('group_page', id=r_person.research_group ) }}">{{ r_groupName }}</a></p>
+        <br>
+        <br>
 
+        <h2>{{ _('Projects') }}:</h2>
 
+        <br>
+
+        <table class="content-table">
+            {% for tupleProjectAndYear in r_projectAndYear %}
+                <tr>
+                    <th>{{ tupleProjectAndYear[0] }}</th>
+                </tr>
+                {% for project in tupleProjectAndYear[1] %}
+                    <tr>
+                        <td>
+                            <ul>
+                                <li><a href="{{ url_for('project_page', id=project.ID) }}" >{{ project.title }}</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
 
     </div>
 

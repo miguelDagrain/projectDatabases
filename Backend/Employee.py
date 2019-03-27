@@ -21,12 +21,17 @@ class Employee:
         self.active = active
         self.promotor = promotor
 
-    def getResearchGroup(self, dbConnect):
+    def getResearchGroup(self):
         access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])
-        res = access.ResearchGroupAccess(dbConnect)
+        res = access.ResearchGroupAccess()
         return res.get_researchGroupOnID(self.research_group)
 
-    def getPromotor(self, dbConnect):
+    def getPromotor(self):
         access = __import__('DataAccess', fromlist=['EmployeeAccess'])
-        emp = access.EmployeeAccess(dbConnect)
+        emp = access.EmployeeAccess()
         return emp.get_employee(self.promotor)
+
+    def getProjects(self):
+        access = __import__('DataAccess', fromlist=['EmployeeAccess'])
+        promotor = access.EmployeeAccess()
+        return promotor.get_employeeProjects(self.id)
