@@ -1,4 +1,4 @@
-insert into document (documentID, lang, content) values (default, 'engels', 'PROTOTYPE XML DOCUMENT SERVER,<p>Contact adres:<ul>' ||
+insert into document (documentID, lang, content) values (default, 'english', 'PROTOTYPE XML DOCUMENT SERVER,<p>Contact adres:<ul>' ||
  '<li>ACUNIA N.V.' ||
   '<li>Philips-site 5 box 3' ||
    '<li>3001 Leuven' ||
@@ -11,20 +11,20 @@ insert into document (documentID, lang, content) values (default, 'engels', 'PRO
           ' alle classes die nodig zijn om een OSGi framework te ondersteunen.<p>' ||
         'ACUNIA heeft ook zijn eigen run-time compiler voor Wonka ontwikkeld, die optimalizatie algoritmen zal gebruiken om de performantie van een embedded systeem te verhogen. Het doel van deze stage ' ||
          'is te onderzoeken hoe de bestaande algoritmen kunnen uitgebreid worden om meer complexe \"<i>refactoringen</i>\" zoals method inlining te ondersteunen.</p>');
-insert into document (documentID, lang, content) values (default, 'engels', 'MODELLEREN VAN MPEG-2 VIDEO BRONNEN,<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. ' ||
+insert into document (documentID, lang, content) values (default, 'english', 'MODELLEREN VAN MPEG-2 VIDEO BRONNEN,<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. ' ||
  'De bedoeling van deze thesis is tweezijdig. Enerzijds bestaat deze uit het onderzoeken van bestaande MPEG- 2 modellen die een of meerdere van die speciale MPEG-2 features modelleren. Op basis hiervan kan' ||
   ' dan een nieuw model opgesteld worden dat een aantal modellen combineert. Deze thesis kan eventueel door 2 studenten gedaan worden. Afhankelijk hiervan kan er meer of minder nadruk gelegd worden op de ' ||
    'implementatie van oplossingsmethoden.</p>');
-insert into document (documentID, lang, content) values (default, 'engels', '<p>In een CDN (Content Distribution Network) kan de controle van het' ||
+insert into document (documentID, lang, content) values (default, 'english', '<p>In een CDN (Content Distribution Network) kan de controle van het' ||
  'distributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling' ||
   'van deze thesis is om de invloed hiervan op de performantie en signaling' ||
    'overhead na te gaan.</p>');
-insert into document (documentID, lang, content) values (default, 'engels', 'SCHEDULING MECHANISMES VOOR AUDIO EN VIDEO STROMEN,<p>De bedoeling ' ||
+insert into document (documentID, lang, content) values (default, 'english', 'SCHEDULING MECHANISMES VOOR AUDIO EN VIDEO STROMEN,<p>De bedoeling ' ||
  'van deze thesis is om te onderzoeken met welke scheduling' ||
  'algoritmes en met welke parameterkeuze voor deze algoritmes de QoS (Quality of Service) voor audio- en videostromen gegarandeerd kan worden, zowel ' ||
   'in een knooppunt als end-to-end.</p>');
-insert into document values(default,'engels','wij hebben geen description');
-insert into document values(default,'engels','<p>Contact adres:<ul><li>ACUNIA N.V. ' ||
+insert into document values(default,'english','wij hebben geen description');
+insert into document values(default,'english','<p>Contact adres:<ul><li>ACUNIA N.V. ' ||
  '<li>Philips-site 5 box 3' ||
   '<li>3001 Leuven' ||
    '<li><a href=\"http://www.acunia.be\">Acunia</a>' ||
@@ -39,11 +39,11 @@ insert into document values(default,'engels','<p>Contact adres:<ul><li>ACUNIA N.
       'ACUNIA heeft ook zijn eigen run-time compiler voor Wonka ontwikkeld, die optimalizatie algoritmen zal gebruiken om de performantie van een embedded systeem ' ||
        'te verhogen. Het doel van deze stage is te onderzoeken hoe de bestaande algoritmen kunnen uitgebreid worden om meer complexe \"<i>refactoringen</i>\" zoals' ||
         ' method inlining te ondersteunen.</p>');
-insert into document values(default,'engels','<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. ' ||
+insert into document values(default,'english','<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. ' ||
  'De bedoeling van deze thesis is tweezijdig. Enerzijds bestaat deze uit het onderzoeken van bestaande MPEG- 2 modellen die een of meerdere van die speciale MPEG-2 features modelleren.' ||
   ' Op basis hiervan kan dan een nieuw model opgesteld worden dat een aantal modellen combineert. Deze thesis kan eventueel door 2 studenten gedaan worden. ' ||
    'Afhankelijk hiervan kan er meer of minder nadruk gelegd worden op de implementatie van oplossingsmethoden.</p>');
-insert into document values(default,'engels','<p>In een CDN (Content Distribution Network) kan de controle van het' ||
+insert into document values(default,'english','<p>In een CDN (Content Distribution Network) kan de controle van het' ||
  'distributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling' ||
   'van deze thesis is om de invloed hiervan op de performantie en signaling' ||
  'overhead na te gaan.</p>');
@@ -73,12 +73,15 @@ insert into employeeRoles values(2,'user');
 insert into employeeRoles values(3,'user');
 insert into employeeRoles values(4,'admin');
 
-
 insert into contactPerson values(2,1);
 
-insert into project values (default,'PROTOTYPE XML DOCUMENT SERVER',1,true,1);
-insert into project values (default,'MODELLEREN VAN MPEG-2 VIDEO BRONNEN',2,false,1);
-insert into project values (default,'INVLOED VAN HET DISTRIBUTIEPROCES OP DE PERFORMANTIE VAN EEN CDN EN OP DE SIGNALING OVERHEAD',1,false,1);
+insert into project values (default,'PROTOTYPE XML DOCUMENT SERVER',1,true);
+insert into project values (default,'MODELLEREN VAN MPEG-2 VIDEO BRONNEN',2,false);
+insert into project values (default,'INVLOED VAN HET DISTRIBUTIEPROCES OP DE PERFORMANTIE VAN EEN CDN EN OP DE SIGNALING OVERHEAD',1,false);
+
+insert into projectresearchgroup values(1,1);
+insert into projectresearchgroup values(2,1);
+insert into projectresearchgroup values(3,1);
 
 insert into projectYear values(2019);
 insert into projectYear values(2020);
@@ -88,12 +91,9 @@ insert into projectYearConnection values(2019,1);
 insert into projectYearConnection values(2020,2);
 insert into projectYearConnection values(2021,3);
 
-insert into projectType values('Master thesis');
-insert into projectType values('Research internship');
-
 insert into projectTypeConnection values('Master thesis',1);
-insert into projectTypeConnection values('Research internship',2);
-insert into projectTypeConnection values('Research internship',3);
+insert into projectTypeConnection values('Research internship 2',2);
+insert into projectTypeConnection values('Research internship 1',3);
 
 insert into projectPromotor values(1,1);
 insert into projectPromotor values(1,2);
@@ -109,13 +109,13 @@ insert into projectDocument values(1,6);
 insert into projectDocument values(2,7);
 insert into projectDocument values(3,8);
 
-insert into student values (default,'Van Leuvenhaege Matthias');
-insert into student values (default,'Molderez Tim');
-insert into student values (default,'Mertens Tim');
+insert into student values (default,'Van Leuvenhaege Matthias',20120120);
+insert into student values (default,'Molderez Tim',20120121);
+insert into student values (default,'Mertens Tim',20120125);
 
-insert into projectRegistration values (3,'bezig',1);
-insert into projectRegistration values (3,'bezig',2);
-insert into projectRegistration values (3,'bezig',3);
+insert into projectRegistration values (3,'busy',1);
+insert into projectRegistration values (3,'busy',2);
+insert into projectRegistration values (3,'busy',3);
 
 insert into bookmark values(1,1);
 insert into bookmark values(2,1);

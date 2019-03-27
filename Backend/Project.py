@@ -26,11 +26,11 @@ class Project:
     #     self.relatedProject = related_project
     #     self.promotor=list()
 
-    def __init__(self, id, title, max_students, active, research_group):
+    def __init__(self, id, title, max_students, active):
         self.title = title
         self.maxStudents = max_students
         self.desc = list()
-        self.researchGroup = research_group
+        self.researchGroup = list
         self.active = active
         self.activeYear = list()
         self.type = list()
@@ -43,5 +43,8 @@ class Project:
 
     def get_researchGroup(self, dbConnect):
         access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])
+        groups=list()
+
         res = access.ResearchGroupAccess(dbConnect)
-        return res.get_researchGroupOnID(self.researchGroup)
+        for i in self.researchGroup:
+            groups.append(res.get_researchGroupOnID(i))

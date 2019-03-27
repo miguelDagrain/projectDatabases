@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS projectTypeConnection;
 DROP TABLE IF EXISTS projectType;
 DROP TABLE IF EXISTS projectYearConnection;
 DROP TABLE IF EXISTS projectYear;
+drop table if exists projectResearchgroup;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS contactPerson;
 DROP TABLE IF EXISTS employeeRoles;
@@ -137,8 +138,14 @@ CREATE TABLE project
   projectID     SERIAL PRIMARY KEY,
   title         VARCHAR(255) NOT NULL,
   maxStudents   INT          NOT NULL,
-  active        BOOLEAN,
-  researchGroup INT REFERENCES researchGroup (groupID)
+  active        BOOLEAN
+);
+
+create table projectResearchgroup
+(
+  projectid int references project(projectID),
+  researchgroupid int references researchGroup(groupID),
+  primary key (projectid,researchgroupid)
 );
 
 CREATE TABLE projectYear
@@ -200,7 +207,8 @@ CREATE TABLE projectDocument
 CREATE TABLE student
 (
   studentID SERIAL PRIMARY KEY,
-  name      VARCHAR(70) NOT NULL
+  name      VARCHAR(70) NOT NULL,
+  studentnumber int NOT NULL
 );
 
 CREATE TABLE projectRegistration
