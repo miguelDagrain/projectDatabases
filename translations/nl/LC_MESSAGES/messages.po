@@ -1,0 +1,248 @@
+# Dutch translations for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-03-11 17:45+0100\n"
+"PO-Revision-Date: 2019-03-11 17:45+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: nl\n"
+"Language-Team: nl <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: html/templates/404.html:8
+msgid "Page not found"
+msgstr ""
+
+#: html/templates/administration-add-group.html:9
+msgid "Group name"
+msgstr ""
+
+#: html/templates/administration-add-group.html:12
+#: html/templates/researchgroups.html:40
+msgid "Abbreviation"
+msgstr ""
+
+#: html/templates/administration-add-group.html:15
+#: html/templates/projects.html:50
+msgid "Disciplines"
+msgstr ""
+
+#: html/templates/administration-add-group.html:18
+#: html/templates/people.html:36 html/templates/people.html:62
+#: html/templates/projects.html:39 html/templates/projects.html:52
+#: html/templates/projects.html:79 html/templates/projects.html:105
+msgid "All"
+msgstr ""
+
+#: html/templates/administration-add-group.html:39
+#: html/templates/researchgroups.html:46
+msgid "Active"
+msgstr ""
+
+#: html/templates/administration-add-group.html:43
+msgid "Address"
+msgstr ""
+
+#: html/templates/administration-add-group.html:47
+msgid "Telephone number"
+msgstr ""
+
+#: html/templates/administration-add-group.html:51
+msgid "Enter"
+msgstr ""
+
+#: html/templates/administration.html:3 html/templates/administration.html:41
+#: html/templates/layout.html:91 html/templates/project.html:3
+#: html/templates/projects.html:3 html/templates/projects.html:119
+msgid "Projects"
+msgstr ""
+
+#: html/templates/administration.html:27 html/templates/layout.html:97
+#: html/templates/researchgroups.html:2 html/templates/researchgroups.html:31
+msgid "Research groups"
+msgstr ""
+
+#: html/templates/administration.html:28
+msgid "add group"
+msgstr ""
+
+#: html/templates/administration.html:29
+msgid "remove group"
+msgstr ""
+
+#: html/templates/administration.html:30
+msgid "modify groups"
+msgstr ""
+
+#: html/templates/administration.html:34
+msgid "Collaborators"
+msgstr ""
+
+#: html/templates/administration.html:35
+msgid "add collaborator"
+msgstr ""
+
+#: html/templates/administration.html:36
+msgid "remove collaborator"
+msgstr ""
+
+#: html/templates/administration.html:37
+msgid "modify collaborators"
+msgstr ""
+
+#: html/templates/administration.html:42
+msgid "modify disciplines"
+msgstr ""
+
+#: html/templates/administration.html:43
+msgid "modify types"
+msgstr ""
+
+#: html/templates/index.html:18
+msgid "Added research group to the database"
+msgstr ""
+
+#: html/templates/index.html:25
+msgid "add research group"
+msgstr ""
+
+#: html/templates/layout.html:85
+msgid "Home"
+msgstr ""
+
+#: html/templates/layout.html:103 html/templates/people.html:19
+#: html/templates/people.html:73
+msgid "People"
+msgstr ""
+
+#: html/templates/layout.html:110
+msgid "Bookmarks"
+msgstr ""
+
+#: html/templates/layout.html:117
+msgid "Administration"
+msgstr ""
+
+#: html/templates/layout.html:148
+msgid "Username"
+msgstr ""
+
+#: html/templates/layout.html:149 html/templates/layout.html:250
+msgid "username"
+msgstr ""
+
+#: html/templates/layout.html:152
+msgid "Password"
+msgstr ""
+
+#: html/templates/layout.html:153 html/templates/layout.html:256
+msgid "password"
+msgstr ""
+
+#: html/templates/people.html:29 html/templates/people.html:77
+#: html/templates/researchgroups.html:37
+msgid "Name"
+msgstr ""
+
+#: html/templates/people.html:34 html/templates/people.html:78
+#: html/templates/projects.html:77
+msgid "Research group"
+msgstr ""
+
+#: html/templates/people.html:60 html/templates/people.html:79
+msgid "Promotor"
+msgstr ""
+
+#: html/templates/people.html:63
+msgid "Yes"
+msgstr ""
+
+#: html/templates/people.html:64
+msgid "No"
+msgstr ""
+
+#: html/templates/people.html:68 html/templates/projects.html:111
+msgid "Search"
+msgstr ""
+
+#: html/templates/project.html:31
+msgid "Project"
+msgstr ""
+
+#: html/templates/project.html:33 html/templates/projects.html:121
+msgid "Explanations"
+msgstr ""
+
+#: html/templates/project.html:38 html/templates/projects.html:126
+msgid "title"
+msgstr ""
+
+#: html/templates/project.html:44
+msgid "promotor"
+msgstr ""
+
+#: html/templates/project.html:50
+msgid "maximum students"
+msgstr ""
+
+#: html/templates/project.html:56 html/templates/projects.html:127
+msgid "research group"
+msgstr ""
+
+#: html/templates/project.html:62
+msgid "description"
+msgstr ""
+
+#: html/templates/projects.html:31
+msgid "Search query"
+msgstr ""
+
+#: html/templates/projects.html:37
+msgid "Type"
+msgstr ""
+
+#: html/templates/projects.html:40
+msgid "Bachelor dissertation"
+msgstr ""
+
+#: html/templates/projects.html:41
+msgid "Master thesis"
+msgstr ""
+
+#: html/templates/projects.html:42
+msgid "Research internship 1"
+msgstr ""
+
+#: html/templates/projects.html:43
+msgid "Research internship 2"
+msgstr ""
+
+#: html/templates/projects.html:103
+msgid "Status"
+msgstr ""
+
+#: html/templates/projects.html:106
+msgid "Available projects only"
+msgstr ""
+
+#: html/templates/projects.html:107
+msgid "Assigned projects only"
+msgstr ""
+
+#: html/templates/projects.html:128
+msgid "assigned students"
+msgstr ""
+
+#: html/templates/researchgroups.html:43
+msgid "Discipline"
+msgstr ""
+

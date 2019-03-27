@@ -1,11 +1,52 @@
-insert into document (documentID, lang, content) values (default, 'english', 'PROTOTYPE XML DOCUMENT SERVER,<p>Contact adres:\n<ul>\n<li>ACUNIA N.V.\n<li>Philips-site 5 box 3\n<li>3001 Leuven\n<li><a href=\"http://www.acunia.be\">Acunia</a>\n</ul>\n<p>\nContext:<br>\nACUNIA is een firma gesticht in 1996, de core business van ACUNIA is de telematica industrie, die telecommunicatie en informatie technologie combineert in mobiele en vaste toestellen. Acunia ontwikkeld ook Wonka<sup>TM</sup>, een cleanroom Virtual Machine voor Java. Wonka<sup>TM</sup> is extreem draagbare en self-contained en kan gebruikt worden in combinatie met zijn eigen RTOS (run-time operation system) om complete oplossingen voor embedded devices aan te bieden. De Wonka VM is Java2 compatibel en de Wonka class libraries bevatten alle classes die nodig zijn om een OSGi framework te ondersteunen.<p>\nACUNIA heeft ook zijn eigen run-time compiler voor Wonka ontwikkeld, die optimalizatie algoritmen zal gebruiken om de performantie van een embedded systeem te verhogen. Het doel van deze stage is te onderzoeken hoe de bestaande algoritmen kunnen uitgebreid worden om meer complexe \"<i>refactoringen</i>\" zoals method inlining te ondersteunen.</p>\n');
-insert into document (documentID, lang, content) values (default, 'english', 'MODELLEREN VAN MPEG-2 VIDEO BRONNEN,<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. De bedoeling van deze thesis is tweezijdig. Enerzijds bestaat deze uit het onderzoeken van bestaande MPEG- 2 modellen die een of meerdere van die speciale MPEG-2 features modelleren. Op basis hiervan kan dan een nieuw model opgesteld worden dat een aantal modellen combineert. Deze thesis kan eventueel door 2 studenten gedaan worden. Afhankelijk hiervan kan er meer of minder nadruk gelegd worden op de implementatie van oplossingsmethoden.</p>\n');
-insert into document (documentID, lang, content) values (default, 'english', '<p>In een CDN (Content Distribution Network) kan de controle van het\ndistributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling\nvan deze thesis is om de invloed hiervan op de performantie en signaling\noverhead na te gaan.</p>\n');
-insert into document (documentID, lang, content) values (default, 'english', 'SCHEDULING MECHANISMES VOOR AUDIO EN VIDEO STROMEN,<p>De bedoeling van deze thesis is om te onderzoeken met welke scheduling\nalgoritmes en met welke parameterkeuze voor deze algoritmes de QoS (Quality of Service) voor audio- en videostromen gegarandeerd kan worden, zowel in een knooppunt als end-to-end.</p>\n');
-insert into document values(default,'english','wij hebben geen description');
-insert into document values(default,'english','<p>Contact adres:\n<ul>\n<li>ACUNIA N.V.\n<li>Philips-site 5 box 3\n<li>3001 Leuven\n<li><a href=\"http://www.acunia.be\">Acunia</a>\n</ul>\n<p>\nContext:<br>\nACUNIA is een firma gesticht in 1996, de core business van ACUNIA is de telematica industrie, die telecommunicatie en informatie technologie combineert in mobiele en vaste toestellen. Acunia ontwikkeld ook Wonka<sup>TM</sup>, een cleanroom Virtual Machine voor Java. Wonka<sup>TM</sup> is extreem draagbare en self-contained en kan gebruikt worden in combinatie met zijn eigen RTOS (run-time operation system) om complete oplossingen voor embedded devices aan te bieden. De Wonka VM is Java2 compatibel en de Wonka class libraries bevatten alle classes die nodig zijn om een OSGi framework te ondersteunen.<p>\nACUNIA heeft ook zijn eigen run-time compiler voor Wonka ontwikkeld, die optimalizatie algoritmen zal gebruiken om de performantie van een embedded systeem te verhogen. Het doel van deze stage is te onderzoeken hoe de bestaande algoritmen kunnen uitgebreid worden om meer complexe \"<i>refactoringen</i>\" zoals method inlining te ondersteunen.</p>\n');
-insert into document values(default,'english','<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. De bedoeling van deze thesis is tweezijdig. Enerzijds bestaat deze uit het onderzoeken van bestaande MPEG- 2 modellen die een of meerdere van die speciale MPEG-2 features modelleren. Op basis hiervan kan dan een nieuw model opgesteld worden dat een aantal modellen combineert. Deze thesis kan eventueel door 2 studenten gedaan worden. Afhankelijk hiervan kan er meer of minder nadruk gelegd worden op de implementatie van oplossingsmethoden.</p>\n');
-insert into document values(default,'english','<p>In een CDN (Content Distribution Network) kan de controle van het\ndistributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling\nvan deze thesis is om de invloed hiervan op de performantie en signaling\noverhead na te gaan.</p>\n');
+insert into document (documentID, lang, content) values (default, 'engels', 'PROTOTYPE XML DOCUMENT SERVER,<p>Contact adres:<ul>' ||
+ '<li>ACUNIA N.V.' ||
+  '<li>Philips-site 5 box 3' ||
+   '<li>3001 Leuven' ||
+    '<li><a href=\"http://www.acunia.be\">Acunia</a>' ||
+     '</ul>' ||
+      '<p>Context:<br>' ||
+       'ACUNIA is een firma gesticht in 1996, de core business van ACUNIA is de telematica industrie, die telecommunicatie en informatie technologie combineert in mobiele en vaste toestellen.' ||
+        ' Acunia ontwikkeld ook Wonka<sup>TM</sup>, een cleanroom Virtual Machine voor Java. Wonka<sup>TM</sup> is extreem draagbare en self-contained en kan gebruikt worden in' ||
+         ' combinatie met zijn eigen RTOS (run-time operation system) om complete oplossingen voor embedded devices aan te bieden. De Wonka VM is Java2 compatibel en de Wonka class libraries bevatten' ||
+          ' alle classes die nodig zijn om een OSGi framework te ondersteunen.<p>' ||
+        'ACUNIA heeft ook zijn eigen run-time compiler voor Wonka ontwikkeld, die optimalizatie algoritmen zal gebruiken om de performantie van een embedded systeem te verhogen. Het doel van deze stage ' ||
+         'is te onderzoeken hoe de bestaande algoritmen kunnen uitgebreid worden om meer complexe \"<i>refactoringen</i>\" zoals method inlining te ondersteunen.</p>');
+insert into document (documentID, lang, content) values (default, 'engels', 'MODELLEREN VAN MPEG-2 VIDEO BRONNEN,<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. ' ||
+ 'De bedoeling van deze thesis is tweezijdig. Enerzijds bestaat deze uit het onderzoeken van bestaande MPEG- 2 modellen die een of meerdere van die speciale MPEG-2 features modelleren. Op basis hiervan kan' ||
+  ' dan een nieuw model opgesteld worden dat een aantal modellen combineert. Deze thesis kan eventueel door 2 studenten gedaan worden. Afhankelijk hiervan kan er meer of minder nadruk gelegd worden op de ' ||
+   'implementatie van oplossingsmethoden.</p>');
+insert into document (documentID, lang, content) values (default, 'engels', '<p>In een CDN (Content Distribution Network) kan de controle van het' ||
+ 'distributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling' ||
+  'van deze thesis is om de invloed hiervan op de performantie en signaling' ||
+   'overhead na te gaan.</p>');
+insert into document (documentID, lang, content) values (default, 'engels', 'SCHEDULING MECHANISMES VOOR AUDIO EN VIDEO STROMEN,<p>De bedoeling ' ||
+ 'van deze thesis is om te onderzoeken met welke scheduling' ||
+ 'algoritmes en met welke parameterkeuze voor deze algoritmes de QoS (Quality of Service) voor audio- en videostromen gegarandeerd kan worden, zowel ' ||
+  'in een knooppunt als end-to-end.</p>');
+insert into document values(default,'engels','wij hebben geen description');
+insert into document values(default,'engels','<p>Contact adres:<ul><li>ACUNIA N.V. ' ||
+ '<li>Philips-site 5 box 3' ||
+  '<li>3001 Leuven' ||
+   '<li><a href=\"http://www.acunia.be\">Acunia</a>' ||
+  '</ul>' ||
+   '<p>' ||
+    'Context:<br>' ||
+     'ACUNIA is een firma gesticht in 1996, de core business van ACUNIA is de telematica industrie, die telecommunicatie en informatie ' ||
+      'technologie combineert in mobiele en vaste toestellen. Acunia ontwikkeld ook Wonka<sup>TM</sup>, een cleanroom Virtual Machine voor Java.' ||
+       ' Wonka<sup>TM</sup> is extreem draagbare en self-contained en kan gebruikt worden in combinatie met zijn eigen RTOS (run-time operation system)' ||
+        ' om complete oplossingen voor embedded devices aan te bieden. De Wonka VM is Java2 compatibel en de Wonka class libraries bevatten alle classes die' ||
+         ' nodig zijn om een OSGi framework te ondersteunen.<p>' ||
+      'ACUNIA heeft ook zijn eigen run-time compiler voor Wonka ontwikkeld, die optimalizatie algoritmen zal gebruiken om de performantie van een embedded systeem ' ||
+       'te verhogen. Het doel van deze stage is te onderzoeken hoe de bestaande algoritmen kunnen uitgebreid worden om meer complexe \"<i>refactoringen</i>\" zoals' ||
+        ' method inlining te ondersteunen.</p>');
+insert into document values(default,'engels','<p>Deze thesis handelt over de typische eigenschappen van MPEG-2 video die niet in MPEG-1 zitten. ' ||
+ 'De bedoeling van deze thesis is tweezijdig. Enerzijds bestaat deze uit het onderzoeken van bestaande MPEG- 2 modellen die een of meerdere van die speciale MPEG-2 features modelleren.' ||
+  ' Op basis hiervan kan dan een nieuw model opgesteld worden dat een aantal modellen combineert. Deze thesis kan eventueel door 2 studenten gedaan worden. ' ||
+   'Afhankelijk hiervan kan er meer of minder nadruk gelegd worden op de implementatie van oplossingsmethoden.</p>');
+insert into document values(default,'engels','<p>In een CDN (Content Distribution Network) kan de controle van het' ||
+ 'distributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling' ||
+  'van deze thesis is om de invloed hiervan op de performantie en signaling' ||
+ 'overhead na te gaan.</p>');
 
 insert into attachment values(1,'jos heeft ook een attachment');
 insert into attachment values(1,'jos heeft zelfs 2 attachments');
@@ -47,6 +88,9 @@ insert into projectYearConnection values(2019,1);
 insert into projectYearConnection values(2020,2);
 insert into projectYearConnection values(2021,3);
 
+insert into projectType values('Master thesis');
+insert into projectType values('Research internship');
+
 insert into projectTypeConnection values('Master thesis',1);
 insert into projectTypeConnection values('Research internship',2);
 insert into projectTypeConnection values('Research internship',3);
@@ -69,9 +113,9 @@ insert into student values (default,'Van Leuvenhaege Matthias');
 insert into student values (default,'Molderez Tim');
 insert into student values (default,'Mertens Tim');
 
-insert into projectRegistration values (3,'busy',1);
-insert into projectRegistration values (3,'busy',2);
-insert into projectRegistration values (3,'busy',3);
+insert into projectRegistration values (3,'bezig',1);
+insert into projectRegistration values (3,'bezig',2);
+insert into projectRegistration values (3,'bezig',3);
 
 insert into bookmark values(1,1);
 insert into bookmark values(2,1);
