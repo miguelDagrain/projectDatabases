@@ -1,7 +1,12 @@
 import psycopg2
+connection=None
 
+def setConnection( dbname, dbuser, dbpass, dbhost):
+    global connection
+    connection=DBConnection(dbname, dbuser, dbpass, dbhost)
 
-class DBConnection:
+class DBConnection():
+
     def __init__(self, dbname, dbuser, dbpass, dbhost):
         try:
             self.conn = psycopg2.connect(
