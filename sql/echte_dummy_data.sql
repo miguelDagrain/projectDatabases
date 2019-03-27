@@ -32,12 +32,15 @@ insert into employeeRoles values(2,'user');
 insert into employeeRoles values(3,'user');
 insert into employeeRoles values(4,'admin');
 
-
 insert into contactPerson values(2,1);
 
-insert into project values (default,'PROTOTYPE XML DOCUMENT SERVER',1,true,1);
-insert into project values (default,'MODELLEREN VAN MPEG-2 VIDEO BRONNEN',2,false,1);
-insert into project values (default,'INVLOED VAN HET DISTRIBUTIEPROCES OP DE PERFORMANTIE VAN EEN CDN EN OP DE SIGNALING OVERHEAD',1,false,1);
+insert into project values (default,'PROTOTYPE XML DOCUMENT SERVER',1,true);
+insert into project values (default,'MODELLEREN VAN MPEG-2 VIDEO BRONNEN',2,false);
+insert into project values (default,'INVLOED VAN HET DISTRIBUTIEPROCES OP DE PERFORMANTIE VAN EEN CDN EN OP DE SIGNALING OVERHEAD',1,false);
+
+insert into projectresearchgroup values(1,1);
+insert into projectresearchgroup values(2,1);
+insert into projectresearchgroup values(3,1);
 
 insert into projectYear values(2019);
 insert into projectYear values(2020);
@@ -65,9 +68,9 @@ insert into projectDocument values(1,6);
 insert into projectDocument values(2,7);
 insert into projectDocument values(3,8);
 
-insert into student values (default,'Van Leuvenhaege Matthias');
-insert into student values (default,'Molderez Tim');
-insert into student values (default,'Mertens Tim');
+insert into student values (default,'Van Leuvenhaege Matthias',20120120);
+insert into student values (default,'Molderez Tim',20120121);
+insert into student values (default,'Mertens Tim',20120125);
 
 insert into projectRegistration values (3,'busy',1);
 insert into projectRegistration values (3,'busy',2);

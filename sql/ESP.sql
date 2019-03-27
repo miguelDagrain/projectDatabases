@@ -137,8 +137,15 @@ CREATE TABLE project
   projectID     SERIAL PRIMARY KEY,
   title         VARCHAR(255) NOT NULL,
   maxStudents   INT          NOT NULL,
-  active        BOOLEAN,
-  researchGroup INT REFERENCES researchGroup (groupID)
+  active        BOOLEAN
+  active        BOOLEAN
+);
+
+create table projectResearchgroup
+(
+  projectid int references project(projectID),
+  researchgroupid int references researchGroup(groupID),
+  primary key (projectid,researchgroupid)
 );
 
 CREATE TABLE projectYear
@@ -198,7 +205,8 @@ CREATE TABLE projectDocument
 CREATE TABLE student
 (
   studentID SERIAL PRIMARY KEY,
-  name      VARCHAR(70) NOT NULL
+  name      VARCHAR(70) NOT NULL,
+  studentnumber int NOT NULL
 );
 
 CREATE TABLE projectRegistration

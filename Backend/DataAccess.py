@@ -611,9 +611,41 @@ class ProjectAccess:
                            (str(project1ID), str(project2ID)))
             if cursor.rowcount == 0:
                 cursor.execute('insert into projectRelation values(%s,%s)', (str(project1ID), str(project2ID)))
+                self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
             print("unable to save tag")
+
+    def get_projectresearchgroups(self,projectID):
+        """
+        gets all the researchgroup id's of a project on a certain id
+        :param projectID: the id of the project
+        :return: a list of researchgroups
+        """
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectResearchgroup where projectid=%s', (str(projectID)))
+        projects = list()
+        for row in cursor:
+            projects.append(row[1])
+        cursor.execute('select * from projectRelation where project2=%s', (str(projectID)))
+        return projects
+
+    def add_projectResearchgroup(self, projectID,researchgroupID):
+        """
+        adds a relation between a project and a resaerchgroup
+        :param projectid: the project
+        :param researchgroupID: the researchgroup
+        """
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from  projectResearchgroup where projectid=%s and researchgroupid=%s',
+                           (str(projectID), str(researchgroupID)))
+            if cursor.rowcount == 0:
+                cursor.execute('insert into projectResearchgroup values(%s,%s)', (str(projectID), str(researchgroupID)))
+                self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            print("unable to save projectresearchgroup")
 
     def get_projects(self):
         """
@@ -625,12 +657,13 @@ class ProjectAccess:
         cursor.execute('select * from project')
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3], row[4])
+            project = Project(row[0], row[1], row[2], row[3])
             project.desc = self.get_projectDocuments(str(project.ID))
             project.activeYear = self.get_projectYears(project.ID)
             project.promotor = self.get_projectPromotors(project.ID)
             project.tag = self.get_projectTags(project.ID)
             project.relatedProject = self.get_projectRelations(project.ID)
+            project.researchGroup=self.get_projectresearchgroups(project.ID)
             projects.append(project)
 
         return projects
@@ -645,12 +678,13 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (str(ID)))
         row = cursor.fetchone()
-        project = Project(row[0], row[1], row[2], row[3], row[4])
+        project = Project(row[0], row[1], row[2], row[3])
         project.desc = self.get_projectDocuments(str(project.ID))
         project.activeYear = self.get_projectYears(project.ID)
         project.promotor = self.get_projectPromotors(project.ID)
         project.tag = self.get_projectTags(project.ID)
         project.relatedProject = self.get_projectRelations(project.ID)
+        project.researchGroup = self.get_projectresearchgroups(project.ID)
         return project
 
     def remove_project(self, ID):
@@ -663,25 +697,30 @@ class ProjectAccess:
         self.dbconnect.commit()
         return
 
+    #TODO: heel dit ding werkt niemeer
     def get_project_filter_data(self):
         from Project import Project
         cursor = self.dbconnect.get_cursor()
-        sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
-              "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
+        # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
+        #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-        sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (" \
-              "SELECT COUNT(*) FROM projectregistration pr WHERE pr.project=p.projectid) as cnt " \
-              "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
-              "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
+        #TODO: dit werkt niemeer :(
+        # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (" \
+        #       "SELECT COUNT(*) FROM projectregistration pr WHERE pr.project=p.projectid) as cnt " \
+        #       "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
+        #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-        cursor.execute(sql);
+        #temp query
+        sql="select * from project;"
+        cursor.execute(sql)
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3], row[4])
+            project = Project(row[0], row[1], row[2], row[3])
             project.type = row[6]
             project.desc = self.get_projectDocuments(str(project.ID))
             project.discipline = row[5]
             project.registeredStudents = row[7]
+            project.researchGroup=self.get_projectresearchgroups(project.ID)
             projects.append(project)
         return projects
 
@@ -795,6 +834,10 @@ class ProjectAccess:
             cursor.execute('delete from projectDocument where projectID²=%s', str(project.ID))
             for i in project.desc:
                 self.add_projectDocument(str(project.ID), i)
+
+            cursor.execute('delete from projectresearchgroup where projectid²=%s', str(project.ID))
+            for i in project.researchGroup:
+                self.add_projectDocument(str(project.ID), str(i))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -876,7 +919,7 @@ class StudentAccess:
         cursor.execute('select * from student')
         students = list()
         for row in cursor:
-            student = Student(row[0], row[1])
+            student = Student(row[0], row[1],row[2])
             student.likedProject = self.get_studentBookmarkProject(student.studentID)
             students.append(student)
         return students
@@ -891,7 +934,7 @@ class StudentAccess:
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM student WHERE studentID=%s ', (str(ID)))
         row = cursor.fetchone()
-        stu = Student(row[0], row[1])
+        stu = Student(row[0], row[1],row[2])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
         return stu
 
@@ -903,11 +946,11 @@ class StudentAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             if stu.studentId is not None:
-                cursor.execute('INSERT INTO student values(%s,%s)',
-                               (str(stu.studentId), stu.name))
+                cursor.execute('INSERT INTO student values(%s,%s,%s)',
+                               (str(stu.studentId), stu.name,str(stu.studentNumber)))
             else:
-                cursor.execute('INSERT INTO student values(default,%s)',
-                               (stu.name))
+                cursor.execute('INSERT INTO student values(default,%s,%s)',
+                               (stu.name,str(stu.studentNumber)))
                 cursor.execute('select lastval()')
                 stu.studentId = cursor.fetchone()[0]
             for i in stu.likedProject:
@@ -1001,7 +1044,7 @@ class StudentAccess:
             cursor.execute('select * from student where studentID=%s', (str(student.studentID)))
             if cursor.rowcount == 0:
                 raise Exception('no student found with that id')
-            cursor.execute('update  student set name= %s where studentId=%s', (student.name, str(student.studentID)))
+            cursor.execute('update  student set name= %s, set studentnumber=%s where studentId=%s', (student.name,str(student.studentNumber), str(student.studentID)))
 
             cursor.execute('delete from bookmark where student=%s', str(student.studentID))
             for i in student.likedProject:

@@ -143,7 +143,7 @@ def group_page(id):
     Pacces = ProjectAccess()
     projects = list()
     for project in Pacces.get_projects():
-        if project.researchGroup == researchGroup.ID:
+        if project.researchGroup[0] == researchGroup.ID:
             projects.append(project)
 
     language = request.cookies.get('lang')
