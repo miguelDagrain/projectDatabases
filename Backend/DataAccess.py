@@ -754,6 +754,7 @@ class ProjectAccess:
             project = Project(row[0], row[1], row[2], row[3])
             projects.append(project)
 
+        #de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
         for project in projects:
             cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
             project.type = list(cursor.fetchall())
