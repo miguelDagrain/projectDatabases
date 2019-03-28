@@ -19,6 +19,7 @@
 <script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
 <script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
 <script src="{{ url_for('static', filename='js/multiple-text-input.js') }}"></script>
+<script src="{{ url_for('static', filename='js/add-project-ajax.js') }}"></script>
 
 <script src="{{ url_for('static', filename='js/text-input-name-empl-suggestion.js') }}"></script>
 
@@ -150,9 +151,12 @@
              <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('add project') }}</button>
 
              <div id="modal-form-project" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-lg" role="document">
+
+            <!--todo: vragen achter discipline-->
+
                     <div class="modal-content">
-                        <form id="add-project-form" class="modal-body administration-form" action="" method="post">
+                        <form id="add-project-form" class="modal-body administration-form" action="#" onsubmit="return addProject(this)" method="post">
                             <label for="administration-form-title">{{ _('Title') }}:</label>
                             <input type="text" id="administration-form-title" name="Title">
 
@@ -160,8 +164,9 @@
                             <input type="number" id="administration-form-max" name="Maxstudents">
 
                             <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
-                            <div class="dropdown input-block">
+                            <div class="multi-select input-block">
                                 <select name="Researchgroup" id="administration-form-researchgroup">
+                                    <option value="0" >{{ _('All') }}</option>
 
                                      <script>
                                         iter = 0;
@@ -172,9 +177,9 @@
                                      <option value="" id="noGroupName">{{ group.name }}</option>
 
                                      <script>
+                                        iter++;
                                         document.getElementById("noGroupName").setAttribute("value", iter.toString(10));
                                         document.getElementById("noGroupName").removeAttribute("id");
-                                        iter++;
                                      </script>
 
                                      {% endfor %}
@@ -182,15 +187,33 @@
                                 </select>
                             </div>
 
-                            <label for="administration-form-description">{{ _('description') }}:</label>
-                            <div class="administration-form-textarea input-block">
-                                <textarea class="tinymce" id="administration-form-description" name="Description"></textarea>
+                            <label for="administration-form-discipline">{{ _('Discipline') }}:</label>
+                            <div class="multi-select input-block">
+                                <select id="administration-form-discipline" name="Discipline">
+                                    <option value="0" >{{ _('All') }}</option>
+
+                                    <script>
+                                        iter = 0;
+                                    </script>
+
+                                    {% for discipline in r_disciplines %}
+
+                                    <option value="" id="noDiscipline">{{ discipline }}</option>
+
+                                    <script>
+                                       iter++;
+                                       document.getElementById("noDiscipline").setAttribute("value", iter.toString(10));
+                                       document.getElementById("noDiscipline").removeAttribute("id");
+                                    </script>
+
+                                     {% endfor %}
+                                </select>
                             </div>
 
                             <label for="administration-form-type">{{ _('Type') }}:</label>
                             <div class="multi-select input-block">
                                 <select id="administration-form-type" name="Type">
-                                    <option value="0" >{{ _('All') }}</option>
+                                     <option value="0" >{{ _('All') }}</option>
 
                                      <script>
                                         iter = 0;
@@ -210,13 +233,18 @@
                                 </select>
                             </div>
 
+                            <label for="administration-form-description">{{ _('description') }}:</label>
+                            <div class="administration-form-textarea input-block">
+                                <textarea class="tinymce" id="administration-form-description" name="Description"></textarea>
+                            </div>
+
                             <div class="multi-text-input" id="Promotors">
                                 <label for="administration-form-promotor">{{ _('Promotors') }}:</label>
 
                                 <div class="input-block">
 
                                     <div class="suggestion-block">
-                                        <input type="text" id="administration-form-promotor" name="Promotor">
+                                        <input type="text" id="administration-form-promotor" name="Promotors">
                                         <div id="administration-form-promotor-suggestions" class="dropdown-items dropdown-hide text-suggestion-input-dropdown"></div>
                                         <script>setUpNameSuggestions($("#administration-form-promotor"), $("#administration-form-promotor-suggestions"))</script>
                                     </div>
@@ -237,8 +265,15 @@
                                 </div>
                             </div>
 
-                            <label for="administration-form-related">{{ _('Related projects') }}</label>
-                            <input type="text" id="administration-form-related" name="Related">
+                            <div class="multi-text-input" id="Related">
+                                <label for="administration-form-related">{{ _('Related projects') }}</label>
+
+                                <div class="input-block">
+
+                                    <input type="text" id="administration-form-related" name="Related">
+                                    <button>{{ _('add') }}</button>
+                                </div>
+                            </div>
 
                             <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
                         </form>

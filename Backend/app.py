@@ -1,6 +1,7 @@
 import json
 import re
 import sys
+import datetime
 from functools import wraps
 
 from flask import *
@@ -12,6 +13,7 @@ from flask_login import login_user, logout_user, current_user
 import dbConnection
 from DataAccess import *
 from Document import *
+from Project import Project
 from Employee import Employee
 from ResearchGroup import ResearchGroup
 from Session import *
@@ -305,7 +307,7 @@ def show_projects():
         for d in proj.desc:
             str = d.text
             rgx = re.compile("(\w[\w']*\w|\w)")
-            list = rgx.findall(str);
+            list = rgx.findall(str)
             for word in list:
                 if word in pjson['words']:
                     pjson['words'][word] += 1
@@ -319,8 +321,72 @@ def show_projects():
 
 
 @app.route("/projects/", methods=["POST"])
-def add_projects():
+def add_project():
+
     access = FullDataAccess()
+
+    title = request.form.get("Title")
+
+
+    maxStudents = request.form.get("Maxstudents")
+
+    project = Project(None, title, maxStudents, True)
+
+
+    researchGroupNrs = request.form.get("Researchgroup")
+
+    for researchGroupNr in researchGroupNrs:
+        project.researchGroup.append(int(researchGroupNr)-1)
+
+
+    #todo: aanpassen zodat documenten in andere talen kunnen worden toegevoegd
+    descriptionText = request.form.get("Description")
+
+    project.desc.append(Document(None, "dutch", descriptionText))
+
+
+    typeNrs = request.form.get("Type")
+    typeOptions = access.get_projectType()
+
+    for typeNr in typeNrs:
+        project.type.append(typeOptions[int(typeNr)-1])
+
+    disciplineNrs = request.form.get("Discipline")
+
+    for disciplineNr in disciplineNrs:
+        project.discipline.append(int(disciplineNr)-1)
+
+
+    #todo: toevoegen zodat er onderscheid is tussen promotors en begeleiders
+    promotorsNameArray = request.form.get("Promotors")
+
+    promotorOptions = access.get_employees()
+    promotorNameId = {promotorOption.name:promotorOption.id for promotorOption in promotorOptions}
+
+    for promotorName in promotorsNameArray:
+        if promotorName in promotorNameId: #dit zal normaal gezien true geven voor alle mogelijke inputs omdat javascript hierop al controleerde
+            project.promotor.append(promotorNameId[promotorName])
+
+
+    tags = request.form.get("Tags")
+    project.tag = list(tags)
+
+
+    related = request.form.get("Related")
+
+    relatedProjectOptions = access.get_projects()
+    relatedProjectTitleId = {relatedProjectOption.title:relatedProjectOption.ID for relatedProjectOption in relatedProjectOptions}
+
+    for relatedProjectTitle in related:
+        if relatedProjectTitle in relatedProjectTitleId:
+            project.relatedProject.append(relatedProjectTitleId[relatedProjectTitle])
+
+    now = datetime.now()
+    project.activeYear.append(now.year)
+
+    access.add_project(project)
+
+    return redirect(url_for('show_projects'))
 
     
 

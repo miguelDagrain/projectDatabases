@@ -35,11 +35,11 @@ class DocumentAccess:
         """
         from Document import Document
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM document WHERE documentID=%s', (str(id)))
+        cursor.execute('SELECT * FROM document WHERE documentID=%s', (id,))
         row = cursor.fetchone()
         document = Document(row[0], row[1], row[2])
         cursorAttachment = self.dbconnect.get_cursor()
-        cursorAttachment.execute('select * from attachment where %s=doc', (str(document.ID)))
+        cursorAttachment.execute('select * from attachment where %s=doc', (document.ID,))
         for att in cursorAttachment:
             document.attachment.append(att[1])
         return document
@@ -80,9 +80,10 @@ class DocumentAccess:
                     self.add_attachment(att)
             # get id and return updated object
             self.dbconnect.commit()
-        except:
+            return id
+        except (Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            raise Exception('Unable to save document!')
+            raise Exception('Unable to save document!%s' % error)
 
     def change_Document(self, document):
         """
@@ -477,7 +478,7 @@ class ProjectAccess:
         :return: a list of documents
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectDocument where projectID=%s', (str(projectID)))
+        cursor.execute('select * from projectDocument where projectID=%s', (projectID,))
         desc = list()
         for row in cursor:
             desc.append(self.doc.get_document(row[1]))
@@ -493,12 +494,12 @@ class ProjectAccess:
         try:
             docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO projectDocument values(%s,%s)',
-                           (str(projectID), str(docid)))
+                           (projectID, str(docid)))
             # get id and return updated object
             self.dbconnect.commit()
-        except:
+        except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            raise Exception('Unable to save projectdocument!')
+            raise Exception('Unable to save projectdocument!\n%s' % error)
 
     def get_projectYears(self, projectID):
         """
@@ -521,17 +522,17 @@ class ProjectAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('select * from projectYear where year=%s', (str(year)))
+            cursor.execute('select * from projectYear where year=%s', (year,))
             if cursor.rowcount == 0:
-                cursor.execute('insert into projectYear values(%s)', (str(year)))
+                cursor.execute('insert into projectYear values(%s)', (year,))
             cursor.execute('select * from projectYearConnection where year=%s and projectID=%s',
                            (str(year), str(projectId)))
             if cursor.rowcount == 0:
-                cursor.execute('insert into projectYearConnection values(%s,%s)', (str(year), str(projectId)))
+                cursor.execute('insert into projectYearConnection values(%s,%s)', (year, projectId))
             self.dbconnect.commit()
-        except:
+        except (Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            raise Exception('Unable to save projectYear!')
+            raise Exception('Unable to save projectYear!\n%s' % error)
 
     def get_typesFromProject(self, projectID):
         """
@@ -555,13 +556,13 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('select * from projectTypeConnection where type=%s and projectID=%s',
-                           (str(type), str(projectId)))
+                           (str(type), projectId))
             if cursor.rowcount == 0:
-                cursor.execute('insert into projectTypeConnection values(%s,%s)', (str(type), str(projectId)))
+                cursor.execute('insert into projectTypeConnection values(%s,%s)', (str(type), projectId))
             self.dbconnect.commit()
-        except:
+        except (Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            raise Exception('Unable to save projectType!')
+            raise Exception('Unable to save projectType!\n%s' % error)
 
     def get_projectPromotors(self, projectID):
         """
@@ -857,27 +858,27 @@ class ProjectAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO project values(default,%s,%s,%s,%s)',
-                           (proj.title, str(proj.maxStudents), proj.active, proj.researchGroup))
+            cursor.execute('INSERT INTO project values(default,%s,%s,%s)',
+                           (proj.title, str(proj.maxStudents), proj.active))
             cursor.execute('SELECT LASTVAL()')
-            gid = cursor.fetchone()[0]
-            proj.ID = gid
+            gid = cursor.fetchone()
+            proj.ID = int(gid[0])
             for i in proj.desc:
-                self.add_projectDocument(proj.projectId, i)
+                self.add_projectDocument(proj.ID, i)
             for i in proj.activeYear:
-                self.add_projectYears(gid, i)
+                self.add_projectYears(proj.ID, i)
             for i in proj.type:
-                self.add_projectTypeConnection(gid, i)
+                self.add_projectTypeConnection(proj.ID, i)
             for i in proj.tag:
-                self.add_projectTag(gid, i)
+                self.add_projectTag(proj.ID, i)
             for i in proj.relatedProject:
-                self.add_projectRelation(gid, i)
+                self.add_projectRelation(proj.ID, i)
             for i in proj.promotor:
-                self.add_projectPromotor(gid, i)
+                self.add_projectPromotor(proj.ID, i)
             self.dbconnect.commit()
-        except:
+        except (Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            raise Exception('Unable to save project!')
+            raise Exception('Unable to save project!\n%s' % error)
 
     def change_project(self, project):
         """
