@@ -691,17 +691,41 @@ class ProjectAccess:
         """
         from Project import Project
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from project')
+        sql = "select * from project;"
+        cursor.execute(sql)
         projects = list()
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
-            project.desc = self.get_projectDocuments(str(project.ID))
-            project.activeYear = self.get_projectYears(project.ID)
-            project.promotor = self.get_projectPromotors(project.ID)
-            project.tag = self.get_projectTags(project.ID)
-            project.relatedProject = self.get_projectRelations(project.ID)
-            project.researchGroup=self.get_projectresearchgroups(project.ID)
             projects.append(project)
+
+        # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
+        for project in projects:
+            cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
+            project.type = list(cursor.fetchall())
+
+            project.desc = self.get_projectDocuments(project.ID)
+
+            cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
+            project.discipline = list(cursor.fetchall())
+
+            cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
+                           (project.ID, "succeeded"))
+            project.registeredStudents = list(cursor.fetchall())
+
+            cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
+            project.researchGroup = list(cursor.fetchall())
+
+            cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
+            project.relatedProject = list(cursor.fetchall())
+
+            cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
+            project.promotor = list(cursor.fetchall())
+
+            cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
+            project.tag = list(cursor.fetchall())
+
+            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', [project.ID])
+            project.activeYear = list(cursor.fetchall())
 
         return projects
 
