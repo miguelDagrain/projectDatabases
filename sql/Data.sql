@@ -5020,10 +5020,10 @@ insert into student (studentID, name, studentnumber) values (45,'Andre Kevin',20
 insert into student (studentID, name, studentnumber) values (46,'Schram Ian',20035300);
 insert into student (studentID, name, studentnumber) values (47,'Barra Mariko',20035579);
 insert into student (studentID, name, studentnumber) values (48,'Wiegers Rudolf',20040149);
-insert into student (studentID, name, studentnumber) values (49,'Van Den Enden DavstudentID',20040704);
+insert into student (studentID, name, studentnumber) values (49,'Van Den Enden David',20040704);
 insert into student (studentID, name, studentnumber) values (50,'Van Den Akker Daniel',20040187);
-insert into student (studentID, name, studentnumber) values (51,'Staessens DavstudentID',20015297);
-insert into student (studentID, name, studentnumber) values (52,'De RstudentIDder Johannes',20035129);
+insert into student (studentID, name, studentnumber) values (51,'Staessens David',20015297);
+insert into student (studentID, name, studentnumber) values (52,'De Ridder Johannes',20035129);
 insert into student (studentID, name, studentnumber) values (53,'Vanderstraeten Erik',20040162);
 insert into student (studentID, name, studentnumber) values (54,'Van Den Bogerd Joris',20017248);
 insert into student (studentID, name, studentnumber) values (55,'Van Den Eynde Jeremy',20040267);
@@ -5161,7 +5161,7 @@ insert into student (studentID, name, studentnumber) values (187,'Bojan Arnaudov
 insert into student (studentID, name, studentnumber) values (188,'Viktor Stojkovski',20120869);
 insert into student (studentID, name, studentnumber) values (189,'Rafael Ugaz Riofrio',20124471);
 insert into student (studentID, name, studentnumber) values (190,'Srinivasan Balakrishnan',20124687);
-insert into student (studentID, name, studentnumber) values (191,'Sayed Faheem HastudentIDer',20123579);
+insert into student (studentID, name, studentnumber) values (191,'Sayed Faheem Haider',20123579);
 insert into student (studentID, name, studentnumber) values (192,'Viktor Kunovski',20125497);
 insert into student (studentID, name, studentnumber) values (193,'Gharzai Salehi',20120671);
 insert into student (studentID, name, studentnumber) values (194,'Mohammad Amin Sepasian',20115304);
@@ -5195,7 +5195,7 @@ insert into student (studentID, name, studentnumber) values (221,'Tihon Tomic',2
 insert into student (studentID, name, studentnumber) values (222,'Addis Alemayehu Gebremichael',20145287);
 insert into student (studentID, name, studentnumber) values (223,'Michael Deckers',20145715);
 insert into student (studentID, name, studentnumber) values (224,'Sara Sali',20144832);
-insert into student (studentID, name, studentnumber) values (225,'Istvan DavstudentID',20146406);
+insert into student (studentID, name, studentnumber) values (225,'Istvan David',20146406);
 insert into student (studentID, name, studentnumber) values (226,'Robin Verachtert',20121405);
 insert into student (studentID, name, studentnumber) values (227,'Miguel Camelo Botero',20147066);
 insert into student (studentID, name, studentnumber) values (228,'N',20081535);
@@ -5232,10 +5232,10 @@ insert into student (studentID, name, studentnumber) values (258,'Bruno Dedeken'
 insert into student (studentID, name, studentnumber) values (259,'Jony Van Puymbroeck',20122781);
 insert into student (studentID, name, studentnumber) values (260,'Josse Coen',20134090);
 insert into student (studentID, name, studentnumber) values (261,'Sam Pinxteren',20111524);
-insert into student (studentID, name, studentnumber) values (262,'DavstudentID Danssaert',20104000);
+insert into student (studentID, name, studentnumber) values (262,'David Danssaert',20104000);
 insert into student (studentID, name, studentnumber) values (263,'Tim Leys',20137641);
 insert into student (studentID, name, studentnumber) values (264,'Joey De Pauw',20141918);
-insert into student (studentID, name, studentnumber) values (265,'KlestudentIDi Ismailaj',20124580);
+insert into student (studentID, name, studentnumber) values (265,'Kleidi Ismailaj',20124580);
 insert into student (studentID, name, studentnumber) values (266,'Sebastiaan De Peuter',20143413);
 insert into student (studentID, name, studentnumber) values (267,'Baturay Ofluoglu',20174797);
 insert into student (studentID, name, studentnumber) values (268,'Thomas Hendriks',20139858);
