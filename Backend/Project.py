@@ -30,7 +30,7 @@ class Project:
         self.title = title
         self.maxStudents = max_students
         self.desc = list()
-        self.researchGroup = list
+        self.researchGroup = list()
         self.active = active
         self.activeYear = list()
         self.type = list()

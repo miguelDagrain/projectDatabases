@@ -141,9 +141,16 @@ CREATE TABLE project
   active        BOOLEAN
 );
 
+CREATE TABLE projectDiscipline
+(
+  projectID int references project(projectID),
+  discipline varchar(255) references discipline(subject),
+  primary key (projectID, discipline)
+);
+
 create table projectResearchgroup
 (
-  projectid int references project(projectID),
+  projectID int references project(projectID),
   researchgroupid int references researchGroup(groupID),
   primary key (projectid,researchgroupid)
 );

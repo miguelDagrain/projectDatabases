@@ -184,7 +184,7 @@ class ResearchGroupAccess:
             rgroup.contactID = cursor.fetchone()[0]
         return rgroup
 
-    def get_researchGroupOnID(self, id):
+    def get_researchGroupOnID(self, ids):
         """
         gets a researchgroup from teh database based on an id
         :param id: the id
@@ -192,14 +192,20 @@ class ResearchGroupAccess:
         """
         from ResearchGroup import ResearchGroup
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (str(id)))
-        row = cursor.fetchone()
-        rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
-        rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
-        cursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
-        if cursor.rowcount > 0:
-            rgroup.contactID = cursor.fetchone()[0]
-        return rgroup
+
+        rgroups = list()
+
+        for id in ids:
+            cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (id,))
+            row = cursor.fetchone()
+            rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
+            rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
+            cursor.execute('select * from contactPerson where rgroup=%s', (rgroup.ID,))
+            if cursor.rowcount > 0:
+                rgroup.contactID = cursor.fetchone()[0]
+            rgroups.append(rgroup)
+
+        return rgroups
 
     def remove_researchGroup(self, id):
         """
@@ -659,7 +665,6 @@ class ProjectAccess:
         projects = list()
         for row in cursor:
             projects.append(row[1])
-        cursor.execute('select * from projectRelation where project2=%s', (str(projectID)))
         return projects
 
     def add_projectResearchgroup(self, projectID,researchgroupID):
@@ -729,7 +734,6 @@ class ProjectAccess:
         self.dbconnect.commit()
         return
 
-    #TODO: heel dit ding werkt niemeer
     def get_project_filter_data(self):
         from Project import Project
         cursor = self.dbconnect.get_cursor()
@@ -748,12 +752,35 @@ class ProjectAccess:
         projects = list()
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
-            project.type = row[6]
-            project.desc = self.get_projectDocuments(str(project.ID))
-            project.discipline = row[5]
-            project.registeredStudents = row[7]
-            project.researchGroup=self.get_projectresearchgroups(project.ID)
             projects.append(project)
+
+        for project in projects:
+            cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
+            project.type = list(cursor.fetchall())
+
+            project.desc = self.get_projectDocuments(project.ID)
+
+            cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
+            project.discipline = list(cursor.fetchall())
+
+            cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s', (project.ID, "succeeded"))
+            project.registeredStudents = list(cursor.fetchall())
+
+            cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
+            project.researchGroup = list(cursor.fetchall())
+
+            cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
+            project.relatedProject = list(cursor.fetchall())
+
+            cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
+            project.promotor = list(cursor.fetchall())
+
+            cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
+            project.tag = list(cursor.fetchall())
+
+            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', [project.ID])
+            project.activeYear = list(cursor.fetchall())
+
         return projects
 
     def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):

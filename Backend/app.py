@@ -318,6 +318,12 @@ def show_projects():
                            alt=json.dumps(projData, default=lambda x: x.__dict__))
 
 
+@app.route("/projects/", methods=["POST"])
+def add_projects():
+    access = FullDataAccess()
+
+    
+
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods=['GET'])
 def project_page(id):
