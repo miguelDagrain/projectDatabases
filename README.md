@@ -18,6 +18,10 @@ optional: insert dummy_data
 
 > psql -U pdb -d pdbdatabase -f sql/echte_dummy_data.sql
 
+insert Datadump data:
+
+> psql -U pdb -d pdbdatabase -f sql/Data.sql
+
 
 ###Flask-Babel
  If you only want the translations you only have to do the compile step
