@@ -275,7 +275,6 @@
 
     function filterProjects(){
 
-        console.log("called");
         var searchQ = document.getElementById("SQInput").value;
 
         // Init
@@ -321,9 +320,6 @@
             }
         }
 
-        var disc = "";
-        var types = document.getElementById("type");
-        var disciplines = document.getElementById("disciplines");
         var status = document.getElementById("status");
         var rg = document.getElementById("researchGroup");
         var ms = document.getElementsByClassName("multi-select");
@@ -343,17 +339,12 @@
                 selectedDisciplines.push(ms[1].children[2].children[i].textContent);
             }
         }
-
+        /*
         console.log(selectedTypes);
         console.log(selectedDisciplines);
         console.log(rg.options[rg.selectedIndex].text);
         console.log(status.options[status.selectedIndex].text);
-
-        if ( disciplines.selectedIndex >= 0) {
-
-            disc = disciplines.options[disciplines.selectedIndex];
-        }
-
+        */
 
         // Weighted relevance for each token
         for ( var i in result){
@@ -366,7 +357,16 @@
                 continue;
             }
 
-            if (result[i].researchGroup !== rg.options[rg.selectedIndex].text && rg.selectedIndex>0){
+            var rgFound = false;
+            for (var rgn in result[i].researchGroup){
+                if (result[i].researchGroup[rgn] == rg.options[rg.selectedIndex].text){
+                    rgFound = true;
+                    break;
+                }
+
+            }
+
+            if (!rgFound && rg.selectedIndex>0){
                 result[i].relevance = 0;
                 continue;
             }
