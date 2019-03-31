@@ -21,7 +21,7 @@ class DocumentAccess:
         for row in cursor:
             document = Document(row[0], row[1], row[2])
             cursorAttachment = self.dbconnect.get_cursor()
-            cursorAttachment.execute('select * from attachment where %s=doc', (str(document.ID)))
+            cursorAttachment.execute('select * from attachment where %s=doc', (document.ID,))
             for att in cursorAttachment:
                 document.attachment.append(Attachment(att[0], att[1]))
             documents.append(document)
@@ -53,9 +53,9 @@ class DocumentAccess:
         try:
             cursor = self.dbconnect.get_cursor()
             cursor.execute('select * from attachment where doc=%s and attachment=%s',
-                           (str(documentID), str(attachment)))
+                           (documentID, attachment))
             if cursor.rowcount == 0:
-                cursor.execute('insert into attachment values(%s,%s)', (str(documentID), str(attachment)))
+                cursor.execute('insert into attachment values(%s,%s)', (documentID, str(attachment)))
                 self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -93,13 +93,13 @@ class DocumentAccess:
         try:
             if document.ID is not None:
                 cursor = self.dbconnect.get_cursor()
-                cursor.execute('select * from document where documentID=%s', (str(document.ID)))
+                cursor.execute('select * from document where documentID=%s', (document.ID,))
                 if cursor.rowcount == 0:
                     raise Exception('no document with that ID found')
                 cursor.execute('update document set lang= %s, content= %s where documentID=%s',
-                               (document.language, document.text, str(document.ID)))
+                               (document.language, document.text, document.ID))
 
-                cursor.execute('delete from attachment where doc=%s', (str(document.ID)))
+                cursor.execute('delete from attachment where doc=%s', (document.ID,))
                 for i in document.attachment:
                     self.add_attachment(document.ID, i)
                 self.dbconnect.commit()
@@ -126,7 +126,7 @@ class ResearchGroupAccess:
         :return: a list of descriptions
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from groupDescription where groupID=%s', (str(groupid)))
+        cursor.execute('select * from groupDescription where groupID=%s', (groupid,))
         desc = list()
         for row in cursor:
             desc.append(self.doc.get_document(row[1]))
@@ -142,7 +142,7 @@ class ResearchGroupAccess:
         try:
             docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO groupDescription values(%s,%s)',
-                           (str(groupid), str(docid)))
+                           (groupid, docid))
             # get id and return updated object
             self.dbconnect.commit()
         except:
@@ -162,7 +162,7 @@ class ResearchGroupAccess:
             rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
             rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
             newcursor = self.dbconnect.get_cursor()
-            newcursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
+            newcursor.execute('select * from contactPerson where rgroup=%s', (rgroup.ID,))
             if newcursor.rowcount > 0:
                 rgroup.contactID = newcursor.fetchone()[0]
             rgroups.append(rgroup)
@@ -176,16 +176,16 @@ class ResearchGroupAccess:
         """
         from ResearchGroup import ResearchGroup
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM researchGroup WHERE name=%s', (name))
+        cursor.execute('SELECT * FROM researchGroup WHERE name=%s', (name,))
         row = cursor.fetchone()
         rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
-        cursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
+        cursor.execute('select * from contactPerson where rgroup=%s', (rgroup.ID,))
         if cursor.rowcount > 0:
             rgroup.contactID = cursor.fetchone()[0]
         return rgroup
 
-    def get_researchGroupOnID(self, ids):
+    def get_researchGroupsOnIDs(self, ids):
         """
         gets a researchgroup from teh database based on an id
         :param id: the id
@@ -214,7 +214,7 @@ class ResearchGroupAccess:
         :param id: the id
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('DELETE FROM researchGroup WHERE groupID=%s', (str(id)))
+        cursor.execute('DELETE FROM researchGroup WHERE groupID=%s', (id,))
         self.dbconnect.commit()
 
     def changeContactPerson(self, eid, groupID):
@@ -225,13 +225,13 @@ class ResearchGroupAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('SELECT * FROM contactPerson WHERE rgroup=%s', (str(groupID)))
+            cursor.execute('SELECT * FROM contactPerson WHERE rgroup=%s', (groupID,))
             if cursor.rowcount == 0:
-                cursor.execute('insert into contactperson values(%s,%s)', (str(eid), str(groupID)))
+                cursor.execute('insert into contactperson values(%s,%s)', (eid, groupID))
             else:
                 if (cursor.fetchone()[0] != eid):
                     # waarom zegt pycharm hier constant dat hem '=' verwacht terwijl dat er staat ???
-                    cursor.execute('update contactPerson set employee= %s where rgroup=%s', (str(eid), str(groupID)))
+                    cursor.execute('update contactPerson set employee= %s where rgroup=%s', (eid, groupID))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -268,14 +268,14 @@ class ResearchGroupAccess:
         try:
             if group.ID == None:
                 raise Exception('no id given')
-            cursor.execute('select * from researchgroup where groupID=%s', (str(group.ID)))
+            cursor.execute('select * from researchgroup where groupID=%s', (group.ID,))
             if cursor.rowcount == 0:
                 raise Exception('no researchGroup found with that id')
             cursor.execute(
                 'update researchGroup set name= %s,abbreviation= %s,discipline= %s,active= %s,address= %s,telNr= %s where groupId=%s',
                 (group.name, group.abbreviation, group.discipline, group.active, group.address, str(group.telNr)),
                 str(group.ID))
-            cursor.execute('delete from groupDescription where groupID=%s', str(group.ID))
+            cursor.execute('delete from groupDescription where groupID=%s', (group.ID,))
             for i in group.desc:
                 self.add_researchGroupDescription(i, str(group.ID))
             self.dbconnect.commit()
@@ -314,7 +314,7 @@ class EmployeeAccess:
         """
         from Employee import Employee
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (str(id)))
+        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (id,))
         row = cursor.fetchone()
         return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
@@ -345,7 +345,7 @@ class EmployeeAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('DELETE FROM employee WHERE employeeID=%s', (str(id)))
+            cursor.execute('DELETE FROM employee WHERE employeeID=%s', (id,))
             self.dbconnect.commit()
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
@@ -389,7 +389,7 @@ class EmployeeAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO employeeRoles values(%s,%s)',
-                           (str(id), role))
+                           (id, role))
             # get id and return updated object
             self.dbconnect.commit()
         except(Exception, self.dbconnect.get_error()) as error:
@@ -403,7 +403,7 @@ class EmployeeAccess:
         :return: a list of roles that the employee has
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from employeeRoles where employee=%s', (str(id)))
+        cursor.execute('select * from employeeRoles where employee=%s', (id,))
         roles = list()
         for row in cursor:
             roles.append(row[1])
@@ -418,13 +418,13 @@ class EmployeeAccess:
         try:
             if employee.ID == None:
                 raise Exception('no id given')
-            cursor.execute('select * from employee where employeeID=%s', (str(employee.ID)))
+            cursor.execute('select * from employee where employeeID=%s', (employee.ID,))
             if cursor.rowcount == 0:
                 raise Exception('no employee found with that id')
             cursor.execute(
                 'update employee set name= %s,email= %s,office= %s,researchgroup= %s,title= %s,INTernORextern= %s,active= %s,promotor= %s where employeeID=%s',
-                (employee.name, employee.email, employee.office, str(employee.research_group), employee.title,
-                 employee.internOrExtern, employee.active, str(employee.promotor), str(employee.ID)))
+                (employee.name, employee.email, employee.office, employee.research_group, employee.title,
+                 employee.internOrExtern, employee.active, employee.promotor, employee.ID))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -438,7 +438,7 @@ class EmployeeAccess:
         """
         from Project import Project
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select project from projectpromotor where employee=%s', str(id))
+        cursor.execute('select project from projectpromotor where employee=%s', (id,))
 
         projectsId = list()
         for row in cursor:
@@ -446,11 +446,11 @@ class EmployeeAccess:
 
         projects = list()
         for projId in projectsId:
-            cursor.execute('select * from project where projectID=%s', str(projId)) #returns exactly one row from the table
+            cursor.execute('select * from project where projectID=%s', (projId,)) #returns exactly one row from the table
             row = cursor.fetchone()
             project = Project(row[0], row[1], row[2], row[3], row[4])
 
-            cursor.execute('select year from projectYearConnection where projectID=%s', str(projId))
+            cursor.execute('select year from projectYearConnection where projectID=%s', (projId,))
 
             years = list()
             for row in cursor:
@@ -494,7 +494,7 @@ class ProjectAccess:
         try:
             docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO projectDocument values(%s,%s)',
-                           (projectID, str(docid)))
+                           (projectID, docid))
             # get id and return updated object
             self.dbconnect.commit()
         except(Exception, self.dbconnect.get_error()) as error:
@@ -508,7 +508,7 @@ class ProjectAccess:
         :return: a list of years
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectYearConnection where projectID=%s', (str(projectID)))
+        cursor.execute('select * from projectYearConnection where projectID=%s', (projectID,))
         years = list()
         for i in cursor:
             years.append(i[0])
@@ -526,7 +526,7 @@ class ProjectAccess:
             if cursor.rowcount == 0:
                 cursor.execute('insert into projectYear values(%s)', (year,))
             cursor.execute('select * from projectYearConnection where year=%s and projectID=%s',
-                           (str(year), str(projectId)))
+                           (year, projectId))
             if cursor.rowcount == 0:
                 cursor.execute('insert into projectYearConnection values(%s,%s)', (year, projectId))
             self.dbconnect.commit()
@@ -541,7 +541,7 @@ class ProjectAccess:
         :return: a list of types
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectYearConnection where projectID=%s', (str(projectID)))
+        cursor.execute('select * from projectYearConnection where projectID=%s', (projectID,))
         types = list()
         for i in cursor:
             types.append(i[0])
@@ -559,7 +559,7 @@ class ProjectAccess:
                            (str(type), projectId))
             if cursor.rowcount == 0:
                 cursor.execute('insert into projectTypeConnection values(%s,%s)', (str(type), projectId))
-            self.dbconnect.commit()
+                self.dbconnect.commit()
         except (Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
             raise Exception('Unable to save projectType!\n%s' % error)
@@ -571,7 +571,7 @@ class ProjectAccess:
         :return: a list of ids for the promoters
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectPromotor where project=%s', (str(projectID)))
+        cursor.execute('select * from projectPromotor where project=%s', (projectID,))
         proms = list()
         for row in cursor:
             proms.append(row[0])
@@ -586,12 +586,13 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('select * from projectPromotor where employee=%s and project=%s',
-                           (str(employeeId), str(projectID)))
+                           (employeeId, projectID))
             if cursor.rowcount == 0:
-                cursor.execute('insert into projectPromotor values(%s,%s)', (str(employeeId), str(projectID)))
-        except:
+                cursor.execute('insert into projectPromotor values(%s,%s)', (employeeId, projectID))
+                self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
-            print("unable to safe promotor")
+            print("unable to safe promotor\n%s" % error)
 
     def get_projectTags(self, projectID):
         """
@@ -600,7 +601,7 @@ class ProjectAccess:
         :return: a list of tags
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectTag where project=%s', (str(projectID)))
+        cursor.execute('select * from projectTag where project=%s', (projectID,))
         tags = list()
         for row in cursor:
             tags.append(row[0])
@@ -614,9 +615,10 @@ class ProjectAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('select * from projectTag where tag=%s and project=%s', tag, str(projectID))
+            cursor.execute('select * from projectTag where tag=%s and project=%s', (str(tag), projectID))
             if cursor.rowcount == 0:
-                cursor.execute('insert into projectTag values(%s,%s)', (tag, str(projectID)))
+                cursor.execute('insert into projectTag values(%s,%s)', (str(tag), projectID))
+                self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
             print("unable to save tag")
@@ -628,11 +630,11 @@ class ProjectAccess:
         :return:a list of related projects id's
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectRelation where project1=%s', (str(projectID)))
+        cursor.execute('select * from projectRelation where project1=%s', (projectID,))
         related = list()
         for row in cursor:
             related.append(row[1])
-        cursor.execute('select * from projectRelation where project2=%s', (str(projectID)))
+        cursor.execute('select * from projectRelation where project2=%s', (projectID,))
         for row in cursor:
             if row[0] not in related:
                 related.append(row[0])
@@ -647,9 +649,9 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('select * from  projectRelation where project1=%s and project2=%s',
-                           (str(project1ID), str(project2ID)))
+                           (project1ID, project2ID))
             if cursor.rowcount == 0:
-                cursor.execute('insert into projectRelation values(%s,%s)', (str(project1ID), str(project2ID)))
+                cursor.execute('insert into projectRelation values(%s,%s)', (project1ID, project2ID))
                 self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -662,7 +664,7 @@ class ProjectAccess:
         :return: a list of researchgroups
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectResearchgroup where projectid=%s', (str(projectID)))
+        cursor.execute('select * from projectResearchgroup where projectid=%s', (projectID,))
         projects = list()
         for row in cursor:
             projects.append(row[1])
@@ -677,9 +679,9 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('select * from  projectResearchgroup where projectid=%s and researchgroupid=%s',
-                           (str(projectID), str(researchgroupID)))
+                           (projectID, researchgroupID))
             if cursor.rowcount == 0:
-                cursor.execute('insert into projectResearchgroup values(%s,%s)', (str(projectID), str(researchgroupID)))
+                cursor.execute('insert into projectResearchgroup values(%s,%s)', (projectID, researchgroupID))
                 self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -725,7 +727,7 @@ class ProjectAccess:
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
 
-            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', [project.ID])
+            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
             project.activeYear = list(cursor.fetchall())
 
         return projects
@@ -738,10 +740,10 @@ class ProjectAccess:
         """
         from Project import Project
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM project WHERE projectID=%s ', (str(ID)))
+        cursor.execute('SELECT * FROM project WHERE projectID=%s ', (ID,))
         row = cursor.fetchone()
         project = Project(row[0], row[1], row[2], row[3])
-        project.desc = self.get_projectDocuments(str(project.ID))
+        project.desc = self.get_projectDocuments(project.ID)
         project.activeYear = self.get_projectYears(project.ID)
         project.promotor = self.get_projectPromotors(project.ID)
         project.tag = self.get_projectTags(project.ID)
@@ -755,7 +757,7 @@ class ProjectAccess:
         :param ID: the id of the project you want to remove
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('DELETE FROM project WHERE projectID=%s', (str(ID)))
+        cursor.execute('DELETE FROM project WHERE projectID=%s', (ID,))
         self.dbconnect.commit()
         return
 
@@ -804,7 +806,7 @@ class ProjectAccess:
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
 
-            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', [project.ID])
+            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
             project.activeYear = list(cursor.fetchall())
 
         return projects
@@ -859,7 +861,7 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO project values(default,%s,%s,%s)',
-                           (proj.title, str(proj.maxStudents), proj.active))
+                           (proj.title, proj.maxStudents, proj.active))
             cursor.execute('SELECT LASTVAL()')
             gid = cursor.fetchone()
             proj.ID = int(gid[0])
@@ -875,6 +877,8 @@ class ProjectAccess:
                 self.add_projectRelation(proj.ID, i)
             for i in proj.promotor:
                 self.add_projectPromotor(proj.ID, i)
+            for i in proj.researchGroup:
+                self.add_projectResearchgroup(proj.ID, i)
             self.dbconnect.commit()
         except (Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
@@ -889,40 +893,40 @@ class ProjectAccess:
         try:
             if project.ID == None:
                 raise Exception('no id given')
-            cursor.execute('select * from project where projectID=%s', (str(project.ID)))
+            cursor.execute('select * from project where projectID=%s', (project.ID,))
             if cursor.rowcount == 0:
                 raise Exception('no project found with that id')
             cursor.execute(
                 'update project set title= %s,maxStudents= %s,active= %s,researchGroup= %s where projectID=%s',
-                (project.title, str(project.maxStudents), project.active, str(project.researchGroup), str(project.ID)))
+                (project.title, project.maxStudents, project.active, project.researchGroup, project.ID))
 
-            cursor.execute('delete from projectYearConnection where projectID=%s', str(project.ID))
+            cursor.execute('delete from projectYearConnection where projectID=%s', (project.ID,))
             for i in project.activeYear:
-                self.add_projectYears(str(project.ID), i)
+                self.add_projectYears(project.ID, i)
 
-            cursor.execute('delete from projectTypeConnection where projectID=%s', str(project.ID))
+            cursor.execute('delete from projectTypeConnection where projectID=%s', (project.ID,))
             for i in project.type:
-                self.add_projectTypeConnection(str(project.ID), i)
+                self.add_projectTypeConnection(project.ID, i)
 
-            cursor.execute('delete from projectPromotor where project=%s', str(project.ID))
+            cursor.execute('delete from projectPromotor where project=%s', (project.ID,))
             for i in project.promotor:
-                self.add_projectPromotor(str(project.ID), i)
+                self.add_projectPromotor(project.ID, i)
 
-            cursor.execute('delete from projectTag where project=%s', str(project.ID))
+            cursor.execute('delete from projectTag where project=%s', (project.ID,))
             for i in project.tag:
-                self.add_projectTag(str(project.ID), i)
+                self.add_projectTag(project.ID, i)
 
-            cursor.execute('delete from projectRelation where project1=%s', str(project.ID))
+            cursor.execute('delete from projectRelation where project1=%s', (project.ID,))
             for i in project.relatedProject:
-                self.add_projectRelation(str(project.ID), i)
+                self.add_projectRelation(project.ID, i)
 
-            cursor.execute('delete from projectDocument where projectID²=%s', str(project.ID))
+            cursor.execute('delete from projectDocument where projectID=%s', (project.ID,))
             for i in project.desc:
-                self.add_projectDocument(str(project.ID), i)
+                self.add_projectDocument(project.ID, i)
 
-            cursor.execute('delete from projectresearchgroup where projectid²=%s', str(project.ID))
+            cursor.execute('delete from projectresearchgroup where projectid=%s', (project.ID,))
             for i in project.researchGroup:
-                self.add_projectDocument(str(project.ID), str(i))
+                self.add_projectDocument(project.ID, i)
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -946,7 +950,7 @@ class StudentAccess:
         """
         from Bookmark import Bookmark
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where student=%s', (str(studentId)))
+        cursor.execute('select * from bookmark where student=%s', (studentId,))
         bookmarks = list()
         for row in cursor:
             bookmarker = Bookmark(row[0], row[1])
@@ -961,7 +965,7 @@ class StudentAccess:
         :return: a list of projects
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where student=%s', (str(studentId)))
+        cursor.execute('select * from bookmark where student=%s', (studentId,))
         projects = list()
         for row in cursor:
             projects.append(self.project.get_project(row[0]))
@@ -976,7 +980,7 @@ class StudentAccess:
         """
         from Bookmark import Bookmark
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where project=%s', (str(projectId)))
+        cursor.execute('select * from bookmark where project=%s', (projectId,))
         bookmarks = list()
         for row in cursor:
             bookmark = Bookmark(row[0], row[1])
@@ -990,9 +994,9 @@ class StudentAccess:
         :param studentId: the student id
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where project=%s and student=%s', (str(projectId), str(studentId)))
+        cursor.execute('select * from bookmark where project=%s and student=%s', (projectId, studentId))
         if cursor.rowcount == 0:
-            cursor.execute('insert into bookmark values(%s,%s)', (str(projectId), str(studentId)))
+            cursor.execute('insert into bookmark values(%s,%s)', (projectId, studentId))
 
     def get_students(self):
         """
@@ -1017,7 +1021,7 @@ class StudentAccess:
         """
         from Student import Student
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM student WHERE studentID=%s ', (str(ID)))
+        cursor.execute('SELECT * FROM student WHERE studentID=%s ', (ID,))
         row = cursor.fetchone()
         stu = Student(row[0], row[1],row[2])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
@@ -1032,10 +1036,10 @@ class StudentAccess:
         try:
             if stu.studentId is not None:
                 cursor.execute('INSERT INTO student values(%s,%s,%s)',
-                               (str(stu.studentId), stu.name,str(stu.studentNumber)))
+                               (stu.studentId, stu.name, stu.studentNumber))
             else:
                 cursor.execute('INSERT INTO student values(default,%s,%s)',
-                               (stu.name,str(stu.studentNumber)))
+                               (stu.name, stu.studentNumber))
                 cursor.execute('select lastval()')
                 stu.studentId = cursor.fetchone()[0]
             for i in stu.likedProject:
@@ -1069,7 +1073,7 @@ class StudentAccess:
         """
         from ProjectRegistration import ProjectRegistration
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectRegistration where project=%s', (str(projectID)))
+        cursor.execute('select * from projectRegistration where project=%s', (projectID,))
         prs = list()
         for row in cursor:
             pr = ProjectRegistration(row[0], row[1], row[2])
@@ -1084,7 +1088,7 @@ class StudentAccess:
         """
         from ProjectRegistration import ProjectRegistration
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectRegistration where student=%s', (str(studentID)))
+        cursor.execute('select * from projectRegistration where student=%s', (studentID,))
         prs = list()
         for row in cursor:
             pr = ProjectRegistration(row[0], row[1], row[2])
@@ -1110,7 +1114,7 @@ class StudentAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO projectRegistration values(%s,%s,%s)',
-                           (str(pr.project), pr.status, str(student)))
+                           (pr.project, str(pr.status), student))
             # get id and return updated object
             self.dbconnect.commit()
         except:
@@ -1126,12 +1130,12 @@ class StudentAccess:
         try:
             if student.studentID is None:
                 raise Exception('no id given')
-            cursor.execute('select * from student where studentID=%s', (str(student.studentID)))
+            cursor.execute('select * from student where studentID=%s', (student.studentID,))
             if cursor.rowcount == 0:
                 raise Exception('no student found with that id')
-            cursor.execute('update  student set name= %s, set studentnumber=%s where studentId=%s', (student.name,str(student.studentNumber), str(student.studentID)))
+            cursor.execute('update  student set name= %s, set studentnumber=%s where studentId=%s', (student.name, student.studentNumber, student.studentID))
 
-            cursor.execute('delete from bookmark where student=%s', str(student.studentID))
+            cursor.execute('delete from bookmark where student=%s', (student.studentID,))
             for i in student.likedProject:
                 self.add_bookmark(i, str(student.studentID))
             self.dbconnect.commit()
@@ -1192,7 +1196,7 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO title values(%s)', (title))
+            cursor.execute('INSERT INTO title values(%s)', (title,))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -1217,7 +1221,7 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO INTEXT values(%s)', (origin))
+            cursor.execute('INSERT INTO INTEXT values(%s)', (origin,))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -1242,7 +1246,7 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO registration values(%s)', (status))
+            cursor.execute('INSERT INTO registration values(%s)', (status,))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -1267,7 +1271,7 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO language values(%s)', (lang))
+            cursor.execute('INSERT INTO language values(%s)', (lang,))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -1292,7 +1296,7 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO projectType values(%s)', (type))
+            cursor.execute('INSERT INTO projectType values(%s)', (type,))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()

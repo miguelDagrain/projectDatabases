@@ -143,14 +143,14 @@ CREATE TABLE project
 
 CREATE TABLE projectDiscipline
 (
-  projectID int references project(projectID),
+  projectID int references project(projectID) ON DELETE CASCADE,
   discipline varchar(255) references discipline(subject),
   primary key (projectID, discipline)
 );
 
 create table projectResearchgroup
 (
-  projectID int references project(projectID),
+  projectID int references project(projectID) ON DELETE CASCADE,
   researchgroupid int references researchGroup(groupID),
   primary key (projectid,researchgroupid)
 );
@@ -206,8 +206,8 @@ CREATE TABLE projectRelation
 
 CREATE TABLE projectDocument
 (
-  projectID INT REFERENCES project (projectID) ON DELETE CASCADE,
-  docID     INT REFERENCES document (documentID),
+  projectID INT REFERENCES project (projectID), -- On delete cascade is niet nodig omwille van de trigger
+  docID     INT REFERENCES document (documentID) ON DELETE CASCADE,
   PRIMARY KEY (projectID, docID)
 );
 
@@ -239,9 +239,10 @@ BEGIN
     SET researchgroup = 1
     WHERE researchgroup = old.groupID;
 
-    UPDATE project
-    SET researchGroup = 1
-    WHERE researchGroup = old.groupID;
+
+    UPDATE projectResearchgroup
+    SET researchgroupid = 1
+    WHERE researchgroupid = old.groupID;
 
     DELETE FROM document
      WHERE documentID = (SELECT docID
@@ -258,3 +259,21 @@ BEFORE DELETE ON researchGroup
 FOR EACH ROW
 WHEN (old.groupID <> 1)
 EXECUTE PROCEDURE researchGroup_del_func();
+
+CREATE FUNCTION project_del_func() RETURNS trigger AS $action$
+BEGIN
+
+  DELETE FROM document
+  WHERE documentID = (SELECT docID
+                      FROM projectDocument
+                      WHERE projectID = old.projectID);
+
+  RETURN old;
+
+END
+$action$ LANGUAGE plpgsql;
+
+CREATE TRIGGER project_del_tr
+BEFORE DELETE ON project
+FOR EACH ROW
+EXECUTE PROCEDURE project_del_func();

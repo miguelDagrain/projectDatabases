@@ -156,7 +156,7 @@
             <!--todo: vragen achter discipline-->
 
                     <div class="modal-content">
-                        <form id="add-project-form" class="modal-body administration-form" action="#" onsubmit="return addProject(this)" method="post">
+                        <form id="add-project-form" class="modal-body administration-form" action="" method="post">
                             <label for="administration-form-title">{{ _('Title') }}:</label>
                             <input type="text" id="administration-form-title" name="Title">
 
@@ -165,7 +165,7 @@
 
                             <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
                             <div class="multi-select input-block">
-                                <select name="Researchgroup" id="administration-form-researchgroup">
+                                <select name="Researchgroup" id="administration-form-researchgroup" multiple>
                                     <option value="0" >{{ _('All') }}</option>
 
                                      <script>
@@ -189,7 +189,7 @@
 
                             <label for="administration-form-discipline">{{ _('Discipline') }}:</label>
                             <div class="multi-select input-block">
-                                <select id="administration-form-discipline" name="Discipline">
+                                <select id="administration-form-discipline" name="Discipline" multiple>
                                     <option value="0" >{{ _('All') }}</option>
 
                                     <script>
@@ -212,7 +212,7 @@
 
                             <label for="administration-form-type">{{ _('Type') }}:</label>
                             <div class="multi-select input-block">
-                                <select id="administration-form-type" name="Type">
+                                <select id="administration-form-type" name="Type" multiple>
                                      <option value="0" >{{ _('All') }}</option>
 
                                      <script>
@@ -261,7 +261,8 @@
                                 <div class="input-block">
 
                                     <input type="text" id="administration-form-tags" name="Tags">
-                                    <button>{{ _('add') }}</button>
+                                    <button id="administration-form-tag-add">{{ _('add') }}</button>
+                                    <script>standardConnectAddClick($("#administration-form-tag-add"))</script>
                                 </div>
                             </div>
 
@@ -271,12 +272,14 @@
                                 <div class="input-block">
 
                                     <input type="text" id="administration-form-related" name="Related">
-                                    <button>{{ _('add') }}</button>
+                                    <button id="administration-form-related-add">{{ _('add') }}</button>
+                                    <script>standardConnectAddClick($("#administration-form-related-add"))</script>
                                 </div>
                             </div>
 
                             <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
                         </form>
+                        <script>setupFormAddProject()</script>
                     </div>
                 </div>
             </div>
@@ -362,6 +365,9 @@
         var status = document.getElementById("status");
         var rg = document.getElementById("researchGroup");
         var ms = document.getElementsByClassName("multi-select");
+
+        console.log(ms[0]);
+        console.log(ms[1]);
 
         // get selected types
         var selectedTypes = [];

@@ -55,9 +55,9 @@ msgid "Name"
 msgstr "Naam"
 
 #: html/templates/people.html:29 html/templates/people.html:73
-#: html/templates/projects.html:59
-msgid "Research group"
-msgstr "Onderzoeksgroep"
+#: html/templates/project.html
+msgid "research groups"
+msgstr "onderzoeksgroepen"
 
 #: elke multi-select
 #: html/templates/people.html:31 html/templates/people.html:57

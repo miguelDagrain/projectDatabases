@@ -52,3 +52,13 @@ function setUpMultipleTextInput() {
 
     }
 }
+
+/**
+ * standaard functie om add button click te initialiseren, het kan soms handig zijn om een eigen specifieke functie te
+ * schrijven in plaats van deze te gebruiken
+ */
+function standardConnectAddClick(addButton) {
+    $(addButton).bind('click', function () {
+        $(addButton).trigger('acceptAndAdd');
+    });
+}

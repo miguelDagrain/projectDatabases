@@ -325,40 +325,40 @@ def add_project():
 
     access = FullDataAccess()
 
-    title = request.form.get("Title")
+    title = request.json["Title"]
 
 
-    maxStudents = request.form.get("Maxstudents")
+    maxStudents = request.json["Maxstudents"]
 
     project = Project(None, title, maxStudents, True)
 
 
-    researchGroupNrs = request.form.get("Researchgroup")
+    researchGroupNrs = request.json["Researchgroup"]
 
     for researchGroupNr in researchGroupNrs:
-        project.researchGroup.append(int(researchGroupNr)-1)
+        project.researchGroup.append(int(researchGroupNr))
 
 
     #todo: aanpassen zodat documenten in andere talen kunnen worden toegevoegd
-    descriptionText = request.form.get("Description")
+    descriptionText = request.json["Description"]
 
     project.desc.append(Document(None, "dutch", descriptionText))
 
 
-    typeNrs = request.form.get("Type")
+    typeNrs = request.json["Type"]
     typeOptions = access.get_projectType()
 
     for typeNr in typeNrs:
-        project.type.append(typeOptions[int(typeNr)-1])
+        project.type.append(typeOptions[int(typeNr)])
 
-    disciplineNrs = request.form.get("Discipline")
+    disciplineNrs = request.json["Discipline"]
 
     for disciplineNr in disciplineNrs:
-        project.discipline.append(int(disciplineNr)-1)
+        project.discipline.append(int(disciplineNr))
 
 
     #todo: toevoegen zodat er onderscheid is tussen promotors en begeleiders
-    promotorsNameArray = request.form.get("Promotors")
+    promotorsNameArray = request.json["Promotors"]
 
     promotorOptions = access.get_employees()
     promotorNameId = {promotorOption.name:promotorOption.id for promotorOption in promotorOptions}
@@ -368,11 +368,11 @@ def add_project():
             project.promotor.append(promotorNameId[promotorName])
 
 
-    tags = request.form.get("Tags")
+    tags = request.json["Tags"]
     project.tag = list(tags)
 
 
-    related = request.form.get("Related")
+    related = request.json["Related"]
 
     relatedProjectOptions = access.get_projects()
     relatedProjectTitleId = {relatedProjectOption.title:relatedProjectOption.ID for relatedProjectOption in relatedProjectOptions}
@@ -386,7 +386,7 @@ def add_project():
 
     access.add_project(project)
 
-    return redirect(url_for('show_projects'))
+    return jsonify(result=True)
 
     
 
@@ -394,17 +394,20 @@ def add_project():
 @app.route("/projects/<int:id>", methods=['GET'])
 def project_page(id):
     Paccess = ProjectAccess()
+    Eaccess = EmployeeAccess()
+    Raccess = ResearchGroupAccess()
     project = Paccess.get_project(id)
     document = Paccess.get_projectDocuments(id)
-    promotors = Paccess.get_projectPromotors(id)
-    Eaccess = EmployeeAccess()
-    emp = Eaccess.get_employee(promotors[0])
+    promotorsIDs = Paccess.get_projectPromotors(id)
+    promotors = list()
+    for promotorID in promotorsIDs:
+        promotors.append(Eaccess.get_employee(promotorID))
 
-    Raccess = ResearchGroupAccess()
-    researchGroup = Raccess.get_researchGroupOnID(project.researchGroup)
+    researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
 
-    return render_template("project.html", r_project=project, r_document=document, r_promotor=emp,
-                           r_researchGroup=researchGroup, page="projects")
+
+    return render_template("project.html", r_project=project, r_promotors=promotors,
+                           r_researchGroups=researchGroups, page="projects")
 
 
 @app.route("/projects/<int:id>", methods=["POST"])
