@@ -297,7 +297,7 @@ def show_projects():
     for proj in projects:
         researchGroupNames = []
         for rg in proj.researchGroup:
-            researchGroupNames.append(access.get_researchGroupOnID(rg)[0].name)
+            researchGroupNames.append(access.get_researchGroupsOnIDs(rg)[0].name)
 
         typeNames = []
         for tp in proj.type:
