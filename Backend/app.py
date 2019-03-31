@@ -295,14 +295,20 @@ def show_projects():
     projData = []
 
     for proj in projects:
-        discipline = ""
-        for rg in researchGroups:
-            if rg.ID == proj.researchGroup:
-                discipline = rg.discipline
-                break
+        researchGroupNames = []
+        for rg in proj.researchGroup:
+            researchGroupNames.append(access.get_researchGroupOnID(rg)[0].name)
 
-        pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": proj.type, "tag": proj.tag,
-                 "discipline": proj.discipline, "researchGroup": proj.researchGroup, "maxStudents": proj.maxStudents,
+        typeNames = []
+        for tp in proj.type:
+            typeNames.append(tp[0])
+
+        disciplineNames = []
+        for dc in proj.discipline:
+            disciplineNames.append(dc[0])
+
+        pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
+                 "discipline": disciplineNames , "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents, 'words': {}}
         for d in proj.desc:
             str = d.text

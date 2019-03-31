@@ -792,7 +792,7 @@ class ProjectAccess:
             project.discipline = list(cursor.fetchall())
 
             cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s', (project.ID, "succeeded"))
-            project.registeredStudents = list(cursor.fetchall())
+            project.registeredStudents = len(list(cursor.fetchall()))
 
             cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
             project.researchGroup = list(cursor.fetchall())

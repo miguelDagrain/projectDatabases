@@ -12,7 +12,6 @@ function setUpMultiSelection() {
         var button = document.createElement("div");
         button.setAttribute("class", "multi-select-button");
         button.innerHTML = "_('All')";
-        button.onchange = selectMain.onchange;
         selector.appendChild(button);
 
         //maak een menu
@@ -29,7 +28,6 @@ function setUpMultiSelection() {
         allOption.addEventListener("click", function (evt) {
              evt.preventDefault();
              evt.stopPropagation();
-
 
              var select = this.parentElement.parentElement.getElementsByTagName("select")[0];
 
@@ -66,7 +64,10 @@ function setUpMultiSelection() {
         });
 
         menu.appendChild(allOption);
-        allOption.click();
+        //allOption.click();
+        allOption.classList.remove("multi-select-items-not-selected");
+        allOption.classList.add("multi-select-items-selected");
+        allOption.parentElement.previousElementSibling.innerHTML = "All";
 
         //voeg voor elke optie een niet geselecteerd item toe met eventlistener, en verberg deze
         for(var nrSelect = 1; nrSelect < selectMain.length; nrSelect++){

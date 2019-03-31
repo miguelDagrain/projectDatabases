@@ -92,6 +92,7 @@ insert into projectYearConnection values(2020,2);
 insert into projectYearConnection values(2021,3);
 
 insert into projectTypeConnection values('Master thesis',1);
+insert into projectTypeConnection values('Research internship 2',1);
 insert into projectTypeConnection values('Research internship 2',2);
 insert into projectTypeConnection values('Research internship 1',3);
 
@@ -120,4 +121,6 @@ insert into projectRegistration values (3,'busy',3);
 insert into bookmark values(1,1);
 insert into bookmark values(2,1);
 
-
+insert into projectdiscipline values (1, 'Mathematics');
+insert into projectdiscipline values (2, 'Computer Science');
+insert into projectdiscipline values (3, 'Engineering');

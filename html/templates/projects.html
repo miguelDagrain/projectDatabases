@@ -25,7 +25,7 @@
 
 <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
-
+<script src="{{ url_for('static', filename='js/filter-projects.js') }}"></script>
 
 {% endblock scripts %}
 
@@ -151,10 +151,7 @@
              <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('add project') }}</button>
 
              <div id="modal-form-project" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-
-            <!--todo: vragen achter discipline-->
-
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <form id="add-project-form" class="modal-body administration-form" action="" method="post">
                             <label for="administration-form-title">{{ _('Title') }}:</label>
@@ -287,7 +284,12 @@
          {% endif %}
 
         <table id="project_list" class="content-table project-table">
-            <!--wordt gebruikt om te positioneren-->
+            <tr id="project_list_header">
+            <th class="th-1">{{ _('title') }}</th>
+            <th class="th-2">{{ _('research group') }}</th>
+            <th class="th-3">{{ _('assigned students') }}</th>
+            </tr>
+            <!--wordt gebruikt om te positioneren van project list-->
         </table>
 
     </div>
@@ -306,159 +308,6 @@
     k++;
 
     {% endfor %}
-
-    function countOccurances(str, search){
-        return (str.match( new RegExp(search, "gi")) || []).length;
-    }
-
-    function filterProjects(){
-
-        console.log("called");
-        var searchQ = document.getElementById("SQInput").value;
-
-        // Init
-        var result = obj;
-        var sq = searchQ.trim();
-        var tokens = sq.split(" ");
-        var tokenCount = [];
-        var totalTokenCount = [];
-        var tokenProjectCount = [];
-
-        for( var i in tokens) {
-            tokenProjectCount[i] = 0;
-            totalTokenCount[i] = 0;
-            tokenCount[i] = [];
-        }
-
-        // Count Occurances
-        for ( var i in result){
-            result[i].relevance = 0;
-            for( var j in tokens) {
-
-                // Check in title
-                if (countOccurances(result[i].title, tokens[j])) {
-                    result[i].relevance ++;
-
-                }
-
-                // Check in description
-                var count = 0;
-                for (word in result[i].words){
-                    if (countOccurances(word, tokens[j]) > 0){
-                        count += result[i].words[word];
-                    }
-                }
-
-                tokenCount[j][i] = count;   // tokenCount for this project
-
-                if (count > 0){
-                    totalTokenCount[j] += count;    // total token count
-                    tokenProjectCount[j] += 1;
-                }
-
-            }
-        }
-
-        var disc = "";
-        var types = document.getElementById("type");
-        var disciplines = document.getElementById("disciplines");
-        var status = document.getElementById("status");
-        var rg = document.getElementById("researchGroup");
-        var ms = document.getElementsByClassName("multi-select");
-
-        console.log(ms[0]);
-        console.log(ms[1]);
-
-        // get selected types
-        var selectedTypes = [];
-        for(var i = 0; i < ms[0].children[2].children.length; i++){
-            if (!ms[0].children[2].children[i].className.includes("not-selected")){
-                selectedTypes.push(ms[0].children[2].children[i].textContent);
-            }
-        }
-
-        // get selected disciplines
-        var selectedDisciplines = [];
-        for(var i = 0; i < ms[1].children[2].children.length; i++){
-            if (!ms[1].children[2].children[i].className.includes("not-selected")){
-                selectedDisciplines.push(ms[1].children[2].children[i].textContent);
-            }
-        }
-
-        console.log(selectedTypes);
-        console.log(selectedDisciplines);
-        console.log(rg.options[rg.selectedIndex].text);
-        console.log(status.options[status.selectedIndex].text);
-
-        if ( disciplines.selectedIndex >= 0) {
-
-            disc = disciplines.options[disciplines.selectedIndex];
-        }
-
-
-        // Weighted relevance for each token
-        for ( var i in result){
-            if (!selectedDisciplines.includes("All") && !selectedDisciplines.includes(result[i].discipline) ){
-                result[i].relevance = 0;
-                continue;
-            }
-            if (!selectedTypes.includes("All") && !selectedTypes.includes(result[i].type) ){
-                result[i].relevance = 0;
-                continue;
-            }
-
-            if (result[i].researchGroup !== rg.options[rg.selectedIndex].text && rg.selectedIndex>0){
-                result[i].relevance = 0;
-                continue;
-            }
-
-            switch (status.selectedIndex) {
-                case 1:
-                    if (result[i].maxStudents <= result[i].registeredStudents){
-                        result[i].relevance = 0;
-                        continue;
-                    }
-                    break;
-                case 2:
-                    if (result[i].maxStudents > result[i].registeredStudents){
-                        result[i].relevance = 0;
-                        continue;
-                    }
-                    break;
-            }
-
-            for( var j in tokens) {
-                if (tokenCount[j][i] && tokenProjectCount[j] !== 0){
-
-                    result[i].relevance += tokenCount[j][i] / totalTokenCount[j] / tokenProjectCount[j];
-                }
-            }
-
-        }
-
-        // Sort by relevance
-        result.sort(function(a, b){return b.relevance - a.relevance});
-
-        // Update page content
-        var doc = document.getElementById("project_list");
-        doc.innerHTML =
-            '<tr>' +
-                '<th class="th-1">{{ _('title') }}</th>' +
-                '<th class="th-2">{{ _('research group') }}</th>' +
-                '<th class="th-3">{{ _('assigned students') }}</th>' +
-            '</tr>';
-
-        for (var i in result) {
-            if (result[i].relevance == 0){break;}
-
-            doc.innerHTML += '<tr>' +
-                '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' +
-                '<td>' + result[i].researchGroup + '</td>' +
-                '<td>[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']</td> ' + // todo: replace 0 by an parameter
-                '</tr>' ;
-
-        }
-    }
 
 </script>
 
