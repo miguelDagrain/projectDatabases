@@ -70,7 +70,7 @@ def index():
     Renders the index template
     :return: Rendered index template
     """
-    resp = make_response(render_template("index.html", page="index"))
+    resp = make_response(render_template("home.html", page="index", homedoc="<h1>Todo:</h1><div>Tinymce doet moeilk.</div><div>Lelijke errors van missing file.</div><div>Waar haal k die file vandaan??</div><div>Check console voor meer info.</div>"))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)

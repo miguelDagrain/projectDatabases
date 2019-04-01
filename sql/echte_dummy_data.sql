@@ -1,3 +1,5 @@
+
+
 insert into document (documentID, lang, content) values (default, 'english', 'PROTOTYPE XML DOCUMENT SERVER,<p>Contact adres:<ul>' ||
  '<li>ACUNIA N.V.' ||
   '<li>Philips-site 5 box 3' ||

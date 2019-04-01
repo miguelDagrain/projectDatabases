@@ -1,0 +1,59 @@
+
+{% extends "layout.html" %}
+
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+
+{% endblock stylesheets %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+<script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
+<script>
+    tinymce.init({
+        selector: '#mytextarea',
+        menubar: 'file edit insert view format table tools help'
+    });
+
+</script>
+
+{% endblock scripts %}
+
+{% block body %}
+
+<div style="display:flex;">
+    <div class="page-content">
+
+        {% if 'admin' in current_user.roles %}
+
+            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('Edit page') }}</button>
+
+            <div id="modal-form-project" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <form id="edit-home-form" class="modal-body administration-form" action="" method="post">
+
+                            <textarea id="mytextarea">{{homedoc|safe}}</textarea>
+
+                            <input class="administration-form-submit" type="submit" value="{{ _('Save') }}">
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+        <div>
+        {{( homedoc|safe )}}
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
