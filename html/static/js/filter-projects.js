@@ -1,4 +1,7 @@
 function countOccurances(str, search){
+    if (search.length <1){
+        return 0;
+    }
     return (str.match( new RegExp(search, "gi")) || []).length;
 }
 
@@ -7,46 +10,49 @@ function filterProjects(){
     var searchQ = document.getElementById("SQInput").value;
 
     // Init
-    var result = obj;
+    var result = [];
     var sq = searchQ.trim();
     var tokens = sq.split(" ");
-    var tokenCount = [];
-    var totalTokenCount = [];
-    var tokenProjectCount = [];
-
-    for( var i in tokens) {
-        tokenProjectCount[i] = 0;
-        totalTokenCount[i] = 0;
-        tokenCount[i] = [];
+    if (sq.length == 0){
+        tokens = []
     }
 
-    // Count Occurances
-    for ( var i in result){
-        result[i].relevance = 0;
+    // Count Occurances in Title
+    for ( var i in obj){
+        obj[i].relevance = 0;
         for( var j in tokens) {
-
             // Check in title
-            if (countOccurances(result[i].title, tokens[j])) {
-                result[i].relevance ++;
+            if (countOccurances(obj[i].title, tokens[j])) {
+                obj[i].relevance++;
 
             }
+        }
+    }
 
-            // Check in description
-            var count = 0;
-            for (word in result[i].words){
-                if (countOccurances(word, tokens[j]) > 0){
-                    count += result[i].words[word];
+    // Count Occurances in Description
+    for( var j in tokens) {
+        // Check in description
+        for (var word in wordTable){
+            if (countOccurances(word, tokens[j]) > 0){
+                //console.log("influenced by:" + word)
+                for ( var i in wordTable[word]) {
+                    if (i != "total") {
+                        var div = (Object.keys(wordTable[word]).length -1);
+                        obj[i].relevance += wordTable[word][i] / (wordTable[word]["total"] * div)
+                    }
+
                 }
             }
-
-            tokenCount[j][i] = count;   // tokenCount for this project
-
-            if (count > 0){
-                totalTokenCount[j] += count;    // total token count
-                tokenProjectCount[j] += 1;
-            }
-
         }
+
+    }
+
+    // Add to the possible projects list
+    for (var i in obj){
+        if (obj[i].relevance >= 0 || sq.length === 0 ){
+            result.push(obj[i])
+        }
+
     }
 
     var status = document.getElementById("status");
@@ -135,13 +141,6 @@ function filterProjects(){
                 break;
         }
 
-        for( var j in tokens) {
-            if (tokenCount[j][i] && tokenProjectCount[j] !== 0){
-
-                result[i].relevance += tokenCount[j][i] / totalTokenCount[j] / tokenProjectCount[j];
-            }
-        }
-
     }
 
     // Sort by relevance
@@ -155,7 +154,7 @@ function filterProjects(){
     // je schrijft <div> code wordt aangevuld met </div>
     for (var i in result) {
         rowStr = '';
-        if (result[i].relevance == 0){break;}
+        if (result[i].relevance == 0 && sq.length > 0){break;}
 
         rowStr += '<tr>' + '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' + '<td>';
 
@@ -167,4 +166,7 @@ function filterProjects(){
         tableList.innerHTML += rowStr;
 
     }
+
+    //console.log("finished");
+
 }

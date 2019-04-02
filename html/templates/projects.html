@@ -305,13 +305,15 @@
 
 <script type="text/javascript">
 
+    var Words  = {{words|tojson|safe}};
+    wordTable = JSON.parse(Words);
+
     var Data  = {{alt|tojson|safe}};
     obj = JSON.parse(Data);
 
-    var k = 0;
     {% for project in r_projects %}
-    obj[k].href ="{{ url_for('project_page', id=project.ID) }}";
-    k++;
+    obj[{{project.ID|safe}}].href ="{{ url_for('project_page', id=project.ID) }}";
+
     {% endfor %}
 
 </script>
