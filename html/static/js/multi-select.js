@@ -145,5 +145,8 @@ function setUpMultiSelection() {
            this.nextSibling.classList.toggle("multi-select-hide");
 
         });
+
+        allOption.click(); // zorg ervoor dat de all wordt geklikt (dit deselecteert all in de opties die we presenteren maar verandert nog niets aan de select)
+        allOption.click(); // selecteer alle items om te beginnen (in de select worden de items nu ook geselecteerd)
     }
 }
