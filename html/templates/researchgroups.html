@@ -32,13 +32,11 @@
 </script>
 {% block body %}
 
-    <div style="display:flex;">
+    <div class="page-content">
 
-        <div class="page-content">
+        <h1>{{ _('Research groups') }}</h1>
 
-            <h1>{{ _('Research groups') }}</h1>
-
-            {% if 'admin' in current_user.roles %}
+        {% if 'admin' in current_user.roles %}
 
             <button class="page-content-button" data-toggle="modal" data-target="#modal-form-group">{{ _('add group') }}</button>
 
@@ -62,13 +60,13 @@
 
                                     {% for discip in r_disciplines %}
 
-                                    <option value="" id="noValueDis">{{ discip }}</option>
+                                        <option value="" id="noValueDis">{{ discip }}</option>
 
-                                    <script>
-                                        document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
-                                        document.getElementById("noValueDis").removeAttribute("id");
-                                        iter++;
-                                    </script>
+                                        <script>
+                                            document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                                            document.getElementById("noValueDis").removeAttribute("id");
+                                            iter++;
+                                        </script>
 
                                     {% endfor %}
 
@@ -89,62 +87,61 @@
                 </div>
             </div>
 
-            {% endif %}
+        {% endif %}
 
-            <table class="content-table group-table table-sm" id="verticalScroll" >
-                <thead>
-                <tr>
+        <table class="table" id="verticalScroll">
+            <thead>
+            <tr>
+                <th class="th-sm">
+                    <strong>{{ _('Name') }}</strong>
+                </th>
+                <th class="th-sm">
+                    <strong>{{ _('Abbreviation') }}</strong>
+                </th>
+                <th class="th-sm">
+                    <strong>{{ _('Discipline') }}</strong>
+                </th>
+                {% if 'admin' in current_user.roles %}
                     <th class="th-sm">
-                        <strong>{{ _('Name') }}</strong>
+                        <strong>{{ _('Active') }}</strong>
                     </th>
-                    <th class="th-sm">
-                        <strong>{{ _('Abbreviation') }}</strong>
-                    </th>
-                    <th class="th-sm">
-                        <strong>{{ _('Discipline') }}</strong>
-                    </th>
-                    {% if 'admin' in current_user.roles %}
-                        <th class="th-sm">
-                            <strong>{{ _('Active') }}</strong>
-                        </th>
-                    {% endif %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for group in r_groups %}
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for group in r_groups %}
 
-                    {% if (group.active == True or 'admin' in current_user.roles) and (group.ID != 1) %}
-                        <tr>
-                            <td>
-                                <a href="{{ url_for('group_page', id=group.ID) }}">{{ group.name }}</a>
-                            </td>
-                            <td>
-                                {{ group.abbreviation }}
-                            </td>
-                            <td>
-                                {{ group.discipline }}
-                            </td>
+                {% if (group.active == True or 'admin' in current_user.roles) and (group.ID != 1) %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('group_page', id=group.ID) }}">{{ group.name }}</a>
+                        </td>
+                        <td>
+                            {{ group.abbreviation }}
+                        </td>
+                        <td>
+                            {{ group.discipline }}
+                        </td>
 
-                            {% if 'admin' in current_user.roles %}
-                                <td>
-                                    {% if group.active == True %}
-                                        &#10004;
-                                    {% elif group.active == False %}
-                                        &#10060;
-                                    {% endif %}
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
+                        {% if 'admin' in current_user.roles %}
+                            <td>
+                                {% if group.active == True %}
+                                    &#10004;
+                                {% elif group.active == False %}
+                                    &#10060;
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
 
-        </div>
     </div>
 
 
-<script>setUpDropdowns()</script>
+    <script>setUpDropdowns()</script>
 <script>setUpMultiSelection()</script>
 
 {% endblock body %}
