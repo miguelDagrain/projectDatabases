@@ -448,7 +448,7 @@ class EmployeeAccess:
         for projId in projectsId:
             cursor.execute('select * from project where projectID=%s', (projId,)) #returns exactly one row from the table
             row = cursor.fetchone()
-            project = Project(row[0], row[1], row[2], row[3], row[4])
+            project = Project(row[0], row[1], row[2], row[3])
 
             cursor.execute('select year from projectYearConnection where projectID=%s', (projId,))
 

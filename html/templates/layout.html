@@ -209,29 +209,13 @@
             </div>
         </div>
     </div>
-    <!-- login popup -->
-    <div class="col-14 float-right" id="loginpopup">
-        <div class="float-right" style="margin-bottom: 0">
-            {% if not current_user.is_authenticated %}
-                <label style="display:flex;">
-                    <small>
-                        {{ _('username') }}:
-                        <input type="text" name="Search_query">
-                    </small>
-                </label>
-                <label style="display:flex;">
-                    <small>
-                        {{ _('password') }}:
-                        <input type="text" name="Search_query">
-                    </small>
-                </label>
-            {% endif %}
-        </div>
-    </div>
+
+
+    {% block body %}
+
+    {% endblock body %}
+
 </div>
 
-{% block body %}
-
-{% endblock body %}
 </body>
 </html>
