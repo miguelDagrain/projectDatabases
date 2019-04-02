@@ -44,6 +44,8 @@
 .content-table  td {
     padding: 30px;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content-table tr {
