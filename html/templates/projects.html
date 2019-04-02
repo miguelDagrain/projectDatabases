@@ -21,7 +21,8 @@
 <script src="{{ url_for('static', filename='js/multiple-text-input.js') }}"></script>
 <script src="{{ url_for('static', filename='js/add-project-ajax.js') }}"></script>
 
-<script src="{{ url_for('static', filename='js/text-input-name-empl-suggestion.js') }}"></script>
+<script src="{{ url_for('static', filename='js/text-input-suggestions.js') }}"></script>
+<script src="{{ url_for('static', filename='js/limit_accept.js')}}"></script>
 
 <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
@@ -243,11 +244,11 @@
                                     <div class="suggestion-block">
                                         <input type="text" id="administration-form-promotor" name="Promotors">
                                         <div id="administration-form-promotor-suggestions" class="dropdown-items dropdown-hide text-suggestion-input-dropdown"></div>
-                                        <script>setUpNameSuggestions($("#administration-form-promotor"), $("#administration-form-promotor-suggestions"))</script>
+                                        <script>setUpSuggestions($("#administration-form-promotor"), $("#administration-form-promotor-suggestions"), "/check/empl_names")</script>
                                     </div>
 
                                     <button id="administration-form-promotor-add">{{ _('add') }}</button>
-                                    <script>setUpOnlyAcceptNames($("#administration-form-promotor"), $("#administration-form-promotor-add"))</script>
+                                    <script>setUpOnlyAcceptLimited($("#administration-form-promotor"), $("#administration-form-promotor-add"), "/check/empl_name_correct")</script>
                                 </div>
                             </div>
 
@@ -268,9 +269,15 @@
 
                                 <div class="input-block">
 
-                                    <input type="text" id="administration-form-related" name="Related">
+                                    <div class="suggestion-block">
+                                        <input type="text" id="administration-form-related" name="Related">
+                                        <div id="administration-form-related-suggestions" class="dropdown-items dropdown-hide text-suggestion-input-dropdown"></div>
+                                        <script>setUpSuggestions($("#administration-form-related"), $("#administration-form-related-suggestions"), "/check/project_titles")</script>
+                                    </div>
+
+
                                     <button id="administration-form-related-add">{{ _('add') }}</button>
-                                    <script>standardConnectAddClick($("#administration-form-related-add"))</script>
+                                    <script>setUpOnlyAcceptLimited($("#administration-form-related"), $("#administration-form-related-add"), "/check/project_title_correct")</script>
                                 </div>
                             </div>
 
