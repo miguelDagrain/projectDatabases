@@ -148,17 +148,23 @@ function filterProjects(){
     result.sort(function(a, b){return b.relevance - a.relevance});
 
     // Update page content
-    var doc = document.getElementById("project_list");
-    doc.innerHTML = doc.children[0].innerHTML;
+    var tableList = document.getElementById("project_list");
+    tableList.innerHTML = tableList.children[0].innerHTML;
 
+    // als je meteen aan de html toevoegd zonder eerst een string te maken dan sluit hij zelf de tags bv.:
+    // je schrijft <div> code wordt aangevuld met </div>
     for (var i in result) {
+        rowStr = '';
         if (result[i].relevance == 0){break;}
 
-        doc.innerHTML += '<tr>' +
-            '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' +
-            '<td>' + result[i].researchGroup + '</td>' +
-            '<td>[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']</td> ' + // todo: replace 0 by an parameter
-            '</tr>' ;
+        rowStr += '<tr>' + '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' + '<td>';
+
+        for (var groupIter = 0; groupIter < result[i].researchGroup.length; groupIter++) {
+            rowStr += result[i].researchGroup[groupIter] + '<br>';
+        }
+        rowStr +='</td>' + '<td>[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']</td> ' + '</tr>';
+
+        tableList.innerHTML += rowStr;
 
     }
 }
