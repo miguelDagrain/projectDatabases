@@ -564,10 +564,42 @@ def check_empl_name_correct():
     Eaccess = EmployeeAccess()
     employees = Eaccess.get_employees()
 
-    given_name = request.args.get('name')
+    given_name = request.args.get('input')
 
     for empl in employees:
         if given_name == empl.name:
+            return jsonify(True)
+
+    return jsonify(False)
+
+
+@app.route("/check/project_titles", methods=["GET"])
+def check_project_titles():
+    Paccess = ProjectAccess()
+    projects = Paccess.get_projects()
+
+    given_letters = request.args.get('letters')
+
+    possibilities = list()
+
+    for proj in projects:
+        if given_letters in proj.title:
+            possibilities.append(proj.title)
+            if len(possibilities) > 4:
+                break
+
+    return  jsonify(possibilities)
+
+
+@app.route("/check/project_title_correct", methods=["GET"])
+def check_project_title_correct():
+    Paccess = ProjectAccess()
+    projects = Paccess.get_projects()
+
+    given_title = request.args.get('input')
+
+    for proj in projects:
+        if given_title == proj.title:
             return jsonify(True)
 
     return jsonify(False)

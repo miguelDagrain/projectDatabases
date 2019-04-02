@@ -1,9 +1,9 @@
 /*
- * functie die een request stuurt om suggesties te kunnen ontvangen
+ * functie die een request stuurt om name suggesties te kunnen ontvangen
  */
-function giveNameSuggestions(elemInput, elemDropdown) {
+function giveSuggestions(elemInput, elemDropdown, url) {
 
-    $.getJSON($SCRIPT_ROOT + "/check/empl_names", {
+    $.getJSON($SCRIPT_ROOT + url, {
         letters: $(elemInput).val()
         },
         function(data){
@@ -29,28 +29,9 @@ function giveNameSuggestions(elemInput, elemDropdown) {
 /*
  * functie om een text-input name suggestions te geven
  */
-function setUpNameSuggestions(elemInput, elemDropdown) {
+function setUpSuggestions(elemInput, elemDropdown, url) {
 
     $(elemInput).bind('input', function(){
-        giveNameSuggestions(this, elemDropdown);
+        giveSuggestions(this, elemDropdown, url);
     });
-}
-
-/*
- * functie die er voor zorgt dat enkel namen van onderzoekmedewerkers worden geaccepteerd.
- */
-function setUpOnlyAcceptNames(elemInput, addButton) {
-
-    $(addButton).bind('click', function () {
-        $.getJSON($SCRIPT_ROOT + "/check/empl_name_correct",
-            { name: $(elemInput).val() },
-            function (data) {
-                if(data === true){
-                    $(addButton).trigger('acceptAndAdd');
-                }else{
-                    alert('invalid name');
-                }
-            });
-
-    })
 }
