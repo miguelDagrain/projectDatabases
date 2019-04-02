@@ -18,6 +18,7 @@ from Employee import Employee
 from ResearchGroup import ResearchGroup
 from Session import *
 from User import *
+from MailService import MailService
 from config import config_data
 
 from helperFunc import *
