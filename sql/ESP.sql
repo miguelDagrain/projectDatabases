@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS projectType;
 DROP TABLE IF EXISTS projectYearConnection;
 DROP TABLE IF EXISTS projectYear;
 drop table if exists projectResearchgroup;
+drop table if exists projectDiscipline;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS contactPerson;
 DROP TABLE IF EXISTS employeeRoles;
