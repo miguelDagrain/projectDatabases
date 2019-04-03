@@ -2,7 +2,7 @@ function countOccurances(str, search){
     if (search.length <1){
         return 0;
     }
-    return (str.match( new RegExp(search, "gi")) || []).length;
+    return (str.match( new RegExp(search, "i")) || []).length;
 }
 
 function filterProjects(){
@@ -31,7 +31,6 @@ function filterProjects(){
 
     // Count Occurances in Description
     for( var j in tokens) {
-        // Check in description
         for (var word in wordTable){
             if (countOccurances(word, tokens[j]) > 0){
                 //console.log("influenced by:" + word)
@@ -44,7 +43,6 @@ function filterProjects(){
                 }
             }
         }
-
     }
 
     // Add to the possible projects list
@@ -52,7 +50,6 @@ function filterProjects(){
         if (obj[i].relevance >= 0 || sq.length === 0 ){
             result.push(obj[i])
         }
-
     }
 
     var status = document.getElementById("status");
@@ -140,7 +137,6 @@ function filterProjects(){
                 }
                 break;
         }
-
     }
 
     // Sort by relevance
@@ -154,7 +150,8 @@ function filterProjects(){
     // je schrijft <div> code wordt aangevuld met </div>
     for (var i in result) {
         rowStr = '';
-        if (result[i].relevance == 0 && sq.length > 0){break;}
+        if ((result[i].relevance == 0 && sq.length > 0) || i > 10){break;}
+
 
         rowStr += '<tr>' + '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' + '<td>';
 
