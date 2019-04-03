@@ -313,19 +313,19 @@ def show_projects():
                  "discipline": disciplineNames , "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents}
         for d in proj.desc:
-            str = d.text
+            textstr = d.text
             rgx = re.compile("(\w[\w']*\w|\w)")
-            list = rgx.findall(str)
+            list = rgx.findall(textstr)
             for w in list:
                 if not w in words:
                     words[w] = {}
                     words[w]["total"] = 0
 
-                if proj.ID in words[w]:
-                    words[w][proj.ID] +=1
+                if str(proj.ID) in words[w]:
+                    words[w][str(proj.ID)] +=1
                     words[w]["total"] +=1
                 else:
-                    words[w][proj.ID] =1
+                    words[w][str(proj.ID)] =1
                     words[w]["total"] +=1
 
         projData[proj.ID] = pjson
