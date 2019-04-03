@@ -42,7 +42,7 @@ insert into project (projectID, title, maxStudents, active) values (70,'MANAGING
 insert into project (projectID, title, maxStudents, active) values (72,'INVERTEREN VAN TWEEVOUDIG KANSGENERERENDE FUNCTIES MET TOEPASSING OP VOORBEELDEN UIT DE WACHTRIJTHEORIE',1,FALSE);
 insert into project (projectID, title, maxStudents, active) values (73,'MULTICAST IN EEN CONTENT DISTRIBUTIE NETWERK',1,FALSE);
 insert into project (projectID, title, maxStudents, active) values (74,'CAC VOOR VIDEO STROMEN',1,FALSE);
-insert into project (projectID, title, maxStudents, active) values (75,'XSL-FO FORMATTER VOOR PDA''S'',1,FALSE);
+insert into project (projectID, title, maxStudents, active) values (75,'XSL-FO FORMATTER VOOR PDA''S',1,FALSE);
 insert into project (projectID, title, maxStudents, active) values (76,'BEVEILIGEN VAN JAVA PROGRAMMA''S TEGEN COPIEREN EN DECOMPILEREN',2,FALSE);
 insert into project (projectID, title, maxStudents, active) values (77,'XSLT EXTENSIES STANDARDISEREN',1,FALSE);
 insert into project (projectID, title, maxStudents, active) values (78,'FONT LIBRARY IN JAVA',1,FALSE);
@@ -110,7 +110,7 @@ insert into project (projectID, title, maxStudents, active) values (203,'FIBONAC
 insert into project (projectID, title, maxStudents, active) values (206,'Extending an open source modeling (UML) tool',1,FALSE);
 insert into project (projectID, title, maxStudents, active) values (211,'UITBREIDING VAN DE JAVA WEKA DATA MINING LIBRARY',1,TRUE);
 insert into project (projectID, title, maxStudents, active) values (212,'SFERISCHE REPRESENTATIE VAN DE MENSELIJKE CORTEX VOOR DE VISUALISATIE EN ANALYSE VAN FMRI-DATA',1,FALSE);
-insert into project (projectID, title, maxStudents, active) values (213,'XML QUERY ALGEBRA''S,1,FALSE);
+insert into project (projectID, title, maxStudents, active) values (213,'XML QUERY ALGEBRA''S',1,FALSE);
 insert into project (projectID, title, maxStudents, active) values (215,'VISUALISATIE TOOL VOOR MOBILITEITSTESTBED',2,FALSE);
 insert into project (projectID, title, maxStudents, active) values (219,'AUTOMATISATIE VAN CITATIERAPPORTEN VOOR DE UA ONDERZOEKSRAAD',2,FALSE);
 insert into project (projectID, title, maxStudents, active) values (220,'LIBRARY COMPARISON TESTER',1,FALSE);
