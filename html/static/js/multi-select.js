@@ -64,7 +64,7 @@ function setUpMultiSelection() {
         });
 
         menu.appendChild(allOption);
-        //allOption.click();
+        // allOption.click();
         allOption.classList.remove("multi-select-items-not-selected");
         allOption.classList.add("multi-select-items-selected");
         allOption.parentElement.previousElementSibling.innerHTML = "All";

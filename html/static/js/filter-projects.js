@@ -10,7 +10,7 @@ function filterProjects(){
     var searchQ = document.getElementById("SQInput").value;
 
     // Init
-    var result = [];
+    result = [];
     var sq = searchQ.trim();
     var tokens = sq.split(" ");
     if (sq.length == 0){
@@ -146,11 +146,15 @@ function filterProjects(){
     var tableList = document.getElementById("project_list");
     tableList.innerHTML = tableList.children[0].innerHTML;
 
+    projectCount = 0;
+    showMoreProjects(sq)
+
+    /*
     // als je meteen aan de html toevoegd zonder eerst een string te maken dan sluit hij zelf de tags bv.:
     // je schrijft <div> code wordt aangevuld met </div>
-    for (var i in result) {
+    for (var i = 0; i< result.length; i ++) {
         rowStr = '';
-        if ((result[i].relevance == 0 && sq.length > 0) || i > 10){break;}
+        if ((result[i].relevance === 0 && sq.length > 0) || i > 10){break;}
 
 
         rowStr += '<tr>' + '<td><a href=' + result[i].href  + '>' + result[i].title + '</a></td>' + '<td>';
@@ -161,9 +165,47 @@ function filterProjects(){
         rowStr +='</td>' + '<td>[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']</td> ' + '</tr>';
 
         tableList.innerHTML += rowStr;
+        projectCount = i+1;
+    }
+    //console.log("finished");
+    */
+
+}
+
+function showMoreProjects(sq) {
+
+    // Update page content
+    var tableList = document.getElementById("project_list");
+    var pCont = document.createElement("tbody");
+
+    for (var i = projectCount; i < projectCount + 10; i++) {
+
+        if ((result[i].relevance === 0 && sq.length > 0)){break;}
+
+        var cont = document.createElement("tr");
+        var name = document.createElement("td");
+        var link = document.createElement("a");
+        link.appendChild(document.createTextNode(result[i].title));
+        link.href = result[i].href;
+        name.appendChild(link);
+        cont.appendChild(name);
+        pCont.appendChild(cont);
+
+        var group = document.createElement("td");
+        for (var groupIter = 0; groupIter < result[i].researchGroup.length; groupIter++) {
+            var newGr = document.createElement("br");
+            newGr.appendChild(document.createTextNode(result[i].researchGroup[groupIter]));
+            group.appendChild(newGr);
+
+        }
+        cont.appendChild(group);
+
+        var stud = document.createElement("td");
+        stud.appendChild(document.createTextNode('[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']'));
+        cont.appendChild(stud);
 
     }
-
-    //console.log("finished");
+    tableList.appendChild(pCont);
+    projectCount += 10;
 
 }
