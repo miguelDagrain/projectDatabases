@@ -672,7 +672,7 @@ insert into employee (employeeID, name, email, office, promotor, researchgroup, 
 insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (2,'Bart Braem','bart.braem@uantwerpen.be', NULL, 'y',2, NULL, NULL, NULL);
 insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (10,'Jeroen Avonts','jeroen.avonts@uantwerpen.be', NULL, 'n',2, NULL, NULL, NULL);
 insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (12,'Johan Bergs','johan.bergs@uantwerpen.be', NULL, 'n',2, NULL, NULL, NULL);
-insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (13,'Nicolas Letor', NULL, 'nicolas.letor@uantwerpen.be', NULL, 'n',2, NULL, NULL, NULL);
+insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (13,'Nicolas Letor', 'nicolas.letor@uantwerpen.be', NULL, 'n',2, NULL, NULL, NULL);
 insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (14,'Alain Verschoren','alain.verschoren@uantwerpen.be', NULL, 'y',13, NULL, NULL, NULL);
 insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (16,'Bart Goethals','bart.goethals@uantwerpen.be', NULL, 'y',3, NULL, NULL, NULL);
 insert into employee (employeeID, name, email, office, promotor, researchgroup, title, INTernORextern, active) values (19,'Anja Struyf','anja.struyf@uantwerpen.be', NULL, 'y',11, NULL, NULL, NULL);

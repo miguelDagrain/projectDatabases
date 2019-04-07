@@ -607,6 +607,18 @@ class ProjectAccess:
             tags.append(row[0])
         return tags
 
+    def delete_all_ProjectTages(self):
+        """
+        deletes all tags in the database, this is used for when the new tags are calculated
+        """
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('DELETE FROM projecttag')
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            print("unable to delete all tags")
+
     def add_projectTag(self, projectID, tag):
         """
         adds a tag to a project
@@ -615,7 +627,7 @@ class ProjectAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('select * from projectTag where tag=%s and project=%s', (str(tag), projectID))
+            cursor.execute('select * from projectTag where tag=%s and project=%s', (str(tag), str(projectID)))
             if cursor.rowcount == 0:
                 cursor.execute('insert into projectTag values(%s,%s)', (str(tag), projectID))
                 self.dbconnect.commit()

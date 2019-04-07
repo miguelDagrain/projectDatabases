@@ -18,6 +18,7 @@ from Employee import Employee
 from ResearchGroup import ResearchGroup
 from Session import *
 from User import *
+from TagCalculator import findTags
 from MailService import MailService
 from config import config_data
 
@@ -666,4 +667,5 @@ if __name__ == "__main__":
 
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                               dbhost=config_data['dbhost'])
+    findTags()
     app.run(debug=True, host=ip, port=port)
