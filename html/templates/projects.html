@@ -35,6 +35,11 @@
    setUpMultiSelection();
    setUpMultipleTextInput();
    filterProjects();
+    window.onscroll = function(ev) {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            showMoreProjects(document.getElementById("SQInput").value.trim());
+        }
+    };
 {% endblock onReadyCalls %}
 
 {% block body %}
@@ -305,14 +310,21 @@
 
 <script type="text/javascript">
 
+    var Words  = {{words|tojson|safe}};
+    wordTable = JSON.parse(Words);
+
     var Data  = {{alt|tojson|safe}};
     obj = JSON.parse(Data);
 
-    var k = 0;
+    projectCount = 0;
+    result = [];
+
     {% for project in r_projects %}
-    obj[k].href ="{{ url_for('project_page', id=project.ID) }}";
-    k++;
+    obj[{{project.ID|safe}}].href ="{{ url_for('project_page', id=project.ID) }}";
+
     {% endfor %}
+
+
 
 </script>
 

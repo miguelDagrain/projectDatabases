@@ -45,9 +45,9 @@ insert into document values(default,'english','<p>Deze thesis handelt over de ty
  'De bedoeling van deze thesis is tweezijdig. Enerzijds bestaat deze uit het onderzoeken van bestaande MPEG- 2 modellen die een of meerdere van die speciale MPEG-2 features modelleren.' ||
   ' Op basis hiervan kan dan een nieuw model opgesteld worden dat een aantal modellen combineert. Deze thesis kan eventueel door 2 studenten gedaan worden. ' ||
    'Afhankelijk hiervan kan er meer of minder nadruk gelegd worden op de implementatie van oplossingsmethoden.</p>');
-insert into document values(default,'english','<p>In een CDN (Content Distribution Network) kan de controle van het' ||
- 'distributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling' ||
-  'van deze thesis is om de invloed hiervan op de performantie en signaling' ||
+insert into document values(default,'english','<p>In een CDN (Content Distribution Network) kan de controle van het ' ||
+ 'distributieproces zowel centraal als gedistribueerd gebeuren.  Bedoeling ' ||
+  'van deze thesis is om de invloed hiervan op de performantie en signaling ' ||
  'overhead na te gaan.</p>');
 
 insert into attachment values(1,'jos heeft ook een attachment');

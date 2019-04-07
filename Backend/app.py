@@ -293,7 +293,8 @@ def show_projects():
     researchGroups = access.get_researchGroups()
     disciplines = access.get_disciplines()
     types = access.get_projectType()
-    projData = []
+    projData = {}
+    words = {}
 
     for proj in projects:
         researchGroupNames = []
@@ -310,21 +311,28 @@ def show_projects():
 
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "discipline": disciplineNames , "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
-                 "registeredStudents": proj.registeredStudents, 'words': {}}
+                 "registeredStudents": proj.registeredStudents}
         for d in proj.desc:
-            str = d.text
+            textstr = d.text
             rgx = re.compile("(\w[\w']*\w|\w)")
-            list = rgx.findall(str)
-            for word in list:
-                if word in pjson['words']:
-                    pjson['words'][word] += 1
+            list = rgx.findall(textstr)
+            for w in list:
+                if not w in words:
+                    words[w] = {}
+                    words[w]["total"] = 0
+
+                if str(proj.ID) in words[w]:
+                    words[w][str(proj.ID)] +=1
+                    words[w]["total"] +=1
                 else:
-                    pjson['words'][word] = 1
-        projData.append(pjson)
+                    words[w][str(proj.ID)] =1
+                    words[w]["total"] +=1
+
+        projData[proj.ID] = pjson
 
     return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
                            r_disciplines=disciplines, r_types=types, page="projects",
-                           alt=json.dumps(projData, default=lambda x: x.__dict__))
+                           alt=json.dumps(projData, default=lambda x: x.__dict__), words=json.dumps(words, default=lambda x: x.__dict__))
 
 
 @app.route("/projects/", methods=["POST"])

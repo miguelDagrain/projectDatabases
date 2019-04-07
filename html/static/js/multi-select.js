@@ -64,7 +64,7 @@ function setUpMultiSelection() {
         });
 
         menu.appendChild(allOption);
-        //allOption.click();
+        // allOption.click();
         allOption.classList.remove("multi-select-items-not-selected");
         allOption.classList.add("multi-select-items-selected");
         allOption.parentElement.previousElementSibling.innerHTML = "All";
@@ -146,7 +146,7 @@ function setUpMultiSelection() {
 
         });
 
-        allOption.click(); // zorg ervoor dat de all wordt geklikt (dit deselecteert all in de opties die we presenteren maar verandert nog niets aan de select)
-        allOption.click(); // selecteer alle items om te beginnen (in de select worden de items nu ook geselecteerd)
+        //allOption.click(); // zorg ervoor dat de all wordt geklikt (dit deselecteert all in de opties die we presenteren maar verandert nog niets aan de select)
+        //allOption.click(); // selecteer alle items om te beginnen (in de select worden de items nu ook geselecteerd)
     }
 }
