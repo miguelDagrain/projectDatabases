@@ -1,7 +1,7 @@
 
 
 .project-table > tr, .th-1 {
-    width:58%;
+    width:55%;
 }
 
 .project-table > tr, .th-2 {
@@ -9,5 +9,5 @@
 }
 
 .project-table > tr, .th-3 {
-    width:12%;
+    width:15%;
 }

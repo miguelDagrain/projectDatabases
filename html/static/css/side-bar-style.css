@@ -1,13 +1,13 @@
 .side-bar {
-    position: fixed;
+    position: sticky;
     display: inline-flex;
     flex-direction: column;
     width: 10%;
     height: 100%;
-    background-color:#D3D3D3;
+    background-color:#003366;
     margin-left: 0;
     margin-top: 0;
-    box-shadow:0 2px 5px 0 rgba(0,0,0,0.3),0 2px 10px 0 rgba(0,0,0,0.25);
+    box-shadow:0 2px 0px 0 rgba(117, 211, 0, 0.3),0 2px 0px 0 rgb(255, 255, 255);
 }
 
 .side-bar > div {
@@ -17,10 +17,20 @@
     margin-bottom: 20px;
     margin-left: 5px;
     margin-right: 5px;
-    color:#003366;
+    color: #ffffff;
 }
 
-.side-bar > input, label {
+.side-bar > label {
+    display: block;
+    width: 90%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #ffffff;
+}
+
+.side-bar > input {
     display: block;
     width: 90%;
     margin-top: 20px;
@@ -32,7 +42,7 @@
 
 .side-bar > label > input {
     background-color:white;
-    color:#003366;
+    color: #003366;
     width: 100%;
 }
 
@@ -71,4 +81,3 @@
     background-color:#003366;
     color:white;
 }
-
