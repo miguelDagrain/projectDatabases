@@ -72,7 +72,22 @@ def index():
     Renders the index template
     :return: Rendered index template
     """
-    resp = make_response(render_template("home.html", page="index", homedoc="<h1>Todo:</h1><div>Tinymce doet moeilk.</div><div>Lelijke errors van missing file.</div><div>Waar haal k die file vandaan??</div><div>Check console voor meer info.</div>"))
+    resp = make_response(render_template("home.html", page="index", homedoc="<h1>Todo:</h1><div>Home-page is aanpasbaar.</div><div>Moet nog opgeslagen worden in Database.</div><div>Kunne we al attachements fixe??</div><div>We kunne de home-page als document opslaan met een vast ID (liefst iets simpel zoals bv ID = 0)</div><div>Feedback graag.</div>"))
+    if request.cookies.get('lang') is None:
+        lang = get_locale()
+        resp.set_cookie('lang', lang)
+    return resp
+
+
+@app.route("/home/modify_homepage/", methods=["POST"])
+def modify_homepage():
+    """
+    function to modify the home-page
+    """
+
+    value = request.form.get("NewHome")
+
+    resp = make_response(render_template("home.html", page="index", homedoc=value))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
@@ -667,5 +682,5 @@ if __name__ == "__main__":
 
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                               dbhost=config_data['dbhost'])
-    findTags()
+    ##findTags()
     app.run(debug=True, host=ip, port=port)

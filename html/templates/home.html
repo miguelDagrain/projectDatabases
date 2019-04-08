@@ -18,7 +18,7 @@
 <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
 <script>
     tinymce.init({
-        selector: '#mytextarea',
+        selector: '#homepageEditor',
         menubar: 'file edit insert view format table tools help'
     });
 
@@ -33,14 +33,14 @@
 
         {% if 'admin' in current_user.roles %}
 
-            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('Edit page') }}</button>
+            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-homepage">{{ _('Edit page') }}</button>
 
-            <div id="modal-form-project" class="modal fade" tabindex="-1" role="dialog">
+            <div id="modal-form-homepage" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                        <form id="edit-home-form" class="modal-body administration-form" action="" method="post">
+                        <form id="edit-home-form" class="modal-body administration-form" action="{{ url_for('modify_homepage') }}" method="post">
 
-                            <textarea id="mytextarea">{{homedoc|safe}}</textarea>
+                            <textarea id="homepageEditor" name="NewHome">{{homedoc|safe}}</textarea>
 
                             <input class="administration-form-submit" type="submit" value="{{ _('Save') }}">
                         </form>
@@ -49,11 +49,17 @@
                 </div>
             </div>
 
+
         {% endif %}
-        <div>
+
+        <div id="display">
         {{( homedoc|safe )}}
         </div>
     </div>
 </div>
 
 {% endblock body %}
+
+
+
+
