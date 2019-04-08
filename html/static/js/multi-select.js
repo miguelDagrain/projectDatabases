@@ -24,50 +24,57 @@ function setUpMultiSelection() {
         allOption.setAttribute("class", "multi-select-all multi-select-items-not-selected");
         allOption.innerHTML = selectMain.options[0].innerHTML;
         allOption.onchange = selectMain.onchange;
+
+        allOption.changeSelection = function(){
+            var select = this.parentElement.parentElement.getElementsByTagName("select")[0];
+
+            if($(this).hasClass("multi-select-items-not-selected")) {
+
+                for (var nrSelect = 0; nrSelect < select.length; nrSelect++) {
+                    select.options[nrSelect].setAttribute("selected", "selected");
+                }
+
+                var selectedItems = this.parentElement.getElementsByClassName("multi-select-items-selected");
+                for (var selectSibling = 0; selectSibling < selectedItems.length; selectSibling) {
+                    (selectedItems[selectSibling]).classList.add("multi-select-items-not-selected");
+                    (selectedItems[selectSibling]).classList.remove("multi-select-items-selected");
+                }
+
+                this.classList.remove("multi-select-items-not-selected");
+                this.classList.add("multi-select-items-selected");
+
+                this.parentElement.previousElementSibling.innerHTML = "All";
+            }else{
+
+                for (var nrSelect = 0; nrSelect < select.length; nrSelect++) {
+                    select.options[nrSelect].removeAttribute("selected");
+                }
+
+
+                this.classList.remove("multi-select-items-selected");
+                this.classList.add("multi-select-items-not-selected");
+
+                this.parentElement.previousElementSibling.innerHTML = "None";
+            }
+
+        };
+
         //maak het mogelijk om alle opties ineens te selecteren
         allOption.addEventListener("click", function (evt) {
              evt.preventDefault();
              evt.stopPropagation();
-
-             var select = this.parentElement.parentElement.getElementsByTagName("select")[0];
-
-             if($(this).hasClass("multi-select-items-not-selected")) {
-
-                 for (var nrSelect = 0; nrSelect < select.length; nrSelect++) {
-                     select.options[nrSelect].setAttribute("selected", "selected");
-                 }
-
-                 var selectedItems = this.parentElement.getElementsByClassName("multi-select-items-selected");
-                 for (var selectSibling = 0; selectSibling < selectedItems.length; selectSibling) {
-                     (selectedItems[selectSibling]).classList.add("multi-select-items-not-selected");
-                     (selectedItems[selectSibling]).classList.remove("multi-select-items-selected");
-                 }
-
-                 this.classList.remove("multi-select-items-not-selected");
-                 this.classList.add("multi-select-items-selected");
-
-                  this.parentElement.previousElementSibling.innerHTML = "All";
-             }else{
-
-                 for (var nrSelect = 0; nrSelect < select.length; nrSelect++) {
-                     select.options[nrSelect].removeAttribute("selected");
-                 }
-
-
-                 this.classList.remove("multi-select-items-selected");
-                 this.classList.add("multi-select-items-not-selected");
-
-                 this.parentElement.previousElementSibling.innerHTML = "None";
-             }
-            this.onchange();
+             this.changeSelection();
+             this.onchange();
 
         });
 
         menu.appendChild(allOption);
         // allOption.click();
-        allOption.classList.remove("multi-select-items-not-selected");
-        allOption.classList.add("multi-select-items-selected");
-        allOption.parentElement.previousElementSibling.innerHTML = "All";
+        //allOption.classList.remove("multi-select-items-not-selected");
+        //allOption.classList.add("multi-select-items-selected");
+        //allOption.parentElement.previousElementSibling.innerHTML = "All";
+        allOption.changeSelection();
+
 
         //voeg voor elke optie een niet geselecteerd item toe met eventlistener, en verberg deze
         for(var nrSelect = 1; nrSelect < selectMain.length; nrSelect++){
