@@ -46,7 +46,7 @@
             </tr>
             {% for promotor in r_promotors %}
                 <tr>
-                    <td>{{ promotor.name }}</td>
+                <td><a href="{{ url_for('get_person', id=promotor.id) }}">{{ promotor.name }}</a></td>
                 </tr>
             {% endfor %}
             <tr>
@@ -60,7 +60,7 @@
             </tr>
             {% for group in r_researchGroups %}
                 <tr>
-                    <td>{{ group.name }}</td>
+                    <td><a href="{{ url_for('group_page', id=group.ID ) }}">{{ group.name }}</a></td>
                 </tr>
             {% endfor %}
             <tr>
@@ -68,7 +68,7 @@
             </tr>
 
         </table>
-                <div>{{ r_project.desc[0].text | safe }}</div>
+                <td>{{ r_project.desc[0].text | safe }}</td>
 
     </button>
 

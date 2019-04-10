@@ -52,7 +52,7 @@
                 <td>
                     <ul>
                         {% for researcher in r_researchers %}
-                            <li>{{ researcher.name }}</li>
+                            <li><a href="{{ url_for('get_person', id=researcher.id) }}">{{ researcher.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </td>

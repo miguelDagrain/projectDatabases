@@ -433,7 +433,6 @@ def project_page(id):
     promotors = list()
     for promotorID in promotorsIDs:
         promotors.append(Eaccess.get_employee(promotorID))
-
     researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
 
 
