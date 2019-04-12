@@ -1,75 +1,98 @@
+var formData = new FormData();
+
+function handleUploadAttachementDrop (event) {
+
+    //prevent file from being opened
+    event.preventDefault();
+
+    if(event.dataTransfer.items){
+        for (var it = 0; it < event.dataTransfer.items.length; it++) {
+            if(event.dataTransfer.items[it].kind === 'file') {
+                var file = event.dataTransfer.items[it].getAsFile();
+
+                window.formData.append('Attachments', file);
+
+                var listItem = "<li>" + file.name + "</li>";
+
+                $('#administration-form-upload').append(listItem);
+            }
+        }
+
+    }else {
+        for (var it = 0; it < ev.dataTransfer.files.length; it++) {
+             window.formData.append('Attachments', event.dataTransfer.files[it]);
+
+            var listItem = "<li>" +  event.dataTransfer.files[it].name + "</li>";
+            $('#administration-form-upload').append(listItem);
+        }
+    }
+
+}
+
+
+function handleUploadAttachementOver (event) {
+    //prevent file from being opened
+    event.preventDefault();
+}
+
 function addProject() {
 
     var promotorsInput = document.getElementById('Promotors').getElementsByClassName('given-input-block')[0];
-    var promotorsArray = [];
     for (var iter = 0; iter < promotorsInput.childElementCount; iter++)
     {
-        promotorsArray.push(promotorsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
+        formData.append('Promotor', promotorsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
 
     var tagsInput = document.getElementById('Tags').getElementsByClassName('given-input-block')[0];
-    var tagsArray = [];
     for (var iter = 0; iter < tagsInput.childElementCount; iter++){
-        tagsArray.push(tagsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
+        formData.append('Tags', tagsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
 
     var relatedInput = document.getElementById('Related').getElementsByClassName('given-input-block')[0];
-    var relatedArray = [];
     for (var iter = 0; iter < relatedInput.childElementCount; iter++) {
-        relatedArray.push(relatedInput.children[iter].getElementsByTagName('span')[0].innerHTML)
+        formData.append('Related', relatedInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
 
-    var groupArray = [];
     for (var iter = 0; iter < document.getElementById('administration-form-researchgroup').options.length; ++iter) {
         var groupOption = document.getElementById('administration-form-researchgroup').options[iter];
 
         if(groupOption.selected){
-            groupArray.push($(groupOption).val());
+            formData.append('Researchgroup', $(groupOption).val().toString(10));
         }
     }
 
 
-    var typeArray = [];
     for (var iter = 0; iter < document.getElementById('administration-form-type').options.length; ++iter) {
         var typeOption =  document.getElementById('administration-form-type').options[iter];
 
         if(typeOption.selected){
-            typeArray.push($(typeOption).val());
+            formData.append('Type', $(typeOption).val().toString(10));
         }
     }
 
 
-    var disciplineArray = [];
     for (var iter = 0; iter < document.getElementById('administration-form-discipline').options.length; ++iter) {
         var disciplineOption = document.getElementById('administration-form-discipline').options[iter];
 
         if(disciplineOption.selected){
-            disciplineArray.push($(disciplineOption).val());
+            formData.append('Discipline', $(disciplineOption).val().toString(10));
         }
     }
 
-    var title =  $('#administration-form-title').val();
-    var max = $('#administration-form-max').val();
-    var desc = $('#administration-form-description').val();
+    formData.append('Title', $('#administration-form-title').val());
+    formData.append('Maxstudents', $('#administration-form-max').val().toString(10));
+    formData.append('Description', $('#administration-form-description').val());
 
     var request = $.ajax({
         type: "POST",
         url: $SCRIPT_ROOT + '/projects/',
-        data: JSON.stringify({
-            Title: title, //string
-            Maxstudents: max, //int
-            Researchgroup: groupArray, //array (omwillle van select met multiple attribute)
-            Description: desc, //string
-            Type: typeArray, //array (omwille van select met multiple attribute)
-            Discipline: disciplineArray, //array (omwille van select met multiple attribute)
-            Promotors: promotorsArray, //array
-            Tags: tagsArray, //array
-            Related: relatedArray //array
-        }),
-        contentType: 'application/json;charset=UTF-8'
+        data: formData,
+        dataType: 'json',
+        processData: false,
+        contentType: false
     });
 
     request.done(function (data){

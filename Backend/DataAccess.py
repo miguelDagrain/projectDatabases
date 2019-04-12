@@ -39,7 +39,7 @@ class DocumentAccess:
         row = cursor.fetchone()
         document = Document(row[0], row[1], row[2])
         cursorAttachment = self.dbconnect.get_cursor()
-        cursorAttachment.execute('select * from attachment where %s=doc', (document.ID,))
+        cursorAttachment.execute('select * from attachment where doc=%s', (document.ID,))
         for att in cursorAttachment:
             document.attachment.append(att[1])
         return document
@@ -495,6 +495,12 @@ class ProjectAccess:
             docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO projectDocument values(%s,%s)',
                            (projectID, docid))
+
+            #voeg de attachments toe
+            docAccess = DocumentAccess
+            for attachment in document.attachment:
+                docAccess.add_attachment(docid, attachment)
+
             # get id and return updated object
             self.dbconnect.commit()
         except(Exception, self.dbconnect.get_error()) as error:

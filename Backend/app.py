@@ -10,6 +10,8 @@ from flask_babel import *
 from flask_login import LoginManager
 from flask_login import login_user, logout_user, current_user
 
+from werkzeug.utils import secure_filename
+
 import dbConnection
 from DataAccess import *
 from Document import *
@@ -27,6 +29,7 @@ from helperFunc import *
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
+app.config['UPLOAD_FOLDER'] = "../uploaded/"
 babel = Babel(app)
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 login_manager = LoginManager()
@@ -356,40 +359,49 @@ def add_project():
 
     access = FullDataAccess()
 
-    title = request.json["Title"]
+    title = request.form["Title"]
 
 
-    maxStudents = request.json["Maxstudents"]
+    maxStudents = request.form["Maxstudents"]
 
     project = Project(None, title, maxStudents, True)
 
 
-    researchGroupNrs = request.json["Researchgroup"]
+    researchGroupNrs = request.form.getlist("Researchgroup")
 
     for researchGroupNr in researchGroupNrs:
         project.researchGroup.append(int(researchGroupNr))
 
 
     #todo: aanpassen zodat documenten in andere talen kunnen worden toegevoegd
-    descriptionText = request.json["Description"]
+    descriptionText = request.form["Description"]
 
-    project.desc.append(Document(None, "dutch", descriptionText))
+    doc = Document(None, "dutch", descriptionText)
+
+    project.desc.append(doc)
+
+    files = request.files["Attachments"]
+    for file in files:
+        nameFile = secure_filename(title+'_'+file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        doc.attachment.append(nameFile)
 
 
-    typeNrs = request.json["Type"]
+
+    typeNrs = request.form.getlist("Type")
     typeOptions = access.get_projectType()
 
     for typeNr in typeNrs:
         project.type.append(typeOptions[int(typeNr)])
 
-    disciplineNrs = request.json["Discipline"]
+    disciplineNrs = request.form.getlist("Discipline")
 
     for disciplineNr in disciplineNrs:
         project.discipline.append(int(disciplineNr))
 
 
     #todo: toevoegen zodat er onderscheid is tussen promotors en begeleiders
-    promotorsNameArray = request.json["Promotors"]
+    promotorsNameArray = request.form.getlist("Promotors")
 
     promotorOptions = access.get_employees()
     promotorNameId = {promotorOption.name:promotorOption.id for promotorOption in promotorOptions}
@@ -399,11 +411,11 @@ def add_project():
             project.promotor.append(promotorNameId[promotorName])
 
 
-    tags = request.json["Tags"]
+    tags = request.form.getlist("Tags")
     project.tag = list(tags)
 
 
-    related = request.json["Related"]
+    related = request.form.getlist("Related")
 
     relatedProjectOptions = access.get_projects()
     relatedProjectTitleId = {relatedProjectOption.title:relatedProjectOption.ID for relatedProjectOption in relatedProjectOptions}

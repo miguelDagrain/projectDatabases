@@ -152,7 +152,7 @@
     <div class="page-content">
         <h1>{{ _('Projects') }}</h1>
 
-          {% if ('admin' or 'staff') in current_user.roles %}
+          {% if ('admin' in current_user.roles or 'staff' in current_user.roles) %}
 
              <button class="page-content-button" data-toggle="modal" data-target="#modal-form-project">{{ _('add project') }}</button>
 
@@ -241,6 +241,17 @@
                                 <textarea class="tinymce" id="administration-form-description" name="Description"></textarea>
                             </div>
 
+                            <div>
+                                <label for="administration-form-upload">{{ _('attached files') }}:</label>
+                                <div class="upload" ondrop="handleUploadAttachementDrop(event);" ondragover="handleUploadAttachementOver(event);">
+                                    <img src="{{ url_for('static', filename='image/upload.png') }}">
+                                    <p>{{ _('drag here your files that you want to upload') }}</p>
+                                </div>
+                                <ul id="administration-form-upload"></ul>
+
+                                <!--<input id="administration-form-upload" type="file" css="display:none;" name="Attachements" multiple>-->
+                            </div>
+
                             <div class="multi-text-input" id="Promotors">
                                 <label for="administration-form-promotor">{{ _('Promotors') }}:</label>
 
@@ -264,7 +275,7 @@
                                 <div class="input-block">
 
                                     <input type="text" id="administration-form-tags" name="Tags">
-                                    <button id="administration-form-tag-add">{{ _('add') }}</button>
+                                    <button id="administrat ion-form-tag-add">{{ _('add') }}</button>
                                     <script>standardConnectAddClick($("#administration-form-tag-add"))</script>
                                 </div>
                             </div>
