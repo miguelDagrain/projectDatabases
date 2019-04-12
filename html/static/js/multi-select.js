@@ -11,7 +11,7 @@ function setUpMultiSelection() {
         //maak button
         var button = document.createElement("div");
         button.setAttribute("class", "multi-select-button");
-        button.innerHTML = "_('All')";
+        button.innerHTML = "All";
         selector.appendChild(button);
 
         //maak een menu
@@ -69,11 +69,11 @@ function setUpMultiSelection() {
         });
 
         menu.appendChild(allOption);
-        // allOption.click();
+        // allOption.changeSelection();
         //allOption.classList.remove("multi-select-items-not-selected");
         //allOption.classList.add("multi-select-items-selected");
         //allOption.parentElement.previousElementSibling.innerHTML = "All";
-        allOption.changeSelection();
+        // allOption.changeSelection();
 
 
         //voeg voor elke optie een niet geselecteerd item toe met eventlistener, en verberg deze
