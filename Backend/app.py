@@ -151,7 +151,7 @@ def group_page(id):
     :return: rendered template of the group
     """
     Racces = ResearchGroupAccess()
-    researchGroup = Racces.get_researchGroupOnID(id)
+    researchGroup = Racces.get_singleResearchGroupOnID(id)
 
     Eacces = EmployeeAccess()
     researchers = list()
@@ -272,7 +272,7 @@ def get_person(id):
     person = Eaccess.get_employee(id)
 
     Raccess = ResearchGroupAccess()
-    group = Raccess.get_researchGroupOnID(person.research_group)
+    group = Raccess.get_singleResearchGroupOnID(person.research_group)
 
     projects = person.getProjects()
 
@@ -445,7 +445,6 @@ def project_page(id):
     promotors = list()
     for promotorID in promotorsIDs:
         promotors.append(Eaccess.get_employee(promotorID))
-
     researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
 
 
@@ -694,5 +693,5 @@ if __name__ == "__main__":
 
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                               dbhost=config_data['dbhost'])
-    ##findTags()
+#    findTags()
     app.run(debug=True, host=ip, port=port)
