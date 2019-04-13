@@ -76,8 +76,7 @@ class DocumentAccess:
                 id = cursor.fetchone()[0]
                 doc.ID = id
                 for att in doc.attachment:
-                    att.docid = id
-                    self.add_attachment(att)
+                    self.add_attachment(id,att)
             # get id and return updated object
             self.dbconnect.commit()
             return id
@@ -499,6 +498,7 @@ class ProjectAccess:
         desc = list()
         for row in cursor:
             desc.append(self.doc.get_document(row[1]))
+
         return desc
 
     def add_projectDocument(self, projectID, document):
@@ -512,11 +512,6 @@ class ProjectAccess:
             docid = self.doc.add_document(document)
             cursor.execute('INSERT INTO projectDocument values(%s,%s)',
                            (projectID, docid))
-
-            #voeg de attachments toe
-            docAccess = DocumentAccess
-            for attachment in document.attachment:
-                docAccess.add_attachment(docid, attachment)
 
             # get id and return updated object
             self.dbconnect.commit()
@@ -896,7 +891,7 @@ class ProjectAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO project values(default,%s,%s,%s)',
-                           (proj.title, proj.maxStudents, proj.active))
+                           (proj.title, str(proj.maxStudents), proj.active))
             cursor.execute('SELECT LASTVAL()')
             gid = cursor.fetchone()
             proj.ID = int(gid[0])

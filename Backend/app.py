@@ -2,6 +2,7 @@ import json
 import re
 import sys
 import datetime
+import os
 from functools import wraps
 
 from flask import *
@@ -9,8 +10,8 @@ from flask.templating import render_template
 from flask_babel import *
 from flask_login import LoginManager
 from flask_login import login_user, logout_user, current_user
-
 from werkzeug.utils import secure_filename
+
 
 import dbConnection
 from DataAccess import *
@@ -29,7 +30,8 @@ from helperFunc import *
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
-app.config['UPLOAD_FOLDER'] = "../uploaded/"
+app.config['UPLOAD_FOLDER']="../attachments/"
+ALLOWED_EXTENSIONS = set(['html','txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 babel = Babel(app)
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 login_manager = LoginManager()
@@ -380,19 +382,17 @@ def add_project():
 
     project.desc.append(doc)
 
-    files = request.files["Attachments"]
+    files = request.files.getlist("Attachments")
     for file in files:
         nameFile = secure_filename(title+'_'+file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
         doc.attachment.append(nameFile)
 
-
-
     typeNrs = request.form.getlist("Type")
     typeOptions = access.get_projectType()
 
     for typeNr in typeNrs:
-        project.type.append(typeOptions[int(typeNr)])
+        project.type.append(typeOptions[int(typeNr)-1])
 
     disciplineNrs = request.form.getlist("Discipline")
 
@@ -445,11 +445,21 @@ def project_page(id):
     promotors = list()
     for promotorID in promotorsIDs:
         promotors.append(Eaccess.get_employee(promotorID))
+
     researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
+    docattachments=document[0].attachment
+    attachments=list()
+    for i in docattachments:
+        splitted=i.split('_', 1)[-1]
+        attachments.append((i,splitted))
 
 
     return render_template("project.html", r_project=project, r_promotors=promotors,
-                           r_researchGroups=researchGroups, page="projects")
+                           r_researchGroups=researchGroups, page="projects",r_attachments=attachments)
+
+@app.route('/download/<string:name>', methods=['GET'])
+def download(name):
+    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name)
 
 
 @app.route("/projects/<int:id>", methods=["POST"])
@@ -683,6 +693,36 @@ def logout():
     flash("you are now logged out")
     return redirect(next or url_for('index'))
 
+@app.route('/upload/')
+def upload():
+    return render_template('uploader.html')
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            if not os.path.exists(app.config['UPLOAD_FOLDER']+"test/"):
+                os.mkdir(app.config['UPLOAD_FOLDER']+"test/")
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], "test/"+filename))
+
+            # return redirect(url_for('uploaded_file',filename=filename))
+    return 'file uploaded successfully'
+
 
 if __name__ == "__main__":
     ip = config_data['ip']
@@ -693,5 +733,5 @@ if __name__ == "__main__":
 
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                               dbhost=config_data['dbhost'])
-#    findTags()
+    ##findTags()
     app.run(debug=True, host=ip, port=port)

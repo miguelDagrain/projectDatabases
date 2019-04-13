@@ -5617,3 +5617,10 @@ insert into bookmark (project, student) values (657,250);
 insert into bookmark (project, student) values (853,250);
 insert into bookmark (project, student) values (854,250);
 insert into bookmark (project, student) values (851,250);
+
+select setval('document_documentID_seq', (select max(projectID) + 1 from project), false);
+select setval('researchGroup_groupID_seq', (select max(groupID) + 1 from researchGroup), false);
+select setval('employee_employeeID_seq', (select max(employeeID) + 1 from employee), false);
+select setval('project_projectID_seq', (select max(projectID) + 1 from project), false);
+select setval('student_studentID_seq', (select max(studentID) + 1 from student), false);
+
