@@ -107,6 +107,6 @@ function setupFormAddProject() {
     $('#add-project-form').bind('submit', function (event) {
         event.preventDefault();
         addProject();
-        $(this).attr('disabled', true);
+        $(this).modal('hide');
     });
 }

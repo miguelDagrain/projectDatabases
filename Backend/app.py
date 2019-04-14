@@ -440,7 +440,6 @@ def project_page(id):
     Eaccess = EmployeeAccess()
     Raccess = ResearchGroupAccess()
     project = Paccess.get_project(id)
-    document = Paccess.get_projectDocuments(id)
     promotorsIDs = Paccess.get_projectPromotors(id)
     promotors = list()
     for promotorID in promotorsIDs:
@@ -682,6 +681,17 @@ def logout():
     next = request.args.get('logout')
     flash("you are now logged out")
     return redirect(next or url_for('index'))
+
+
+@app.route('/showInterest/', methods=['POST'])
+def showInterest():
+    message = request.form["Message"]
+    sender = "momenteel geen idee"
+    receiver = "moet nog uitzoeken hoe op te halen"
+    subject = "Expressing interest in " +  "naam van project"
+
+    service = MailService
+    service.sendSingleMail(sender, receiver, subject, message)
 
 
 if __name__ == "__main__":

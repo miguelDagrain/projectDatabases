@@ -216,11 +216,11 @@ class ResearchGroupAccess:
         """
         from ResearchGroup import ResearchGroup
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (str(id)))
+        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (id,))
         row = cursor.fetchone()
         rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
-        cursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
+        cursor.execute('select * from contactPerson where rgroup=%s', (rgroup.ID,))
         if cursor.rowcount > 0:
             rgroup.contactID = cursor.fetchone()[0]
         return rgroup
