@@ -234,46 +234,49 @@ CREATE TABLE bookmark
   PRIMARY KEY (project, student)
 );
 
-CREATE FUNCTION researchGroup_del_func() RETURNS trigger AS $action$
-BEGIN
-    UPDATE employee
-    SET researchgroup = 1
-    WHERE researchgroup = old.groupID;
+drop function if exists researchGroup_del_func;
+ CREATE FUNCTION researchGroup_del_func() RETURNS trigger AS $action$
+ BEGIN
+     UPDATE employee
+     SET researchgroup = 1
+     WHERE researchgroup = old.groupID;
 
 
-    UPDATE projectResearchgroup
-    SET researchgroupid = 1
-    WHERE researchgroupid = old.groupID;
+     UPDATE projectResearchgroup
+     SET researchgroupid = 1
+     WHERE researchgroupid = old.groupID;
 
-    DELETE FROM document
-     WHERE documentID = (SELECT docID
-                       FROM groupDescription NATURAL JOIN researchGroup rG
-                       WHERE rG.groupID = old.groupID);
+     DELETE FROM document
+      WHERE documentID = (SELECT docID
+                        FROM groupDescription NATURAL JOIN researchGroup rG
+                        WHERE rG.groupID = old.groupID);
 
-    RETURN old;
-END
-$action$ LANGUAGE plpgsql;
+     RETURN old;
+ END
+ $action$ LANGUAGE plpgsql;
 
-
+drop trigger if exists researchGroup_del_tr ON researchGroup;
 CREATE TRIGGER researchGroup_del_tr
 BEFORE DELETE ON researchGroup
 FOR EACH ROW
 WHEN (old.groupID <> 1)
 EXECUTE PROCEDURE researchGroup_del_func();
 
-CREATE FUNCTION project_del_func() RETURNS trigger AS $action$
-BEGIN
+drop function if exists project_del_func;
+ CREATE FUNCTION project_del_func() RETURNS trigger AS $action$
+ BEGIN
 
-  DELETE FROM document
-  WHERE documentID = (SELECT docID
-                      FROM projectDocument
-                      WHERE projectID = old.projectID);
+   DELETE FROM document
+   WHERE documentID = (SELECT docID
+                       FROM projectDocument
+                       WHERE projectID = old.projectID);
 
-  RETURN old;
+   RETURN old;
 
-END
-$action$ LANGUAGE plpgsql;
+ END
+ $action$ LANGUAGE plpgsql;
 
+drop trigger if exists project_del_tr on project;
 CREATE TRIGGER project_del_tr
 BEFORE DELETE ON project
 FOR EACH ROW
