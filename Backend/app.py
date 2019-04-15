@@ -445,6 +445,7 @@ def project_page(id):
     Raccess = ResearchGroupAccess()
     project = Paccess.get_project(id)
     promotorsIDs = Paccess.get_projectPromotors(id)
+    document = Paccess.get_projectDocuments(id)
     promotors = list()
     for promotorID in promotorsIDs:
         promotors.append(Eaccess.get_employee(promotorID))
