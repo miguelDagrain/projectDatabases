@@ -1,0 +1,4 @@
+dn: ou=People,dc=pdbldap,dc=com
+objectClass: organizationalUnit
+ou: Credentials
+

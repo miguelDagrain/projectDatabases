@@ -657,10 +657,19 @@ def check_project_title_correct():
 
 @login_manager.user_loader
 def load_user(user_id):
-    us = User(Session(user_id, 1, 0, 0))
+    eors=EORS.UNKNOWN
+    if(user_id[0]=="S"):
+        eors=EORS.STUDENT
+    elif(user_id[0]=="E"):
+        eors=EORS.EMPLOYEE
+    us = User(Session(user_id, 1, 0, 0, eors))
     eAcces = EmployeeAccess()
-    if user_id != 'None':
-        us.roles = eAcces.get_employeeRoles(user_id)
+    us.roles=list()
+    if user_id != 'None' and us.session.EORS==EORS.EMPLOYEE:
+        us.roles = eAcces.get_employeeRoles(user_id[1:])
+        us.roles.append("employee")
+    elif user_id != 'None' and us.session.EORS ==EORS.STUDENT:
+        us.roles.append('student')
     us.auth = True
     us.active = True
     return us
@@ -673,7 +682,7 @@ def unauthorized():
 
 @app.route('/login/', methods=['POST'])
 def login():
-    us = User(Session(0, 1, 0, 0))
+    us = User(Session(0, 1, 0, 0, EORS.UNKNOWN))
     username = request.form["username"]
     password = request.form["password"]
     try:
@@ -746,8 +755,8 @@ if __name__ == "__main__":
     # temp=access.get_researchGroupOnID(1)
     # temp2=access.get_projectPromotors(1)
     # app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )
-
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                               dbhost=config_data['dbhost'])
     ##findTags()
     app.run(debug=True, host=ip, port=port)
+

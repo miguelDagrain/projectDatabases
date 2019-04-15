@@ -334,6 +334,21 @@ class EmployeeAccess:
         row = cursor.fetchone()
         return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
+    def get_employeeOnName(self,name):
+        """
+        gets a single employee out the database on a name
+        :param name: the name
+        :return: a single employee
+        """
+        from Employee import Employee
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM employee WHERE name=%s ', (name,))
+        if(cursor.rowcount!=0):
+            row = cursor.fetchone()
+            return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+        else:
+            return None
+
     def add_employee(self, empl):
         """
         adds an employee to the database
@@ -970,6 +985,7 @@ class StudentAccess:
         self.dbconnect = dbConnection.connection
         self.project = ProjectAccess()
 
+
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
         """
@@ -1055,6 +1071,23 @@ class StudentAccess:
         stu = Student(row[0], row[1],row[2])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
         return stu
+
+    def get_studentOnStudentNumber(self,number):
+        """
+        gets a single student based of an id
+        :param ID: the id of this student
+        :return: a single student
+        """
+        from Student import Student
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT * FROM student WHERE studentnumber=%s ', (number,))
+        if(cursor.rowcount!=0):
+            row = cursor.fetchone()
+            stu = Student(row[0], row[1], row[2])
+            stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
+            return stu
+        else:
+            return None
 
     def add_student(self, stu):
         """
