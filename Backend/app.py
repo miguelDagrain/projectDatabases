@@ -731,12 +731,13 @@ def upload_file():
 @app.route('/showInterest/', methods=['POST'])
 def showInterest():
     message = request.form["Message"]
-    sender = "momenteel geen idee"
-    receiver = "moet nog uitzoeken hoe op te halen"
-    subject = "Expressing interest in " +  "naam van project"
+    sender = "" #todo: huidige persoon ingelogd moet nog opgehaald worden
+    receiver = "" #todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
+    subject = "Expressing interest in " + "naam van project" #todo: nog naam van project van project via ajax door sturen
 
     service = MailService
     service.sendSingleMail(sender, receiver, subject, message)
+    return True
 
 
 if __name__ == "__main__":
