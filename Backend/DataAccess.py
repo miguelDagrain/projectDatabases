@@ -215,11 +215,11 @@ class ResearchGroupAccess:
         """
         from ResearchGroup import ResearchGroup
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (str(id)))
+        cursor.execute('SELECT * FROM researchGroup WHERE groupID=%s', (str(id),))
         row = cursor.fetchone()
         rgroup = ResearchGroup(row[0], row[1], row[2], row[3], row[4], row[5], row[6], None)
         rgroup.desc = self.get_researchgroupDescriptions(rgroup.ID)
-        cursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID)))
+        cursor.execute('select * from contactPerson where rgroup=%s', (str(rgroup.ID),))
         if cursor.rowcount > 0:
             rgroup.contactID = cursor.fetchone()[0]
         return rgroup
@@ -745,8 +745,7 @@ class ProjectAccess:
                            (project.ID, "succeeded"))
             project.registeredStudents = list(cursor.fetchall())
 
-            cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
-            project.researchGroup = list(cursor.fetchall())
+            project.researchGroup = self.get_projectresearchgroups(project.ID)
 
             cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
             project.relatedProject = list(cursor.fetchall())
