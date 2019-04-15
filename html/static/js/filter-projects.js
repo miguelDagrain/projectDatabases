@@ -77,6 +77,7 @@ function filterProjects(){
     console.log(rg.options[rg.selectedIndex].text);
     console.log(status.options[status.selectedIndex].text);
 
+
     // Weighted relevance for each token
     for ( var i in result){
 
@@ -132,6 +133,7 @@ function filterProjects(){
             case 2:
                 if (result[i].maxStudents > result[i].registeredStudents){
                     result[i].relevance = 0;
+                    console.log("rg");
                     continue;
                 }
                 break;
