@@ -12,6 +12,8 @@ DROP TABLE IF EXISTS projectTypeConnection;
 DROP TABLE IF EXISTS projectType;
 DROP TABLE IF EXISTS projectYearConnection;
 DROP TABLE IF EXISTS projectYear;
+drop table if exists projectResearchgroup;
+drop table if exists projectDiscipline;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS contactPerson;
 DROP TABLE IF EXISTS employeeRoles;
@@ -137,8 +139,21 @@ CREATE TABLE project
   projectID     SERIAL PRIMARY KEY,
   title         VARCHAR(255) NOT NULL,
   maxStudents   INT          NOT NULL,
-  active        BOOLEAN,
-  researchGroup INT REFERENCES researchGroup (groupID)
+  active        BOOLEAN
+);
+
+CREATE TABLE projectDiscipline
+(
+  projectID int references project(projectID) ON DELETE CASCADE,
+  discipline varchar(255) references discipline(subject),
+  primary key (projectID, discipline)
+);
+
+create table projectResearchgroup
+(
+  projectID int references project(projectID) ON DELETE CASCADE,
+  researchgroupid int references researchGroup(groupID),
+  primary key (projectid,researchgroupid)
 );
 
 CREATE TABLE projectYear
@@ -158,7 +173,9 @@ CREATE TABLE projectType
   type varchar(255) PRIMARY KEY
 );
 insert into projectType values ('Master thesis');
-insert into projectType values ('Research internship');
+insert into projectType values ('Research internship 2');
+insert into projectType values ('Research internship 1');
+insert into projectType values ('Bachelor dissertation');
 
 CREATE TABLE projectTypeConnection
 (
@@ -190,15 +207,16 @@ CREATE TABLE projectRelation
 
 CREATE TABLE projectDocument
 (
-  projectID INT REFERENCES project (projectID) ON DELETE CASCADE,
-  docID     INT REFERENCES document (documentID),
+  projectID INT REFERENCES project (projectID), -- On delete cascade is niet nodig omwille van de trigger
+  docID     INT REFERENCES document (documentID) ON DELETE CASCADE,
   PRIMARY KEY (projectID, docID)
 );
 
 CREATE TABLE student
 (
   studentID SERIAL PRIMARY KEY,
-  name      VARCHAR(70) NOT NULL
+  name      VARCHAR(70) NOT NULL,
+  studentnumber int NOT NULL
 );
 
 CREATE TABLE projectRegistration
@@ -216,28 +234,50 @@ CREATE TABLE bookmark
   PRIMARY KEY (project, student)
 );
 
-CREATE FUNCTION researchGroup_del_func() RETURNS trigger AS $action$
-BEGIN
-    UPDATE employee
-    SET researchgroup = 1
-    WHERE researchgroup = old.groupID;
-
-    UPDATE project
-    SET researchGroup = 1
-    WHERE researchGroup = old.groupID;
-
-    DELETE FROM document
-     WHERE documentID = (SELECT docID
-                       FROM groupDescription NATURAL JOIN researchGroup rG
-                       WHERE rG.groupID = old.groupID);
-
-    RETURN old;
-END
-$action$ LANGUAGE plpgsql;
+drop function if exists researchGroup_del_func;
+ CREATE FUNCTION researchGroup_del_func() RETURNS trigger AS $action$
+ BEGIN
+     UPDATE employee
+     SET researchgroup = 1
+     WHERE researchgroup = old.groupID;
 
 
+     UPDATE projectResearchgroup
+     SET researchgroupid = 1
+     WHERE researchgroupid = old.groupID;
+
+     DELETE FROM document
+      WHERE documentID = (SELECT docID
+                        FROM groupDescription NATURAL JOIN researchGroup rG
+                        WHERE rG.groupID = old.groupID);
+
+     RETURN old;
+ END
+ $action$ LANGUAGE plpgsql;
+
+drop trigger if exists researchGroup_del_tr ON researchGroup;
 CREATE TRIGGER researchGroup_del_tr
 BEFORE DELETE ON researchGroup
 FOR EACH ROW
 WHEN (old.groupID <> 1)
 EXECUTE PROCEDURE researchGroup_del_func();
+
+drop function if exists project_del_func;
+ CREATE FUNCTION project_del_func() RETURNS trigger AS $action$
+ BEGIN
+
+   DELETE FROM document
+   WHERE documentID = (SELECT docID
+                       FROM projectDocument
+                       WHERE projectID = old.projectID);
+
+   RETURN old;
+
+ END
+ $action$ LANGUAGE plpgsql;
+
+drop trigger if exists project_del_tr on project;
+CREATE TRIGGER project_del_tr
+BEFORE DELETE ON project
+FOR EACH ROW
+EXECUTE PROCEDURE project_del_func();

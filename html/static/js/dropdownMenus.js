@@ -4,10 +4,10 @@
  *  (dewelke eigenlijk niet kunnen opgemaakt worden met css).
  **/
 function setUpDropdowns() {
+
     var dropdowns = document.getElementsByClassName("dropdown");
     for (iter = 0; iter < dropdowns.length; iter++) { //we doen dit voor elke dropdown
         var selector = dropdowns[iter].getElementsByTagName("select")[0]; //we gaan ervan uit dat er maar een select per dropdown is
-
         var selected = document.createElement("div");
         selected.setAttribute("class", "dropdown-selected");
         selected.innerHTML = selector.options[selector.selectedIndex].innerHTML; //zet de inner-html naar de html van de geselecteerde optie
@@ -24,6 +24,7 @@ function setUpDropdowns() {
 
             var optionalElem = document.createElement("div");
             optionalElem.innerHTML = selector.options[iterElems].innerHTML;
+            optionalElem.onchange = selector.onchange;
             possibleSelection.appendChild(optionalElem); //voeg de optie toe
             optionalElem.addEventListener("click", function (evt) {
 
@@ -41,6 +42,7 @@ function setUpDropdowns() {
                     }
                 }
 
+                this.onchange();
                 clickableBox.click();//we sluiten zo het menu
             }); //geef de mogelijkheid om deze optie te selecteren
         }
@@ -58,6 +60,7 @@ function setUpDropdowns() {
             evt.preventDefault();
             evt.stopPropagation();
         });
+
 
     }
 }

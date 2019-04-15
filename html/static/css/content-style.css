@@ -1,8 +1,8 @@
 .page-content {
     display: inline-block;
     width: 88%;
-    margin-left: 12%;
-    margin-right: 0px;
+    margin-left: 4%;
+    margin-right: 5px;
     margin-top: 20px;
 }
 
@@ -44,6 +44,8 @@
 .content-table  td {
     padding: 30px;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content-table tr {

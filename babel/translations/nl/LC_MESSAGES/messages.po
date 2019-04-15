@@ -55,9 +55,9 @@ msgid "Name"
 msgstr "Naam"
 
 #: html/templates/people.html:29 html/templates/people.html:73
-#: html/templates/projects.html:59
-msgid "Research group"
-msgstr "Onderzoeksgroep"
+#: html/templates/project.html
+msgid "research groups"
+msgstr "onderzoeksgroepen"
 
 #: elke multi-select
 #: html/templates/people.html:31 html/templates/people.html:57
@@ -206,6 +206,7 @@ msgstr "Omschrijving"
 
 #: html/templates/researchgroup.html
 #: html/templates/people.html
+#: html/templates/person.html
 msgid "Research group"
 msgstr "Onderzoeksgroep"
 
@@ -296,3 +297,7 @@ msgstr "Geen"
 #: elke multi-select knop
 msgid "Selection"
 msgstr "Selectie"
+
+#: html/templates/layout.html:233
+msgid "We use cookies to power and improve your experiences on this site"
+msgstr "Wij gebruiken cookies om uw ervaring op deze website te bevorderen."

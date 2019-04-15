@@ -1,4 +1,4 @@
-dn: uid=ADMIN,ou=People,dc=pdbldap,dc=com
+dn: cn=ADMIN,ou=People,dc=pdbldap,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 objectClass: shadowAccount
@@ -14,7 +14,7 @@ gecos: FULLNAME
 loginShell: /bin/bash
 homeDirectory: USERDIRECTORY
 
-dn: uid=USER,ou=People,dc=pdbldap,dc=com
+dn: cn=USER,ou=People,dc=pdbldap,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 objectClass: shadowAccount

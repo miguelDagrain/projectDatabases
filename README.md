@@ -18,6 +18,10 @@ optional: insert dummy_data
 
 > psql -U pdb -d pdbdatabase -f sql/echte_dummy_data.sql
 
+insert Datadump data:
+
+> psql -U pdb -d pdbdatabase -f sql/Data.sql
+
 
 ###Flask-Babel
  If you only want the translations you only have to do the compile step
@@ -65,15 +69,19 @@ say no for the first question
 
 if asked for domain name type pdbldap.com
 
-as organization name choose pdblda
+as organization name choose pdbldap
  
 choose MDB, then answer no for a question and yes for the last question
 
 got to the ldapFiles folder and run following commands to populate database with user and admin users
 
->ldapadd -x -D cn=admin,dc=pdbldap,dc=com -W -f pdbldap_data_.ldif
+>ldapadd -x -D cn=admin,dc=pdbldap,dc=com -W -f pdbldap_data.ldif
 
->ldapadd -x -D cn=admin,dc=pdbldap,dc=com -W -f pdbldapUsers_.ldif
+for test users
+>ldapadd -x -D cn=admin,dc=pdbldap,dc=com -W -f pdbldapUsers.ldif
+
+for actual users
+>ldapadd -x -D cn=admin,dc=pdbldap,dc=com -W -f pdbldapRealUsers.ldif
 
 install python ldap dependencies
 

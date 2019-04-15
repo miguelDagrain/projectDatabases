@@ -43,13 +43,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    {% block scripts %}{% endblock scripts %}
+
     <script type="text/javascript" name="url picker">
         $(document).ready(function () {
             var elems = document.getElementsByName("url_redirect");
             for (i = 0; i < elems.length; i++) {
                 elems[i].setAttribute("value", window.location.href);
             }
-        })
+
+            {% block onReadyCalls %}{% endblock onReadyCalls %}
+        });
+    </script>
+
+     <!-- nodig om in javascript files de locatie van files enzovoort te kunnen specifieren -->
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
 
     <script type="text/javascript" name="login">
@@ -77,11 +87,10 @@
         }
     </script>
 
-    {% block scripts %}{% endblock scripts %}
+
 
 </head>
 <body>
-
 
 <div class="container-fluid">
 
@@ -138,12 +147,12 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if 'admin' in current_user.rolesi %}
+                            {% if 'admin' in current_user.roles %}
                             <li class="nav-item">
                                 <a class=" hyperlink {{ "active" if page=="administration" }}"
                                    href="{{ url_for( 'get_administration' ) }}">
                                     {{ _('Administration') }}
-                                </a>
+                                 </a>
                             </li>
                             {% endif %}
                         </ul>
@@ -219,6 +228,30 @@
             {% endif %}
         </div>
     </div>
+    <div class="fixed-bottom"  style="text-align:center">
+        <div class="container" style="display:none" id="cookiePopup">
+       {{ _('We use cookies to power and improve your experiences on this site') }}
+            <button type="button" class="btn btn-primary btn-sm" onclick="closeCookieBanner()">
+                ok
+            </button>
+        </div>
+    </div>
+    <script>
+        var cookies=getCookie("allowCookies");
+        if(cookies!=="true"){
+            document.getElementById('cookiePopup').style.display='block';
+        }
+        function closeCookieBanner(){
+            document.cookie="allowCookies=true; path=/";
+            document.getElementById('cookiePopup').style.display='none';
+        }
+        //found on https://stackoverflow.com/questions/10730362/get-cookie-by-name
+        function getCookie(name) {
+          var value = "; " + document.cookie;
+          var parts = value.split("; " + name + "=");
+          if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+    </script>
 </div>
 
 {% block body %}
