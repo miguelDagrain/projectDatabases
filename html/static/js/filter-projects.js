@@ -72,12 +72,10 @@ function filterProjects(){
         }
     }
 
-    /*
     console.log(selectedTypes);
     console.log(selectedDisciplines);
     console.log(rg.options[rg.selectedIndex].text);
     console.log(status.options[status.selectedIndex].text);
-    */
 
     // Weighted relevance for each token
     for ( var i in result){
