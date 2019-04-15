@@ -167,7 +167,11 @@ def group_page(id):
     Pacces = ProjectAccess()
     projects = list()
     for project in Pacces.get_projects():
-        if project.researchGroup[0] == researchGroup.ID:
+        toadd=False
+        for rgroup in project.researchGroup:
+            if rgroup == researchGroup.ID:
+                toadd=True
+        if(toadd):
             projects.append(project)
 
     language = request.cookies.get('lang')

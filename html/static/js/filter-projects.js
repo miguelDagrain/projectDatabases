@@ -71,6 +71,7 @@ function filterProjects(){
             selectedDisciplines.push(ms[1].children[2].children[i].textContent);
         }
     }
+
     /*
     console.log(selectedTypes);
     console.log(selectedDisciplines);
@@ -112,7 +113,7 @@ function filterProjects(){
         // Check research group
         var rgFound = false;
         for (var rgn in result[i].researchGroup){
-            if (result[i].researchGroup[rgn] == rg.options[rg.selectedIndex].text){
+            if (result[i].researchGroup[rgn] === rg.options[rg.selectedIndex].text){
                 rgFound = true;
                 break;
             }
@@ -189,7 +190,7 @@ function showMoreProjects(sq) {
         link.href = result[i].href;
         name.appendChild(link);
         cont.appendChild(name);
-        pCont.appendChild(cont);
+
 
         var group = document.createElement("td");
         for (var groupIter = 0; groupIter < result[i].researchGroup.length; groupIter++) {
@@ -203,9 +204,10 @@ function showMoreProjects(sq) {
         var stud = document.createElement("td");
         stud.appendChild(document.createTextNode('[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']'));
         cont.appendChild(stud);
-
+        pCont.appendChild(cont);
     }
     tableList.appendChild(pCont);
+
     projectCount += 10;
 
 }

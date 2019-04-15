@@ -745,8 +745,7 @@ class ProjectAccess:
                            (project.ID, "succeeded"))
             project.registeredStudents = list(cursor.fetchall())
 
-            cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
-            project.researchGroup = list(cursor.fetchall())
+            project.researchGroup = self.get_projectresearchgroups(project.ID)
 
             cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
             project.relatedProject = list(cursor.fetchall())
