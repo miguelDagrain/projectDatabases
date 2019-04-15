@@ -73,7 +73,7 @@ function setUpMultiSelection() {
         //allOption.classList.remove("multi-select-items-not-selected");
         //allOption.classList.add("multi-select-items-selected");
         //allOption.parentElement.previousElementSibling.innerHTML = "All";
-        // allOption.changeSelection();
+        allOption.changeSelection();
 
 
         //voeg voor elke optie een niet geselecteerd item toe met eventlistener, en verberg deze
