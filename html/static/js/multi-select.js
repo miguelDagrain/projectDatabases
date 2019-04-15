@@ -75,7 +75,6 @@ function setUpMultiSelection() {
         //allOption.parentElement.previousElementSibling.innerHTML = "All";
         allOption.changeSelection();
 
-
         //voeg voor elke optie een niet geselecteerd item toe met eventlistener, en verberg deze
         for(var nrSelect = 1; nrSelect < selectMain.length; nrSelect++){
             var newItem =  document.createElement("div");
