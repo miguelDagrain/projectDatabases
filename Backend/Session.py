@@ -16,7 +16,7 @@ class Session:
         :param clicked_project_time: a time object referencing the time the session clicked on a project
         :return: a new dbSession object
         """
-        self.studentId = id
+        self.ID = id
         self.sessionId = session_id
         self.startTime = start_time
         self.startDate = start_date
@@ -36,4 +36,4 @@ class Session:
     def get_student(self, dbconnect):
         access = __import__('DataAccess', fromlist=['StudentAccess'])
         sa = access.StudentAccess(dbconnect)
-        return sa.get_student(self.studentId)
+        return sa.get_student(self.ID)

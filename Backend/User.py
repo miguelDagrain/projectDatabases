@@ -20,16 +20,16 @@ class User(UserMixin):
         return self.active
 
     """"
-    returns a letter denoting whether it is a employee or student and the studentID
+    returns a letter denoting whether it is a employee or student and the ID
     """
     def get_id(self):
         if(self.session!=None):
             if(self.session.EORS==EORS.EMPLOYEE):
-                return str("E"+str(self.session.studentId))
+                return str("E"+str(self.session.ID))
             elif(self.session.EORS == EORS.STUDENT):
-                return str("S" + str(self.session.studentId))
+                return str("S" + str(self.session.ID))
             else:
-                return str("U" + str(self.session.studentId))
+                return str("U" + str(self.session.ID))
 
     def is_authenticated(self):
 
@@ -67,7 +67,7 @@ class User(UserMixin):
 
             emp=eacces.get_employeeOnName(userName)
             if(emp!=None):
-                self.session.studentId = emp.id
+                self.session.ID = emp.id
                 self.session.EORS=EORS.EMPLOYEE
                 self.auth = True
                 self.roles = eacces.get_employeeRoles(emp.id)
@@ -81,7 +81,7 @@ class User(UserMixin):
             number="2"+number
             stu=sacces.get_studentOnStudentNumber(number)
             if(stu!=None):
-                self.session.studentId = stu.studentID
+                self.session.ID = stu.studentID
                 self.session.EORS = EORS.STUDENT
                 self.auth = True
                 self.roles=list()
@@ -108,7 +108,7 @@ class User(UserMixin):
 
     def normalLogin(self, userName, password):
         if userName == 'admin' and password == "hunter1":
-            self.session.studentId = 16
+            self.session.ID = 16
             self.session.EORS=EORS.EMPLOYEE
             self.auth = True
             self.roles = ('employee','admin', 'user')
@@ -116,7 +116,7 @@ class User(UserMixin):
             self.anon = False
             return True
         elif userName == 'employee' and password == 'hunter2':
-            self.session.studentId = 2
+            self.session.ID = 2
             self.session.EORS = EORS.EMPLOYEE
             self.auth = True
             self.roles = ('employee','user')
@@ -125,11 +125,10 @@ class User(UserMixin):
             self.anon = False
             return True
         elif userName == 'student' and password == 'hunter3':
-            self.session.studentId = 1
+            self.session.ID = 1
             self.session.EORS = EORS.STUDENT
             self.auth = True
             self.roles = ('student','user')
-
             self.active = True
             self.anon = False
             return True
