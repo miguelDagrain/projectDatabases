@@ -662,7 +662,7 @@ def load_user(user_id):
         eors=EORS.STUDENT
     elif(user_id[0]=="E"):
         eors=EORS.EMPLOYEE
-    us = User(Session(user_id, 1, 0, 0, eors))
+    us = User(Session(user_id[1:], 1, 0, 0, eors))
     eAcces = EmployeeAccess()
     us.roles=list()
     if user_id != 'None' and us.session.EORS==EORS.EMPLOYEE:
@@ -747,6 +747,7 @@ def showInterest():
     service = MailService
     service.sendSingleMail(sender, receiver, subject, message)
     return True
+
 
 
 if __name__ == "__main__":

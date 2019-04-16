@@ -24,9 +24,9 @@ class User(UserMixin):
     """
     def get_id(self):
         if(self.session!=None):
-            if(self.session.EROS==EORS.EMPLOYEE):
+            if(self.session.EORS==EORS.EMPLOYEE):
                 return str("E"+str(self.session.studentId))
-            elif(self.session.EROS == EORS.STUDENT):
+            elif(self.session.EORS == EORS.STUDENT):
                 return str("S" + str(self.session.studentId))
             else:
                 return str("U" + str(self.session.studentId))
@@ -68,7 +68,7 @@ class User(UserMixin):
             emp=eacces.get_employeeOnName(userName)
             if(emp!=None):
                 self.session.studentId = emp.id
-                self.session.EROS=EORS.EMPLOYEE
+                self.session.EORS=EORS.EMPLOYEE
                 self.auth = True
                 self.roles = eacces.get_employeeRoles(emp.id)
                 self.roles.append("employee")
@@ -82,7 +82,7 @@ class User(UserMixin):
             stu=sacces.get_studentOnStudentNumber(number)
             if(stu!=None):
                 self.session.studentId = stu.studentID
-                self.session.EROS = EORS.STUDENT
+                self.session.EORS = EORS.STUDENT
                 self.auth = True
                 self.roles=list()
                 self.roles.append("student")
@@ -109,7 +109,7 @@ class User(UserMixin):
     def normalLogin(self, userName, password):
         if userName == 'admin' and password == "hunter1":
             self.session.studentId = 16
-            self.session.EROS=EORS.EMPLOYEE
+            self.session.EORS=EORS.EMPLOYEE
             self.auth = True
             self.roles = ('employee','admin', 'user')
             self.active = True
@@ -117,7 +117,7 @@ class User(UserMixin):
             return True
         elif userName == 'employee' and password == 'hunter2':
             self.session.studentId = 2
-            self.session.EROS = EORS.EMPLOYEE
+            self.session.EORS = EORS.EMPLOYEE
             self.auth = True
             self.roles = ('employee','user')
 
@@ -126,7 +126,7 @@ class User(UserMixin):
             return True
         elif userName == 'student' and password == 'hunter3':
             self.session.studentId = 1
-            self.session.EROS = EORS.STUDENT
+            self.session.EORS = EORS.STUDENT
             self.auth = True
             self.roles = ('student','user')
 
