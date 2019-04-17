@@ -24,10 +24,10 @@ class User(UserMixin):
     """
 
     def get_id(self):
-        if(self.session!=None):
-            if(self.session.EORS==EORS.EMPLOYEE):
+        if self.session!=None:
+            if self.session.EORS==EORS.EMPLOYEE:
                 return str("E"+str(self.session.ID))
-            elif(self.session.EORS == EORS.STUDENT):
+            elif self.session.EORS == EORS.STUDENT:
                 return str("S" + str(self.session.ID))
             else:
                 return str("U" + str(self.session.ID))
