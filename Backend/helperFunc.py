@@ -13,3 +13,5 @@ def helper_get_selected_multi_choice(selectedNrs, options):
             selected.append(options[int(iterSelected) - 1])
 
     return selected
+
+def deactivate_projects():

@@ -2,8 +2,11 @@ import json
 import re
 import sys
 import datetime
+import time
 import os
 from functools import wraps
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 from flask import *
 from flask.templating import render_template
@@ -11,7 +14,6 @@ from flask_babel import *
 from flask_login import LoginManager
 from flask_login import login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
-
 
 import dbConnection
 from DataAccess import *
@@ -758,6 +760,14 @@ if __name__ == "__main__":
     # app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                               dbhost=config_data['dbhost'])
+
+    mailer = MailService()
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(mailer.sendMailExtendingFirst(),trigger='cron', minute='0', hour='0', day='10', month='9', year='*')
+    scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
+    scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
+
     ##findTags()
     app.run(debug=True, host=ip, port=port)
 
