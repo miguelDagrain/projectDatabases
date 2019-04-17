@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+
+{% block stylesheets %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+
+{% endblock stylesheets %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
+
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#project-desc',
+            menubar: 'edit insert format table tools',
+            height: '400px'
+        });
+    </script>
+
+{% endblock scripts %}
+
+{% block title %}
+    Profile
+{% endblock title %}
+
+{% block body %}
+    <script>
+        $(document).ready(function () {
+            $('#profile-table').DataTable({
+                "columnDefs": [
+                    {"bSortable": false, "targets": 0}
+                ],
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "order": [[0, 'asc'], [1, 'asc']],
+                "pageLength": -1
+            });
+        });
+    </script>
+
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col">
+                <h1>{{ _('Your projects') }}</h1>
+            </div>
+            {% if inactive > 0 %}
+                <div class="col float-right">
+                    <small class="float-right">
+                        {{ _('You have') }} <span style="color: red">{{ inactive }}</span> {{ _('inactive projects') }}
+                    </small>
+                </div>
+            {% endif %}
+        </div>
+        <table class="table" id="profile-table">
+            <thead>
+            <tr>
+                <th class="th-sm"></th>
+                <th class="th-sm">
+                    <strong>{{ _('Project name') }}</strong>
+                </th>
+                <th class="th-sm">
+                    <strong>{{ _('Active') }}</strong>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>
+                        <button class="edit-button" data-toggle="modal" data-target="#project-editor">
+                            &#9998;
+                        </button>
+                    </td>
+                    <td><a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a></td>
+                    <td>
+                        {% if project.active == True %}
+                            &#10004;
+                        {% else %}
+                            &#10060;
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--Project editor modal -->
+    <div class="modal fade" id="project-editor" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit: Project name</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="edit_form">
+                        <div class="form-group">
+                            <label for="project-title" style="margin-bottom: 5px">{{ _('Title') }}</label>
+                            <input id="project-title" class="form-control" type="text"
+                                   placeholder="{{ _('Project title') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-desc">{{ _('Description') }}</label>
+                            <textarea id="project-desc" name="desc"></textarea>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

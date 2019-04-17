@@ -2,7 +2,6 @@ import json
 import re
 import sys
 import datetime
-import time
 import os
 from functools import wraps
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -32,8 +31,8 @@ from helperFunc import *
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
-app.config['UPLOAD_FOLDER']="../attachments/"
-ALLOWED_EXTENSIONS = set(['html','txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = "../attachments/"
+ALLOWED_EXTENSIONS = {'html', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 babel = Babel(app)
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 login_manager = LoginManager()
@@ -49,7 +48,7 @@ def login_required(role="ANY"):
             temp = current_user
             if not current_user.is_authenticated():
                 return login_manager.unauthorized()
-            if ((role not in current_user.roles) and (role != "ANY")):
+            if (role not in current_user.roles) and (role != "ANY"):
                 return login_manager.unauthorized()
             return fn(*args, **kwargs)
 
@@ -79,7 +78,8 @@ def index():
     Renders the index template
     :return: Rendered index template
     """
-    resp = make_response(render_template("home.html", page="index", homedoc="<h1>Todo:</h1><div>Home-page is aanpasbaar.</div><div>Moet nog opgeslagen worden in Database.</div><div>Kunne we al attachements fixe??</div><div>We kunne de home-page als document opslaan met een vast ID (liefst iets simpel zoals bv ID = 0)</div><div>Feedback graag.</div>"))
+    resp = make_response(render_template("home.html", page="index",
+                                         homedoc="<h1>Todo:</h1><div>Home-page is aanpasbaar.</div><div>Moet nog opgeslagen worden in Database.</div><div>Kunne we al attachements fixe??</div><div>We kunne de home-page als document opslaan met een vast ID (liefst iets simpel zoals bv ID = 0)</div><div>Feedback graag.</div>"))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
@@ -132,7 +132,7 @@ def add_research_group():
     abbrev = request.form.get("Abbreviation")
     disciplineNr = request.form.get("Discipline")
     discipline = disciplines[int(disciplineNr)]
-    active = True #active wordt gebruikt voor leesbaarheid
+    active = True  # active wordt gebruikt voor leesbaarheid
     address = request.form.get("Address")
     telephone = request.form.get("Telephone")
     # desc = request.form.get("Description")
@@ -169,11 +169,11 @@ def group_page(id):
     Pacces = ProjectAccess()
     projects = list()
     for project in Pacces.get_projects():
-        toadd=False
+        toadd = False
         for rgroup in project.researchGroup:
             if rgroup == researchGroup.ID:
-                toadd=True
-        if(toadd):
+                toadd = True
+        if (toadd):
             projects.append(project)
 
     language = request.cookies.get('lang')
@@ -184,7 +184,7 @@ def group_page(id):
 
     return render_template("researchgroup.html", r_groupName=researchGroup.name, r_groupID=researchGroup.ID,
                            r_description=description, r_researchers=researchers, r_contactPersons=contactPersons,
-                           r_projects=projects)
+                           r_projects=projects, page='rgroups')
 
 
 @app.route("/researchgroups/<int:id>", methods=["POST"])
@@ -260,7 +260,7 @@ def add_staff():
     roleOptions = Daccess.get_intextOrigin()
     roleNr = request.form.get("Role")
     role = roleOptions[int(roleNr)]
-    active = True #active wordt gebruikt voor leesbaarheid
+    active = True  # active wordt gebruikt voor leesbaarheid
     promotor = True if request.form.get("Promotor") == 'on' else False
 
     emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
@@ -288,13 +288,13 @@ def get_person(id):
 
     for project in projects:
         for year in project.activeYear:
-            if(year in yearAndProject):
+            if (year in yearAndProject):
                 yearAndProject[year].append(project)
             else:
                 yearAndProject[year] = list()
                 yearAndProject[year].append(project)
 
-    orderedYearAndProject = sorted(yearAndProject.items(), key= lambda k : k[0], reverse=True)
+    orderedYearAndProject = sorted(yearAndProject.items(), key=lambda k: k[0], reverse=True)
 
     return render_template("person.html", r_person=person, r_groupName=group.name,
                            r_projectAndYear=orderedYearAndProject, page="people")
@@ -337,7 +337,7 @@ def show_projects():
             disciplineNames.append(dc[0])
 
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
-                 "discipline": disciplineNames , "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
+                 "discipline": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents}
         for d in proj.desc:
             textstr = d.text
@@ -349,39 +349,31 @@ def show_projects():
                     words[w]["total"] = 0
 
                 if str(proj.ID) in words[w]:
-                    words[w][str(proj.ID)] +=1
-                    words[w]["total"] +=1
+                    words[w][str(proj.ID)] += 1
+                    words[w]["total"] += 1
                 else:
-                    words[w][str(proj.ID)] =1
-                    words[w]["total"] +=1
+                    words[w][str(proj.ID)] = 1
+                    words[w]["total"] += 1
 
         projData[proj.ID] = pjson
 
     return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
                            r_disciplines=disciplines, r_types=types, page="projects",
-                           alt=json.dumps(projData, default=lambda x: x.__dict__), words=json.dumps(words, default=lambda x: x.__dict__))
+                           alt=json.dumps(projData, default=lambda x: x.__dict__),
+                           words=json.dumps(words, default=lambda x: x.__dict__))
 
 
 @app.route("/projects/", methods=["POST"])
 def add_project():
-
     access = FullDataAccess()
-
     title = request.form["Title"]
-
-
     maxStudents = request.form["Maxstudents"]
-
     project = Project(None, title, maxStudents, True)
-
-
     researchGroupNrs = request.form.getlist("Researchgroup")
-
     for researchGroupNr in researchGroupNrs:
         project.researchGroup.append(int(researchGroupNr))
 
-
-    #todo: aanpassen zodat documenten in andere talen kunnen worden toegevoegd
+    # todo: aanpassen zodat documenten in andere talen kunnen worden toegevoegd
     descriptionText = request.form["Description"]
 
     doc = Document(None, "dutch", descriptionText)
@@ -390,7 +382,7 @@ def add_project():
 
     files = request.files.getlist("Attachments")
     for file in files:
-        nameFile = secure_filename(title+'_'+file.filename)
+        nameFile = secure_filename(title + '_' + file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
         doc.attachment.append(nameFile)
 
@@ -398,33 +390,31 @@ def add_project():
     typeOptions = access.get_projectType()
 
     for typeNr in typeNrs:
-        project.type.append(typeOptions[int(typeNr)-1])
+        project.type.append(typeOptions[int(typeNr) - 1])
 
     disciplineNrs = request.form.getlist("Discipline")
 
     for disciplineNr in disciplineNrs:
         project.discipline.append(int(disciplineNr))
 
-
-    #todo: toevoegen zodat er onderscheid is tussen promotors en begeleiders
+    # todo: toevoegen zodat er onderscheid is tussen promotors en begeleiders
     promotorsNameArray = request.form.getlist("Promotors")
 
     promotorOptions = access.get_employees()
-    promotorNameId = {promotorOption.name:promotorOption.id for promotorOption in promotorOptions}
+    promotorNameId = {promotorOption.name: promotorOption.id for promotorOption in promotorOptions}
 
     for promotorName in promotorsNameArray:
-        if promotorName in promotorNameId: #dit zal normaal gezien true geven voor alle mogelijke inputs omdat javascript hierop al controleerde
+        if promotorName in promotorNameId:  # dit zal normaal gezien true geven voor alle mogelijke inputs omdat javascript hierop al controleerde
             project.promotor.append(promotorNameId[promotorName])
-
 
     tags = request.form.getlist("Tags")
     project.tag = list(tags)
 
-
     related = request.form.getlist("Related")
 
     relatedProjectOptions = access.get_projects()
-    relatedProjectTitleId = {relatedProjectOption.title:relatedProjectOption.ID for relatedProjectOption in relatedProjectOptions}
+    relatedProjectTitleId = {relatedProjectOption.title: relatedProjectOption.ID for relatedProjectOption in
+                             relatedProjectOptions}
 
     for relatedProjectTitle in related:
         if relatedProjectTitle in relatedProjectTitleId:
@@ -437,7 +427,6 @@ def add_project():
 
     return jsonify(result=True)
 
-    
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods=['GET'])
@@ -453,15 +442,15 @@ def project_page(id):
         promotors.append(Eaccess.get_employee(promotorID))
 
     researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
-    docattachments=document[0].attachment
-    attachments=list()
+    docattachments = document[0].attachment
+    attachments = list()
     for i in docattachments:
-        splitted=i.split('_', 1)[-1]
-        attachments.append((i,splitted))
-
+        splitted = i.split('_', 1)[-1]
+        attachments.append((i, splitted))
 
     return render_template("project.html", r_project=project, r_promotors=promotors,
-                           r_researchGroups=researchGroups, page="projects",r_attachments=attachments)
+                           r_researchGroups=researchGroups, page="projects", r_attachments=attachments)
+
 
 @app.route('/download/<string:name>', methods=['GET'])
 def download(name):
@@ -640,7 +629,7 @@ def check_project_titles():
             if len(possibilities) > 4:
                 break
 
-    return  jsonify(possibilities)
+    return jsonify(possibilities)
 
 
 @app.route("/check/project_title_correct", methods=["GET"])
@@ -664,13 +653,13 @@ def load_user(user_id):
         eors=EORS.STUDENT
     elif(user_id[0]=="E"):
         eors=EORS.EMPLOYEE
-    us = User(Session(user_id[1:], 1, 0, 0, eors))
+    us = User(Session(0, user_id[1:], 0, 0, eors))
     eAcces = EmployeeAccess()
-    us.roles=list()
-    if user_id != 'None' and us.session.EORS==EORS.EMPLOYEE:
+    us.roles = list()
+    if user_id != 'None' and us.session.EORS == EORS.EMPLOYEE:
         us.roles = eAcces.get_employeeRoles(user_id[1:])
         us.roles.append("employee")
-    elif user_id != 'None' and us.session.EORS ==EORS.STUDENT:
+    elif user_id != 'None' and us.session.EORS == EORS.STUDENT:
         us.roles.append('student')
     us.auth = True
     us.active = True
@@ -708,15 +697,18 @@ def logout():
     flash("you are now logged out")
     return redirect(next or url_for('index'))
 
+
 @app.route('/upload/')
 def upload():
     return render_template('uploader.html')
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/uploader', methods = ['GET', 'POST'])
+
+@app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -731,9 +723,9 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            if not os.path.exists(app.config['UPLOAD_FOLDER']+"test/"):
-                os.mkdir(app.config['UPLOAD_FOLDER']+"test/")
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], "test/"+filename))
+            if not os.path.exists(app.config['UPLOAD_FOLDER'] + "test/"):
+                os.mkdir(app.config['UPLOAD_FOLDER'] + "test/")
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], "test/" + filename))
 
             # return redirect(url_for('uploaded_file',filename=filename))
     return 'file uploaded successfully'
@@ -742,14 +734,25 @@ def upload_file():
 @app.route('/showInterest/', methods=['POST'])
 def showInterest():
     message = request.form["Message"]
-    sender = "" #todo: huidige persoon ingelogd moet nog opgehaald worden
-    receiver = "" #todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
-    subject = "Expressing interest in " + "naam van project" #todo: nog naam van project van project via ajax door sturen
+    sender = ""  # todo: huidige persoon ingelogd moet nog opgehaald worden
+    receiver = ""  # todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
+    subject = "Expressing interest in " + "naam van project"  # todo: nog naam van project van project via ajax door sturen
 
     service = MailService
     service.sendSingleMail(sender, receiver, subject, message)
     return True
 
+
+@app.route('/profile/')
+@login_required(role='employee')
+def emp_profile():
+    access = ProjectAccess()
+    if current_user.session.EORS != EORS.EMPLOYEE:
+        return redirect(url_for("index"))
+    id = current_user.session.ID
+    projects = access.get_projects_of_employee(id)
+    inactive_count = access.get_number_of_inactive_by_employee(id)
+    return render_template("emp_profile.html", projects=projects, inactive=inactive_count, page='profile')
 
 
 if __name__ == "__main__":
@@ -759,7 +762,7 @@ if __name__ == "__main__":
     # temp2=access.get_projectPromotors(1)
     # app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
-                              dbhost=config_data['dbhost'])
+                               dbhost=config_data['dbhost'])
 
     mailer = MailService()
 
@@ -770,4 +773,3 @@ if __name__ == "__main__":
 
     ##findTags()
     app.run(debug=True, host=ip, port=port)
-

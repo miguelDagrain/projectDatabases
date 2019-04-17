@@ -34,19 +34,25 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css"
+          rel="stylesheet"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login-popup.css') }}">
 
     {% block stylesheets %}{% endblock stylesheets %}
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 
     {% block scripts %}{% endblock scripts %}
 
-    <script type="text/javascript" name="url picker">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js "></script>
+
+    <script type="text/javascript">
         $(document).ready(function () {
             var elems = document.getElementsByName("url_redirect");
             for (i = 0; i < elems.length; i++) {
@@ -57,7 +63,7 @@
         });
     </script>
 
-     <!-- nodig om in javascript files de locatie van files enzovoort te kunnen specifieren -->
+    <!-- nodig om in javascript files de locatie van files enzovoort te kunnen specifieren -->
     <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
@@ -73,12 +79,11 @@
                     type: "POST",
                     data: {username: form["user"].value, password: form["pass"].value}
                 }).done(function (data) {
-                    if(data === "true") {
+                    if (data === "true") {
                         console.log("ingelogd");
                         $("#login-modal").modal("hide");
                         document.location.reload(true)
-                    }
-                    else{
+                    } else {
                         var failed = document.getElementById("login-failed");
                         failed.style.display = "block";
                     }
@@ -86,7 +91,6 @@
             });
         }
     </script>
-
 
 
 </head>
@@ -140,37 +144,48 @@
                                 </a>
                             </li>
                             {% if current_user.is_authenticated %}
-                                <li class="nav-item">
-                                    <a class=" hyperlink {{ "active" if page=="bookmarks" }}"
-                                       href="{{ url_for('index') }}">
-                                        {{ _('Bookmarks') }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% if 'admin' in current_user.roles %}
-                            <li class="nav-item">
-                                <a class=" hyperlink {{ "active" if page=="administration" }}"
-                                   href="{{ url_for( 'get_administration' ) }}">
-                                    {{ _('Administration') }}
-                                 </a>
-                            </li>
+                                {% if 'admin' in current_user.roles %}
+                                    <li class="nav-item">
+                                        <a class=" hyperlink {{ "active" if page=="administration" }}"
+                                           href="{{ url_for( 'get_administration' ) }}">
+                                            {{ _('Administration') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if 'employee' in current_user.roles %}
+                                    <li class="nav-item">
+                                        <a class="hyperlink {{ "active" if page=="profile" }}"
+                                           href="{{ url_for('emp_profile') }}">
+                                            {{ _('Profile') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if 'student' in current_user.roles %}
+                                    <li class="nav-item">
+                                        <a class=" hyperlink {{ "active" if page=="bookmarks" }}"
+                                           href="{{ url_for('index') }}">
+                                            {{ _('Bookmarks') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
                         </ul>
                     </div>
                 </nav>
             </div>
             {% if current_user.is_authenticated %}
-              <div class="col text-right">
-                <button class="btn-login" data-toggle="modal" onclick="window.location.href='{{ url_for('logout') }}'">
-                    Logout
-                </button>
-            </div>
+                <div class="col text-right">
+                    <button class="btn-login" data-toggle="modal"
+                            onclick="window.location.href='{{ url_for('logout') }}'">
+                        Logout
+                    </button>
+                </div>
             {% else %}
-            <div class="col text-right">
-                <button class="btn-login" data-toggle="modal" data-target="#login-modal">
-                    Login
-                </button>
-            </div>
+                <div class="col text-right">
+                    <button class="btn-login" data-toggle="modal" data-target="#login-modal">
+                        Login
+                    </button>
+                </div>
             {% endif %}
         </div>
     </header>
@@ -228,28 +243,30 @@
             {% endif %}
         </div>
     </div>
-    <div class="fixed-bottom"  style="text-align:center">
+    <div class="fixed-bottom" style="text-align:center">
         <div class="container" style="display:none" id="cookiePopup">
-       {{ _('We use cookies to power and improve your experiences on this site') }}
+            {{ _('We use cookies to power and improve your experiences on this site') }}
             <button type="button" class="btn btn-primary btn-sm" onclick="closeCookieBanner()">
                 ok
             </button>
         </div>
     </div>
     <script>
-        var cookies=getCookie("allowCookies");
-        if(cookies!=="true"){
-            document.getElementById('cookiePopup').style.display='block';
+        var cookies = getCookie("allowCookies");
+        if (cookies !== "true") {
+            document.getElementById('cookiePopup').style.display = 'block';
         }
-        function closeCookieBanner(){
-            document.cookie="allowCookies=true; path=/";
-            document.getElementById('cookiePopup').style.display='none';
+
+        function closeCookieBanner() {
+            document.cookie = "allowCookies=true; path=/";
+            document.getElementById('cookiePopup').style.display = 'none';
         }
+
         //found on https://stackoverflow.com/questions/10730362/get-cookie-by-name
         function getCookie(name) {
-          var value = "; " + document.cookie;
-          var parts = value.split("; " + name + "=");
-          if (parts.length == 2) return parts.pop().split(";").shift();
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
         }
     </script>
 </div>
