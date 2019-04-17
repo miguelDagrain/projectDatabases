@@ -19,15 +19,31 @@
 
     <script>
         $(document).ready(function () {
-            console.log("profile table is now datatable");
             $('#profile-table').DataTable({
-
+                "columnDefs": [
+                    {"bSortable": false, "targets": 0}
+                ],
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "order": [[0, 'asc'], [1, 'asc']],
+                "pageLength": -1
             });
         });
     </script>
 
     <div class="page-content">
-        <h1>{{ _('Your projects') }}</h1>
+
+        <div class="row">
+            <div class="col">
+                <h1>{{ _('Your projects') }}</h1>
+            </div>
+            {% if inactive > 0 %}
+                <div class="col float-right">
+                    <small class="float-right">
+                        {{ _('You have') }} <span style="color: red">{{ inactive }}</span> {{ _('inactive projects') }}
+                    </small>
+                </div>
+            {% endif %}
+        </div>
         <table class="table" id="profile-table">
             <thead>
             <tr>

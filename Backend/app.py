@@ -749,8 +749,9 @@ def emp_profile():
         return redirect(url_for("index"))
     id = current_user.session.ID
     projects = access.get_projects_of_employee(id)
+    inactive_count = access.get_number_of_inactive_by_employee(id)
     print(id)
-    return render_template("emp_profile.html", projects=projects)
+    return render_template("emp_profile.html", projects=projects, inactive=inactive_count)
 
 
 if __name__ == "__main__":
