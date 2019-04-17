@@ -755,14 +755,15 @@ class ProjectAccess:
             'SELECT count(distinct project.projectid) ' \
             'FROM project JOIN projectpromotor p ON project.projectid = p.project ' \
             'WHERE p.employee=%s AND project.active=false'
-        cursor.execute(sql, str(employeeID))
+        cursor.execute(sql, (str(employeeID),))
         count = cursor.fetchone()[0]
         return count
 
     def get_projects_of_employee(self, employeeID):
         from Project import Project
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s', str(employeeID))
+        # cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s', str(employeeID))
+        cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s',(str(employeeID),))
         projects = list()
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
