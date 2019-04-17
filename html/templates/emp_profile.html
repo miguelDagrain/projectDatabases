@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
+
 {% endblock stylesheets %}
 
 
@@ -16,11 +17,21 @@
 
 {% block body %}
 
+    <script>
+        $(document).ready(function () {
+            console.log("profile table is now datatable");
+            $('#profile-table').DataTable({
+
+            });
+        });
+    </script>
+
     <div class="page-content">
         <h1>{{ _('Your projects') }}</h1>
-        <table class="table">
+        <table class="table" id="profile-table">
             <thead>
             <tr>
+                <th class="th-sm"></th>
                 <th class="th-sm">
                     <strong>{{ _('Project name') }}</strong>
                 </th>
@@ -32,7 +43,8 @@
             <tbody>
             {% for project in projects %}
                 <tr>
-                    <td>{{ project.title }}</td>
+                    <td>&#9998;</td>
+                    <td><a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a></td>
                     <td>
                         {% if project.active == True %}
                             &#10004;

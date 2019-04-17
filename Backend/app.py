@@ -749,8 +749,8 @@ def emp_profile():
         return redirect(url_for("index"))
     id = current_user.session.ID
     projects = access.get_projects_of_employee(id)
+    print(id)
     return render_template("emp_profile.html", projects=projects)
-
 
 
 if __name__ == "__main__":
