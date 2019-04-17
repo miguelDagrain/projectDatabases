@@ -749,6 +749,16 @@ class ProjectAccess:
             self.dbconnect.rollback()
             print("unable to save projectresearchgroup")
 
+    def get_number_of_inactive_by_employee(self, employeeID):
+        cursor = self.dbconnect.get_cursor()
+        sql = \
+            'SELECT count(distinct project.projectid) ' \
+            'FROM project JOIN projectpromotor p ON project.projectid = p.project ' \
+            'WHERE p.employee=%s AND project.active=false'
+        cursor.execute(sql, str(employeeID))
+        count = cursor.fetchone()[0]
+        return count
+
     def get_projects_of_employee(self, employeeID):
         from Project import Project
         cursor = self.dbconnect.get_cursor()

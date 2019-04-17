@@ -1,9 +1,12 @@
 from enum import Enum
-#enum to denote employee or student
+
+
+# enum to denote employee or student
 class EORS(Enum):
-    UNKNOWN=0
-    STUDENT=1
-    EMPLOYEE=2
+    UNKNOWN = 0
+    STUDENT = 1
+    EMPLOYEE = 2
+
 
 class Session:
     def __init__(self, session_id, id, start_time, start_date, EORS):
@@ -23,7 +26,7 @@ class Session:
         # both list of tuples
         self.searchWords = list()
         self.clickedProjects = list()
-        self.EORS=EORS
+        self.EORS = EORS
 
     def get_clickedProjects(self, dbconnect):
         access = __import__('DataAccess', fromlist=['ProjectAccess'])
