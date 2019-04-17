@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-import ldap
+# import ldap
 from DataAccess import EmployeeAccess
 from DataAccess import StudentAccess
 from config import config_data
@@ -22,6 +22,7 @@ class User(UserMixin):
     """"
     returns a letter denoting whether it is a employee or student and the ID
     """
+
     def get_id(self):
         if(self.session!=None):
             if(self.session.EORS==EORS.EMPLOYEE):
@@ -44,21 +45,21 @@ class User(UserMixin):
     def get_roles(self):
         return self.roles
 
-
-    def login(self,userName,password):
-        if(config_data['loginMode']=='normal'):
-            return self.normalLogin(userName,password)
-        elif(config_data['loginMode']=='ldap'):
-            return self.ldapLogin(userName,password)
+    def login(self, userName, password):
+        if config_data['loginMode'] == 'normal':
+            return self.normalLogin(userName, password)
+        elif config_data['loginMode'] == 'ldap':
+            return self.ldapLogin(userName, password)
         else:
-            print("unknown login type: "+config_data['login'])
+            print("unknown login type: " + config_data['login'])
             return False
 
-    def ldapLogin(self,userName,password):
+    def ldapLogin(self, userName, password):
         ldap_server = ldapConfig_data['serverAddress']
         ldap_conn = ldap.initialize(ldap_server)
-        user_dn = "cn=" + userName + ",ou="+ldapConfig_data["ou"]+",dc="+ldapConfig_data["dcName"]+",dc="+ldapConfig_data['dcDomain']
-        base_dn = "dc="+ldapConfig_data["dcName"]+",dc="+ldapConfig_data['dcDomain']
+        user_dn = "cn=" + userName + ",ou=" + ldapConfig_data["ou"] + ",dc=" + ldapConfig_data["dcName"] + ",dc=" + \
+                  ldapConfig_data['dcDomain']
+        base_dn = "dc=" + ldapConfig_data["dcName"] + ",dc=" + ldapConfig_data['dcDomain']
         search_filter = "uid=" + userName
         try:
             ldap_conn.bind_s(user_dn, password)
@@ -84,7 +85,7 @@ class User(UserMixin):
                 self.session.ID = stu.studentID
                 self.session.EORS = EORS.STUDENT
                 self.auth = True
-                self.roles=list()
+                self.roles = list()
                 self.roles.append("student")
                 self.roles.append("user")
                 self.active = True
@@ -111,7 +112,7 @@ class User(UserMixin):
             self.session.ID = 16
             self.session.EORS=EORS.EMPLOYEE
             self.auth = True
-            self.roles = ('employee','admin', 'user')
+            self.roles = ('employee', 'admin', 'user')
             self.active = True
             self.anon = False
             return True
@@ -119,7 +120,7 @@ class User(UserMixin):
             self.session.ID = 2
             self.session.EORS = EORS.EMPLOYEE
             self.auth = True
-            self.roles = ('employee','user')
+            self.roles = ('employee', 'user')
 
             self.active = True
             self.anon = False
@@ -138,4 +139,3 @@ class User(UserMixin):
             self.active = False
             self.anon = False
             return False
-

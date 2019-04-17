@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block stylesheets %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+
+{% endblock stylesheets %}
+
+
+{% block title %}Profile{% endblock title %}
+
+{% block body %}
+
+    <div class="page-content">
+        <h1>{{ _('Your projects') }}</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="th-sm">
+                    <strong>{{ _('Project name') }}</strong>
+                </th>
+                <th class="th-sm">
+                    <strong>{{ _('Active') }}</strong>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.title }}</td>
+                    <td>
+                        {% if project.active == True %}
+                            &#10004;
+                        {% else %}
+                            &#10060;
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock body %}

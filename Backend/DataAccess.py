@@ -1,5 +1,6 @@
 import dbConnection
 
+
 class DocumentAccess:
     def __init__(self):
         """
@@ -76,7 +77,7 @@ class DocumentAccess:
                 id = cursor.fetchone()[0]
                 doc.ID = id
                 for att in doc.attachment:
-                    self.add_attachment(id,att)
+                    self.add_attachment(id, att)
             # get id and return updated object
             self.dbconnect.commit()
             return id
@@ -282,7 +283,7 @@ class ResearchGroupAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            if group.ID == None:
+            if group.ID is None:
                 raise Exception('no id given')
             cursor.execute('select * from researchgroup where groupID=%s', (group.ID,))
             if cursor.rowcount == 0:
@@ -477,7 +478,8 @@ class EmployeeAccess:
 
         projects = list()
         for projId in projectsId:
-            cursor.execute('select * from project where projectID=%s', (projId,)) #returns exactly one row from the table
+            cursor.execute('select * from project where projectID=%s',
+                           (projId,))  # returns exactly one row from the table
             row = cursor.fetchone()
             project = Project(row[0], row[1], row[2], row[3])
 
@@ -702,7 +704,7 @@ class ProjectAccess:
             self.dbconnect.rollback()
             print("unable to save tag")
 
-    def get_projectresearchgroups(self,projectID):
+    def get_projectresearchgroups(self, projectID):
         """
         gets all the researchgroup id's of a project on a certain id
         :param projectID: the id of the project
@@ -715,7 +717,7 @@ class ProjectAccess:
             projects.append(row[1])
         return projects
 
-    def add_projectResearchgroup(self, projectID,researchgroupID):
+    def add_projectResearchgroup(self, projectID, researchgroupID):
         """
         adds a relation between a project and a resaerchgroup
         :param projectid: the project
@@ -731,6 +733,16 @@ class ProjectAccess:
         except:
             self.dbconnect.rollback()
             print("unable to save projectresearchgroup")
+
+    def get_projects_of_employee(self, employeeID):
+        from Project import Project
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s', str(employeeID))
+        projects = list()
+        for row in cursor:
+            project = Project(row[0], row[1], row[2], row[3])
+            projects.append(project)
+        return projects
 
     def get_projects(self):
         """
@@ -811,21 +823,21 @@ class ProjectAccess:
         # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
         #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-        #TODO: dit werkt niemeer :(
+        # TODO: dit werkt niemeer :(
         # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (" \
         #       "SELECT COUNT(*) FROM projectregistration pr WHERE pr.project=p.projectid) as cnt " \
         #       "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
         #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-        #temp query
-        sql="select * from project;"
+        # temp query
+        sql = "select * from project;"
         cursor.execute(sql)
         projects = list()
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
             projects.append(project)
 
-        #de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
+        # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
         for project in projects:
             cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
             project.type = list(cursor.fetchall())
@@ -835,7 +847,8 @@ class ProjectAccess:
             cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
             project.discipline = list(cursor.fetchall())
 
-            cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s', (project.ID, "succeeded"))
+            cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
+                           (project.ID, "succeeded"))
             project.registeredStudents = len(list(cursor.fetchall()))
 
             cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
@@ -985,7 +998,6 @@ class StudentAccess:
         self.dbconnect = dbConnection.connection
         self.project = ProjectAccess()
 
-
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
         """
@@ -1053,7 +1065,7 @@ class StudentAccess:
         cursor.execute('select * from student')
         students = list()
         for row in cursor:
-            student = Student(row[0], row[1],row[2])
+            student = Student(row[0], row[1], row[2])
             student.likedProject = self.get_studentBookmarkProject(student.studentID)
             students.append(student)
         return students
@@ -1068,7 +1080,7 @@ class StudentAccess:
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM student WHERE studentID=%s ', (ID,))
         row = cursor.fetchone()
-        stu = Student(row[0], row[1],row[2])
+        stu = Student(row[0], row[1], row[2])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
         return stu
 
@@ -1167,7 +1179,7 @@ class StudentAccess:
     #         prs.append(pr)
     #     return prs
 
-    def add_projectRegistration(self, pr,student):
+    def add_projectRegistration(self, pr, student):
         """
         adds a new projecctregistration
         :param pr: the project
@@ -1195,7 +1207,8 @@ class StudentAccess:
             cursor.execute('select * from student where studentID=%s', (student.studentID,))
             if cursor.rowcount == 0:
                 raise Exception('no student found with that id')
-            cursor.execute('update  student set name= %s, set studentnumber=%s where studentId=%s', (student.name, student.studentNumber, student.studentID))
+            cursor.execute('update  student set name= %s, set studentnumber=%s where studentId=%s',
+                           (student.name, student.studentNumber, student.studentID))
 
             cursor.execute('delete from bookmark where student=%s', (student.studentID,))
             for i in student.likedProject:
@@ -1383,7 +1396,7 @@ class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess
         this constructor makes a FullDataAccess object that has access to all the access classes
         """
 
-        DomainAccess.__init__(self )
+        DomainAccess.__init__(self)
         DocumentAccess.__init__(self)
         EmployeeAccess.__init__(self)
         ProjectAccess.__init__(self)
