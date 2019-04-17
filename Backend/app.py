@@ -751,9 +751,6 @@ def emp_profile():
     projects = access.get_projects_of_employee(id)
     return render_template("emp_profile.html", projects=projects)
 
-@app.route('/test/')
-def test():
-    print(current_user.session.ID)
 
 
 if __name__ == "__main__":
