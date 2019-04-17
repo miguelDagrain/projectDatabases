@@ -323,6 +323,21 @@ class EmployeeAccess:
             employees.append(employee)
         return employees
 
+    def get_admins(self):
+        """
+        this function gets all the admins from the database
+        :return: a list of employees that are also admins
+        """
+        from Employee import Employee
+        admins=list()
+        cursorRoles = self.dbconnect.get_cursor()
+        cursorRoles.execute('select * from employeeRoles where role=\'admin\'')
+        for row in cursorRoles:
+            admins.append(self.get_employee(row[0]))
+        return admins
+
+
+
     def get_employee(self, id):
         """
         gets a single employee out the database on an id
@@ -331,7 +346,7 @@ class EmployeeAccess:
         """
         from Employee import Employee
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (id,))
+        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (str(id),))
         row = cursor.fetchone()
         return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
