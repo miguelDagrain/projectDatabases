@@ -15,3 +15,4 @@ def helper_get_selected_multi_choice(selectedNrs, options):
     return selected
 
 def deactivate_projects():
+    return

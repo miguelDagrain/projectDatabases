@@ -29,7 +29,7 @@ class Employee:
     def getPromotor(self):
         access = __import__('DataAccess', fromlist=['EmployeeAccess'])
         emp = access.EmployeeAccess()
-        return emp.get_employee(self.promotor)
+        return emp.get_employee(self.id)
 
     def getProjects(self):
         access = __import__('DataAccess', fromlist=['EmployeeAccess'])

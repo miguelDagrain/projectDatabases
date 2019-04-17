@@ -3,7 +3,7 @@ from DataAccess import EmployeeAccess
 
 class MailService:
     def __init__(self):
-        service = "smtp.uantwerpen.be"
+        self.service = "smtp.uantwerpen.be"
 
 
 
