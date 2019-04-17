@@ -9,14 +9,28 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
-
 {% endblock stylesheets %}
 
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
 
-{% block title %}Profile{% endblock title %}
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#project-desc',
+            menubar: 'edit insert format table tools',
+            height: '400px'
+        });
+    </script>
+
+{% endblock scripts %}
+
+{% block title %}
+    Profile
+{% endblock title %}
 
 {% block body %}
-
     <script>
         $(document).ready(function () {
             $('#profile-table').DataTable({
@@ -59,7 +73,11 @@
             <tbody>
             {% for project in projects %}
                 <tr>
-                    <td>&#9998;</td>
+                    <td>
+                        <button class="edit-button" data-toggle="modal" data-target="#project-editor">
+                            &#9998;
+                        </button>
+                    </td>
                     <td><a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a></td>
                     <td>
                         {% if project.active == True %}
@@ -76,8 +94,33 @@
 
 
     <!--Project editor modal -->
-    <div class="modal fade" id="project-editor">
-
+    <div class="modal fade" id="project-editor" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit: Project name</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="edit_form">
+                        <div class="form-group">
+                            <label for="project-title" style="margin-bottom: 5px">{{ _('Title') }}</label>
+                            <input id="project-title" class="form-control" type="text"
+                                   placeholder="{{ _('Project title') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-desc">{{ _('Description') }}</label>
+                            <textarea id="project-desc" name="desc"></textarea>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
 {% endblock body %}
