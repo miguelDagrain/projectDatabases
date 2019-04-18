@@ -752,7 +752,25 @@ def emp_profile():
     id = current_user.session.ID
     projects = access.get_projects_of_employee(id)
     inactive_count = access.get_number_of_inactive_by_employee(id)
-    return render_template("emp_profile.html", projects=projects, inactive=inactive_count, page='profile')
+    return render_template("emp_profile.html",
+                           projects=projects,
+                           inactive=inactive_count,
+                           page='profile',
+                           error=request.args.get('error', default=False, type=bool),
+                           update=request.args.get('update', default=False, type=bool)
+                           )
+
+
+@app.route('/profile/', methods=['POST'])
+@login_required(role='employee')
+def change_project():
+    project_id = request.form['project-id']
+    new_title = request.form['project-title']
+    pAccess = ProjectAccess()
+    if pAccess.change_title(project_id, new_title):
+        return redirect(url_for('emp_profile', error=False, update=True))
+    else:
+        return redirect(url_for('emp_profile', error=True, update=False))
 
 
 if __name__ == "__main__":

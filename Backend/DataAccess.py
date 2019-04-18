@@ -329,14 +329,12 @@ class EmployeeAccess:
         :return: a list of employees that are also admins
         """
         from Employee import Employee
-        admins=list()
+        admins = list()
         cursorRoles = self.dbconnect.get_cursor()
         cursorRoles.execute('select * from employeeRoles where role=\'admin\'')
         for row in cursorRoles:
             admins.append(self.get_employee(row[0]))
         return admins
-
-
 
     def get_employee(self, id):
         """
@@ -350,7 +348,7 @@ class EmployeeAccess:
         row = cursor.fetchone()
         return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
-    def get_employeeOnName(self,name):
+    def get_employeeOnName(self, name):
         """
         gets a single employee out the database on a name
         :param name: the name
@@ -359,7 +357,7 @@ class EmployeeAccess:
         from Employee import Employee
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM employee WHERE name=%s ', (name,))
-        if(cursor.rowcount!=0):
+        if (cursor.rowcount != 0):
             row = cursor.fetchone()
             return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
         else:
@@ -518,6 +516,17 @@ class ProjectAccess:
         """
         self.dbconnect = dbConnection.connection
         self.doc = DocumentAccess()
+
+    def change_title(self, projectID, newTitle):
+        cursor = self.dbconnect.get_cursor()
+        sql = 'UPDATE project SET title= %s WHERE projectID=%s'
+        # try:
+        cursor.execute(sql, (str(newTitle), str(projectID)))
+        self.dbconnect.commit()
+        return True
+        # except:
+        self.dbconnect.rollback()
+        return False
 
     def get_projectDocuments(self, projectID):
         """
@@ -763,7 +772,9 @@ class ProjectAccess:
         from Project import Project
         cursor = self.dbconnect.get_cursor()
         # cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s', str(employeeID))
-        cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s',(str(employeeID),))
+        cursor.execute(
+            'select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s',
+            (str(employeeID),))
         projects = list()
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
@@ -974,7 +985,7 @@ class ProjectAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            if project.ID == None:
+            if project.ID is None:
                 raise Exception('no id given')
             cursor.execute('select * from project where projectID=%s', (project.ID,))
             if cursor.rowcount == 0:
@@ -1110,7 +1121,7 @@ class StudentAccess:
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
         return stu
 
-    def get_studentOnStudentNumber(self,number):
+    def get_studentOnStudentNumber(self, number):
         """
         gets a single student based of an id
         :param ID: the id of this student
@@ -1119,7 +1130,7 @@ class StudentAccess:
         from Student import Student
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM student WHERE studentnumber=%s ', (number,))
-        if(cursor.rowcount!=0):
+        if (cursor.rowcount != 0):
             row = cursor.fetchone()
             stu = Student(row[0], row[1], row[2])
             stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
