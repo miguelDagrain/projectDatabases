@@ -15,22 +15,6 @@
     <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
     <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
-
-    <script type="text/javascript">
-        tinymce.init({
-            selector: '#project-desc',
-            menubar: 'edit insert format table tools',
-            height: '400px'
-        });
-    </script>
-
-{% endblock scripts %}
-
-{% block title %}
-    Profile
-{% endblock title %}
-
-{% block body %}
     <script>
         $(document).ready(function () {
             $('#profile-table').DataTable({
@@ -43,6 +27,40 @@
             });
         });
     </script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#project-desc-nl',
+            menubar: 'edit insert format table tools',
+            height: '400px'
+        });
+    </script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#project-desc-en',
+            menubar: 'edit insert format table tools',
+            height: '400px'
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#project-editor').on('show.bs.modal', function (e) {
+                console.log("entered this function hooray");
+                var title = $(e.relatedTarget).data('title');
+                var project_id = $(e.relatedTarget).data('id');
+                $(".modal-body #project-title").val(title);
+                $(".modal-body #project-id").val(project_id);
+                document.getElementById("modal-title").innerHTML = "Edit: " + title;
+            })
+        });
+    </script>
+
+{% endblock scripts %}
+
+{% block title %}
+    Profile
+{% endblock title %}
+
+{% block body %}
 
     <div class="page-content">
 
@@ -50,6 +68,22 @@
             <div class="col">
                 <h1>{{ _('Your projects') }}</h1>
             </div>
+            {% if error == True %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ _('Cannot update project') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+            {% if update == True and error == False %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ _('Project updated') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
             {% if inactive > 0 %}
                 <div class="col float-right">
                     <small class="float-right">
@@ -74,7 +108,8 @@
             {% for project in projects %}
                 <tr>
                     <td>
-                        <button class="edit-button" data-toggle="modal" data-target="#project-editor">
+                        <button class="edit-button" data-toggle="modal" data-target="#project-editor"
+                                data-id="{{ project.ID }}" data-title="{{ project.title }}">
                             &#9998;
                         </button>
                     </td>
@@ -98,7 +133,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit: Project name</h4>
+                    <h4 class="modal-title" id="modal-title">Edit: Project name</h4>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -107,17 +142,22 @@
                     <form method="post" id="edit_form">
                         <div class="form-group">
                             <label for="project-title" style="margin-bottom: 5px">{{ _('Title') }}</label>
-                            <input id="project-title" class="form-control" type="text"
+                            <input id="project-title" class="form-control" type="text" name="project-title"
                                    placeholder="{{ _('Project title') }}" required>
                         </div>
                         <div class="form-group">
-                            <label for="project-desc">{{ _('Description') }}</label>
-                            <textarea id="project-desc" name="desc"></textarea>
+                            <label for="project-desc-nl">{{ _('Dutch description') }}</label>
+                            <textarea id="project-desc-nl" name="desc-nl"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label for="project-desc-en">{{ _('English description') }}</label>
+                            <textarea id="project-desc-en" name="desc-en"></textarea>
+                        </div>
+                        <input type="hidden" name="project-id" id="project-id">
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                        <button type="submit" form="edit_form" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>

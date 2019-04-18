@@ -11,3 +11,8 @@
 .project-table > tr, .th-3 {
     width:15%;
 }
+
+
+ p {
+     color: grey;
+ }
