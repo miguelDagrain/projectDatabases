@@ -866,8 +866,8 @@ class ProjectAccess:
         #       "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
         #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-        # temp query
-        sql = "select * from project;"
+        #temp query
+        sql="select * from project Where active = TRUE;"
         cursor.execute(sql)
         projects = list()
         for row in cursor:

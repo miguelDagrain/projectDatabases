@@ -336,9 +336,19 @@ def show_projects():
         for dc in proj.discipline:
             disciplineNames.append(dc[0])
 
+        firstDescLines = "No description found."
+        if len(proj.desc) > 0:
+            firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
+            firstDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines).group() + " ..."
+
+
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
-                 "discipline": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
-                 "registeredStudents": proj.registeredStudents}
+                 "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
+                 "registeredStudents": proj.registeredStudents, "description" : firstDescLines}
+
+        #print(proj.tag[0], file=sys.stdout)
+
+
         for d in proj.desc:
             textstr = d.text
             rgx = re.compile("(\w[\w']*\w|\w)")
@@ -357,7 +367,7 @@ def show_projects():
 
         projData[proj.ID] = pjson
 
-    return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
+    return render_template("projects.html", r_researchGroups=researchGroups,
                            r_disciplines=disciplines, r_types=types, page="projects",
                            alt=json.dumps(projData, default=lambda x: x.__dict__),
                            words=json.dumps(words, default=lambda x: x.__dict__))
@@ -789,5 +799,5 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
 
-    ##findTags()
+    #findTags()
     app.run(debug=True, host=ip, port=port)
