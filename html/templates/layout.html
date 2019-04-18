@@ -163,7 +163,7 @@
                                 {% if 'student' in current_user.roles %}
                                     <li class="nav-item">
                                         <a class=" hyperlink {{ "active" if page=="bookmarks" }}"
-                                           href="{{ url_for('index') }}">
+                                           href="{{ url_for('bookmark_page') }}">
                                             {{ _('Bookmarks') }}
                                         </a>
                                     </li>

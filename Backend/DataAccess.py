@@ -1080,6 +1080,7 @@ class StudentAccess:
         cursor.execute('select * from bookmark where project=%s and student=%s', (projectId, studentId))
         if cursor.rowcount == 0:
             cursor.execute('insert into bookmark values(%s,%s)', (projectId, studentId))
+            self.dbconnect.commit()
 
     def get_students(self):
         """

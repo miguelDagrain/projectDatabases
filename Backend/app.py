@@ -464,6 +464,32 @@ def apply_remove_project(id):
 
     return redirect(url_for('show_projects'))
 
+@login_required(role='student')
+@app.route("/projects/<int:id>", methods=["GET"])
+def add_bookmark(id):
+    Access = StudentAccess()
+    Access.add_bookmark(id, request.args.get('studentId'))
+    bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
+    print('SID:::', request.args.get('studentId'))
+    return redirect(url_for('show_projects'))
+
+
+
+@login_required(role='student')
+@app.route("/bookmarks/", methods=['GET'])
+def bookmark_page():
+    Access = StudentAccess()
+
+    print('SID:::',request.args.get('studentId'))
+    bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
+    projects = []
+    for project in bookmarks:
+        projects.append(project)
+
+
+    return render_template("bookmarks.html", b_bookmarks=bookmarks)
+
+
 
 @app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
