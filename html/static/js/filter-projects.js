@@ -181,54 +181,52 @@ function showMoreProjects(sq) {
 
     for (var i = projectCount; i < projectCount + 10; i++) {
 
-        if ((result[i].relevance === 0 && sq.length > 0 || result[i].relevance === -1)) {
+        if ((result[i].relevance === 0 && sq.length > 0 || result[i].relevance === -1)){break;}
 
-            var cont = document.createElement("tr");
+        var cont = document.createElement("tr");
 
-            var name = document.createElement("td");
-            var link = document.createElement("a");
-            link.appendChild(document.createTextNode(result[i].title));
-            link.href = "/projects/" + result[i].ID;
-            name.appendChild(link);
-            var desc = document.createElement("p");
-            desc.appendChild(document.createTextNode(result[i].description));
-            name.appendChild(desc);
-            cont.appendChild(name);
+        var name = document.createElement("td");
+        var link = document.createElement("a");
+        link.appendChild(document.createTextNode(result[i].title));
+        link.href = "/projects/" + result[i].ID;
+        name.appendChild(link);
+        var desc = document.createElement("p");
+        desc.appendChild(document.createTextNode(result[i].description));
+        name.appendChild(desc);
+        cont.appendChild(name);
 
+        /*
+        var group = document.createElement("td");
 
-            /*
-            var group = document.createElement("td");
+        for (var groupIter in result[i].researchGroup) {
+            var newGr = document.createElement("br");
+            newGr.appendChild(document.createTextNode(groupIter));
 
-            for (var groupIter in result[i].researchGroup) {
-                var newGr = document.createElement("br");
-                newGr.appendChild(document.createTextNode(groupIter));
+            group.appendChild(newGr);
 
-                group.appendChild(newGr);
-
-            }
-
-            cont.appendChild(group);
-            */
-
-            var tagCollection = document.createElement("td");
-            for (var t in result[i]["tag"]) {
-
-                tag = document.createElement("p");
-                tag.appendChild(document.createTextNode(result[i]["tag"][t]));
-                tagCollection.appendChild(tag);
-
-            }
-
-            cont.appendChild(tagCollection);
-
-            /*
-            var stud = document.createElement("td");
-            stud.appendChild(document.createTextNode('[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']'));
-            cont.appendChild(stud);
-
-             */
-            pCont.appendChild(cont);
         }
+
+        cont.appendChild(group);
+        */
+
+        var tagCollection = document.createElement("td");
+        for (var t in result[i]["tag"]){
+
+            tag = document.createElement("p");
+            tag.appendChild(document.createTextNode(result[i]["tag"][t]));
+            tagCollection.appendChild(tag);
+
+        }
+
+        cont.appendChild(tagCollection);
+
+        /*
+        var stud = document.createElement("td");
+        stud.appendChild(document.createTextNode('[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']'));
+        cont.appendChild(stud);
+
+         */
+        pCont.appendChild(cont);
     }
     tableList.appendChild(pCont);
 

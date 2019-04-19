@@ -71,15 +71,21 @@ def get_locale():
         lang = request.accept_languages.best_match(config_data['supported_langs'])
         return lang
 
-
 @app.route("/")
 def index():
+    return redirect(url_for("home"))
+
+@app.route("/home")
+def home():
     """
     Renders the index template
     :return: Rendered index template
     """
+
+
+
     resp = make_response(render_template("home.html", page="index",
-                                         homedoc="<h1>Todo:</h1><div>Home-page is aanpasbaar.</div><div>Moet nog opgeslagen worden in Database.</div><div>Kunne we al attachements fixe??</div><div>We kunne de home-page als document opslaan met een vast ID (liefst iets simpel zoals bv ID = 0)</div><div>Feedback graag.</div>"))
+                                         homedoc= "" ))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
@@ -91,14 +97,25 @@ def modify_homepage():
     """
     function to modify the home-page
     """
-
     value = request.form.get("NewHome")
+
+    if not os.path.isdir(app.config['UPLOAD_FOLDER']):
+        os.mkdir(app.config['UPLOAD_FOLDER'])
+
+    files = request.files.getlist("Attachments")
+
+    for file in files:
+        print(file.filename, file=sys.stdout)
+        nameFile = secure_filename(title + '_' + file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        doc.attachment.append(nameFile)
 
     resp = make_response(render_template("home.html", page="index", homedoc=value))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
-    return resp
+
+    return redirect(url_for("home"))
 
 
 @app.route("/researchgroups/")
