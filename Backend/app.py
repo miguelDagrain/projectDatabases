@@ -818,6 +818,14 @@ def remove_project():
     return redirect(url_for('emp_profile', removed=True))
 
 
+@login_required(role='employee')
+@app.route('/get_descriptions/<int:project_id>')
+def get_descriptions(project_id):
+    access = FullDataAccess()
+
+    pass
+
+
 if __name__ == "__main__":
     ip = config_data['ip']
     port = config_data['port']

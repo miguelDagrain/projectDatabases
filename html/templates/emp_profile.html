@@ -111,6 +111,9 @@
                     <strong>{{ _('Project name') }}</strong>
                 </th>
                 <th class="th-sm">
+                    <strong>{{ _('Students needed') }}</strong>
+                </th>
+                <th class="th-sm">
                     <strong>{{ _('Active') }}</strong>
                 </th>
             </tr>
@@ -119,7 +122,7 @@
             {% for project in projects %}
                 <tr>
                     <td>
-                        <button class="profile-button" data-toggle="modal">
+                        <button class="profile-button" data-toggle="modal" data-target="#project-assignment">
                             <i class="fa fa-user"></i>
                         </button>
                         <button class="profile-button" data-toggle="modal" data-target="#project-editor"
@@ -131,7 +134,18 @@
                             <i class="fa fa-trash-o"></i>
                         </button>
                     </td>
-                    <td><a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a></td>
+                    <td>
+                        <a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a>
+                    </td>
+                    <td>
+                        {% if project.maxStudents - project.registeredStudents == 0 %}
+                            {{ _('FULL') }}
+                        {% elif project.maxStudents - project.registeredStudents < 0 %}
+                            <span style="color: red">{{ _('ERR') }}</span>
+                        {% else %}
+                            {{ project.maxStudents - project.registeredStudents }}
+                        {% endif %}
+                    </td>
                     <td>
                         {% if project.active == True %}
                             &#10004;
@@ -171,6 +185,8 @@
                             <label for="project-desc-en">{{ _('English description') }}</label>
                             <textarea id="project-desc-en" name="desc-en"></textarea>
                         </div>
+                        <!--TODO-->
+                        <!--Toevoegen verlengen als inactief, toevoegen/verwijderen van promotors exclusief uzelf-->
                         <input type="hidden" name="project-id" id="project-id">
                     </form>
                     <div class="modal-footer">
@@ -198,6 +214,25 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                         <button type="submit" form="delete_form" class="btn btn-primary">Yes</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Project assignment modal-->
+    <div class="modal fade" id="project-assignment" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title">{{ _('Assign students') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <!--TODO-->
+                    Listing of students + option to add/remove students here
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Discard') }}</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">{{ _('Save') }}</button>
                 </div>
             </div>
         </div>

@@ -788,6 +788,11 @@ class ProjectAccess:
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
             projects.append(project)
+        # sql = 'select count(distinct r.student) from projectregistration r where r.project = %s'
+        # for project in projects:
+        #     cursor.execute(sql, str(project.ID))
+        #     count = cursor.fetchone()[0]
+        #     project.registeredStudents = count
         return projects
 
     def get_projects(self):
