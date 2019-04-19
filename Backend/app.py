@@ -77,7 +77,7 @@ def index():
     return redirect(url_for("home"))
 
 
-@app.route("/home")
+@app.route("/home/")
 def home():
     """
     Renders the index template
@@ -100,7 +100,7 @@ def home():
     return resp
 
 
-@app.route("/home/modify_homepage/", methods=["POST"])
+@app.route("/home/", methods=["POST"])
 def modify_homepage():
     """
     function to modify the home-page
@@ -117,9 +117,19 @@ def modify_homepage():
 
     files = request.files.getlist("Attachments")
 
+    print(files, file=sys.stdout)
+
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+
+
+
+
+
     for file in files:
         print(file.filename, file=sys.stdout)
-        nameFile = secure_filename(title + '_' + file.filename)
+        nameFile = secure_filename(file.filename)
         file.save(os.path.join(app.config['HOME_PAGE_FOLDER'], nameFile))
         doc.attachment.append(nameFile)
 

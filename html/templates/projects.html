@@ -29,6 +29,14 @@
 
 <script src="{{ url_for('static', filename='js/filter-projects.js') }}"></script>
 
+<script>
+    $(document).on('focusin', function(e) {
+        if ($(e.target).closest(".tox-dialog").length) {
+            e.stopImmediatePropagation();
+        }
+    });
+</script>
+
 {% endblock scripts %}
 
 {% block onReadyCalls %}

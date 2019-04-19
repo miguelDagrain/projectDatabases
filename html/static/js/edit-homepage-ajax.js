@@ -34,3 +34,33 @@ function handleUploadAttachementOver (event) {
     event.preventDefault();
 }
 
+function editHomepage(){
+
+    console.log("send");
+
+    var request = $.ajax({
+        type: "POST",
+        url: $SCRIPT_ROOT + '/home/',
+        data: formData,
+        dataType: 'json',
+        processData: false,
+        contentType: false
+    });
+
+    request.done(function (data){
+        if(data.result){ //check if true is returned
+            window.location.replace($SCRIPT_ROOT + '/home/'); //this wil call the get
+        }
+    });
+
+}
+
+
+
+function setupFormEditHomepage() {
+    $('#aedit-home-form').bind('submit', function (event) {
+        event.preventDefault();
+        editHomepage();
+        $(this).modal('hide');
+    });
+}

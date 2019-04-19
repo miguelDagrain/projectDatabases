@@ -19,13 +19,7 @@
 <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
 <script src="{{ url_for('static', filename='js/edit-homepage-ajax.js') }}"></script>
-<script>
-    $(document).on('focusin', function(e) {
-        if ($(e.target).closest(".tox-dialog").length) {
-            e.stopImmediatePropagation();
-        }
-    });
-</script>
+
 
 {% endblock scripts %}
 
@@ -34,8 +28,6 @@
 <div style="display:flex;">
     <div class="page-content">
 
-        <a href="{{url_for('download_homepage', name='homepage.html')}}">bb</a>
-
         {% if 'admin' in current_user.roles %}
 
             <button class="page-content-button" data-toggle="modal" data-target="#modal-form-homepage">{{ _('Edit page') }}</button>
@@ -43,7 +35,7 @@
             <div id="modal-form-homepage" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                        <form id="edit-home-form" class="modal-body administration-form" action="{{ url_for('modify_homepage') }}" method="post">
+                        <form id="edit-home-form" class="modal-body administration-form" action="" method="post" enctype = "multipart/form-data">>
 
                             <label for="administration-form-description">{{ _('description') }}:</label>
                             <div class="administration-form-textarea input-block">
@@ -63,7 +55,7 @@
 
                             <input class="administration-form-submit" type="submit" value="{{ _('Save') }}">
                         </form>
-
+                        <script>setupFormEditHomepage()</script>
                     </div>
                 </div>
             </div>
