@@ -32,6 +32,7 @@ app = Flask(__name__, template_folder="../html/templates/", static_folder="../ht
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
 app.config['UPLOAD_FOLDER'] = "../attachments/"
+app.config['HOME_PAGE_FOLDER'] = "../homePage/"
 ALLOWED_EXTENSIONS = {'html', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 babel = Babel(app)
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
@@ -82,10 +83,16 @@ def home():
     :return: Rendered index template
     """
 
-
+    homepage = ''
+    try:
+        homepage = open(app.config['HOME_PAGE_FOLDER'] + 'homePage.html', "r").read()
+    # Store configuration file values
+    except FileNotFoundError:
+        homepage = ''
+    # Keep preset values
 
     resp = make_response(render_template("home.html", page="index",
-                                         homedoc= "" ))
+                                         homedoc=  homepage ))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
@@ -97,17 +104,22 @@ def modify_homepage():
     """
     function to modify the home-page
     """
+
+    if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
+        os.mkdir(app.config['HOME_PAGE_FOLDER'])
+
     value = request.form.get("NewHome")
 
-    if not os.path.isdir(app.config['UPLOAD_FOLDER']):
-        os.mkdir(app.config['UPLOAD_FOLDER'])
+    homeFile = open(app.config['HOME_PAGE_FOLDER'] + 'homePage.html', "w+")
+    homeFile.write(value)
+    homeFile.close()
 
     files = request.files.getlist("Attachments")
 
     for file in files:
         print(file.filename, file=sys.stdout)
         nameFile = secure_filename(title + '_' + file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        file.save(os.path.join(app.config['HOME_PAGE_FOLDER'], nameFile))
         doc.attachment.append(nameFile)
 
     resp = make_response(render_template("home.html", page="index", homedoc=value))
