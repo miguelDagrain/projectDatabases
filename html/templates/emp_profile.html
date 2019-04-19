@@ -46,6 +46,8 @@
             $('#project-editor').on('show.bs.modal', function (e) {
                 var title = $(e.relatedTarget).data('title');
                 var project_id = $(e.relatedTarget).data('id');
+                var desc_nl = $(e.relatedTarget).data('desc1');
+                console.log(desc_nl);
                 $("#project-editor .modal-body #project-title").val(title);
                 $("#project-editor .modal-body #project-id").val(project_id);
                 document.getElementById("modal-title").innerHTML = "Edit: " + title;
@@ -98,7 +100,12 @@
             {% if inactive > 0 %}
                 <div class="col float-right">
                     <small class="float-right">
-                        {{ _('You have') }} <span style="color: red">{{ inactive }}</span> {{ _('inactive projects') }}
+                        {% if inactive == 0 %}
+                            {{ _('You have') }} <span style="color:lightgreen">0</span> {{ _('inactive projects') }}
+                        {% else %}
+                            {{ _('You have') }} <span style="color: red">{{ inactive }}</span>
+                            {{ _('inactive projects') }}
+                        {% endif %}
                     </small>
                 </div>
             {% endif %}
@@ -126,7 +133,7 @@
                             <i class="fa fa-user"></i>
                         </button>
                         <button class="profile-button" data-toggle="modal" data-target="#project-editor"
-                                data-id="{{ project.ID }}" data-title="{{ project.title }}">
+                                data-id="{{ project.ID }}" data-title="{{ project.title }}" data-desc1="{{ project.desc_nl }}">
                             &#9998;
                         </button>
                         <button class="profile-button" data-toggle="modal" data-target="#delete-project"
@@ -138,12 +145,12 @@
                         <a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a>
                     </td>
                     <td>
-                        {% if project.maxStudents - project.registeredStudents == 0 %}
+                        {% if project.maxStudents - project.register_count == 0 %}
                             {{ _('FULL') }}
-                        {% elif project.maxStudents - project.registeredStudents < 0 %}
+                        {% elif project.maxStudents - project.register_count < 0 %}
                             <span style="color: red">{{ _('ERR') }}</span>
                         {% else %}
-                            {{ project.maxStudents - project.registeredStudents }}
+                            {{ project.maxStudents - project.register_count }}
                         {% endif %}
                     </td>
                     <td>

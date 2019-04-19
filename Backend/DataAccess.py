@@ -788,11 +788,28 @@ class ProjectAccess:
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
             projects.append(project)
-        # sql = 'select count(distinct r.student) from projectregistration r where r.project = %s'
-        # for project in projects:
-        #     cursor.execute(sql, str(project.ID))
-        #     count = cursor.fetchone()[0]
-        #     project.registeredStudents = count
+
+        for project in projects:
+            cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
+            project.type = list(cursor.fetchall())
+            project.desc = self.get_projectDocuments(project.ID)
+            cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
+            project.discipline = list(cursor.fetchall())
+            cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
+                           (project.ID, "succeeded"))
+            reg_students = list(cursor.fetchall)
+            project.registeredStudents = reg_students
+            project.register_count = len(reg_students)
+            project.researchGroup = self.get_projectresearchgroups(project.ID)
+            cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
+            project.relatedProject = list(cursor.fetchall())
+            cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
+            project.promotor = list(cursor.fetchall())
+            cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
+            project.tag = list(cursor.fetchall())
+            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
+            project.activeYear = list(cursor.fetchall())
+
         return projects
 
     def get_projects(self):
