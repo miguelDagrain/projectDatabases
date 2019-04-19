@@ -797,7 +797,7 @@ class ProjectAccess:
             project.discipline = list(cursor.fetchall())
             cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
                            (project.ID, "succeeded"))
-            reg_students = list(cursor.fetchall)
+            reg_students = list(cursor.fetchall())
             project.registeredStudents = reg_students
             project.register_count = len(reg_students)
             project.researchGroup = self.get_projectresearchgroups(project.ID)
@@ -809,6 +809,14 @@ class ProjectAccess:
             project.tag = list(cursor.fetchall())
             cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
             project.activeYear = list(cursor.fetchall())
+
+            descriptions = self.get_projectDocuments(project.ID)
+            project.desc = descriptions
+            for desc in descriptions:
+                if desc.language == 'dutch':
+                    project.desc_nl = desc
+                elif desc.language == 'english':
+                    project.desc_en = desc
 
         return projects
 

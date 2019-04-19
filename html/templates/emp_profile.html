@@ -47,9 +47,16 @@
                 var title = $(e.relatedTarget).data('title');
                 var project_id = $(e.relatedTarget).data('id');
                 var desc_nl = $(e.relatedTarget).data('desc1');
-                console.log(desc_nl);
+                var desc_en = $(e.relatedTarget).data('desc2');
+                console.log(desc_en);
                 $("#project-editor .modal-body #project-title").val(title);
                 $("#project-editor .modal-body #project-id").val(project_id);
+                {#$("#project-editor .modal-body #project-desc-nl").innerHTML = desc_nl;#}
+                {#$("#project-editor .modal-body #project-desc-en").innerHTML = desc_en;#}
+                $('#project-desc-en').html(desc_en);
+                $('#project-desc-nl').html(desc_nl);
+                tinyMCE.get('project-desc-en').setContent(desc_en);
+                tinyMCE.get('project-desc-nl').setContent(desc_nl);
                 document.getElementById("modal-title").innerHTML = "Edit: " + title;
             });
             $('#delete-project').on('show.bs.modal', function (e) {
@@ -133,7 +140,8 @@
                             <i class="fa fa-user"></i>
                         </button>
                         <button class="profile-button" data-toggle="modal" data-target="#project-editor"
-                                data-id="{{ project.ID }}" data-title="{{ project.title }}" data-desc1="{{ project.desc_nl }}">
+                                data-id="{{ project.ID }}" data-title="{{ project.title }}"
+                                data-desc1="{{ project.desc_nl.text }}" data-desc2="{{ project.desc_en.text }}">
                             &#9998;
                         </button>
                         <button class="profile-button" data-toggle="modal" data-target="#delete-project"
