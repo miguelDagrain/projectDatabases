@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css">
 
 {% endblock stylesheets %}
 
 {% block scripts %}
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
     <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
     <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
@@ -129,6 +131,9 @@
                 <th class="th-sm">
                     <strong>{{ _('Active') }}</strong>
                 </th>
+                <th class="th-sm">
+                    <strong>{{ _('Extend') }}</strong>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -167,6 +172,9 @@
                         {% else %}
                             &#10060;
                         {% endif %}
+                    </td>
+                    <td>
+                        <input type="checkbox" data-toggle="toggle" data-on="{{ _('extension') }}" data-off="{{ _('no extension') }}">
                     </td>
                 </tr>
             {% endfor %}

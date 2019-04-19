@@ -301,3 +301,15 @@ msgstr "Selectie"
 #: html/templates/layout.html:233
 msgid "We use cookies to power and improve your experiences on this site"
 msgstr "Wij gebruiken cookies om uw ervaring op deze website te bevorderen."
+
+#: html/temmplates/emp_profile.html
+msgid "Extend"
+msgstr "Verleng"
+
+#: html/temmplates/emp_profile.html
+msgid "extension"
+msgstr "verlengen"
+
+#: html/temmplates/emp_profile.html
+msgid "no extension"
+msgstr "geen verlenging"
