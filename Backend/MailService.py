@@ -38,7 +38,7 @@ class MailService:
 
 
 
-                subprocess.call(["sendmail", "-f", "Freek.DeSagher@studentantwerpen.be", "-t", "Miguel.Dagrain@student.uantwerpen.be",
+                subprocess.call(["sendemail", "-f", "Freek.DeSagher@studentantwerpen.be", "-t", "Miguel.Dagrain@student.uantwerpen.be",
                                  "-u", subject, "-o", "message-content-type=html", "-m", message, "-s", self.service])
 
 
@@ -69,5 +69,5 @@ class MailService:
 
 
 
-                subprocess.call(["sendmail", "-f", "Freek.DeSagher@studentantwerpen.be", "-t", "Miguel.Dagrain@student.uantwerpen.be",
+                subprocess.call(["sendemail", "-f", "Freek.DeSagher@studentantwerpen.be", "-t", "Miguel.Dagrain@student.uantwerpen.be",
                                  "-u", subject, "-o", "message-content-type=html", "-m", message, "-s", self.service])

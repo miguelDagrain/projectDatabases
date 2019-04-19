@@ -20,6 +20,7 @@
 <script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
 <script src="{{ url_for('static', filename='js/multiple-text-input.js') }}"></script>
 <script src="{{ url_for('static', filename='js/add-project-ajax.js') }}"></script>
+<script src="{{ url_for('static', filename='js/multi-lang-descr.js')}}"></script>
 
 <script src="{{ url_for('static', filename='js/text-input-suggestions.js') }}"></script>
 <script src="{{ url_for('static', filename='js/limit_accept.js')}}"></script>
@@ -35,6 +36,7 @@
    setUpDropdowns();
    setUpMultiSelection();
    setUpMultipleTextInput();
+   setUpMultilangInput();
    filterProjects();
     window.onscroll = function(ev) {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
@@ -237,22 +239,26 @@
                                 </select>
                             </div>
 
-                            <label for="administration-form-description">{{ _('description') }}:</label>
-                            <div class="administration-form-textarea input-block">
-                                <textarea class="tinymce" id="administration-form-description" name="Description"></textarea>
-                            </div>
-
                             <div>
-                                <label for="administration-form-upload">{{ _('attached files') }}:</label>
-                                <div class="upload" ondrop="handleUploadAttachementDrop(event);" ondragover="handleUploadAttachementOver(event);">
-                                    <img src="{{ url_for('static', filename='image/upload.png') }}">
-                                    <p>{{ _('drag here your files that you want to upload') }}</p>
+                                <label for="administration-form-description">{{ _('description') }}:</label>
+                                <div id="multi-language-desc-textarea" class="administration-form-textarea input-block">
+                                    <textarea class="tinymce" id="administration-form-description" name="Description"></textarea>
                                 </div>
-                                <ul id="administration-form-upload"></ul>
 
-                                <!--<input id="administration-form-upload" type="file" css="display:none;" name="Attachements" multiple>-->
+                                <div id="muli-language-desc-upload">
+                                    <label for="administration-form-upload">{{ _('attached files') }}:</label>
+                                    <div class="upload" ondrop="handleUploadAttachementDrop(event);" ondragover="handleUploadAttachementOver(event);">
+                                        <img src="{{ url_for('static', filename='image/upload.png') }}">
+                                        <p>{{ _('drag here your files that you want to upload') }}</p>
+                                    </div>
+                                    <ul id="administration-form-upload"></ul>
+
+                                    <!--<input id="administration-form-upload" type="file" css="display:none;" name="Attachements" multiple>-->
+                                </div>
+
+                                <div id="multi-language-desc-buttons">
+                                </div>
                             </div>
-
                             <div class="multi-text-input" id="Promotors">
                                 <label for="administration-form-promotor">{{ _('Promotors') }}:</label>
 

@@ -738,9 +738,9 @@ def showInterest():
     receiver = ""  # todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
     subject = "Expressing interest in " + "naam van project"  # todo: nog naam van project van project via ajax door sturen
 
-    service = MailService
+    service = MailService()
     service.sendSingleMail(sender, receiver, subject, message)
-    return True
+    return jsonify(result=True)
 
 
 @app.route('/profile/')
@@ -764,8 +764,8 @@ if __name__ == "__main__":
     dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                                dbhost=config_data['dbhost'])
 
-    mailer = MailService()
-
+    # mailer = MailService()
+    #
     # scheduler = BackgroundScheduler()
     # scheduler.add_job(mailer.sendMailExtendingFirst(),trigger='cron', minute='0', hour='0', day='10', month='9', year='*')
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')

@@ -54,7 +54,7 @@
     width: 60%;
 }
 
-.administration-form > .administration-form-textarea{
+.administration-form .administration-form-textarea{
     position: relative;
     display: block;
     color: #003366;
@@ -95,4 +95,14 @@
     display: block;
     margin-left: 38.455%; /* zelfde lijn als andere blokken: 3 + 30 + 5 die .455 heb ik geen idee van*/
     margin-bottom: 3%;
+}
+
+.language-button {
+    position: relative;
+    display: inline;
+
+}
+
+.selected-language-button {
+    border: 2px solid rgba(0, 51, 102, 0.8);
 }
