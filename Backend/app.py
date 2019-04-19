@@ -31,7 +31,7 @@ app = Flask(__name__, template_folder="../html/templates/", static_folder="../ht
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
 app.config['UPLOAD_FOLDER'] = "../attachments/"
-app.config['HOME_PAGE_FOLDER'] = "../homePage/"
+app.config['HOME_PAGE_FOLDER'] = "../homepage/"
 ALLOWED_EXTENSIONS = {'html', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 babel = Babel(app)
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
@@ -86,7 +86,7 @@ def home():
 
     homepage = ''
     try:
-        homepage = open(app.config['HOME_PAGE_FOLDER'] + 'homePage.html', "r").read()
+        homepage = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "r").read()
     # Store configuration file values
     except FileNotFoundError:
         homepage = ''
@@ -111,7 +111,7 @@ def modify_homepage():
 
     value = request.form.get("NewHome")
 
-    homeFile = open(app.config['HOME_PAGE_FOLDER'] + 'homePage.html', "w+")
+    homeFile = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "w+")
     homeFile.write(value)
     homeFile.close()
 
@@ -519,8 +519,11 @@ def add_student(id):
 
 @app.route('/download/<string:name>', methods=['GET'])
 def download(name):
-    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name)
+    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name, as_attachment=True)
 
+@app.route('/download_homepage/<string:name>', methods=['GET'])
+def download_homepage(name):
+    return send_from_directory(directory=app.config['HOME_PAGE_FOLDER'], filename=name, as_attachment=True)
 
 @app.route("/projects/<int:id>", methods=["POST"])
 def apply_remove_project(id):

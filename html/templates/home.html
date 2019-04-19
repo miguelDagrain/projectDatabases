@@ -34,6 +34,8 @@
 <div style="display:flex;">
     <div class="page-content">
 
+        <a href="{{url_for('download_homepage', name='homepage.html')}}">bb</a>
+
         {% if 'admin' in current_user.roles %}
 
             <button class="page-content-button" data-toggle="modal" data-target="#modal-form-homepage">{{ _('Edit page') }}</button>
