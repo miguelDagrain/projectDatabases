@@ -374,7 +374,6 @@ def show_projects():
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents, "description" : firstDescLines}
-
         #print(proj.tag[0], file=sys.stdout)
 
 
@@ -489,6 +488,33 @@ def project_page(id):
 
     return render_template("project.html", r_project=project, r_promotors=promotors,
                            r_researchGroups=researchGroups, page="projects", r_attachments=attachments)
+
+@app.route('/projects/<int:id>', methods=['POST'])
+def add_student(id):
+
+    sid=request.form["sid"]
+    try:
+        if(len(sid)!=8): raise Exception('student id not the right size')
+        if(sid[0]=='s' or sid[0]=='S'):
+            sid=sid[1:]
+            sid='2'+sid
+
+        sa =StudentAccess()
+        stu=sa.get_studentOnStudentNumber(sid)
+        if (stu==None):  raise Exception('student doesnt exist')
+        pa=ProjectAccess()
+        proj=pa.get_project(id)
+        if(proj==None):  raise Exception('project doesnt exist')
+        registrations=sa.get_projectRegistrationsOnProject(id)
+        if(len(registrations)>=proj.maxStudents):  raise Exception('project already has maximum amount of students')
+        for i in registrations:
+            if(i.student==sid):  raise Exception('student already registered for this project')
+        sa.add_projectRegistration(id,stu.studentID)
+        return 'true'
+    except:
+        return 'false'
+
+
 
 
 @app.route('/download/<string:name>', methods=['GET'])

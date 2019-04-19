@@ -873,6 +873,7 @@ class ProjectAccess:
         from Project import Project
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (ID,))
+        if(cursor.rowcount==0): return None
         row = cursor.fetchone()
         project = Project(row[0], row[1], row[2], row[3])
         project.desc = self.get_projectDocuments(project.ID)
@@ -1172,6 +1173,7 @@ class StudentAccess:
         from Student import Student
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM student WHERE studentID=%s ', (ID,))
+        if(cursor.rowcount==0): return None
         row = cursor.fetchone()
         stu = Student(row[0], row[1], row[2])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
@@ -1281,10 +1283,11 @@ class StudentAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO projectRegistration values(%s,%s,%s)',
-                           (pr.project, str(pr.status), student))
+                           (pr, 'busy', student))
             # get id and return updated object
             self.dbconnect.commit()
-        except:
+        except Exception as e:
+            print(e)
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
 
