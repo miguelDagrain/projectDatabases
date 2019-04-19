@@ -81,8 +81,8 @@ class DocumentAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            id = None
-            if doc.ID is None:
+            id = int()
+            if doc.ID is None or doc.ID == -1:
                 cursor.execute('INSERT INTO document VALUES(default ,%s,%s)', (doc.language, str(doc.text)))
                 cursor.execute('SELECT LASTVAL()')
                 id = cursor.fetchone()[0]
@@ -566,7 +566,7 @@ class ProjectAccess:
         """
         adds a document to a project
         :param projectID: the id of the project
-        :param document: the full document
+        :param document: the full document with ID of -1
         """
         cursor = self.dbconnect.get_cursor()
         try:
@@ -575,7 +575,9 @@ class ProjectAccess:
                            (projectID, docid))
 
             # get id and return updated object
+            document.ID = docid
             self.dbconnect.commit()
+            return document
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
             raise Exception('Unable to save projectdocument!\n%s' % error)
