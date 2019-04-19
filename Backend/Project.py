@@ -40,6 +40,10 @@ class Project:
         self.promotor = list()
         self.discipline = list()
         self.registeredStudents = 0
+        self.register_count = 0
+        self.desc_nl = None
+        self.desc_en = None
+
 
     def get_researchGroup(self, dbConnect):
         access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])

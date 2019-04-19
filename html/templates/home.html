@@ -18,13 +18,8 @@
 <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
 <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
-<script>
-    tinymce.init({
-        selector: '#homepageEditor',
-        menubar: 'file edit insert view format table tools help'
-    });
+<script src="{{ url_for('static', filename='js/edit-homepage-ajax.js') }}"></script>
 
-</script>
 
 {% endblock scripts %}
 
@@ -40,16 +35,31 @@
             <div id="modal-form-homepage" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                        <form id="edit-home-form" class="modal-body administration-form" action="{{ url_for('modify_homepage') }}" method="post">
+                        <form id="edit-home-form" class="modal-body administration-form" action="" method="post" enctype = "multipart/form-data">>
 
-                            <textarea id="homepageEditor" name="NewHome">{{homedoc|safe}}</textarea>
+                            <label for="administration-form-description">{{ _('description') }}:</label>
+                            <div class="administration-form-textarea input-block">
+                                <textarea class="tinymce" id="administration-form-description" name="NewHome">{{homedoc|safe}}</textarea>
+                            </div>
+
+                            <div>
+                                <label for="administration-form-upload">{{ _('attached files') }}:</label>
+                                <div class="upload" ondrop="handleUploadAttachementDrop(event);" ondragover="handleUploadAttachementOver(event);">
+                                    <img src="{{ url_for('static', filename='image/upload.png') }}">
+                                    <p>{{ _('drag here your files that you want to upload') }}</p>
+                                </div>
+                                <ul id="administration-form-upload"></ul>
+
+                                <!--input id="administration-form-upload" type="file" css="display:none;" name="Attachements" multiple-->
+                            </div>
 
                             <input class="administration-form-submit" type="submit" value="{{ _('Save') }}">
                         </form>
-
+                        <script>setupFormEditHomepage()</script>
                     </div>
                 </div>
             </div>
+
 
 
         {% endif %}

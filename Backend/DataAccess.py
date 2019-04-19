@@ -9,6 +9,17 @@ class DocumentAccess:
         """
         self.dbconnect = dbConnection.connection
 
+    def update_document_text(self, documentID, newText):
+        cursor = self.dbconnect.get_cursor()
+        sql = 'UPDATE document SET content= %s WHERE documentid = %s'
+        try:
+            cursor.execute(sql, (str(newText), str(documentID)))
+            self.dbconnect.commit()
+            return True
+        except:
+            self.dbconnect.rollback()
+            return False
+
     def get_documents(self):
         """
         gets all documents from the connected database
@@ -70,8 +81,8 @@ class DocumentAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            id = None
-            if doc.ID is None:
+            id = int()
+            if doc.ID is None or doc.ID == -1:
                 cursor.execute('INSERT INTO document VALUES(default ,%s,%s)', (doc.language, str(doc.text)))
                 cursor.execute('SELECT LASTVAL()')
                 id = cursor.fetchone()[0]
@@ -230,9 +241,14 @@ class ResearchGroupAccess:
         removes a researchgroup from the database based on an id
         :param id: the id
         """
+
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('DELETE FROM researchGroup WHERE groupID=%s', (id,))
-        self.dbconnect.commit()
+        try:
+            cursor.execute('DELETE FROM researchGroup WHERE groupID=%s', (id,))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to remove researchgroup')
 
     def changeContactPerson(self, eid, groupID):
         """
@@ -329,14 +345,12 @@ class EmployeeAccess:
         :return: a list of employees that are also admins
         """
         from Employee import Employee
-        admins=list()
+        admins = list()
         cursorRoles = self.dbconnect.get_cursor()
         cursorRoles.execute('select * from employeeRoles where role=\'admin\'')
         for row in cursorRoles:
             admins.append(self.get_employee(row[0]))
         return admins
-
-
 
     def get_employee(self, id):
         """
@@ -350,7 +364,7 @@ class EmployeeAccess:
         row = cursor.fetchone()
         return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
-    def get_employeeOnName(self,name):
+    def get_employeeOnName(self, name):
         """
         gets a single employee out the database on a name
         :param name: the name
@@ -359,7 +373,7 @@ class EmployeeAccess:
         from Employee import Employee
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM employee WHERE name=%s ', (name,))
-        if(cursor.rowcount!=0):
+        if (cursor.rowcount != 0):
             row = cursor.fetchone()
             return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
         else:
@@ -407,25 +421,29 @@ class EmployeeAccess:
         :return: a list of employee that passess the needed filters
         """
         from Employee import Employee
-        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor = self.dbconnect.get_cursor()
 
-        sql = 'select * from employee e INNER JOIN researchGroup r ON r.groupID=e.researchGroup WHERE ' \
-              'e.name LIKE %(searchQueryQ)s'
+            sql = 'select * from employee e INNER JOIN researchGroup r ON r.groupID=e.researchGroup WHERE ' \
+                  'e.name LIKE %(searchQueryQ)s'
 
-        if researchGroup != "":
-            sql += "AND r.name = %(researchGroupQ)s"
+            if researchGroup != "":
+                sql += "AND r.name = %(researchGroupQ)s"
 
-        if promotor == 1:
-            sql += 'AND e.promotor = TRUE'
-        if promotor == 2:
-            sql += 'AND e.promotor = FALSE'
+            if promotor == 1:
+                sql += 'AND e.promotor = TRUE'
+            if promotor == 2:
+                sql += 'AND e.promotor = FALSE'
 
-        cursor.execute(sql, dict(searchQueryQ="%" + searchQuery + "%", researchGroupQ=researchGroup))
-        employees = list()
-        for row in cursor:
-            employee = Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-            employees.append(employee)
-        return employees
+            cursor.execute(sql, dict(searchQueryQ="%" + searchQuery + "%", researchGroupQ=researchGroup))
+            employees = list()
+            for row in cursor:
+                employee = Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+                employees.append(employee)
+            return employees
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to filter employees')
 
     def add_employeeRole(self, id, role):
         """
@@ -519,6 +537,17 @@ class ProjectAccess:
         self.dbconnect = dbConnection.connection
         self.doc = DocumentAccess()
 
+    def change_title(self, projectID, newTitle):
+        cursor = self.dbconnect.get_cursor()
+        sql = 'UPDATE project SET title= %s WHERE projectID=%s'
+        try:
+            cursor.execute(sql, (str(newTitle), str(projectID)))
+            self.dbconnect.commit()
+            return True
+        except:
+            self.dbconnect.rollback()
+        return False
+
     def get_projectDocuments(self, projectID):
         """
         get all the documents for a certain project
@@ -537,7 +566,7 @@ class ProjectAccess:
         """
         adds a document to a project
         :param projectID: the id of the project
-        :param document: the full document
+        :param document: the full document with ID of -1
         """
         cursor = self.dbconnect.get_cursor()
         try:
@@ -546,7 +575,9 @@ class ProjectAccess:
                            (projectID, docid))
 
             # get id and return updated object
+            document.ID = docid
             self.dbconnect.commit()
+            return document
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
             raise Exception('Unable to save projectdocument!\n%s' % error)
@@ -763,11 +794,43 @@ class ProjectAccess:
         from Project import Project
         cursor = self.dbconnect.get_cursor()
         # cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s', str(employeeID))
-        cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s',(str(employeeID),))
+        cursor.execute(
+            'select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s',
+            (str(employeeID),))
         projects = list()
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
             projects.append(project)
+
+        for project in projects:
+            cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
+            project.type = list(cursor.fetchall())
+            project.desc = self.get_projectDocuments(project.ID)
+            cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
+            project.discipline = list(cursor.fetchall())
+            cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
+                           (project.ID, "succeeded"))
+            reg_students = list(cursor.fetchall())
+            project.registeredStudents = reg_students
+            project.register_count = len(reg_students)
+            project.researchGroup = self.get_projectresearchgroups(project.ID)
+            cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
+            project.relatedProject = list(cursor.fetchall())
+            cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
+            project.promotor = list(cursor.fetchall())
+            cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
+            project.tag = list(cursor.fetchall())
+            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
+            project.activeYear = list(cursor.fetchall())
+
+            descriptions = self.get_projectDocuments(project.ID)
+            project.desc = descriptions
+            for desc in descriptions:
+                if desc.language == 'dutch':
+                    project.desc_nl = desc
+                elif desc.language == 'english':
+                    project.desc_en = desc
+
         return projects
 
     def get_projects(self):
@@ -823,6 +886,7 @@ class ProjectAccess:
         from Project import Project
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (ID,))
+        if(cursor.rowcount==0): return None
         row = cursor.fetchone()
         project = Project(row[0], row[1], row[2], row[3])
         project.desc = self.get_projectDocuments(project.ID)
@@ -838,103 +902,115 @@ class ProjectAccess:
         removes a project from the database
         :param ID: the id of the project you want to remove
         """
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('DELETE FROM project WHERE projectID=%s', (ID,))
-        self.dbconnect.commit()
-        return
+        try:
+            cursor = self.dbconnect.get_cursor()
+            cursor.execute('DELETE FROM project WHERE projectID=%s', (ID,))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to remove project')
+
 
     def get_project_filter_data(self):
         from Project import Project
-        cursor = self.dbconnect.get_cursor()
-        # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
-        #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
+        try:
+            cursor = self.dbconnect.get_cursor()
+            # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
+            #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-        # TODO: dit werkt niemeer :(
-        # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (" \
-        #       "SELECT COUNT(*) FROM projectregistration pr WHERE pr.project=p.projectid) as cnt " \
-        #       "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
-        #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
+            # TODO: dit werkt niemeer :(
+            # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (" \
+            #       "SELECT COUNT(*) FROM projectregistration pr WHERE pr.project=p.projectid) as cnt " \
+            #       "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
+            #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-        # temp query
-        sql = "select * from project;"
-        cursor.execute(sql)
-        projects = list()
-        for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3])
-            projects.append(project)
+            #temp query
+            sql="select * from project Where active = TRUE;"
+            cursor.execute(sql)
+            projects = list()
+            for row in cursor:
+                project = Project(row[0], row[1], row[2], row[3])
+                projects.append(project)
 
-        # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
-        for project in projects:
-            cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
-            project.type = list(cursor.fetchall())
+            # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
+            for project in projects:
+                cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
+                project.type = list(cursor.fetchall())
 
-            project.desc = self.get_projectDocuments(project.ID)
+                project.desc = self.get_projectDocuments(project.ID)
 
-            cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
-            project.discipline = list(cursor.fetchall())
+                cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
+                project.discipline = list(cursor.fetchall())
 
-            cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
-                           (project.ID, "succeeded"))
-            project.registeredStudents = len(list(cursor.fetchall()))
+                cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
+                               (project.ID, "succeeded"))
+                project.registeredStudents = len(list(cursor.fetchall()))
 
-            cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
-            project.researchGroup = list(cursor.fetchall())
+                cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
+                project.researchGroup = list(cursor.fetchall())
 
-            cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
-            project.relatedProject = list(cursor.fetchall())
+                cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
+                project.relatedProject = list(cursor.fetchall())
 
-            cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
-            project.promotor = list(cursor.fetchall())
+                cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
+                project.promotor = list(cursor.fetchall())
 
-            cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
-            project.tag = list(cursor.fetchall())
+                cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
+                project.tag = list(cursor.fetchall())
 
-            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
-            project.activeYear = list(cursor.fetchall())
+                cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
+                project.activeYear = list(cursor.fetchall())
 
-        return projects
+            return projects
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to get project filter data')
 
     def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
-        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor = self.dbconnect.get_cursor()
 
-        sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
-              "WHERE p.title LIKE %(searchQueryQ)s "
+            sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
+                  "WHERE p.title LIKE %(searchQueryQ)s "
 
-        if researchGroup != "":
-            sql += "AND name = %(researchGroupQ)s "
-        # hier is een fout typeQ wordt nooit vervangen
-        # todo: implementeren van type in sql.
-        # if (type != ""):
-        #     sql += "AND type = %(typeQ)s "
+            if researchGroup != "":
+                sql += "AND name = %(researchGroupQ)s "
+            # hier is een fout typeQ wordt nooit vervangen
+            # todo: implementeren van type in sql.
+            # if (type != ""):
+            #     sql += "AND type = %(typeQ)s "
 
-        disciplineValue = ""
+            disciplineValue = ""
 
-        if discipline is not None:
+            if discipline is not None:
 
-            sql += "AND discipline IN ( "
+                sql += "AND discipline IN ( "
 
-            for iterDiscipline in discipline:
-                sql += "'" + iterDiscipline + "', "
+                for iterDiscipline in discipline:
+                    sql += "'" + iterDiscipline + "', "
 
-            sql = sql[0:len(sql) - 2]
-            sql += " ) "
+                sql = sql[0:len(sql) - 2]
+                sql += " ) "
 
-        # gemeenschappelijke sql uit de if else structuur gehaald.
-        if status == 1:
+            # gemeenschappelijke sql uit de if else structuur gehaald.
+            if status == 1:
 
-            sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
+                sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
 
-        elif status == 2:
+            elif status == 2:
 
-            sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
+                sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
 
-        cursor.execute(sql, dict(searchQueryQ="%" + searchQuery + "%", researchGroupQ=researchGroup))
+            cursor.execute(sql, dict(searchQueryQ="%" + searchQuery + "%", researchGroupQ=researchGroup))
 
-        projects = list()
-        for row in cursor:
-            project = self.get_project(row[0])
-            projects.append(project)
-        return projects
+            projects = list()
+            for row in cursor:
+                project = self.get_project(row[0])
+                projects.append(project)
+            return projects
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to filter employees')
 
     def add_project(self, proj):
         """
@@ -974,7 +1050,7 @@ class ProjectAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            if project.ID == None:
+            if project.ID is None:
                 raise Exception('no id given')
             cursor.execute('select * from project where projectID=%s', (project.ID,))
             if cursor.rowcount == 0:
@@ -1076,10 +1152,15 @@ class StudentAccess:
         :param projectId: the project id
         :param studentId: the student id
         """
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from bookmark where project=%s and student=%s', (projectId, studentId))
-        if cursor.rowcount == 0:
-            cursor.execute('insert into bookmark values(%s,%s)', (projectId, studentId))
+        try:
+            cursor = self.dbconnect.get_cursor()
+            cursor.execute('select * from bookmark where project=%s and student=%s', (projectId, studentId))
+            if cursor.rowcount == 0:
+                cursor.execute('insert into bookmark values(%s,%s)', (projectId, studentId))
+                self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('unable to add bookmark')
 
     def get_students(self):
         """
@@ -1105,12 +1186,13 @@ class StudentAccess:
         from Student import Student
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM student WHERE studentID=%s ', (ID,))
+        if(cursor.rowcount==0): return None
         row = cursor.fetchone()
         stu = Student(row[0], row[1], row[2])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
         return stu
 
-    def get_studentOnStudentNumber(self,number):
+    def get_studentOnStudentNumber(self, number):
         """
         gets a single student based of an id
         :param ID: the id of this student
@@ -1119,7 +1201,7 @@ class StudentAccess:
         from Student import Student
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM student WHERE studentnumber=%s ', (number,))
-        if(cursor.rowcount!=0):
+        if (cursor.rowcount != 0):
             row = cursor.fetchone()
             stu = Student(row[0], row[1], row[2])
             stu.likedProject = self.get_studentBookmarkProject(stu.studentID)
@@ -1214,10 +1296,11 @@ class StudentAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO projectRegistration values(%s,%s,%s)',
-                           (pr.project, str(pr.status), student))
+                           (pr, 'busy', student))
             # get id and return updated object
             self.dbconnect.commit()
-        except:
+        except Exception as e:
+            print(e)
             self.dbconnect.rollback()
             raise Exception('Unable to save project registration!')
 

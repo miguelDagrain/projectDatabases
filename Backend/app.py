@@ -6,7 +6,6 @@ import os
 from functools import wraps
 from apscheduler.schedulers.background import BackgroundScheduler
 
-
 from flask import *
 from flask.templating import render_template
 from flask_babel import *
@@ -32,6 +31,7 @@ app = Flask(__name__, template_folder="../html/templates/", static_folder="../ht
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = "../babel/translations/"
 app.config['UPLOAD_FOLDER'] = "../attachments/"
+app.config['HOME_PAGE_FOLDER'] = "../homepage/"
 ALLOWED_EXTENSIONS = {'html', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 babel = Babel(app)
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
@@ -74,31 +74,71 @@ def get_locale():
 
 @app.route("/")
 def index():
+    return redirect(url_for("home"))
+
+
+@app.route("/home/")
+def home():
     """
     Renders the index template
     :return: Rendered index template
     """
+
+    homepage = ''
+    try:
+        homepage = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "r").read()
+    # Store configuration file values
+    except FileNotFoundError:
+        homepage = ''
+    # Keep preset values
+
     resp = make_response(render_template("home.html", page="index",
-                                         homedoc="<h1>Todo:</h1><div>Home-page is aanpasbaar.</div><div>Moet nog opgeslagen worden in Database.</div><div>Kunne we al attachements fixe??</div><div>We kunne de home-page als document opslaan met een vast ID (liefst iets simpel zoals bv ID = 0)</div><div>Feedback graag.</div>"))
+                                         homedoc=homepage))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
     return resp
 
 
-@app.route("/home/modify_homepage/", methods=["POST"])
+@app.route("/home/", methods=["POST"])
 def modify_homepage():
     """
     function to modify the home-page
     """
 
+    if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
+        os.mkdir(app.config['HOME_PAGE_FOLDER'])
+
     value = request.form.get("NewHome")
+
+    homeFile = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "w+")
+    homeFile.write(value)
+    homeFile.close()
+
+    files = request.files.getlist("Attachments")
+
+    print(files, file=sys.stdout)
+
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+
+
+
+
+
+    for file in files:
+        print(file.filename, file=sys.stdout)
+        nameFile = secure_filename(file.filename)
+        file.save(os.path.join(app.config['HOME_PAGE_FOLDER'], nameFile))
+        doc.attachment.append(nameFile)
 
     resp = make_response(render_template("home.html", page="index", homedoc=value))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
-    return resp
+
+    return redirect(url_for("home"))
 
 
 @app.route("/researchgroups/")
@@ -336,9 +376,16 @@ def show_projects():
         for dc in proj.discipline:
             disciplineNames.append(dc[0])
 
+        firstDescLines = "No description found."
+        if len(proj.desc) > 0:
+            firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
+            firstDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines).group() + " ..."
+
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
-                 "discipline": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
-                 "registeredStudents": proj.registeredStudents}
+                 "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
+                 "registeredStudents": proj.registeredStudents, "description" : firstDescLines}
+        #print(proj.tag[0], file=sys.stdout)
+
         for d in proj.desc:
             textstr = d.text
             rgx = re.compile("(\w[\w']*\w|\w)")
@@ -357,7 +404,7 @@ def show_projects():
 
         projData[proj.ID] = pjson
 
-    return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
+    return render_template("projects.html", r_researchGroups=researchGroups,
                            r_disciplines=disciplines, r_types=types, page="projects",
                            alt=json.dumps(projData, default=lambda x: x.__dict__),
                            words=json.dumps(words, default=lambda x: x.__dict__))
@@ -452,10 +499,41 @@ def project_page(id):
                            r_researchGroups=researchGroups, page="projects", r_attachments=attachments)
 
 
+@app.route('/projects/<int:id>', methods=['POST'])
+def add_student(id):
+
+    sid=request.form["sid"]
+    try:
+        if(len(sid)!=8): raise Exception('student id not the right size')
+        if(sid[0]=='s' or sid[0]=='S'):
+            sid=sid[1:]
+            sid='2'+sid
+
+        sa =StudentAccess()
+        stu=sa.get_studentOnStudentNumber(sid)
+        if (stu==None):  raise Exception('student doesnt exist')
+        pa=ProjectAccess()
+        proj=pa.get_project(id)
+        if(proj==None):  raise Exception('project doesnt exist')
+        registrations=sa.get_projectRegistrationsOnProject(id)
+        if(len(registrations)>=proj.maxStudents):  raise Exception('project already has maximum amount of students')
+        for i in registrations:
+            if(i.student==sid):  raise Exception('student already registered for this project')
+        sa.add_projectRegistration(id,stu.studentID)
+        return 'true'
+    except:
+        return 'false'
+
+
+
+
 @app.route('/download/<string:name>', methods=['GET'])
 def download(name):
-    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name)
+    return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name, as_attachment=True)
 
+@app.route('/download_homepage/<string:name>', methods=['GET'])
+def download_homepage(name):
+    return send_from_directory(directory=app.config['HOME_PAGE_FOLDER'], filename=name, as_attachment=True)
 
 @app.route("/projects/<int:id>", methods=["POST"])
 def apply_remove_project(id):
@@ -463,6 +541,31 @@ def apply_remove_project(id):
     Paccess.remove_project(id)
 
     return redirect(url_for('show_projects'))
+
+
+@login_required(role='student')
+@app.route("/projects/<int:id>", methods=["GET"])
+def add_bookmark(id):
+    Access = StudentAccess()
+    Access.add_bookmark(id, request.args.get('studentId'))
+    bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
+    print('SID:::', request.args.get('studentId'))
+
+    return redirect(url_for('show_projects'))
+
+
+@login_required(role='student')
+@app.route("/bookmarks/", methods=['GET'])
+def bookmark_page():
+    Access = StudentAccess()
+
+    print('SID:::', request.args.get('studentId'))
+    bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
+    projects = []
+    for project in bookmarks:
+        projects.append(project)
+
+    return render_template("bookmarks.html", b_bookmarks=bookmarks)
 
 
 @app.route("/projects/search", methods=["GET"])
@@ -648,11 +751,11 @@ def check_project_title_correct():
 
 @login_manager.user_loader
 def load_user(user_id):
-    eors=EORS.UNKNOWN
-    if(user_id[0]=="S"):
-        eors=EORS.STUDENT
-    elif(user_id[0]=="E"):
-        eors=EORS.EMPLOYEE
+    eors = EORS.UNKNOWN
+    if (user_id[0] == "S"):
+        eors = EORS.STUDENT
+    elif (user_id[0] == "E"):
+        eors = EORS.EMPLOYEE
     us = User(Session(0, user_id[1:], 0, 0, eors))
     eAcces = EmployeeAccess()
     us.roles = list()
@@ -752,7 +855,58 @@ def emp_profile():
     id = current_user.session.ID
     projects = access.get_projects_of_employee(id)
     inactive_count = access.get_number_of_inactive_by_employee(id)
-    return render_template("emp_profile.html", projects=projects, inactive=inactive_count, page='profile')
+    return render_template("emp_profile.html",
+                           projects=projects,
+                           inactive=inactive_count,
+                           page='profile',
+                           err=request.args.get('err', default=False, type=bool),
+                           update=request.args.get('update', default=False, type=bool),
+                           removed=request.args.get('removed', default=False, type=bool)
+                           )
+
+
+@app.route('/profile/', methods=['POST'])
+@login_required(role='employee')
+def change_project():
+    # Fetch data from HTML
+    project_id = request.form['project-id']
+    new_title = request.form['project-title']
+    desc_nl_id = request.form['desc-nl-id']
+    desc_en_id = request.form['desc-en-id']
+    new_desc_nl = request.form['desc-nl']
+    new_desc_en = request.form['desc-en']
+
+    # Database Access instances
+    pAccess = ProjectAccess()
+    dAccess = DocumentAccess()
+
+    # Create new document if necessary
+    # Dutch document:
+    if desc_nl_id == '' and new_desc_nl is not None:
+        new_doc = Document(-1, 'dutch', new_desc_nl)
+        new_doc = pAccess.add_projectDocument(project_id, new_doc)
+        desc_nl_id = str(new_doc.ID)
+    # English document:
+    if desc_en_id == '' and new_desc_en is not None:
+        new_doc = Document(-1, 'english', new_desc_en)
+        new_doc = pAccess.add_projectDocument(project_id, new_doc)
+        desc_en_id = str(new_doc.ID)
+
+    # Apply changes
+    if pAccess.change_title(project_id, new_title) and \
+            dAccess.update_document_text(desc_en_id, new_desc_en) and \
+            dAccess.update_document_text(desc_nl_id, new_desc_nl):
+        return redirect(url_for('emp_profile', update=True))
+    else:
+        return redirect(url_for('emp_profile', err=True))
+
+
+@app.route('/profile/remove', methods=['POST'])
+@login_required(role='employee')
+def remove_project():
+    id = request.form['project-id']
+    apply_remove_project(id)
+    return redirect(url_for('emp_profile', removed=True))
 
 
 if __name__ == "__main__":
@@ -771,5 +925,5 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
 
-    ##findTags()
+    # findTags()
     app.run(debug=True, host=ip, port=port)

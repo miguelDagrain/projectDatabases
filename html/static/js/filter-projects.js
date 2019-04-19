@@ -72,11 +72,12 @@ function filterProjects(){
         }
     }
 
+    /*
     console.log(selectedTypes);
     console.log(selectedDisciplines);
     console.log(rg.options[rg.selectedIndex].text);
     console.log(status.options[status.selectedIndex].text);
-
+    */
 
     // Weighted relevance for each token
     for ( var i in result){
@@ -84,14 +85,14 @@ function filterProjects(){
         // Check discipline
         var discFound = false;
         for (var itt in result[i].type){
-            if (!selectedDisciplines.includes(result[i].discipline[itt]) ){
+            if (!selectedDisciplines.includes(result[i].disciplines[itt]) ){
                 continue;
             }
             discFound = true;
             break;
         }
         if (!discFound && !selectedDisciplines.includes("All")){
-            result[i].relevance = 0;
+            result[i].relevance = -1;
             continue;
         }
 
@@ -105,7 +106,7 @@ function filterProjects(){
             break;
         }
         if (!typeFound && !selectedTypes.includes("All")){
-            result[i].relevance = 0;
+            result[i].relevance = -1;
             continue;
         }
 
@@ -118,7 +119,7 @@ function filterProjects(){
             }
         }
         if (!rgFound && rg.selectedIndex>0){
-            result[i].relevance = 0;
+            result[i].relevance = -1;
             continue;
         }
 
@@ -126,14 +127,13 @@ function filterProjects(){
         switch (status.selectedIndex) {
             case 1:
                 if (result[i].maxStudents <= result[i].registeredStudents){
-                    result[i].relevance = 0;
+                    result[i].relevance = -1;
                     continue;
                 }
                 break;
             case 2:
                 if (result[i].maxStudents > result[i].registeredStudents){
-                    result[i].relevance = 0;
-                    console.log("rg");
+                    result[i].relevance = -1;
                     continue;
                 }
                 break;
@@ -181,29 +181,51 @@ function showMoreProjects(sq) {
 
     for (var i = projectCount; i < projectCount + 10; i++) {
 
-        if ((result[i].relevance === 0 && sq.length > 0)){break;}
+        if ((result[i].relevance === 0 && sq.length > 0 || result[i].relevance === -1)){break;}
 
         var cont = document.createElement("tr");
+
         var name = document.createElement("td");
         var link = document.createElement("a");
         link.appendChild(document.createTextNode(result[i].title));
-        link.href = result[i].href;
+        link.href = "/projects/" + result[i].ID;
         name.appendChild(link);
+        var desc = document.createElement("p");
+        desc.appendChild(document.createTextNode(result[i].description));
+        name.appendChild(desc);
         cont.appendChild(name);
 
-
+        /*
         var group = document.createElement("td");
-        for (var groupIter = 0; groupIter < result[i].researchGroup.length; groupIter++) {
+
+        for (var groupIter in result[i].researchGroup) {
             var newGr = document.createElement("br");
-            newGr.appendChild(document.createTextNode(result[i].researchGroup[groupIter]));
+            newGr.appendChild(document.createTextNode(groupIter));
+
             group.appendChild(newGr);
 
         }
-        cont.appendChild(group);
 
+        cont.appendChild(group);
+        */
+
+        var tagCollection = document.createElement("td");
+        for (var t in result[i]["tag"]){
+
+            tag = document.createElement("p");
+            tag.appendChild(document.createTextNode(result[i]["tag"][t]));
+            tagCollection.appendChild(tag);
+
+        }
+
+        cont.appendChild(tagCollection);
+
+        /*
         var stud = document.createElement("td");
         stud.appendChild(document.createTextNode('[' + result[i].registeredStudents + ' / ' + result[i].maxStudents + ']'));
         cont.appendChild(stud);
+
+         */
         pCont.appendChild(cont);
     }
     tableList.appendChild(pCont);

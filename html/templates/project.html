@@ -10,6 +10,7 @@
 
 {% block scripts %}
 
+<script src="{{ url_for('static', filename='js/text-input-suggestions.js') }}"></script>
 <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
 <script src="{{ url_for('static', filename='js/send-message.js') }}"></script>
@@ -23,12 +24,59 @@
 {% block body %}
 
 
+<script type="text/javascript" name="addStudent">
+        function performAddition() {
+            $("#add_student_form").on("submit", function (event) {
+                event.preventDefault();
+                var form = document.getElementById("add_student_form");
+                var formData = form["user"].value;
+                $.ajax({
+                    url: "{{ url_for("add_student",id=r_project.ID) }}",
+                    type: "POST",
+                    data: {sid: form["user"].value}
+                }).done(function (data) {
+                    if (data === "true") {
+                        console.log("student added");
+                        $("#student-modal").modal("hide");
+                        document.location.reload(true)
+                    } else {
+                        var failed = document.getElementById("failed");
+                        failed.style.display = "block";
+                    }
+                });
+            });
+        }
+</script>
+
 <div style="display:flex;">
-
-
     <div class="page-content">
         <h1>{{ r_project.title }}</h1>
-
+        <!--button for making the add_student button appears-->
+        {% if ('employee' in current_user.roles ) %}
+           <button  class="page-content-button" data-toggle="modal" data-target="#student-modal">{{ _('add student') }}</button>
+        {% endif %}
+        <!--here starts the form for adding a student-->
+       <div class="modal fade" id="student-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form method="post" id="add_student_form">
+                            <div class="alert alert-danger" id="failed" style="display:none">
+                                {{ _('adding student failed') }}
+                            </div>
+                            <div class="form-group">
+                                <label for="user" style="margin-bottom: 5px">{{ _('student ID') }}</label>
+                                <input id="user" class="form-control" type="text" placeholder="{{ _('student ID ex: S20171234') }}"
+                                       required>
+                            </div>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" form="add_student_form" class="btn btn-primary" onclick="performAddition()">{{ _('add') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% if 'admin' in current_user.roles %}
 
             <button class="page-content-button" data-toggle="modal" data-target="#remove-project">{{ _('remove project') }}</button>
@@ -50,6 +98,9 @@
             </div>
 
         {% endif %}
+{#TODO: MAKE THIS WORK, THIS SHIT WILL NOT MOVE #}
+        {% if 'student' in current_user.roles %}
+            <button class="page-content-button" onclick="location.href='{{ url_for('add_bookmark', id=r_project.ID) }}'; ">{{ _('add bookmark') }}</button>
 
 
         <button class="page-content-button" data-toggle="modal" data-target="#modal-form-show-interest">{{ _('express interest') }}</button>
@@ -68,6 +119,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
 
         <table class="content-table">
@@ -105,6 +157,7 @@
             </tr>
         {% endfor %}
 
+    </div>
 </div>
 
 

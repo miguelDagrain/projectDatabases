@@ -30,6 +30,14 @@
 
 <script src="{{ url_for('static', filename='js/filter-projects.js') }}"></script>
 
+<script>
+    $(document).on('focusin', function(e) {
+        if ($(e.target).closest(".tox-dialog").length) {
+            e.stopImmediatePropagation();
+        }
+    });
+</script>
+
 {% endblock scripts %}
 
 {% block onReadyCalls %}
@@ -47,6 +55,18 @@
 
 {% block body %}
 
+<script>
+    $(document).ready(function () {
+        $('#profile-table').DataTable({
+            "columnDefs": [
+                {"bSortable": false, "targets": 0}
+            ],
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "order": [[0, 'asc'], [1, 'asc']],
+            "pageLength": -1
+        });
+    });
+</script>
 
 <div style="display:flex;">
 
@@ -313,14 +333,53 @@
 
          {% endif %}
 
+        <table class="table" id="project_list">
+            <thead>
+            <tr>
+
+                <th class="th-sm">
+                    <strong>{{ _('Project name') }}</strong>
+                </th>
+                <th class="th-sm">
+                    <strong>{{ _('Tags') }}</strong>
+                </th>
+                <!--th class="th-sm">
+                    <strong>{{ _('Assigned students') }}</strong>
+                </th-->
+            </tr>
+            </thead>
+            <tbody>
+            <!--
+            {% for project in projects %}
+            <tr>
+                <td>
+                    <button class="edit-button" data-toggle="modal" data-target="#project-editor">
+                        &#9998;
+                    </button>
+                </td>
+                <td><a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a></td>
+                <td>
+                    {% if project.active == True %}
+                    &#10004;
+                    {% else %}
+                    &#10060;
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            -->
+            </tbody>
+        </table>
+
+        <!--
         <table id="project_list" class="content-table project-table">
             <tr id="project_list_header">
             <th class="th-1">{{ _('title') }}</th>
             <th class="th-2">{{ _('research group') }}</th>
             <th class="th-3">{{ _('assigned students') }}</th>
             </tr>
-            <!--wordt gebruikt om te positioneren van project list-->
-        </table>
+            wordt gebruikt om te positioneren van project list-->
+        <!--</table>-->
 
     </div>
 
@@ -337,11 +396,12 @@
     projectCount = 0;
     result = [];
 
+    /*
     {% for project in r_projects %}
-    obj[{{project.ID|safe}}].href ="{{ url_for('project_page', id=project.ID) }}";
+    obj[{{project.ID|safe}}].href ="/projects/" + project.ID ;
 
     {% endfor %}
-
+    */
 
 
 </script>

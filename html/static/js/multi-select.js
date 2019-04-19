@@ -64,7 +64,9 @@ function setUpMultiSelection() {
              evt.preventDefault();
              evt.stopPropagation();
              this.changeSelection();
-             this.onchange();
+             if (this.onchange){
+                 this.onchange();
+             }
 
         });
 
@@ -135,7 +137,9 @@ function setUpMultiSelection() {
                     this.classList.add("class", "multi-select-items-not-selected");
                 }
 
-                this.onchange();
+                if (this.onchange){
+                    this.onchange();
+                }
 
             });
 

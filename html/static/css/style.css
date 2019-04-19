@@ -1,4 +1,4 @@
-.edit-button {
+.profile-button {
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
@@ -7,21 +7,46 @@
     outline: none;
 }
 
+#loginpopup {
+    display: none;
+    /*position:fixed;*/
+    /*left:90%;*/
+    /*height:200px;*/
+}
+
+.showPopupButton {
+    border: none;
+    background: #405080;
+    color: white;
+}
+
+.btn-login {
+    text-decoration: none;
+    background: Transparent;
+    border: none;
+    color: white;
+}
+
+.btn-login:hover {
+    background: #191f33;
+}
+
+
 .navbar-blue {
     background-color: #003366;
 }
 
 .btn-lang {
-	background-color: Transparent;
-	border: 0;
-	color: white;
-	padding: 0;
-	font-size: 80%;
+    background-color: Transparent;
+    border: 0;
+    color: white;
+    padding: 0;
+    font-size: 80%;
 }
 
 .active,
 .btn-lang:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 
@@ -34,7 +59,7 @@
 .hyperlink {
     color: white;
     padding-bottom: 1px;
-	font-size: 90%
+    font-size: 90%
 }
 
 .hyperlink:hover {
@@ -54,7 +79,7 @@
 .banner {
     width: 20%;
     margin-top: 0.5%;
-	margin-bottom: 0.5%;
+    margin-bottom: 0.5%;
 }
 
 a::selection {

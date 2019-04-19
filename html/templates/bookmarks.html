@@ -1,0 +1,49 @@
+
+{% extends "layout.html" %}
+
+{% block title %}Bookmarks{% endblock title %}
+
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+
+{% endblock stylesheets %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+<script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
+<script>
+
+</script>
+
+{% endblock scripts %}
+
+{% block body %}
+
+    <table class="table" id="verticalScroll">
+
+<div style="display:flex;">
+    <div class="page-content">
+
+        {% if 'student' in current_user.roles %}
+            {% for projects in b_bookmarks %}
+                <tr>
+                <td><a href="{{ url_for('get_project', id=project.id) }}">{{ project.name }}</a></td>
+                </tr>
+            {% endfor %}
+
+
+        {% endif %}
+
+    </div>
+</div>
+    </table>
+
+{% endblock body %}
+

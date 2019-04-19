@@ -1,31 +1,4 @@
 <!DOCTYPE html>
-<style>
-    #loginpopup {
-        display: none;
-        /*position:fixed;*/
-        /*left:90%;*/
-        /*height:200px;*/
-    }
-
-    .showPopupButton {
-        border: none;
-        background: #405080;
-        color: white;
-    }
-
-    .btn-login {
-        text-decoration: none;
-        background: Transparent;
-        border: none;
-        color: white;
-    }
-
-    .btn-login:hover {
-        background: #191f33;
-    }
-
-</style>
-
 <html lang={{ lang }}>
 <head>
     <title>ESP - {% block title %}{% endblock title %}</title>
@@ -36,21 +9,19 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css"
           rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login-popup.css') }}">
 
     {% block stylesheets %}{% endblock stylesheets %}
-
-
-
-
-    {% block scripts %}{% endblock scripts %}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js "></script>
+
+    {% block scripts %}{% endblock scripts %}
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -163,7 +134,7 @@
                                 {% if 'student' in current_user.roles %}
                                     <li class="nav-item">
                                         <a class=" hyperlink {{ "active" if page=="bookmarks" }}"
-                                           href="{{ url_for('index') }}">
+                                           href="{{ url_for('bookmark_page') }}">
                                             {{ _('Bookmarks') }}
                                         </a>
                                     </li>
