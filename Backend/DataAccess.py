@@ -9,6 +9,17 @@ class DocumentAccess:
         """
         self.dbconnect = dbConnection.connection
 
+    def update_document_text(self, documentID, newText):
+        cursor = self.dbconnect.get_cursor()
+        sql = 'UPDATE document SET content= %s WHERE documentid = %s'
+        try:
+            cursor.execute(sql, (str(newText), str(documentID)))
+            self.dbconnect.commit()
+            return True
+        except:
+            self.dbconnect.rollback()
+            return False
+
     def get_documents(self):
         """
         gets all documents from the connected database

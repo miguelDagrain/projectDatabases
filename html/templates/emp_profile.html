@@ -46,15 +46,14 @@
             $('#project-editor').on('show.bs.modal', function (e) {
                 var title = $(e.relatedTarget).data('title');
                 var project_id = $(e.relatedTarget).data('id');
-                var desc_nl = $(e.relatedTarget).data('desc1');
-                var desc_en = $(e.relatedTarget).data('desc2');
-                console.log(desc_en);
+                var desc_nl = $(e.relatedTarget).data('desc-nl');
+                var desc_en = $(e.relatedTarget).data('desc-en');
+                var desc_nl_id = $(e.relatedTarget).data('desc-nl-id');
+                var desc_en_id = $(e.relatedTarget).data('desc-en-id');
                 $("#project-editor .modal-body #project-title").val(title);
                 $("#project-editor .modal-body #project-id").val(project_id);
-                {#$("#project-editor .modal-body #project-desc-nl").innerHTML = desc_nl;#}
-                {#$("#project-editor .modal-body #project-desc-en").innerHTML = desc_en;#}
-                $('#project-desc-en').html(desc_en);
-                $('#project-desc-nl').html(desc_nl);
+                $("#project-editor .modal-body #desc-nl-id").val(desc_nl_id);
+                $("#project-editor .modal-body #desc-en-id").val(desc_en_id);
                 tinyMCE.get('project-desc-en').setContent(desc_en);
                 tinyMCE.get('project-desc-nl').setContent(desc_nl);
                 document.getElementById("modal-title").innerHTML = "Edit: " + title;
@@ -141,7 +140,8 @@
                         </button>
                         <button class="profile-button" data-toggle="modal" data-target="#project-editor"
                                 data-id="{{ project.ID }}" data-title="{{ project.title }}"
-                                data-desc1="{{ project.desc_nl.text }}" data-desc2="{{ project.desc_en.text }}">
+                                data-desc-nl="{{ project.desc_nl.text }}" data-desc-en="{{ project.desc_en.text }}"
+                                data-desc-nl-id="{{ project.desc_nl.ID }}" data-desc-en-id="{{ project.desc_en.ID }}">
                             &#9998;
                         </button>
                         <button class="profile-button" data-toggle="modal" data-target="#delete-project"
@@ -203,6 +203,8 @@
                         <!--TODO-->
                         <!--Toevoegen verlengen als inactief, toevoegen/verwijderen van promotors exclusief uzelf-->
                         <input type="hidden" name="project-id" id="project-id">
+                        <input type="hidden" name="desc-nl-id" id="desc-nl-id">
+                        <input type="hidden" name="desc-en-id" id="desc-en-id">
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>

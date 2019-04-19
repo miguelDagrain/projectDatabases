@@ -6,7 +6,6 @@ import os
 from functools import wraps
 from apscheduler.schedulers.background import BackgroundScheduler
 
-
 from flask import *
 from flask.templating import render_template
 from flask_babel import *
@@ -72,9 +71,11 @@ def get_locale():
         lang = request.accept_languages.best_match(config_data['supported_langs'])
         return lang
 
+
 @app.route("/")
 def index():
     return redirect(url_for("home"))
+
 
 @app.route("/home")
 def home():
@@ -92,7 +93,7 @@ def home():
     # Keep preset values
 
     resp = make_response(render_template("home.html", page="index",
-                                         homedoc=  homepage ))
+                                         homedoc=homepage))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
@@ -370,12 +371,10 @@ def show_projects():
             firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
             firstDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines).group() + " ..."
 
-
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents, "description" : firstDescLines}
         #print(proj.tag[0], file=sys.stdout)
-
 
         for d in proj.desc:
             textstr = d.text
@@ -529,6 +528,7 @@ def apply_remove_project(id):
 
     return redirect(url_for('show_projects'))
 
+
 @login_required(role='student')
 @app.route("/projects/<int:id>", methods=["GET"])
 def add_bookmark(id):
@@ -545,15 +545,13 @@ def add_bookmark(id):
 def bookmark_page():
     Access = StudentAccess()
 
-    print('SID:::',request.args.get('studentId'))
+    print('SID:::', request.args.get('studentId'))
     bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
     projects = []
     for project in bookmarks:
         projects.append(project)
 
-
     return render_template("bookmarks.html", b_bookmarks=bookmarks)
-
 
 
 @app.route("/projects/search", methods=["GET"])
@@ -739,11 +737,11 @@ def check_project_title_correct():
 
 @login_manager.user_loader
 def load_user(user_id):
-    eors=EORS.UNKNOWN
-    if(user_id[0]=="S"):
-        eors=EORS.STUDENT
-    elif(user_id[0]=="E"):
-        eors=EORS.EMPLOYEE
+    eors = EORS.UNKNOWN
+    if (user_id[0] == "S"):
+        eors = EORS.STUDENT
+    elif (user_id[0] == "E"):
+        eors = EORS.EMPLOYEE
     us = User(Session(0, user_id[1:], 0, 0, eors))
     eAcces = EmployeeAccess()
     us.roles = list()
@@ -858,8 +856,15 @@ def emp_profile():
 def change_project():
     project_id = request.form['project-id']
     new_title = request.form['project-title']
+    desc_nl_id = request.form['desc-nl-id']
+    desc_en_id = request.form['desc-en-id']
+    new_desc_nl = request.form['desc-nl']
+    new_desc_en = request.form['desc-en']
     pAccess = ProjectAccess()
-    if pAccess.change_title(project_id, new_title):
+    dAccess = DocumentAccess()
+    if pAccess.change_title(project_id, new_title) and \
+            dAccess.update_document_text(desc_en_id, new_desc_en) and \
+            dAccess.update_document_text(desc_nl_id, new_desc_nl):
         return redirect(url_for('emp_profile', update=True))
     else:
         return redirect(url_for('emp_profile', err=True))
@@ -872,13 +877,6 @@ def remove_project():
     apply_remove_project(id)
     return redirect(url_for('emp_profile', removed=True))
 
-
-@login_required(role='employee')
-@app.route('/get_descriptions/<int:project_id>')
-def get_descriptions(project_id):
-    access = FullDataAccess()
-
-    pass
 
 
 if __name__ == "__main__":
@@ -897,5 +895,5 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
 
-    #findTags()
+    # findTags()
     app.run(debug=True, host=ip, port=port)
