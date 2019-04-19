@@ -1,31 +1,4 @@
 <!DOCTYPE html>
-<style>
-    #loginpopup {
-        display: none;
-        /*position:fixed;*/
-        /*left:90%;*/
-        /*height:200px;*/
-    }
-
-    .showPopupButton {
-        border: none;
-        background: #405080;
-        color: white;
-    }
-
-    .btn-login {
-        text-decoration: none;
-        background: Transparent;
-        border: none;
-        color: white;
-    }
-
-    .btn-login:hover {
-        background: #191f33;
-    }
-
-</style>
-
 <html lang={{ lang }}>
 <head>
     <title>ESP - {% block title %}{% endblock title %}</title>
@@ -36,6 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap4.min.css"
           rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login-popup.css') }}">
 

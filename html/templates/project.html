@@ -48,7 +48,7 @@
         {% endif %}
 {#TODO: MAKE THIS WORK, THIS SHIT WILL NOT MOVE #}
         {% if 'student' in current_user.roles %}
-            <button class="page-content-button" data-target="#add-bookmark" onclick = "window.location.href ={{ url_for('add_bookmark', id=r_project.ID) }} ">{{ _('add bookmark') }}</button>
+            <button class="page-content-button" onclick="location.href='{{ url_for('add_bookmark', id=r_project.ID) }}'; ">{{ _('add bookmark') }}</button>
         {% endif %}
 
 

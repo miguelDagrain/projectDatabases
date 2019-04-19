@@ -481,8 +481,8 @@ def add_bookmark(id):
     Access.add_bookmark(id, request.args.get('studentId'))
     bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
     print('SID:::', request.args.get('studentId'))
-    return redirect(url_for('show_projects'))
 
+    return redirect(url_for('show_projects'))
 
 
 @login_required(role='student')
@@ -792,8 +792,9 @@ def emp_profile():
                            projects=projects,
                            inactive=inactive_count,
                            page='profile',
-                           error=request.args.get('error', default=False, type=bool),
-                           update=request.args.get('update', default=False, type=bool)
+                           err=request.args.get('err', default=False, type=bool),
+                           update=request.args.get('update', default=False, type=bool),
+                           removed=request.args.get('removed', default=False, type=bool)
                            )
 
 
@@ -804,9 +805,17 @@ def change_project():
     new_title = request.form['project-title']
     pAccess = ProjectAccess()
     if pAccess.change_title(project_id, new_title):
-        return redirect(url_for('emp_profile', error=False, update=True))
+        return redirect(url_for('emp_profile', update=True))
     else:
-        return redirect(url_for('emp_profile', error=True, update=False))
+        return redirect(url_for('emp_profile', err=True))
+
+
+@app.route('/profile/remove', methods=['POST'])
+@login_required(role='employee')
+def remove_project():
+    id = request.form['project-id']
+    apply_remove_project(id)
+    return redirect(url_for('emp_profile', removed=True))
 
 
 if __name__ == "__main__":

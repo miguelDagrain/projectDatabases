@@ -44,13 +44,16 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#project-editor').on('show.bs.modal', function (e) {
-                console.log("entered this function hooray");
                 var title = $(e.relatedTarget).data('title');
                 var project_id = $(e.relatedTarget).data('id');
-                $(".modal-body #project-title").val(title);
-                $(".modal-body #project-id").val(project_id);
+                $("#project-editor .modal-body #project-title").val(title);
+                $("#project-editor .modal-body #project-id").val(project_id);
                 document.getElementById("modal-title").innerHTML = "Edit: " + title;
-            })
+            });
+            $('#delete-project').on('show.bs.modal', function (e) {
+                var id = $(e.relatedTarget).data('id');
+                $('#delete-project .modal-footer #project-id').val(id);
+            });
         });
     </script>
 
@@ -68,7 +71,7 @@
             <div class="col">
                 <h1>{{ _('Your projects') }}</h1>
             </div>
-            {% if error == True %}
+            {% if err == True %}
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ _('Cannot update project') }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -76,9 +79,17 @@
                     </button>
                 </div>
             {% endif %}
-            {% if update == True and error == False %}
+            {% if update == True %}
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ _('Project updated') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+            {% if removed == True %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ _('Project removed') }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -108,9 +119,16 @@
             {% for project in projects %}
                 <tr>
                     <td>
-                        <button class="edit-button" data-toggle="modal" data-target="#project-editor"
+                        <button class="profile-button" data-toggle="modal">
+                            <i class="fa fa-user"></i>
+                        </button>
+                        <button class="profile-button" data-toggle="modal" data-target="#project-editor"
                                 data-id="{{ project.ID }}" data-title="{{ project.title }}">
                             &#9998;
+                        </button>
+                        <button class="profile-button" data-toggle="modal" data-target="#delete-project"
+                                data-id="{{ project.ID }}">
+                            <i class="fa fa-trash-o"></i>
                         </button>
                     </td>
                     <td><a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a></td>
@@ -159,6 +177,27 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
                         <button type="submit" form="edit_form" class="btn btn-primary">Save</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Delete modal -->
+    <div class="modal fade" id="delete-project" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title">Are you sure?</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <form id="delete_form" method="post" action="{{ url_for('remove_project') }}">
+                        <input type="hidden" id="project-id" name="project-id">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="submit" form="delete_form" class="btn btn-primary">Yes</button>
+                    </form>
                 </div>
             </div>
         </div>
