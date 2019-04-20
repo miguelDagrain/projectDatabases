@@ -93,6 +93,7 @@ function filterProjects(){
         }
         if (!discFound && !selectedDisciplines.includes("All")){
             result[i].relevance = -1;
+            console.log("disc");
             continue;
         }
 
@@ -107,6 +108,7 @@ function filterProjects(){
         }
         if (!typeFound && !selectedTypes.includes("All")){
             result[i].relevance = -1;
+            console.log("type");
             continue;
         }
 
@@ -120,6 +122,7 @@ function filterProjects(){
         }
         if (!rgFound && rg.selectedIndex>0){
             result[i].relevance = -1;
+            console.log("rg");
             continue;
         }
 
@@ -128,12 +131,14 @@ function filterProjects(){
             case 1:
                 if (result[i].maxStudents <= result[i].registeredStudents){
                     result[i].relevance = -1;
+                    console.log("case1");
                     continue;
                 }
                 break;
             case 2:
                 if (result[i].maxStudents > result[i].registeredStudents){
                     result[i].relevance = -1;
+                    console.log("case2");
                     continue;
                 }
                 break;
