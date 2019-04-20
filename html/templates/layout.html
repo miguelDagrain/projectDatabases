@@ -65,7 +65,7 @@
 
 
 </head>
-<body>
+<footer>
 
 <div class="container-fluid">
 
@@ -242,8 +242,32 @@
     </script>
 </div>
 
-{% block body %}
+    <style>
+        .wrapper {
+            min-height: calc(100vh - 180px);
+            padding-bottom: 40px;
 
-{% endblock body %}
+        }
+        .footer{
+            clear: both;
+            height: 70px;
+            text-align: center;
+
+            color: lightgray;
+
+        }
+
+    </style>
+
+    <div class="wrapper">
+    {% block body %}
+
+    {% endblock body %}
+
+        <div class="push"></div>
+    </div>
+
+    <footer class="footer">ESP - UAntwerpen</footer>
+
 </body>
 </html>
