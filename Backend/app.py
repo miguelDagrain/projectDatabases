@@ -368,10 +368,13 @@ def show_projects():
             firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
             firstDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines).group() + " ..."
 
+
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents, "description" : firstDescLines}
+
         #print(proj.tag[0], file=sys.stdout)
+
 
         for d in proj.desc:
             textstr = d.text
@@ -533,27 +536,34 @@ def apply_remove_project(id):
 @login_required(role='student')
 @app.route("/projects/<int:id>/<int:empty>", methods=["GET"])
 def add_bookmark(id, empty):
-    student = current_user.get_id()
+    student = current_user.session.ID
     Access = StudentAccess()
     Access.add_bookmark(id, student)
-    bookmarks = Access.get_studentBookmarks(student)
-    print('SID:::', student)
-
     return redirect(url_for('show_projects'))
+
 
 
 @login_required(role='student')
 @app.route("/bookmarks/", methods=['GET'])
 def bookmark_page():
+    student = current_user.session.ID
+
     Access = StudentAccess()
+    fullAccess = FullDataAccess()
 
-    print('SID:::', request.args.get('studentId'))
-    bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
-    projects = []
+    IDS = []
+    bookmarks = Access.get_studentBookmarks(student)
     for project in bookmarks:
-        projects.append(project)
+        IDS.append(project.project)
 
-    return render_template("bookmarks.html", b_bookmarks=bookmarks)
+    projecten = []
+    for pr in IDS:
+        x = fullAccess.get_project(pr)
+        projecten.append(x)
+
+
+
+    return render_template("bookmarks.html", b_projecten=projecten, page = "bookmarks")
 
 
 @app.route("/projects/search", methods=["GET"])

@@ -32,9 +32,9 @@
     <div class="page-content">
 
         {% if 'student' in current_user.roles %}
-            {% for projects in b_bookmarks %}
+            {% for project in b_projecten %}
                 <tr>
-                <td><a href="{{ url_for('get_project', id=project.id) }}">{{ project.name }}</a></td>
+                <td><a href="{{ url_for('project_page', id=project.ID) }}" >{{ project.title }}</a></td>
                 </tr>
             {% endfor %}
 
