@@ -544,12 +544,13 @@ def apply_remove_project(id):
 
 
 @login_required(role='student')
-@app.route("/projects/<int:id>", methods=["GET"])
-def add_bookmark(id):
+@app.route("/projects/<int:id>/<int:empty>", methods=["GET"])
+def add_bookmark(id, empty):
+    student = current_user.get_id()
     Access = StudentAccess()
-    Access.add_bookmark(id, request.args.get('studentId'))
-    bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
-    print('SID:::', request.args.get('studentId'))
+    Access.add_bookmark(id, student)
+    bookmarks = Access.get_studentBookmarks(student)
+    print('SID:::', student)
 
     return redirect(url_for('show_projects'))
 

@@ -100,8 +100,9 @@
         {% endif %}
 {#TODO: MAKE THIS WORK, THIS SHIT WILL NOT MOVE #}
         {% if 'student' in current_user.roles %}
-            <button class="page-content-button" onclick="location.href='{{ url_for('add_bookmark', id=r_project.ID) }}'; ">{{ _('add bookmark') }}</button>
-
+        <form action="{{ url_for('add_bookmark', id=r_project.ID, empty=0) }}"  method="get">
+            <button class="page-content-button" type="submit">{{ _('add bookmark') }}</button>
+        </form>
 
         <button class="page-content-button" data-toggle="modal" data-target="#modal-form-show-interest">{{ _('express interest') }}</button>
 
