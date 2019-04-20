@@ -30,16 +30,6 @@
     color: #ffffff;
 }
 
-.side-bar > input {
-    display: block;
-    width: 90%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 5px;
-    margin-right: 5px;
-    color: #003366;
-}
-
 .side-bar > label > input {
     background-color:white;
     color: #003366;

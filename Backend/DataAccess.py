@@ -823,6 +823,13 @@ class ProjectAccess:
             cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
             project.activeYear = list(cursor.fetchall())
 
+            sa=StudentAccess()
+            registrations=sa.get_projectRegistrationsOnProject(project.ID)
+            project.registeredStudents = list()
+            for i in registrations:
+                project.registeredStudents.append(sa.get_student(i.student))
+
+
             descriptions = self.get_projectDocuments(project.ID)
             project.desc = descriptions
             for desc in descriptions:
@@ -1098,7 +1105,7 @@ class StudentAccess:
         a constructor for a studentAccess object
         """
         self.dbconnect = dbConnection.connection
-        self.project = ProjectAccess()
+        self.project=ProjectAccess()
 
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
