@@ -36,7 +36,7 @@ function handleUploadAttachementOver (event) {
 
 function editHomepage(){
 
-    console.log("send");
+    formData.append("newHome", $('#administration-form-description').val().toString(1000000));
 
     var request = $.ajax({
         type: "POST",
@@ -49,7 +49,7 @@ function editHomepage(){
 
     request.done(function (data){
         if(data.result){ //check if true is returned
-            window.location.replace($SCRIPT_ROOT + '/home/'); //this wil call the get
+            window.location.replace($SCRIPT_ROOT + '/home'); //this wil call the get
         }
     });
 
@@ -58,7 +58,7 @@ function editHomepage(){
 
 
 function setupFormEditHomepage() {
-    $('#aedit-home-form').bind('submit', function (event) {
+    $('#edit-home-form').bind('submit', function (event) {
         event.preventDefault();
         editHomepage();
         $(this).modal('hide');

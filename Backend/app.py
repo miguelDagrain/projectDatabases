@@ -109,7 +109,9 @@ def modify_homepage():
     if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
         os.mkdir(app.config['HOME_PAGE_FOLDER'])
 
-    value = request.form.get("NewHome")
+    value = ""
+    if request.form.get("newHome"):
+        value = request.form.get("newHome")
 
     homeFile = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "w+")
     homeFile.write(value)
@@ -119,27 +121,12 @@ def modify_homepage():
 
     print(files, file=sys.stdout)
 
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-
-
-
-
-
     for file in files:
         print(file.filename, file=sys.stdout)
         nameFile = secure_filename(file.filename)
         file.save(os.path.join(app.config['HOME_PAGE_FOLDER'], nameFile))
-        doc.attachment.append(nameFile)
 
-    resp = make_response(render_template("home.html", page="index", homedoc=value))
-    if request.cookies.get('lang') is None:
-        lang = get_locale()
-        resp.set_cookie('lang', lang)
-
-    return redirect(url_for("home"))
-
+    return jsonify(result=True)
 
 @app.route("/researchgroups/")
 def show_research_groups():
