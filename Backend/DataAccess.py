@@ -537,6 +537,17 @@ class ProjectAccess:
         self.dbconnect = dbConnection.connection
         self.doc = DocumentAccess()
 
+    def remove_bookmark(self, projectID, studentID):
+        cursor = self.dbconnect.get_cursor()
+        sql = 'DELETE FROM bookmark b WHERE b.project= %s AND b.student= %s'
+        try:
+            cursor.execute(sql, (str(projectID), str(studentID),))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception(
+                "Unable to delete bookmark with projectID=" + str(projectID) + " and studentID=" + str(studentID))
+
     def change_title(self, projectID, newTitle):
         cursor = self.dbconnect.get_cursor()
         sql = 'UPDATE project SET title= %s WHERE projectID=%s'
@@ -823,12 +834,11 @@ class ProjectAccess:
             cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
             project.activeYear = list(cursor.fetchall())
 
-            sa=StudentAccess()
-            registrations=sa.get_projectRegistrationsOnProject(project.ID)
+            sa = StudentAccess()
+            registrations = sa.get_projectRegistrationsOnProject(project.ID)
             project.registeredStudents = list()
             for i in registrations:
                 project.registeredStudents.append(sa.get_student(i.student))
-
 
             descriptions = self.get_projectDocuments(project.ID)
             project.desc = descriptions
@@ -893,7 +903,7 @@ class ProjectAccess:
         from Project import Project
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (ID,))
-        if(cursor.rowcount==0): return None
+        if (cursor.rowcount == 0): return None
         row = cursor.fetchone()
         project = Project(row[0], row[1], row[2], row[3])
         project.desc = self.get_projectDocuments(project.ID)
@@ -917,7 +927,6 @@ class ProjectAccess:
             self.dbconnect.rollback()
             raise Exception('unable to remove project')
 
-
     def get_project_filter_data(self):
         from Project import Project
         try:
@@ -931,8 +940,8 @@ class ProjectAccess:
             #       "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
             #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
-            #temp query
-            sql="select * from project Where active = TRUE;"
+            # temp query
+            sql = "select * from project Where active = TRUE;"
             cursor.execute(sql)
             projects = list()
             for row in cursor:
@@ -1105,7 +1114,7 @@ class StudentAccess:
         a constructor for a studentAccess object
         """
         self.dbconnect = dbConnection.connection
-        self.project=ProjectAccess()
+        self.project = ProjectAccess()
 
     # returns all the bookmarks of the student
     def get_studentBookmarks(self, studentId):
@@ -1193,7 +1202,7 @@ class StudentAccess:
         from Student import Student
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM student WHERE studentID=%s ', (ID,))
-        if(cursor.rowcount==0): return None
+        if (cursor.rowcount == 0): return None
         row = cursor.fetchone()
         stu = Student(row[0], row[1], row[2])
         stu.likedProject = self.get_studentBookmarkProject(stu.studentID)

@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css">
 
 {% endblock stylesheets %}
 
@@ -140,9 +141,9 @@
             {% for project in projects %}
                 <tr>
                     <td>
-                        <button class="profile-button" data-toggle="modal" data-target="#project-assignment">
-                            <i class="fa fa-user"></i>
-                        </button>
+{#                        <button class="profile-button" data-toggle="modal" data-target="#project-assignment">#}
+{#                            <i class="fa fa-user"></i>#}
+{#                        </button>#}
                         <button class="profile-button" data-toggle="modal" data-target="#project-editor"
                                 data-id="{{ project.ID }}" data-title="{{ project.title }}"
                                 data-desc-nl="{{ project.desc_nl.text }}" data-desc-en="{{ project.desc_en.text }}"
@@ -174,7 +175,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        <input type="checkbox" data-toggle="toggle" data-on="{{ _('extension') }}" data-off="{{ _('no extension') }}">
+                        <label>
+                            <input type="checkbox" data-toggle="toggle" data-on="{{ _('Yes') }}"
+                                   data-off="{{ _('No') }}" data-height="20%" data-width="20%">
+                        </label>
                     </td>
                 </tr>
             {% endfor %}
