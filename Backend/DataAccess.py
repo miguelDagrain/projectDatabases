@@ -46,6 +46,7 @@ class DocumentAccess:
         :return: a single doucment
         """
         from Document import Document
+        from Attachment import Attachment
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT * FROM document WHERE documentID=%s', (id,))
         row = cursor.fetchone()
@@ -53,7 +54,7 @@ class DocumentAccess:
         cursorAttachment = self.dbconnect.get_cursor()
         cursorAttachment.execute('select * from attachment where doc=%s', (document.ID,))
         for att in cursorAttachment:
-            document.attachment.append(att[1])
+            document.attachment.append(Attachment(att[0], att[1]))
         return document
 
     def add_attachment(self, documentID, attachment):
@@ -112,7 +113,7 @@ class DocumentAccess:
 
                 cursor.execute('delete from attachment where doc=%s', (document.ID,))
                 for i in document.attachment:
-                    self.add_attachment(document.ID, i)
+                    self.add_attachment(document.ID, i.content)
                 self.dbconnect.commit()
 
             else:
@@ -306,8 +307,8 @@ class ResearchGroupAccess:
                 raise Exception('no researchGroup found with that id')
             cursor.execute(
                 'update researchGroup set name= %s,abbreviation= %s,discipline= %s,active= %s,address= %s,telNr= %s where groupId=%s',
-                (group.name, group.abbreviation, group.discipline, group.active, group.address, str(group.telNr)),
-                str(group.ID))
+                (group.name, group.abbreviation, group.discipline, group.active, group.address, str(group.telNr),
+                str(group.ID)))
             cursor.execute('delete from groupDescription where groupID=%s', (group.ID,))
             for i in group.desc:
                 self.add_researchGroupDescription(i, str(group.ID))
@@ -481,15 +482,15 @@ class EmployeeAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            if employee.ID == None:
+            if employee.id == None:
                 raise Exception('no id given')
-            cursor.execute('select * from employee where employeeID=%s', (employee.ID,))
+            cursor.execute('select * from employee where employeeID=%s', (str(employee.id),))
             if cursor.rowcount == 0:
                 raise Exception('no employee found with that id')
             cursor.execute(
-                'update employee set name= %s,email= %s,office= %s,researchgroup= %s,title= %s,INTernORextern= %s,active= %s,promotor= %s where employeeID=%s',
-                (employee.name, employee.email, employee.office, employee.research_group, employee.title,
-                 employee.internOrExtern, employee.active, employee.promotor, employee.ID))
+                'update employee set name= %s,email= %s,office= %s,title= %s,INTernORextern= %s,active= %s,promotor= %s where employeeID=%s',
+                (employee.name, employee.email, employee.office, employee.title,
+                 employee.internOrExtern, employee.active, employee.promotor, employee.id))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -633,7 +634,7 @@ class ProjectAccess:
         :return: a list of types
         """
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from projectYearConnection where projectID=%s', (projectID,))
+        cursor.execute('select * from projecttypeConnection where projectID=%s', (projectID,))
         types = list()
         for i in cursor:
             types.append(i[0])
@@ -912,6 +913,7 @@ class ProjectAccess:
         project.tag = self.get_projectTags(project.ID)
         project.relatedProject = self.get_projectRelations(project.ID)
         project.researchGroup = self.get_projectresearchgroups(project.ID)
+        project.type=self.get_typesFromProject(project.ID)
         return project
 
     def remove_project(self, ID):
@@ -1232,16 +1234,16 @@ class StudentAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            if stu.studentId is not None:
+            if stu.studentID is not None:
                 cursor.execute('INSERT INTO student values(%s,%s,%s)',
-                               (stu.studentId, stu.name, stu.studentNumber))
+                               (stu.studentID, stu.name, stu.studentNumber))
             else:
                 cursor.execute('INSERT INTO student values(default,%s,%s)',
                                (stu.name, stu.studentNumber))
                 cursor.execute('select lastval()')
-                stu.studentId = cursor.fetchone()[0]
+                stu.studentID = cursor.fetchone()[0]
             for i in stu.likedProject:
-                self.add_bookmark(i.ID, stu.studentId)
+                self.add_bookmark(i.ID, stu.studentID)
 
             # get id and return updated object
             self.dbconnect.commit()
