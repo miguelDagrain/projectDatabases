@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ _('Employee') }}{% endblock title %}
+{% block title %}{{ r_person.name }}{% endblock title %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
