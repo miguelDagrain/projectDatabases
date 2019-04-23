@@ -25,7 +25,6 @@
 
 {% block body %}
 
-
 <div style="display: flex">
 
     <form class="side-bar" action="{{ url_for('show_people') }}" method="get">
@@ -147,15 +146,15 @@
 
         {% endif %}
 
-        <table class="content-table " id="people_table">
-            <tr>
-                <th class="th-1">{{ _('Name') }}</th>
-                <th class="th-2">{{ _('Research group') }}</th>
-                <th class="th-3">{{ _('Promotor') }}</th>
-            </tr>
-            <tbody>
+        <table class="table " id="people_table">
+            <thead>
+                <tr>
+                    <th class="th-1">{{ _('Name') }}</th>
+                    <th class="th-2">{{ _('Research group') }}</th>
+                    <th class="th-3">{{ _('Promotor') }}</th>
+                </tr>
+            <thead>
 
-            </tbody>
         </table>
     </div>
 </div>
