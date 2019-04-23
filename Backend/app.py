@@ -490,7 +490,7 @@ def project_page(id):
                            added_bookmark=request.args.get('added_bookmark', default=False))
 
 
-@app.route('/projects/<int:id>', methods=['POST'])
+@app.route('/projects/<int:id>/add_student', methods=['POST'])
 def add_student(id):
     sid = request.form["sid"]
     try:
