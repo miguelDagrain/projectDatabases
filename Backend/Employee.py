@@ -4,7 +4,7 @@ class Employee:
         constructor for dbEmployee  where all varibales are given
         :param email: a string representing an email
         :param office: a string representing a office(building+floor+room)
-        :param research_group:a string representing a researchgroup (must represent the name of a dbResearch=gorup)
+        :param research_group:a string representing a researchgroup (must represent the name of a dbResearch=group)
         :param title: a title enum
         :param interextern:  a Intext enum
         :param active: a bool stating whether the employee is active or not

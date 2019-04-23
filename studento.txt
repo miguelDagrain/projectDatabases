@@ -1,0 +1,4 @@
+9xyer!
+user: pdbgroep1
+
+ssh pdbgroep1@studento.uantwerpen.be

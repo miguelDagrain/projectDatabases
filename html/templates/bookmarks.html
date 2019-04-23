@@ -1,49 +1,90 @@
-
 {% extends "layout.html" %}
 
 {% block title %}Bookmarks{% endblock title %}
 
 {% block stylesheets %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
 {% endblock stylesheets %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
-<script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
-<script>
-
-</script>
+    <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#delete-bookmark').on('show.bs.modal', function (e) {
+                var projectID = $(e.relatedTarget).data('bookmark-id');
+                $("#delete-bookmark .modal-footer #project-id").val(projectID);
+            });
+        });
+    </script>
 
 {% endblock scripts %}
 
 {% block body %}
 
-    <table class="table" id="verticalScroll">
-
-<div style="display:flex;">
     <div class="page-content">
-
-        {% if 'student' in current_user.roles %}
-            {% for projects in b_bookmarks %}
+        <h4>{{ _('Bookmarks') }}</h4>
+        {% if empty %}
+            <p>{{ _('You currently have no bookmarks. Go to the projects page to add bookmarks.') }}</p>
+        {% else %}
+            <table class="table" id="verticalScroll">
+                <thead>
                 <tr>
-                <td><a href="{{ url_for('get_project', id=project.id) }}">{{ project.name }}</a></td>
+                    <td><strong>Project</strong></td>
+                    <td><strong>Remove</strong></td>
                 </tr>
-            {% endfor %}
+                </thead>
+                <tbody>
+                {% if 'student' in current_user.roles %}
+                    {% for project in b_projecten %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a>
+                            </td>
+                            <td>
+                                <button class="profile-button" data-toggle="modal" data-target="#delete-bookmark"
+                                        data-bookmark-id="{{ project.ID }}">
+                                    <i class="fa fa-trash-o"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
 
 
+                {% endif %}
+                </tbody>
+            </table>
         {% endif %}
-
     </div>
-</div>
-    </table>
+
+    <div class="modal fade" id="delete-bookmark" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title">Delete bookmark?</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <form id="delete_form" method="post" action="{{ url_for('remove_bookmark') }}">
+                        <input type="hidden" id="project-id" name="project-id">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="submit" form="delete_form" class="btn btn-primary">Yes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 {% endblock body %}
 

@@ -84,9 +84,10 @@ def home():
     :return: Rendered index template
     """
 
-    homepage = ''
+    this_dir = os.path.dirname(__file__)
+    home_file = app.config['HOME_PAGE_FOLDER'] + 'homepage.html'
     try:
-        homepage = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "r").read()
+        homepage = open(os.path.join(this_dir, home_file), "r").read()
     # Store configuration file values
     except FileNotFoundError:
         homepage = ''
@@ -109,7 +110,9 @@ def modify_homepage():
     if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
         os.mkdir(app.config['HOME_PAGE_FOLDER'])
 
-    value = request.form.get("NewHome")
+    value = ""
+    if request.form.get("newHome"):
+        value = request.form.get("newHome")
 
     homeFile = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "w+")
     homeFile.write(value)
@@ -119,26 +122,12 @@ def modify_homepage():
 
     print(files, file=sys.stdout)
 
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-
-
-
-
-
     for file in files:
         print(file.filename, file=sys.stdout)
         nameFile = secure_filename(file.filename)
         file.save(os.path.join(app.config['HOME_PAGE_FOLDER'], nameFile))
-        doc.attachment.append(nameFile)
 
-    resp = make_response(render_template("home.html", page="index", homedoc=value))
-    if request.cookies.get('lang') is None:
-        lang = get_locale()
-        resp.set_cookie('lang', lang)
-
-    return redirect(url_for("home"))
+    return jsonify(result=True)
 
 
 @app.route("/researchgroups/")
@@ -383,8 +372,9 @@ def show_projects():
 
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
-                 "registeredStudents": proj.registeredStudents, "description" : firstDescLines}
-        #print(proj.tag[0], file=sys.stdout)
+                 "registeredStudents": proj.registeredStudents, "description": firstDescLines}
+
+        # print(proj.tag[0], file=sys.stdout)
 
         for d in proj.desc:
             textstr = d.text
@@ -508,44 +498,44 @@ def project_page(id):
         attachments.append((i, splitted))
 
     return render_template("project.html", r_project=project, r_promotors=promotors,
-                           r_researchGroups=researchGroups, page="projects", r_attachments=attachments)
+                           r_researchGroups=researchGroups, page="projects", r_attachments=attachments,
+                           added_bookmark=request.args.get('added_bookmark', default=False))
 
 
-@app.route('/projects/<int:id>', methods=['POST'])
+@app.route('/projects/<int:id>/add_student', methods=['POST'])
 def add_student(id):
-
-    sid=request.form["sid"]
+    sid = request.form["sid"]
     try:
-        if(len(sid)!=8): raise Exception('student id not the right size')
-        if(sid[0]=='s' or sid[0]=='S'):
-            sid=sid[1:]
-            sid='2'+sid
+        if (len(sid) != 8): raise Exception('student id not the right size')
+        if (sid[0] == 's' or sid[0] == 'S'):
+            sid = sid[1:]
+            sid = '2' + sid
 
-        sa =StudentAccess()
-        stu=sa.get_studentOnStudentNumber(sid)
-        if (stu==None):  raise Exception('student doesnt exist')
-        pa=ProjectAccess()
-        proj=pa.get_project(id)
-        if(proj==None):  raise Exception('project doesnt exist')
-        registrations=sa.get_projectRegistrationsOnProject(id)
-        if(len(registrations)>=proj.maxStudents):  raise Exception('project already has maximum amount of students')
+        sa = StudentAccess()
+        stu = sa.get_studentOnStudentNumber(sid)
+        if (stu == None):  raise Exception('student doesnt exist')
+        pa = ProjectAccess()
+        proj = pa.get_project(id)
+        if (proj == None):  raise Exception('project doesnt exist')
+        registrations = sa.get_projectRegistrationsOnProject(id)
+        if (len(registrations) >= proj.maxStudents):  raise Exception('project already has maximum amount of students')
         for i in registrations:
-            if(i.student==sid):  raise Exception('student already registered for this project')
-        sa.add_projectRegistration(id,stu.studentID)
+            if (i.student == sid):  raise Exception('student already registered for this project')
+        sa.add_projectRegistration(id, stu.studentID)
         return 'true'
     except:
         return 'false'
-
-
 
 
 @app.route('/download/<string:name>', methods=['GET'])
 def download(name):
     return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name, as_attachment=True)
 
+
 @app.route('/download_homepage/<string:name>', methods=['GET'])
 def download_homepage(name):
     return send_from_directory(directory=app.config['HOME_PAGE_FOLDER'], filename=name, as_attachment=True)
+
 
 @app.route("/projects/<int:id>", methods=["POST"])
 def apply_remove_project(id):
@@ -558,27 +548,41 @@ def apply_remove_project(id):
 @login_required(role='student')
 @app.route("/projects/<int:id>/<int:empty>", methods=["GET"])
 def add_bookmark(id, empty):
-    student = current_user.get_id()
+    student = current_user.session.ID
     Access = StudentAccess()
     Access.add_bookmark(id, student)
-    bookmarks = Access.get_studentBookmarks(student)
-    print('SID:::', student)
-
-    return redirect(url_for('show_projects'))
+    return redirect(url_for('project_page', id=id, added_bookmark=True))
 
 
 @login_required(role='student')
 @app.route("/bookmarks/", methods=['GET'])
 def bookmark_page():
+    student = current_user.session.ID
+
     Access = StudentAccess()
+    fullAccess = FullDataAccess()
 
-    print('SID:::', request.args.get('studentId'))
-    bookmarks = Access.get_studentBookmarks(request.args.get('studentId'))
-    projects = []
-    for project in bookmarks:
-        projects.append(project)
+    IDS = []
+    bookmarks = Access.get_studentBookmarks(student)
+    for bookmark in bookmarks:
+        IDS.append(bookmark.project)
 
-    return render_template("bookmarks.html", b_bookmarks=bookmarks)
+    projecten = []
+    for project_id in IDS:
+        project = fullAccess.get_project(project_id)
+        projecten.append(project)
+
+    return render_template("bookmarks.html", b_projecten=projecten, page="bookmarks", empty=(len(projecten) == 0))
+
+
+@app.route("/delete-bookmark/", methods=['POST'])
+@login_required(role='student')
+def remove_bookmark():
+    project_id = request.form['project-id']
+    student_id = current_user.session.ID
+    pAccess = ProjectAccess()
+    pAccess.remove_bookmark(project_id, student_id)
+    return redirect(url_for('bookmark_page'))
 
 
 @app.route("/projects/search", methods=["GET"])
