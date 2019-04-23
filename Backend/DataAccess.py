@@ -289,9 +289,9 @@ class ResearchGroupAccess:
             for i in group.desc:
                 self.add_researchGroupDescription(i, gid)
             self.dbconnect.commit()
-        except:
+        except Exception as e:
             self.dbconnect.rollback()
-            raise Exception('Unable to save researchgroup!')
+            raise Exception('Unable to save researchgroup!'+str(e))
 
     def change_researchGroup(self, group):
         """

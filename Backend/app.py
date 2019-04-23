@@ -168,9 +168,7 @@ def add_research_group():
     address = request.form.get("Address")
     telephone = request.form.get("Telephone")
     # desc = request.form.get("Description")
-    desc = list()
-    desc.append(Document(1, 'dutch',
-                         'ik ben jos het document'))  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+    desc = list() # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
     r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
     Raccess = ResearchGroupAccess()

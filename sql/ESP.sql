@@ -267,7 +267,7 @@ drop function if exists project_del_func;
  BEGIN
 
    DELETE FROM document
-   WHERE documentID = (SELECT docID
+   WHERE documentID in (SELECT docID
                        FROM projectDocument
                        WHERE projectID = old.projectID);
 
