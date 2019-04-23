@@ -80,7 +80,7 @@ function showMorePeople(sq){
         var name = document.createElement("td");
         var link = document.createElement("a");
         link.appendChild(document.createTextNode(result[i]["name"]));
-        link.href = "/peoples/" + result[i]["ID"];
+        link.href = "/people/" + result[i]["ID"];
         name.appendChild(link);
         cont.appendChild(name);
 
