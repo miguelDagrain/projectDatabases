@@ -14,7 +14,6 @@ from flask_login import LoginManager
 from flask_login import login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
 
-import dbConnection
 from DataAccess import *
 from Document import *
 from Project import Project
