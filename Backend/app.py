@@ -368,7 +368,9 @@ def show_projects():
         firstDescLines = "No description found."
         if len(proj.desc) > 0:
             firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
-            # firstDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines).group() + " ..."
+            tempDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines)
+            if(tempDescLines!=None):
+                firstDescLines=tempDescLines.group() + " ..."
 
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
