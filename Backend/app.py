@@ -39,6 +39,8 @@ app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# uncomment this if you want to calculate tags
+# findTags()
 
 # overriding the login manager of flask login to support roles, inspired from 
 # https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes 
@@ -246,17 +248,19 @@ def show_people():
 
 
     else:
-        researchGroupOptions = [""]
-
-        for iter in researchGroups:
-            researchGroupOptions.append(iter.name)
-
-        name = request.args.get("Name")
-        groupNr = int(request.args.get("Research_group"))
-        group = researchGroupOptions[groupNr]
-        promotor = int(request.args.get("Promotor"))
-
-        people = Raccess.filter_employees(name, group, promotor)
+        Eaccess = EmployeeAccess()
+        people = Eaccess.get_employees()
+        # researchGroupOptions = [""]
+        #
+        # for iter in researchGroups:
+        #     researchGroupOptions.append(iter.name)
+        #
+        # name = request.args.get("Name")
+        # groupNr = int(request.args.get("Research_group"))
+        # group = researchGroupOptions[groupNr]
+        # promotor = int(request.args.get("Promotor"))
+        #
+        # people = Raccess.filter_employees(name, group, promotor)
 
     neededValuesPeoplePage = {}
     for person in people:
@@ -587,37 +591,38 @@ def remove_bookmark():
 
 @app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
-    if request.args.get("Search_query") is None:
-        return show_projects()
-    else:
-        Raccess = ResearchGroupAccess()
-        researchGroups = Raccess.get_researchGroups()
-        typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-        Daccess = DomainAccess()
-        disciplineOptions = Daccess.get_disciplines()
-        researchGroupOptions = [""]
-
-        for iter in researchGroups:
-            researchGroupOptions.append(iter.name)
-
-        query = request.args.get("Search_query")
-        print(query, file=sys.stderr)
-        typeNr = int(request.args.get("Type"))
-        type = typeOptions[typeNr]
-
-        disciplineNrs = request.args.getlist("Disciplines")
-        discipline = helper_get_selected_multi_choice(disciplineNrs, disciplineOptions)
-
-        groupNr = int(request.args.get("Research_group"))
-        group = researchGroupOptions[groupNr]
-        status = int(request.args.get("Status"))
-
-        Paccess = ProjectAccess()
-        projects = Paccess.filter_projects(query, type, discipline, group, status)
-
-        return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-                               r_disciplines=disciplineOptions, r_types=typeOptions, page="projects",
-                               alt=json.dumps(projects, default=lambda x: x.__dict__))
+    # if request.args.get("Search_query") is None:
+    #     return show_projects()
+    # else:
+    #     Raccess = ResearchGroupAccess()
+    #     researchGroups = Raccess.get_researchGroups()
+    #     typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
+    #     Daccess = DomainAccess()
+    #     disciplineOptions = Daccess.get_disciplines()
+    #     researchGroupOptions = [""]
+    #
+    #     for iter in researchGroups:
+    #         researchGroupOptions.append(iter.name)
+    #
+    #     query = request.args.get("Search_query")
+    #     print(query, file=sys.stderr)
+    #     typeNr = int(request.args.get("Type"))
+    #     type = typeOptions[typeNr]
+    #
+    #     disciplineNrs = request.args.getlist("Disciplines")
+    #     discipline = helper_get_selected_multi_choice(disciplineNrs, disciplineOptions)
+    #
+    #     groupNr = int(request.args.get("Research_group"))
+    #     group = researchGroupOptions[groupNr]
+    #     status = int(request.args.get("Status"))
+    #
+    #     Paccess = ProjectAccess()
+    #     projects = Paccess.filter_projects(query, type, discipline, group, status)
+    #
+        # return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
+        #                        r_disciplines=disciplineOptions, r_types=typeOptions, page="projects",
+        #                        alt=json.dumps(projects, default=lambda x: x.__dict__))
+    return redirect(url_for('show_projects'))
 
 
 @app.route("/administration/")
@@ -943,5 +948,4 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
 
-    findTags()
     app.run(debug=True, host=ip, port=port)
