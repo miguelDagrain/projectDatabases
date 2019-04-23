@@ -84,9 +84,10 @@ def home():
     :return: Rendered index template
     """
 
-    homepage = ''
+    this_dir = os.path.dirname(__file__)
+    home_file = app.config['HOME_PAGE_FOLDER'] + 'homepage.html'
     try:
-        homepage = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "r").read()
+        homepage = open(os.path.join(this_dir, home_file), "r").read()
     # Store configuration file values
     except FileNotFoundError:
         homepage = ''
