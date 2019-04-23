@@ -258,13 +258,14 @@ def show_people():
 
         people = Raccess.filter_employees(name, group, promotor)
 
-    neededValuesPeoplePage = []
+    neededValuesPeoplePage = {}
     for person in people:
         for group in researchGroups:
             if group.ID == person.research_group:
-                neededValuesPeoplePage.append([person.name, group.name, person.promotor, person.id])
+                neededValuesPeoplePage[person.id] = {"name" : person.name, "group": group.name, "promotor": person.promotor, "ID": person.id}
+                #neededValuesPeoplePage.append([person.name, group.name, person.promotor, person.id])
 
-    return render_template("people.html", r_values=neededValuesPeoplePage, r_researchGroups=researchGroups,
+    return render_template("people.html", r_values=json.dumps(neededValuesPeoplePage, default=lambda x: x.__dict__), r_researchGroups=researchGroups,
                            page="people")
 
 
