@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-# import ldap
+import ldap
 from DataAccess import EmployeeAccess
 from DataAccess import StudentAccess
 from config import config_data
