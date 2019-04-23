@@ -5,15 +5,17 @@ function setUpMultilangInput() {
     $('#multi-language-desc-buttons').append(clicked);
 
     var nlButton = document.createElement('button');
-    $(nlButton).attr({'type':'button'});
+    $(nlButton).attr({'type':'button', 'id':'nlButton'});
     $(nlButton).addClass('language-button');
     $(nlButton).addClass('selected-language-button');
     nlButton.innerHTML = 'nl';
 
     var nlDesc = document.createElement('div');
+    $(nlDesc).attr({'id':'nlDesc'});
     $(nlDesc).css({'display':'none'});
 
     var nlUploads = document.createElement('ul');
+    $(nlUploads).attr({'id':'nlUploads'});
     $(nlUploads).css({'display':'none'});
 
     $("#multi-language-desc-buttons").append(nlButton);
@@ -26,9 +28,11 @@ function setUpMultilangInput() {
     engButton.innerHTML = 'eng';
 
     var engDesc = document.createElement('div');
+    $(engDesc).attr({'id':'engDesc'});
     $(engDesc).css({'display':'none'});
 
     var engUploads = document.createElement('ul');
+    $(engUploads).attr({'id':'engUploads'});
     $(engUploads).css({'display':'none'});
 
     $("#multi-language-desc-buttons").append(engButton);

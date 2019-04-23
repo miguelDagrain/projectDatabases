@@ -379,7 +379,7 @@ def show_projects():
         firstDescLines = "No description found."
         if len(proj.desc) > 0:
             firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
-            firstDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines).group() + " ..."
+            # firstDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines).group() + " ..."
 
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
@@ -421,17 +421,29 @@ def add_project():
         project.researchGroup.append(int(researchGroupNr))
 
     # todo: aanpassen zodat documenten in andere talen kunnen worden toegevoegd
-    descriptionText = request.form["Description"]
+    descriptionTextNl = request.form["nlDescription"]
 
-    doc = Document(None, "dutch", descriptionText)
+    doc = Document(None, "dutch", descriptionTextNl)
 
     project.desc.append(doc)
 
-    files = request.files.getlist("Attachments")
+    files = request.files.getlist("nlUploads")
     for file in files:
         nameFile = secure_filename(title + '_' + file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
         doc.attachment.append(nameFile)
+
+    descriptionTextEng = request.form["engDescription"]
+
+    docEn = Document(None, "english", descriptionTextEng)
+
+    project.desc.append(docEn)
+
+    files = request.files.getlist("engUploads")
+    for file in files:
+        nameFile = secure_filename(title + '_' + file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        docEn.attachment.append(nameFile)
 
     typeNrs = request.form.getlist("Type")
     typeOptions = access.get_projectType()

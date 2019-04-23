@@ -6,11 +6,17 @@ function handleUploadAttachementDrop (event) {
     event.preventDefault();
 
     if(event.dataTransfer.items){
+        var currentLang = $('#multi-language-desc-buttons').children()[0].innerHTML;
         for (var it = 0; it < event.dataTransfer.items.length; it++) {
             if(event.dataTransfer.items[it].kind === 'file') {
                 var file = event.dataTransfer.items[it].getAsFile();
 
-                window.formData.append('Attachments', file);
+                if(currentLang === 'nl'){
+                    window.formData.append('nlUploads', file);
+                }else if(currentLang === 'en'){
+                    window.formData.append('engUploads', file);
+                }
+
 
                 var listItem = "<li>" + file.name + "</li>";
 
@@ -40,7 +46,7 @@ function addProject() {
     var promotorsInput = document.getElementById('Promotors').getElementsByClassName('given-input-block')[0];
     for (var iter = 0; iter < promotorsInput.childElementCount; iter++)
     {
-        formData.append('Promotor', promotorsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
+        formData.append('Promotors', promotorsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
 
@@ -84,7 +90,9 @@ function addProject() {
 
     formData.append('Title', $('#administration-form-title').val());
     formData.append('Maxstudents', $('#administration-form-max').val().toString(10));
-    formData.append('Description', $('#administration-form-description').val());
+    formData.append('nlDescription', $('#nlDesc').html());
+    formData.append('engDescription', $('#engDesc').html());
+
 
     var request = $.ajax({
         type: "POST",
