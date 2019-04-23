@@ -17,7 +17,7 @@
 
 <h2>{{ _('Remove Type') }}</h2>
 
-<form>
+<form class="administration-form" action="{{ url_for('modify_types') }}" method="post">
 
     <label for="administration-form-type">{{ _('Type') }}:</label>
     <div class="dropdown">

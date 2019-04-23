@@ -682,6 +682,22 @@ def modify_types():
     function that modifies
     :return:
     """
+    access = DomainAccess()
+    types = access.get_projectType()
+
+    value = request.form.get("Name")
+    if value:
+        access.add_projectType(value)
+    else:
+        value = request.form.get("Type")
+        if value:
+            type = types[int(value)]
+            access.remove_type(type)
+
+    # disciplines = access.get_disciplines()
+
+
+    return render_template("administration-modify-types.html", send=True)
 
 
 # @app.errorhandler(404)
@@ -856,12 +872,13 @@ def upload_file():
 
 @app.route('/showInterest/', methods=['POST'])
 def showInterest():
-    message = request.form["Message"]
-    sender = ""  # todo: huidige persoon ingelogd moet nog opgehaald worden
-    receiver = ""  # todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
+    # message = request.form["Message"]
+    message="ik zijn eens geinteresseerd"
+    sender = "miguel.dagraine@student.uantwerpen.be"  # todo: huidige persoon ingelogd moet nog opgehaald worden
+    receiver = "thibautvangoethem2@gmail.com"  # todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
     subject = "Expressing interest in " + "naam van project"  # todo: nog naam van project van project via ajax door sturen
 
-    service = MailService
+    service = MailService()
     service.sendSingleMail(sender, receiver, subject, message)
     return True
 

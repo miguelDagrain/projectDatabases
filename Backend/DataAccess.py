@@ -1379,6 +1379,19 @@ class DomainAccess:
             self.dbconnect.rollback()
             raise Exception('\nUnable to remove discipline!:\n(%s)' % (error))
 
+    def remove_type(self, type):
+        """
+        removes a discipline
+        :param discipline:
+        """
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute("DELETE FROM projecttype WHERE type = (%s)", (type,))
+            self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback()
+            raise Exception('\nUnable to remove type!:\n(%s)' % (error))
+
     def get_disciplines(self):
         """
         gets all disciplines
