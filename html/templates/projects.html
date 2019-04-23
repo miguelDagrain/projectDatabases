@@ -55,19 +55,6 @@
 
 {% block body %}
 
-<script>
-    $(document).ready(function () {
-        $('#profile-table').DataTable({
-            "columnDefs": [
-                {"bSortable": false, "targets": 0}
-            ],
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "order": [[0, 'asc'], [1, 'asc']],
-            "pageLength": -1
-        });
-    });
-</script>
-
 <div style="display:flex;">
 
     <form class="side-bar" action="{{ url_for('apply_filter_projects') }}" method="get">

@@ -71,7 +71,7 @@ function showMorePeople(sq){
     var tableList = document.getElementById("people_table");
     var pCont = document.createElement("tbody");
 
-    for (var i = peopleCount; i < peopleCount + 10; i++) {
+    for (var i = peopleCount; i < peopleCount + 20; i++) {
         if (result.length <= i){break;}
         if ((result[i].relevance === 0 && sq.length > 0 || result[i].relevance === -1 )){break;}
 
@@ -110,7 +110,7 @@ function showMorePeople(sq){
     }
     tableList.appendChild(pCont);
 
-    peopleCount += 10;
+    peopleCount += 20;
 
     
 }
