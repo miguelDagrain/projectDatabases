@@ -6,7 +6,6 @@ import os
 from functools import wraps
 #from apscheduler.schedulers.background import BackgroundScheduler
 
-
 from flask import *
 from flask.templating import render_template
 from flask_babel import *
@@ -415,7 +414,6 @@ def add_project():
     for researchGroupNr in researchGroupNrs:
         project.researchGroup.append(int(researchGroupNr))
 
-    # todo: aanpassen zodat documenten in andere talen kunnen worden toegevoegd
     descriptionTextNl = request.form["nlDescription"]
 
     doc = Document(None, "dutch", descriptionTextNl)

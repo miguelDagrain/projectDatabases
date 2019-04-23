@@ -44,14 +44,13 @@ function handleUploadAttachementOver (event) {
 function addProject() {
 
     var promotorsInput = document.getElementById('Promotors').getElementsByClassName('given-input-block')[0];
-    for (var iter = 0; iter < promotorsInput.childElementCount; iter++)
-    {
+    for (var iter = 0; iter < promotorsInput.childElementCount; iter++) {
         formData.append('Promotors', promotorsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
 
     var tagsInput = document.getElementById('Tags').getElementsByClassName('given-input-block')[0];
-    for (var iter = 0; iter < tagsInput.childElementCount; iter++){
+    for (var iter = 0; iter < tagsInput.childElementCount; iter++) {
         formData.append('Tags', tagsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
@@ -65,16 +64,16 @@ function addProject() {
     for (var iter = 0; iter < document.getElementById('administration-form-researchgroup').options.length; ++iter) {
         var groupOption = document.getElementById('administration-form-researchgroup').options[iter];
 
-        if(groupOption.selected){
+        if (groupOption.selected) {
             formData.append('Researchgroup', $(groupOption).val().toString(10));
         }
     }
 
 
     for (var iter = 0; iter < document.getElementById('administration-form-type').options.length; ++iter) {
-        var typeOption =  document.getElementById('administration-form-type').options[iter];
+        var typeOption = document.getElementById('administration-form-type').options[iter];
 
-        if(typeOption.selected){
+        if (typeOption.selected) {
             formData.append('Type', $(typeOption).val().toString(10));
         }
     }
@@ -83,16 +82,18 @@ function addProject() {
     for (var iter = 0; iter < document.getElementById('administration-form-discipline').options.length; ++iter) {
         var disciplineOption = document.getElementById('administration-form-discipline').options[iter];
 
-        if(disciplineOption.selected){
+        if (disciplineOption.selected) {
             formData.append('Discipline', $(disciplineOption).val().toString(10));
         }
     }
 
     formData.append('Title', $('#administration-form-title').val());
     formData.append('Maxstudents', $('#administration-form-max').val().toString(10));
+    if ('' === $('#nlDesc').html() && '' === $('#engDesc').html()) {
+        $('#enButton').click();
+    }
     formData.append('nlDescription', $('#nlDesc').html());
     formData.append('engDescription', $('#engDesc').html());
-
 
     var request = $.ajax({
         type: "POST",
