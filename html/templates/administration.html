@@ -23,17 +23,6 @@
 {% block body %}
 
     <div class="side-bar">
-
-        <div>
-            {{_('Research groups')}}:
-            <a class="side-bar-button">{{_('modify groups')}}</a>
-        </div>
-
-        <div>
-            {{_('Staff')}}:
-            <a class="side-bar-button">{{_('modify staff')}}</a>
-        </div>
-
         <div>
             <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{_('modify disciplines')}}</a>
             <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{_('modify types')}}</a>

@@ -23,7 +23,7 @@ function setUpMultilangInput() {
     $("#multi-language-desc-buttons").append(nlUploads);
 
     var engButton = document.createElement('button');
-    $(engButton).attr({'type':'button'});
+    $(engButton).attr({'type':'button', 'id':'enButton'});
     $(engButton).addClass('language-button');
     engButton.innerHTML = 'eng';
 
