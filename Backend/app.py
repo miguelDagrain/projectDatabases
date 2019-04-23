@@ -494,13 +494,9 @@ def project_page(id):
 
     researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
     docattachments = document[0].attachment
-    attachments = list()
-    for i in docattachments:
-        splitted = i.split('_', 1)[-1]
-        attachments.append((i, splitted))
 
     return render_template("project.html", r_project=project, r_promotors=promotors,
-                           r_researchGroups=researchGroups, page="projects", r_attachments=attachments,
+                           r_researchGroups=researchGroups, page="projects", r_attachments=docattachments,
                            added_bookmark=request.args.get('added_bookmark', default=False))
 
 

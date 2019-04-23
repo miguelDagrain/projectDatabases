@@ -171,7 +171,7 @@
             <td>{{ r_project.desc[0].text | safe }}</td>
             {% for attach in r_attachments %}
                 <tr>
-                    <td><a href="{{ url_for('download', name=attach[0] ) }}" download>{{ attach[1] }}</a></td>
+                    <td><a href="{{ url_for('download', name=attach.content ) }}" download>{{ attach.content }}</a></td>
                 </tr>
             {% endfor %}
 
