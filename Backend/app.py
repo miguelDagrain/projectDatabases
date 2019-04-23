@@ -4,7 +4,8 @@ import sys
 import datetime
 import os
 from functools import wraps
-from apscheduler.schedulers.background import BackgroundScheduler
+#from apscheduler.schedulers.background import BackgroundScheduler
+
 
 from flask import *
 from flask.templating import render_template
@@ -665,11 +666,12 @@ def form_modify_types():
     function that returns a form to modify types
     :return: Rendered template of the administration-modify-templates with types
     """
-    access = FullDataAccess
-    types = access
+    access = DomainAccess()
+    types = access.get_projectType()
 
     return render_template("administration-modify-types.html", r_types=types, send=False)
-
+    # access = DomainAccess
+    # types = access.get_projectType()
 
 @app.route("/administration/modify_types", methods=["POST"])
 def modify_types():
@@ -856,9 +858,9 @@ def showInterest():
     receiver = ""  # todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
     subject = "Expressing interest in " + "naam van project"  # todo: nog naam van project van project via ajax door sturen
 
-    service = MailService()
+    service = MailService
     service.sendSingleMail(sender, receiver, subject, message)
-    return jsonify(result=True)
+    return True
 
 
 @app.route('/profile/')
@@ -940,5 +942,5 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
 
-    # findTags()
+    findTags()
     app.run(debug=True, host=ip, port=port)
