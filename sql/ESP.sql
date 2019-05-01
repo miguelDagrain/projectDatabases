@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS sessionProjectClick;
 DROP TABLE IF EXISTS sessionSearchQuery;
-DROP TABLE IF EXISTS session CASCADE;
+DROP TABLE IF EXISTS session ;
 DROP TABLE IF EXISTS bookmark;
 DROP TABLE IF EXISTS projectRegistration;
 DROP TABLE IF EXISTS student;
@@ -232,6 +232,29 @@ CREATE TABLE bookmark
   project INT REFERENCES project (projectID) ON DELETE CASCADE,
   student INT REFERENCES student (studentID) ON DELETE CASCADE,
   PRIMARY KEY (project, student)
+);
+
+CREATE TABLE Session
+(
+  sessionID INT PRIMARY KEY,
+  studentID INT REFERENCES student (studentID) NOT NULL,
+  startTime TIME,
+  startDate DATE
+);
+
+CREATE TABLE sessionSearchQuery
+(
+  sessionID  INT REFERENCES Session (sessionID),
+  term       VARCHAR(255),
+  PRIMARY KEY (sessionID, term)
+);
+
+
+CREATE TABLE sessionProjectClick
+ (
+   sessionID  INT REFERENCES session (sessionID),
+   project    INT REFERENCES project (projectID),
+  PRIMARY KEY (sessionID, project, searchTime)
 );
 
 drop function if exists researchGroup_del_func;

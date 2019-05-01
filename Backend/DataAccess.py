@@ -832,8 +832,7 @@ class ProjectAccess:
             project.promotor = list(cursor.fetchall())
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
-            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
-            project.activeYear = list(cursor.fetchall())
+            project.activeYear=self.get_projectYears(project.ID)
 
             sa = StudentAccess()
             registrations = sa.get_projectRegistrationsOnProject(project.ID)
@@ -890,8 +889,7 @@ class ProjectAccess:
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
 
-            cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
-            project.activeYear = list(cursor.fetchall())
+            project.activeYear=self.get_projectYears(project.ID)
 
         return projects
 
@@ -976,8 +974,8 @@ class ProjectAccess:
                 cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
                 project.tag = list(cursor.fetchall())
 
-                cursor.execute('SELECT year FROM projectYearConnection WHERE projectID=%s', (project.ID,))
-                project.activeYear = list(cursor.fetchall())
+                project.activeYear=self.get_projectYears(project.ID)
+
 
             return projects
         except:
@@ -1529,6 +1527,32 @@ class DomainAccess:
             types.append(i[0])
         return types
 
+
+class SessionAccess:
+    def __init__(self):
+        """
+        constructor for a SessionAccess object
+        """
+        self.dbconnect = dbConnection.connection
+
+    def getSessiononId(self,id):
+        from Session import Session
+        try:
+            cursor = self.dbconnect.get_cursor()
+            cursor.execute('select * from Session where sessionID=%s' ,(str(id),))
+            row=cursor.fetchone()
+            session = Session(row[0],row[1],row[2],row[3])
+            cursor.execute('select * from sessionSearchQuery where sessionID=%s',(str(id),))
+            for i in cursor:
+                session.searchWords.append(i[1])
+            cursor.execute('select * from sessionProjectClick where sessionID=%s',(str(id),))
+            for i in cursor:
+                session.clickedProjects.append(i[1])
+
+            return session
+        except Exception as e:
+            print('error while getting session on id '+str(e))
+            return None
 
 class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
     def __init__(self):
