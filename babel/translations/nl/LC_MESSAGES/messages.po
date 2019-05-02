@@ -162,6 +162,10 @@ msgstr "Actief"
 msgid "Extend"
 msgstr "Verleng"
 
+#: html/templates/emp_profile.html:139
+msgid "Year"
+msgstr "Jaar"
+
 #: html/templates/emp_profile.html:163
 msgid "FULL"
 msgstr "VOLZET"

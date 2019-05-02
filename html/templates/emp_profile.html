@@ -135,6 +135,9 @@
                 <th class="th-sm">
                     <strong>{{ _('Extend') }}</strong>
                 </th>
+                <th class="th-sm">
+                    <strong>{{ _('Year') }}</strong>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -179,6 +182,11 @@
                             <input type="checkbox" data-toggle="toggle" data-on="{{ _('Yes') }}"
                                    data-off="{{ _('No') }}" data-height="20%" data-width="20%">
                         </label>
+                    </td>
+                    <td>
+                        {% for year in project.activeYear %}
+                            {{ year }}
+                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}
