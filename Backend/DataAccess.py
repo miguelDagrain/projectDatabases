@@ -1332,7 +1332,7 @@ class StudentAccess:
             cursor.execute('select * from student where studentID=%s', (student.studentID,))
             if cursor.rowcount == 0:
                 raise Exception('no student found with that id')
-            cursor.execute('update  student set name= %s, set studentnumber=%s where studentId=%s',
+            cursor.execute('update  student set name= %s, setgf studentnumber=%s where studentId=%s',
                            (student.name, student.studentNumber, student.studentID))
 
             cursor.execute('delete from bookmark where student=%s', (student.studentID,))
@@ -1535,16 +1535,14 @@ class SessionAccess:
         """
         self.dbconnect = dbConnection.connection
 
-    def getSessiononId(self,id):
+    def get_SessionOnId(self,id):
         from Session import Session
+        from Session import EORS
         try:
             cursor = self.dbconnect.get_cursor()
             cursor.execute('select * from Session where sessionID=%s' ,(str(id),))
             row=cursor.fetchone()
-            session = Session(row[0],row[1],row[2],row[3])
-            cursor.execute('select * from sessionSearchQuery where sessionID=%s',(str(id),))
-            for i in cursor:
-                session.searchWords.append(i[1])
+            session = Session(row[0],row[1],row[2],EORS.STUDENT)
             cursor.execute('select * from sessionProjectClick where sessionID=%s',(str(id),))
             for i in cursor:
                 session.clickedProjects.append(i[1])
@@ -1553,6 +1551,80 @@ class SessionAccess:
         except Exception as e:
             print('error while getting session on id '+str(e))
             return None
+
+    def get_SessionOnSID(self,studentID):
+        try:
+            cursor = self.dbconnect.get_cursor()
+            cursor.execute('select * from Session where studentID=%s', (str(studentID),))
+            sessions=list()
+            for row in cursor:
+                sessions.append(self.getSessionOnId(row[0]))
+            return sessions
+        except Exception as e:
+            print('error while getting session on id ' + str(e))
+        return None
+
+    def add_Session(self, session):
+        from Session import EORS
+        if(session.EORS!=EORS.STUDENT):
+            return
+        try:
+            cursor = self.dbconnect.get_cursor()
+            if(session.sessionID is not None):
+                cursor.execute('select * from  Session where sessionID=%s',(str(session.sessionID),) )
+                if(cursor.rowcount!=0):
+                    self.change_Session(session)
+                    return
+                cursor.execute('insert into Session values(%s,%s,%s)',(str(session.sessionID),str(session.ID),str(session.startTime)))
+            else:
+                cursor.execute('insert into Session values(DEFAULT,%s,%s) returning sessionID',
+                               ( str(session.ID), str(session.startTime)))
+
+                session.sessionID=cursor.fetchone()[0]
+            self.dbconnect.commit()
+            for i in session.clickedProjects:
+                cursor.execute('execute insertClick(%s,%s)',(str(session.sessionID),str(i)))
+            self.dbconnect.commit()
+        except Exception as e:
+            print('error while adding session ' + str(e))
+            self.dbconnect.rollback()
+
+    def change_Session(self,session):
+        from Session import EORS
+        if (session.EORS != EORS.STUDENT):
+            return
+        try:
+            cursor=self.dbconnect.get_cursor()
+            if (session.sessionID is not None):
+                cursor.execute('update session set studentID=%s, startTime=%s where sessionID=%s',
+                               (str(session.ID),str(session.startTime),str(session.sessionID)))
+                cursor.execute('delete from sessionProjectClick where sessionID=%s',(str(session.sessionID),))
+                self.dbconnect.commit()
+                for i in session.clickedProjects:
+                    cursor.execute('execute insertClick(%s,%s)', (str(session.sessionID), str(i)))
+            self.dbconnect.commit()
+        except Exception as e:
+            print('error while changing session ' + str(e))
+            self.dbconnect.rollback()
+
+    def add_sessionProjectClick(self,sessionID,projectID):
+        try:
+            cursor=self.dbconnect.get_cursor()
+            cursor.execute('execute insertSessionProjectClick(%s,%s)',(str(sessionID),str(projectID),))
+            self.dbconnect.commit()
+        except Exception as e:
+            print('unable to add sessionProjectClick'+str(e))
+            self.dbconnect.rollback()
+
+    def get_CurentSQLTime(self):
+        try:
+            cursor = self.dbconnect.get_cursor()
+            cursor.execute('SELECT NOW()')
+            time=cursor.fetchone()[0]
+            return time
+        except Exception as e:
+            print('couldnt get current time ' + str(e))
+
 
 class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
     def __init__(self):

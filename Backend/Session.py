@@ -9,7 +9,7 @@ class EORS(Enum):
 
 
 class Session:
-    def __init__(self, session_id, id, start_time, start_date, EORS):
+    def __init__(self, session_id, id, start_time, EORS):
         """
         a constructor for a dbSession with all variables given
         :param session_id: an int representing the session
@@ -20,11 +20,9 @@ class Session:
         :return: a new dbSession object
         """
         self.ID = id
-        self.sessionId = session_id
+        self.sessionID = session_id
         self.startTime = start_time
-        self.startDate = start_date
         # both list of tuples
-        self.searchWords = list()
         self.clickedProjects = list()
         self.EORS = EORS
 
@@ -39,4 +37,4 @@ class Session:
     def get_student(self, dbconnect):
         access = __import__('DataAccess', fromlist=['StudentAccess'])
         sa = access.StudentAccess(dbconnect)
-        return sa.get_student(self.ID)
+        return sa.get_student(self.studentID)

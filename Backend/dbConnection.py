@@ -4,6 +4,7 @@ connection=None
 def setConnection( dbname, dbuser, dbpass, dbhost):
     global connection
     connection=DBConnection(dbname, dbuser, dbpass, dbhost)
+    setup_preparedStatements()
 
 class DBConnection():
 
@@ -32,3 +33,12 @@ class DBConnection():
 
     def get_error(self):
         return psycopg2.Error
+
+def setup_preparedStatements():
+    try:
+        cursor=connection.get_cursor()
+        cursor.execute('prepare insertClick as insert into sessionProjectClick values($1,$2)')
+        cursor.execute('prepare insertSessionProjectClick as insert into sessionProjectClick values($1,$2)')
+    except Exception as e:
+        print('error while making prepared statements ' + str(e))
+        connection.rollback()

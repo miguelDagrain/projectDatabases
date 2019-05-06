@@ -28,7 +28,7 @@ class User(UserMixin):
             if self.session.EORS==EORS.EMPLOYEE:
                 return str("E"+str(self.session.ID))
             elif self.session.EORS == EORS.STUDENT:
-                return str("S" + str(self.session.ID))
+                return str("S" + str(self.session.sessionID))
             else:
                 return str("U" + str(self.session.ID))
 

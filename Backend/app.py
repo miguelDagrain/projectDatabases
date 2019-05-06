@@ -483,6 +483,11 @@ def add_project():
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods=['GET'])
 def project_page(id):
+    su=current_user
+    if(su.is_authenticated):
+        if(su.session.EORS is EORS.STUDENT):
+            sa=SessionAccess()
+            sa.add_sessionProjectClick(su.session.sessionID,id)
     Paccess = ProjectAccess()
     Eaccess = EmployeeAccess()
     Raccess = ResearchGroupAccess()
@@ -787,10 +792,16 @@ def check_project_title_correct():
 def load_user(user_id):
     eors = EORS.UNKNOWN
     if (user_id[0] == "S"):
-        eors = EORS.STUDENT
+        sa=SessionAccess()
+        se=sa.get_SessionOnId(user_id[1:])
+        us=User(se)
+
+        # eors = EORS.STUDENT
+        # us = User(Session(0, user_id[1:], 0, eors))
     elif (user_id[0] == "E"):
         eors = EORS.EMPLOYEE
-    us = User(Session(0, user_id[1:], 0, 0, eors))
+        us = User(Session(0, user_id[1:], 0, eors))
+
     eAcces = EmployeeAccess()
     us.roles = list()
     if user_id != 'None' and us.session.EORS == EORS.EMPLOYEE:
@@ -810,11 +821,15 @@ def unauthorized():
 
 @app.route('/login/', methods=['POST'])
 def login():
-    us = User(Session(0, 1, 0, 0, EORS.UNKNOWN))
+    sa = SessionAccess()
+    us = User(Session(None, 1, sa.get_CurentSQLTime(), EORS.UNKNOWN))
     username = request.form["username"]
     password = request.form["password"]
     try:
         if us.login(username, password):
+            if(us.session.EORS==EORS.STUDENT):
+
+                sa.add_Session(us.session)
             login_user(us)
             temp = current_user
             flash('Logged in successfully.')
@@ -829,6 +844,10 @@ def login():
 
 @app.route("/logout/", methods=['GET', 'POST'])
 def logout():
+    if(current_user.session.EORS==EORS.STUDENT):
+        us=current_user
+        sa=SessionAccess()
+        sa.add_Session(us.session)
     logout_user()
     next = request.args.get('logout')
     flash("you are now logged out")
@@ -961,3 +980,9 @@ if __name__ == "__main__":
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
 
     app.run(debug=True, host=ip, port=port)
+
+    # sa=SessionAccess()
+    # s=Session(None,1,sa.get_CurentSQLTime(),EORS.STUDENT)
+    # s.clickedProjects.append('1')
+    # s.clickedProjects.append('3')
+    # sa.add_Session(s)

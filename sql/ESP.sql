@@ -35,6 +35,8 @@ DROP DOMAIN IF EXISTS INTEXT;
 DROP DOMAIN IF EXISTS title;
 DROP DOMAIN IF EXISTS subject;
 
+set timezone='CEST';
+
 create table title(
   title varchar(255) primary key
 );
@@ -236,25 +238,16 @@ CREATE TABLE bookmark
 
 CREATE TABLE Session
 (
-  sessionID INT PRIMARY KEY,
+  sessionID SERIAL PRIMARY KEY,
   studentID INT REFERENCES student (studentID) NOT NULL,
-  startTime TIME,
-  startDate DATE
+  startTime timestamptz
 );
-
-CREATE TABLE sessionSearchQuery
-(
-  sessionID  INT REFERENCES Session (sessionID),
-  term       VARCHAR(255),
-  PRIMARY KEY (sessionID, term)
-);
-
 
 CREATE TABLE sessionProjectClick
  (
    sessionID  INT REFERENCES session (sessionID),
    project    INT REFERENCES project (projectID),
-  PRIMARY KEY (sessionID, project, searchTime)
+  PRIMARY KEY (sessionID, project)
 );
 
 drop function if exists researchGroup_del_func;
