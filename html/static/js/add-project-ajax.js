@@ -49,6 +49,11 @@ function addProject() {
     }
 
 
+    var staffInput = document.getElementById('Staff').getElementsByClassName('given-input-block')[0];
+    for (var iter = 0; iter < staffInput.childElementCount; iter++) {
+        formData.append('Staff',  staffInput.children[iter].getElementsByTagName('span')[0].innerHTML)
+    }
+
     var tagsInput = document.getElementById('Tags').getElementsByClassName('given-input-block')[0];
     for (var iter = 0; iter < tagsInput.childElementCount; iter++) {
         formData.append('Tags', tagsInput.children[iter].getElementsByTagName('span')[0].innerHTML)

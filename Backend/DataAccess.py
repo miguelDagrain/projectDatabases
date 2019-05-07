@@ -670,6 +670,19 @@ class ProjectAccess:
             proms.append(row[0])
         return proms
 
+    def get_projectStaff(self, projectID):
+        """
+        gets all the staff not promotor for a certain project
+        :param projectID: the id of the project
+        :return: a list of ids for the promoters
+        """
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectStaff where project=%s', (projectID,))
+        staff = list()
+        for row in cursor:
+            staff.append(row[0])
+        return staff
+
     def add_projectPromotor(self, projectID, employeeId):
         """
         adds a promotor to a certain project in the database
@@ -686,6 +699,23 @@ class ProjectAccess:
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
             print("unable to safe promotor\n%s" % error)
+
+    def add_projectStaff(self, projectID, employeeId):
+        """
+        adds a staff to a certain project in the database
+        :param projectID: the id of the project
+        :param employeeId: the id of the employee
+        """
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from projectStaff where employee=%s and project=%s',
+                           (employeeId, projectID))
+            if cursor.rowcount == 0:
+                cursor.execute('insert into projectStaff values(%s,%s)', (employeeId, projectID))
+                self.dbconnect.commit()
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback()
+            print("unable to safe staff\n%s" % error)
 
     def get_projectTags(self, projectID):
         """
@@ -1052,6 +1082,8 @@ class ProjectAccess:
                 self.add_projectRelation(proj.ID, i)
             for i in proj.promotor:
                 self.add_projectPromotor(proj.ID, i)
+            for i in proj.staff:
+                self.add_projectStaff(proj.ID, i)
             for i in proj.researchGroup:
                 self.add_projectResearchgroup(proj.ID, i)
             self.dbconnect.commit()

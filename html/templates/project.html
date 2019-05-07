@@ -149,6 +149,14 @@
                         <td><a href="{{ url_for('get_person', id=promotor.id) }}">{{ promotor.name }}</a></td>
                     </tr>
                 {% endfor %}
+                 <tr>
+                    <th class="th-2">{{ _('staff') }}</th>
+                </tr>
+                {% for staff in r_staff %}
+                    <tr>
+                        <td><a href="{{ url_for('get_person', id=staff.id) }}">{{ staff.name }}</a></td>
+                    </tr>
+                {% endfor %}
                 <tr>
                     <th class="th-2">{{ _('maximum students') }}</th>
                 </tr>

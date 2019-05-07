@@ -264,6 +264,9 @@
                                 <div id="multi-language-desc-buttons">
                                 </div>
                             </div>
+
+                            <br>
+                            <p style="color: black;">{{ _('Employees') }}:<p>
                             <div class="multi-text-input" id="Promotors">
                                 <label for="administration-form-promotor">{{ _('Promotors') }}:</label>
 
@@ -280,6 +283,22 @@
                                 </div>
                             </div>
 
+                            <div class="multi-text-input" id="Staff">
+                                <label for="administration-form-promotor">{{ _('Staff') }}:</label>
+
+                                <div class="input-block">
+
+                                    <div class="suggestion-block">
+                                        <input type="text" id="administration-form-staff" name="Staff">
+                                        <div id="administration-form-staff-suggestions" class="dropdown-items dropdown-hide text-suggestion-input-dropdown"></div>
+                                        <script>setUpSuggestions($("#administration-form-staff"), $("#administration-form-staff-suggestions"), "/check/empl_names")</script>
+                                    </div>
+
+                                    <button id="administration-form-staff-add">{{ _('add') }}</button>
+                                    <script>setUpOnlyAcceptLimited($("#administration-form-staff"), $("#administration-form-staff-add"), "/check/empl_name_correct")</script>
+                                </div>
+                            </div>
+                            <br>
 
                             <div class="multi-text-input" id="Tags">
                                 <label for="administration-form-tags">{{ _('Tags') }}:</label>
