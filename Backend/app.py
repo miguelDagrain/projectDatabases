@@ -452,12 +452,20 @@ def add_project():
     # todo: toevoegen zodat er onderscheid is tussen promotors en begeleiders
     promotorsNameArray = request.form.getlist("Promotors")
 
-    promotorOptions = access.get_employees()
-    promotorNameId = {promotorOption.name: promotorOption.id for promotorOption in promotorOptions}
+    employeeOptions = access.get_employees()
+    promotorNameId = {promotorOption.name: promotorOption.id for promotorOption in employeeOptions}
 
     for promotorName in promotorsNameArray:
         if promotorName in promotorNameId:  # dit zal normaal gezien true geven voor alle mogelijke inputs omdat javascript hierop al controleerde
             project.promotor.append(promotorNameId[promotorName])
+
+    staffNameArray = request.form.getlist("Staff")
+
+    staffNameId = {staffOption.name: staffOption.id for staffOption in employeeOptions} #ik ben gewoon te lui om de naam te veranderen van promotoroption
+
+    for staffName in staffNameArray:
+        if staffName in staffNameId:  # dit zal normaal gezien true geven voor alle mogelijke inputs omdat javascript hierop al controleerde
+            project.staff.append(staffNameId[staffName])
 
     tags = request.form.getlist("Tags")
     project.tag = list(tags)
@@ -498,10 +506,15 @@ def project_page(id):
     for promotorID in promotorsIDs:
         promotors.append(Eaccess.get_employee(promotorID))
 
+    staffIDs = Paccess.get_projectStaff(id)
+    staff = list()
+    for staffID in staffIDs:
+        staff.append(Eaccess.get_employee(staffID))
+
     researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
     docattachments = document[0].attachment
 
-    return render_template("project.html", r_project=project, r_promotors=promotors,
+    return render_template("project.html", r_project=project, r_promotors=promotors, r_staff=staff,
                            r_researchGroups=researchGroups, page="projects", r_attachments=docattachments,
                            added_bookmark=request.args.get('added_bookmark', default=False))
 

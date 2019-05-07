@@ -11,6 +11,7 @@ class Project:
         self.ID = id
         self.relatedProject = list()
         self.promotor = list()
+        self.staff = list()
         self.discipline = list()
         self.registeredStudents = 0
         self.register_count = 0

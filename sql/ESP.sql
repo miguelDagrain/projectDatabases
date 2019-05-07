@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS projectDocument;
 DROP TABLE IF EXISTS projectRelation;
 DROP TABLE IF EXISTS projectTag;
 DROP TABLE IF EXISTS projectPromotor;
+DROP TABLE IF EXISTS projectStaff;
 DROP TABLE IF EXISTS projectTypeConnection;
 DROP TABLE IF EXISTS projectType;
 DROP TABLE IF EXISTS projectYearConnection;
@@ -190,6 +191,13 @@ CREATE TABLE projectPromotor
 (
   employee INT REFERENCES employee (employeeID) ON DELETE CASCADE,
   project  INT REFERENCES project (projectID) ON DELETE CASCADE,
+  PRIMARY KEY (employee, project)
+);
+
+CREATE TABLE projectStaff
+(
+  employee INT REFERENCES employee (employeeID) ON DELETE CASCADE,
+  project INT REFERENCES project (projectID) ON DELETE CASCADE,
   PRIMARY KEY (employee, project)
 );
 
