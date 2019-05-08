@@ -1011,6 +1011,7 @@ class ProjectAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('unable to get project filter data')
+            raise Exception('unable to get project filter data')
 
     def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
         try:
@@ -1390,11 +1391,27 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute("INSERT INTO discipline (subject) VALUES (%s)", (discipline,))
+            cursor.execute("INSERT INTO discipline (subject, active) VALUES (%s, 'true')", (discipline,))
             self.dbconnect.commit()
+
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
             raise Exception('\nUnable to add discipline!\n(%s)' % (error))
+
+    def reactivate_discipline(self, discipline):
+        """
+        adds a discipline to the list of disciplines
+        :param discipline: the new discipline
+        """
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute("UPDATE discipline SET active = 'true' WHERE subject = %s", (discipline,))
+            self.dbconnect.commit()
+
+
+        except(Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback()
+            raise Exception('\nUnable to re-add discipline!\n(%s)' % (error))
 
     def remove_discipline(self, discipline):
         """
@@ -1403,7 +1420,7 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute("DELETE FROM discipline WHERE subject = (%s)", (discipline,))
+            cursor.execute("UPDATE discipline set active = 'false' WHERE subject = %s", (discipline,))
             self.dbconnect.commit()
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
@@ -1416,13 +1433,26 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute("DELETE FROM projecttype WHERE type = (%s)", (type,))
+            cursor.execute("UPDATE projecttype set active = 'false' WHERE type = %s", (type,))
             self.dbconnect.commit()
         except(Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
             raise Exception('\nUnable to remove type!:\n(%s)' % (error))
 
     def get_disciplines(self):
+        """
+        gets all disciplines
+        :return: a list of disciplines
+        """
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from discipline')
+        disciplines = list()
+        for row in cursor:
+            if row[1] == 'true':
+                disciplines.append(row[0])
+        return disciplines
+
+    def get_alldisciplines(self):
         """
         gets all disciplines
         :return: a list of disciplines
@@ -1541,7 +1571,20 @@ class DomainAccess:
         """
         cursor = self.dbconnect.get_cursor()
         try:
-            cursor.execute('INSERT INTO projectType values(%s)', (type,))
+            cursor.execute("INSERT INTO projectType (type, active) VALUES (%s, 'true')", (type,))
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception('Unable to add projectType!')
+
+    def reactivate_projectType(self, type):
+        """
+        adds a new projectType to the database
+        :param type: the new type
+        """
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute("UPDATE projectType SET active = 'true' WHERE type = %s", (type,))
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
@@ -1555,8 +1598,21 @@ class DomainAccess:
         cursor = self.dbconnect.get_cursor()
         cursor.execute('select * from projectType ')
         types = list()
-        for i in cursor:
-            types.append(i[0])
+        for row in cursor:
+            if row[1] == 'true':
+                types.append(row[0])
+        return types
+
+    def get_allprojectType(self):
+        """
+        gets all projectTyppes out of the database
+        :return: a list of projecTypes
+        """
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('select * from projectType ')
+        types = list()
+        for row in cursor:
+           types.append(row[0])
         return types
 
 

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-02 15:18+0200\n"
-"PO-Revision-Date: 2019-04-02 15:19+0200\n"
+"POT-Creation-Date: 2019-05-08 17:04+0200\n"
+"PO-Revision-Date: 2019-05-08 17:04+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: nl\n"
 "Language-Team: nl <LL@li.org>\n"
@@ -38,8 +38,8 @@ msgstr ""
 #: html/templates/administration-modify-disciplines.html:47
 #: html/templates/administration-modify-types.html:14
 #: html/templates/administration-modify-types.html:45
-#: html/templates/people.html:139 html/templates/projects.html:277
-#: html/templates/researchgroups.html:86
+#: html/templates/people.html:140 html/templates/project.html:135
+#: html/templates/projects.html:331 html/templates/researchgroups.html:75
 msgid "Enter"
 msgstr ""
 
@@ -48,16 +48,16 @@ msgid "Remove Discipline"
 msgstr ""
 
 #: html/templates/administration-modify-disciplines.html:22
-#: html/templates/projects.html:187 html/templates/researchgroups.html:104
+#: html/templates/projects.html:201 html/templates/researchgroups.html:93
 msgid "Discipline"
 msgstr ""
 
 #: html/templates/administration-modify-disciplines.html:26
-#: html/templates/people.html:38 html/templates/people.html:64
-#: html/templates/projects.html:56 html/templates/projects.html:80
-#: html/templates/projects.html:107 html/templates/projects.html:133
-#: html/templates/projects.html:166 html/templates/projects.html:190
-#: html/templates/projects.html:213
+#: html/templates/people.html:40 html/templates/people.html:66
+#: html/templates/projects.html:72 html/templates/projects.html:96
+#: html/templates/projects.html:123 html/templates/projects.html:149
+#: html/templates/projects.html:180 html/templates/projects.html:204
+#: html/templates/projects.html:227
 msgid "All"
 msgstr ""
 
@@ -78,48 +78,141 @@ msgid "Remove Type"
 msgstr ""
 
 #: html/templates/administration-modify-types.html:22
-#: html/templates/projects.html:54 html/templates/projects.html:210
+#: html/templates/projects.html:70 html/templates/projects.html:224
 msgid "Type"
 msgstr ""
 
-#: html/templates/administration.html:3 html/templates/layout.html:127
+#: html/templates/administration.html:3 html/templates/layout.html:102
 #: html/templates/person.html:45 html/templates/project.html:3
-#: html/templates/projects.html:3 html/templates/projects.html:147
+#: html/templates/projects.html:3 html/templates/projects.html:161
 #: html/templates/researchgroup.html:82
 msgid "Projects"
 msgstr ""
 
-#: html/templates/administration.html:28 html/templates/layout.html:133
-#: html/templates/researchgroups.html:2 html/templates/researchgroups.html:39
-msgid "Research groups"
-msgstr ""
-
-#: html/templates/administration.html:29
-msgid "modify groups"
-msgstr ""
-
-#: html/templates/administration.html:33
-msgid "Staff"
-msgstr ""
-
-#: html/templates/administration.html:34
-msgid "modify staff"
-msgstr ""
-
-#: html/templates/administration.html:38
+#: html/templates/administration.html:27
 msgid "modify disciplines"
 msgstr ""
 
-#: html/templates/administration.html:39
+#: html/templates/administration.html:28
 msgid "modify types"
 msgstr ""
 
-#: html/templates/home.html:36
+#: html/templates/bookmarks.html:34 html/templates/layout.html:138
+msgid "Bookmarks"
+msgstr ""
+
+#: html/templates/bookmarks.html:36
+msgid "You currently have no bookmarks. Go to the projects page to add bookmarks."
+msgstr ""
+
+#: html/templates/emp_profile.html:83
+msgid "Your projects"
+msgstr ""
+
+#: html/templates/emp_profile.html:87
+msgid "Cannot update project"
+msgstr ""
+
+#: html/templates/emp_profile.html:95
+msgid "Project updated"
+msgstr ""
+
+#: html/templates/emp_profile.html:103
+msgid "Project removed"
+msgstr ""
+
+#: html/templates/emp_profile.html:113 html/templates/emp_profile.html:115
+msgid "You have"
+msgstr ""
+
+#: html/templates/emp_profile.html:113 html/templates/emp_profile.html:116
+msgid "inactive projects"
+msgstr ""
+
+#: html/templates/emp_profile.html:127 html/templates/projects.html:345
+msgid "Project name"
+msgstr ""
+
+#: html/templates/emp_profile.html:130
+msgid "Students needed"
+msgstr ""
+
+#: html/templates/emp_profile.html:133 html/templates/researchgroups.html:97
+msgid "Active"
+msgstr ""
+
+#: html/templates/emp_profile.html:136
+msgid "Extend"
+msgstr ""
+
+#: html/templates/emp_profile.html:139
+msgid "Year"
+msgstr ""
+
+#: html/templates/emp_profile.html:166
+msgid "FULL"
+msgstr ""
+
+#: html/templates/emp_profile.html:168
+msgid "ERR"
+msgstr ""
+
+#: html/templates/emp_profile.html:182 html/templates/people.html:67
+#: html/templates/person.html:30 html/templates/project.html:105
+#: html/templates/researchgroup.html:33
+msgid "Yes"
+msgstr ""
+
+#: html/templates/emp_profile.html:183 html/templates/people.html:68
+#: html/templates/person.html:32 html/templates/project.html:108
+#: html/templates/researchgroup.html:35
+msgid "No"
+msgstr ""
+
+#: html/templates/emp_profile.html:211 html/templates/people.html:120
+#: html/templates/projects.html:171
+msgid "Title"
+msgstr ""
+
+#: html/templates/emp_profile.html:213
+msgid "Project title"
+msgstr ""
+
+#: html/templates/emp_profile.html:216
+msgid "Dutch description"
+msgstr ""
+
+#: html/templates/emp_profile.html:220
+msgid "English description"
+msgstr ""
+
+#: html/templates/emp_profile.html:264
+msgid "Assign students"
+msgstr ""
+
+#: html/templates/emp_profile.html:271
+msgid "Discard"
+msgstr ""
+
+#: html/templates/emp_profile.html:272 html/templates/home.html:56
+msgid "Save"
+msgstr ""
+
+#: html/templates/home.html:33
 msgid "Edit page"
 msgstr ""
 
-#: html/templates/home.html:45
-msgid "Save"
+#: html/templates/home.html:40 html/templates/project.html:175
+#: html/templates/projects.html:248
+msgid "description"
+msgstr ""
+
+#: html/templates/home.html:46 html/templates/projects.html:254
+msgid "attached files"
+msgstr ""
+
+#: html/templates/home.html:49 html/templates/projects.html:257
+msgid "drag here your files that you want to upload"
 msgstr ""
 
 #: html/templates/index.html:19
@@ -130,120 +223,103 @@ msgstr ""
 msgid "add research group"
 msgstr ""
 
-#: html/templates/layout.html:121
+#: html/templates/layout.html:96
 msgid "Home"
 msgstr ""
 
-#: html/templates/layout.html:139 html/templates/people.html:21
-#: html/templates/people.html:75
+#: html/templates/layout.html:108 html/templates/researchgroups.html:2
+#: html/templates/researchgroups.html:28
+msgid "Research groups"
+msgstr ""
+
+#: html/templates/layout.html:114 html/templates/people.html:24
+#: html/templates/people.html:76
 msgid "People"
 msgstr ""
 
-#: html/templates/layout.html:146
-msgid "Bookmarks"
-msgstr ""
-
-#: html/templates/layout.html:154
+#: html/templates/layout.html:122
 msgid "Administration"
 msgstr ""
 
-#: html/templates/layout.html:190
+#: html/templates/layout.html:130
+msgid "Profile"
+msgstr ""
+
+#: html/templates/layout.html:176
 msgid "Wrong username or password"
 msgstr ""
 
-#: html/templates/layout.html:193
+#: html/templates/layout.html:179
 msgid "Username"
 msgstr ""
 
-#: html/templates/layout.html:194 html/templates/layout.html:218
+#: html/templates/layout.html:180 html/templates/layout.html:204
 msgid "username"
 msgstr ""
 
-#: html/templates/layout.html:198
+#: html/templates/layout.html:184
 msgid "Password"
 msgstr ""
 
-#: html/templates/layout.html:199 html/templates/layout.html:224
+#: html/templates/layout.html:185 html/templates/layout.html:210
 msgid "password"
 msgstr ""
 
-#: html/templates/layout.html:233
+#: html/templates/layout.html:219
 msgid "We use cookies to power and improve your experiences on this site"
 msgstr ""
 
-#: html/templates/people.html:31 html/templates/people.html:87
-#: html/templates/people.html:150 html/templates/researchgroups.html:98
+#: html/templates/people.html:33 html/templates/people.html:88
+#: html/templates/people.html:152 html/templates/researchgroups.html:87
 msgid "Name"
 msgstr ""
 
-#: html/templates/people.html:36 html/templates/people.html:96
-#: html/templates/people.html:151 html/templates/person.html:41
-#: html/templates/projects.html:105 html/templates/projects.html:163
+#: html/templates/people.html:38 html/templates/people.html:97
+#: html/templates/people.html:153 html/templates/person.html:41
+#: html/templates/projects.html:121 html/templates/projects.html:177
 #: html/templates/researchgroup.html:3
 msgid "Research group"
 msgstr ""
 
-#: html/templates/people.html:62 html/templates/people.html:136
-#: html/templates/people.html:152
+#: html/templates/people.html:64 html/templates/people.html:137
+#: html/templates/people.html:154
 msgid "Promotor"
 msgstr ""
 
-#: html/templates/people.html:65 html/templates/person.html:30
-#: html/templates/project.html:32 html/templates/researchgroup.html:33
-msgid "Yes"
-msgstr ""
-
-#: html/templates/people.html:66 html/templates/person.html:32
-#: html/templates/project.html:34 html/templates/researchgroup.html:35
-msgid "No"
-msgstr ""
-
-#: html/templates/people.html:70 html/templates/projects.html:139
-msgid "Search"
-msgstr ""
-
-#: html/templates/people.html:79
+#: html/templates/people.html:80
 msgid "add staf"
 msgstr ""
 
-#: html/templates/people.html:90
+#: html/templates/people.html:91
 msgid "E-mail"
 msgstr ""
 
-#: html/templates/people.html:93
+#: html/templates/people.html:94
 msgid "Office address"
 msgstr ""
 
-#: html/templates/people.html:119 html/templates/projects.html:157
-msgid "Title"
-msgstr ""
-
-#: html/templates/people.html:122
+#: html/templates/people.html:123
 msgid "professor"
 msgstr ""
 
-#: html/templates/people.html:123
+#: html/templates/people.html:124
 msgid "phd"
 msgstr ""
 
-#: html/templates/people.html:124
+#: html/templates/people.html:125
 msgid "none"
 msgstr ""
 
-#: html/templates/people.html:128
+#: html/templates/people.html:129
 msgid "Role"
 msgstr ""
 
-#: html/templates/people.html:131
+#: html/templates/people.html:132
 msgid "intern"
 msgstr ""
 
-#: html/templates/people.html:132
+#: html/templates/people.html:133
 msgid "extern"
-msgstr ""
-
-#: html/templates/person.html:3
-msgid "Employee"
 msgstr ""
 
 #: html/templates/person.html:20
@@ -254,84 +330,129 @@ msgstr ""
 msgid "Are you sure you want to remove this employee?"
 msgstr ""
 
-#: html/templates/project.html:22
-msgid "remove project"
+#: html/templates/project.html:55
+msgid "Bookmark added"
 msgstr ""
 
-#: html/templates/project.html:28
-msgid "Are you sure you want to delete this project?"
+#: html/templates/project.html:65
+msgid "add student"
 msgstr ""
 
-#: html/templates/project.html:45
-msgid "promotor"
+#: html/templates/project.html:74
+msgid "adding student failed"
 msgstr ""
 
-#: html/templates/project.html:53
-msgid "maximum students"
+#: html/templates/project.html:77
+msgid "student ID"
 msgstr ""
 
-#: html/templates/project.html:59
-msgid "research groups"
+#: html/templates/project.html:79
+msgid "student ID ex: S20171234"
 msgstr ""
 
-#: html/templates/project.html:67 html/templates/projects.html:233
-msgid "description"
-msgstr ""
-
-#: html/templates/projects.html:48
-msgid "Search query"
-msgstr ""
-
-#: html/templates/projects.html:78 html/templates/researchgroups.html:55
-msgid "Disciplines"
-msgstr ""
-
-#: html/templates/projects.html:131
-msgid "Status"
-msgstr ""
-
-#: html/templates/projects.html:134
-msgid "Available projects only"
-msgstr ""
-
-#: html/templates/projects.html:135
-msgid "Assigned projects only"
-msgstr ""
-
-#: html/templates/projects.html:151
-msgid "add project"
-msgstr ""
-
-#: html/templates/projects.html:160
-msgid "Maxstudents"
-msgstr ""
-
-#: html/templates/projects.html:239
-msgid "Promotors"
-msgstr ""
-
-#: html/templates/projects.html:249 html/templates/projects.html:261
-#: html/templates/projects.html:272
+#: html/templates/project.html:85 html/templates/projects.html:281
+#: html/templates/projects.html:297 html/templates/projects.html:309
+#: html/templates/projects.html:326
 msgid "add"
 msgstr ""
 
-#: html/templates/projects.html:256
+#: html/templates/project.html:94
+msgid "remove project"
+msgstr ""
+
+#: html/templates/project.html:100
+msgid "Are you sure you want to delete this project?"
+msgstr ""
+
+#: html/templates/project.html:118
+msgid "add bookmark"
+msgstr ""
+
+#: html/templates/project.html:122
+msgid "express interest"
+msgstr ""
+
+#: html/templates/project.html:129
+msgid "motivation"
+msgstr ""
+
+#: html/templates/project.html:145
+msgid "promotor"
+msgstr ""
+
+#: html/templates/project.html:153
+msgid "staff"
+msgstr ""
+
+#: html/templates/project.html:161
+msgid "maximum students"
+msgstr ""
+
+#: html/templates/project.html:167
+msgid "research groups"
+msgstr ""
+
+#: html/templates/projects.html:64
+msgid "Search query"
+msgstr ""
+
+#: html/templates/projects.html:94 html/templates/researchgroups.html:44
+msgid "Disciplines"
+msgstr ""
+
+#: html/templates/projects.html:147
+msgid "Status"
+msgstr ""
+
+#: html/templates/projects.html:150
+msgid "Available projects only"
+msgstr ""
+
+#: html/templates/projects.html:151
+msgid "Assigned projects only"
+msgstr ""
+
+#: html/templates/projects.html:165
+msgid "add project"
+msgstr ""
+
+#: html/templates/projects.html:174
+msgid "Maxstudents"
+msgstr ""
+
+#: html/templates/projects.html:269
+msgid "Employees"
+msgstr ""
+
+#: html/templates/projects.html:271
+msgid "Promotors"
+msgstr ""
+
+#: html/templates/projects.html:287
+msgid "Staff"
+msgstr ""
+
+#: html/templates/projects.html:304 html/templates/projects.html:348
 msgid "Tags"
 msgstr ""
 
-#: html/templates/projects.html:267
+#: html/templates/projects.html:315
 msgid "Related projects"
 msgstr ""
 
-#: html/templates/projects.html:288
+#: html/templates/projects.html:351
+msgid "Assigned students"
+msgstr ""
+
+#: html/templates/projects.html:381
 msgid "title"
 msgstr ""
 
-#: html/templates/projects.html:289
+#: html/templates/projects.html:382
 msgid "research group"
 msgstr ""
 
-#: html/templates/projects.html:290
+#: html/templates/projects.html:383
 msgid "assigned students"
 msgstr ""
 
@@ -355,27 +476,23 @@ msgstr ""
 msgid "Contact persons"
 msgstr ""
 
-#: html/templates/researchgroups.html:43
+#: html/templates/researchgroups.html:32
 msgid "add group"
 msgstr ""
 
-#: html/templates/researchgroups.html:49
+#: html/templates/researchgroups.html:38
 msgid "Group name"
 msgstr ""
 
-#: html/templates/researchgroups.html:52 html/templates/researchgroups.html:101
+#: html/templates/researchgroups.html:41 html/templates/researchgroups.html:90
 msgid "Abbreviation"
 msgstr ""
 
-#: html/templates/researchgroups.html:78
+#: html/templates/researchgroups.html:67
 msgid "Address"
 msgstr ""
 
-#: html/templates/researchgroups.html:82
+#: html/templates/researchgroups.html:71
 msgid "Telephone number"
-msgstr ""
-
-#: html/templates/researchgroups.html:108
-msgid "Active"
 msgstr ""
 

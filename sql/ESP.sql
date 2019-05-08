@@ -67,11 +67,12 @@ insert into language values ('english');
 
 create table discipline
 (
-  subject varchar(255) primary key
+  subject varchar(255) primary key,
+  active varchar(30)check (active = 'true' or active = 'false')
 );
-insert into discipline values('Computer Science');
-insert into discipline values('Mathematics');
-insert into discipline values('Engineering');
+insert into discipline values('Computer Science', 'true');
+insert into discipline values('Mathematics', 'true');
+insert into discipline values('Engineering', 'true');
 
 CREATE TABLE document
 (
@@ -173,12 +174,14 @@ CREATE TABLE projectYearConnection
 
 CREATE TABLE projectType
 (
-  type varchar(255) PRIMARY KEY
+  type varchar(255) PRIMARY KEY,
+  active varchar(30)check (active = 'true' or active = 'false')
+
 );
-insert into projectType values ('Master thesis');
-insert into projectType values ('Research internship 2');
-insert into projectType values ('Research internship 1');
-insert into projectType values ('Bachelor dissertation');
+insert into projectType values ('Master thesis', 'true');
+insert into projectType values ('Research internship 2', 'true');
+insert into projectType values ('Research internship 1', 'true');
+insert into projectType values ('Bachelor dissertation', 'true');
 
 CREATE TABLE projectTypeConnection
 (

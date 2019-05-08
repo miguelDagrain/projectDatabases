@@ -156,7 +156,12 @@ def add_research_group():
         return show_research_groups()
 
     Daccess = DomainAccess()
-    disciplines = Daccess.get_disciplines()
+    discipline = Daccess.get_disciplines()
+    disciplines = []
+    for row in discipline:
+        if row[1] == 'true':
+            disciplines.append(row[0])
+
 
     name = request.form.get("Name")
     abbrev = request.form.get("Abbreviation")
@@ -663,11 +668,15 @@ def modify_disciplines():
     :return: Rendered template of the administration-modify-disciplines with disciplines
     """
     access = DomainAccess()
-    disciplines = access.get_disciplines()
+    disciplines = access.get_alldisciplines()
+    actives = access.get_disciplines()
 
     value = request.form.get("Name")
     if value:
-        access.add_discipline(value)
+        if value in disciplines and value not in actives:
+            access.reactivate_discipline(value)
+        elif value not in disciplines:
+            access.add_discipline(value)
     else:
         value = request.form.get("Discipline")
         if value:
@@ -699,11 +708,16 @@ def modify_types():
     :return:
     """
     access = DomainAccess()
-    types = access.get_projectType()
+    active = access.get_projectType()
+    types = access.get_allprojectType()
 
     value = request.form.get("Name")
     if value:
-        access.add_projectType(value)
+        if value in types and value not in active:
+            access.reactivate_projectType(value)
+
+        elif value not in types:
+            access.add_projectType(value)
     else:
         value = request.form.get("Type")
         if value:
