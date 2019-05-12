@@ -1109,6 +1109,41 @@ class ProjectAccess:
             self.dbconnect.rollback()
             raise Exception('unable to filter employees')
 
+    def get_promotors_and_associated_projects(self):
+        """
+        Get all promotors with their associated project Id's
+        :return:
+        """
+        import sys
+
+        cursor = self.dbconnect.get_cursor()
+        employees = {}
+        cursor.execute('SELECT employeeID, name FROM employee')
+
+
+        for row in cursor:
+            #print(row[0], file=sys.stdout)
+            employees[row[0]] = {}
+            employees[row[0]]['name'] = row[1]
+
+        for id in employees.keys():
+            #print(id, file=sys.stdout)
+            projects = self.get_employee_projects_IDs(id)
+            employees[id]['projects'] = projects
+
+        return employees
+
+    def get_employee_projects_IDs(self, ID):
+
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT project FROM projectPromotor WHERE employee = %s', (ID,))
+        projects = []
+        for row in cursor:
+            projects.append(row[0])
+
+        return projects
+
+
     def add_project(self, proj):
         """
         adds a project to the database
