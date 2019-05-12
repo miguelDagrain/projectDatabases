@@ -1,77 +1,91 @@
-
 {% extends "layout.html" %}
 
 {% block title %}Home{% endblock title %}
 
 {% block stylesheets %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
 {% endblock stylesheets %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
-<script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
-<script src="{{ url_for('static', filename='js/edit-homepage-ajax.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+    <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit-homepage-ajax.js') }}"></script>
 
 
 {% endblock scripts %}
 
 {% block body %}
 
-<div style="display:flex;">
-    <div class="page-content">
+    <div style="display:flex;">
+        <div class="page-content">
 
-        {% if 'admin' in current_user.roles %}
+            {% if err != None %}
+                {% if err == "login_required" %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ _('You need to be logged in to see this page') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endif %}
+            {% endif %}
 
-            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-homepage">{{ _('Edit page') }}</button>
+            {% if 'admin' in current_user.roles %}
 
-            <div id="modal-form-homepage" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <form id="edit-home-form" class="modal-body administration-form" action="" method="post" enctype = "multipart/form-data">>
+                <button class="page-content-button" data-toggle="modal"
+                        data-target="#modal-form-homepage">{{ _('Edit page') }}</button>
 
-                            <label for="administration-form-description">{{ _('description') }}:</label>
-                            <div class="administration-form-textarea input-block">
-                                <textarea class="tinymce" id="administration-form-description" name="NewHome">{{homedoc|safe}}</textarea>
-                            </div>
+                <div id="modal-form-homepage" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <form id="edit-home-form" class="modal-body administration-form" action="" method="post"
+                                  enctype="multipart/form-data">>
 
-                            <div>
-                                <label for="administration-form-upload">{{ _('attached files') }}:</label>
-                                <div class="upload" ondrop="handleUploadAttachementDrop(event);" ondragover="handleUploadAttachementOver(event);">
-                                    <img src="{{ url_for('static', filename='image/upload.png') }}">
-                                    <p>{{ _('drag here your files that you want to upload') }}</p>
+                                <label for="administration-form-description">{{ _('description') }}:</label>
+                                <div class="administration-form-textarea input-block">
+                                    <textarea class="tinymce" id="administration-form-description"
+                                              name="NewHome">{{ homedoc|safe }}</textarea>
                                 </div>
-                                <ul id="administration-form-upload"></ul>
 
-                                <!--input id="administration-form-upload" type="file" css="display:none;" name="Attachements" multiple-->
-                            </div>
+                                <div>
+                                    <label for="administration-form-upload">{{ _('attached files') }}:</label>
+                                    <div class="upload" ondrop="handleUploadAttachementDrop(event);"
+                                         ondragover="handleUploadAttachementOver(event);">
+                                        <img src="{{ url_for('static', filename='image/upload.png') }}">
+                                        <p>{{ _('drag here your files that you want to upload') }}</p>
+                                    </div>
+                                    <ul id="administration-form-upload"></ul>
 
-                            <input class="administration-form-submit" type="submit" value="{{ _('Save') }}">
-                        </form>
-                        <script>setupFormEditHomepage()</script>
+                                    <!--input id="administration-form-upload" type="file" css="display:none;" name="Attachements" multiple-->
+                                </div>
+
+                                <input class="administration-form-submit" type="submit" value="{{ _('Save') }}">
+                            </form>
+                            <script>setupFormEditHomepage()</script>
+                        </div>
                     </div>
                 </div>
+
+
+
+            {% endif %}
+
+            <div id="display">
+                {{ ( homedoc|safe ) }}
             </div>
+            <p></p>
 
 
-
-        {% endif %}
-
-        <div id="display" >
-        {{( homedoc|safe )}}
         </div>
-        <p></p>
-
-
     </div>
-</div>
 
 {% endblock body %}
 

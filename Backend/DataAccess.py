@@ -848,9 +848,10 @@ class ProjectAccess:
             if cursor.rowcount == 0:
                 cursor.execute('insert into projectResearchgroup values(%s,%s)', (projectID, researchgroupID))
                 self.dbconnect.commit()
-        except:
+        except Exception as e:
             self.dbconnect.rollback()
-            print("unable to save projectresearchgroup")
+            print("unable to save projectresearchgroup " + str(e))
+            raise e
 
     def get_number_of_inactive_by_employee(self, employeeID):
         cursor = self.dbconnect.get_cursor()
@@ -889,7 +890,7 @@ class ProjectAccess:
             cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
             project.relatedProject = list(cursor.fetchall())
             cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
-            project.promotor = list(cursor.fetchall())
+            project.promotors = list(cursor.fetchall())
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
             project.activeYear=self.get_projectYears(project.ID)
@@ -945,7 +946,7 @@ class ProjectAccess:
             project.relatedProject = list(cursor.fetchall())
 
             cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
-            project.promotor = list(cursor.fetchall())
+            project.promotors = list(cursor.fetchall())
 
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
@@ -970,7 +971,7 @@ class ProjectAccess:
         project = Project(row[0], row[1], row[2], row[3])
         project.desc = self.get_projectDocuments(project.ID)
         project.activeYear = self.get_projectYears(project.ID)
-        project.promotor = self.get_projectPromotors(project.ID)
+        project.promotors = self.get_projectPromotors(project.ID)
         project.tag = self.get_projectTags(project.ID)
         project.relatedProject = self.get_projectRelations(project.ID)
         project.researchGroup = self.get_projectresearchgroups(project.ID)
@@ -1033,7 +1034,7 @@ class ProjectAccess:
                 project.relatedProject = list(cursor.fetchall())
 
                 cursor.execute('SELECT employee FROM projectPromotor WHERE project=%s', (project.ID,))
-                project.promotor = list(cursor.fetchall())
+                project.promotors = list(cursor.fetchall())
 
                 cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
                 project.tag = list(cursor.fetchall())

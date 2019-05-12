@@ -88,6 +88,7 @@
                     </div>
                 </div>
             </div>
+
             {% if 'admin' in current_user.roles %}
 
                 <button class="page-content-button" data-toggle="modal"
@@ -140,49 +141,136 @@
             {% endif %}
 
 
-            <table class="content-table">
-                <tr>
-                    <th class="th-2">{{ _('promotor') }}</th>
-                </tr>
-                {% for promotor in r_promotors %}
-                    <tr>
-                        <td><a href="{{ url_for('get_person', id=promotor.id) }}">{{ promotor.name }}</a></td>
-                    </tr>
-                {% endfor %}
-                 <tr>
-                    <th class="th-2">{{ _('staff') }}</th>
-                </tr>
-                {% for staff in r_staff %}
-                    <tr>
-                        <td><a href="{{ url_for('get_person', id=staff.id) }}">{{ staff.name }}</a></td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <th class="th-2">{{ _('maximum students') }}</th>
-                </tr>
-                <tr>
-                    <td>{{ r_project.maxStudents }}</td>
-                </tr>
-                <tr>
-                    <th class="th-3">{{ _('research groups') }}</th>
-                </tr>
-                {% for group in r_researchGroups %}
-                    <tr>
-                        <td><a href="{{ url_for('group_page', id=group.ID ) }}">{{ group.name }}</a></td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <th class="th-4">{{ _('description') }}</th>
-                </tr>
+            <div class="row">
+                <div class="col">
+                    <h5><strong>{{ _('Description') }}</strong></h5>
+                    <p>{{ desc.text | safe }}</p>
+                    {% if r_attachments != None %}
+                        <h6><strong>{{ _('Attachments') }}</strong></h6>
+                        <ol class="">
+                            {% for attach in r_attachments %}
+                                <li class="">
+                                    <a href="{{ url_for('download', name=attach.content ) }}"
+                                       download>{{ attach.content }}</a>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </div>
+                <div class="col-4">
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col">
+                            <table class="table-condensed align-right">
+                                <thead>
+                                <tr>
+                                    <td><strong>{{ _('Promotors') }}</strong></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if r_promotors != None %}
+                                    {% for promotor in r_promotors %}
+                                        <tr>
+                                            <td>
+                                                <a href="{{ url_for('get_person', id=promotor.id) }}">{{ promotor.name }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td>{{ _('None') }}</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
 
-            </table>
-            <td>{{ r_project.desc[0].text | safe }}</td>
-            {% for attach in r_attachments %}
-                <tr>
-                    <td><a href="{{ url_for('download', name=attach.content ) }}" download>{{ attach.content }}</a></td>
-                </tr>
-            {% endfor %}
-
+                        </div>
+                        <div class="col">
+                            <table class="table-condensed align-right">
+                                <thead>
+                                <tr>
+                                    <td><strong>{{ _('Supervisors') }}</strong></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if supervisors != None %}
+                                    {% for staff in supervisors %}
+                                        <tr>
+                                            <td>
+                                                <a href="{{ url_for('get_person', id=staff.id) }}">{{ staff.name }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td>{{ _('None') }}</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col">
+                            <table class="table-condensed">
+                                <thead>
+                                <tr>
+                                    <td>
+                                        <strong>{{ _('Other associates') }}</strong>
+                                    </td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if extern != None %}
+                                    {% for ext in extern %}
+                                        <tr>
+                                            <td>{{ ext }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td>{{ _('None') }}</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col">
+                            <table class="table-condensed">
+                                <thead>
+                                <tr>
+                                    <td><strong>{{ _('Maximum students') }}</strong></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ r_project.maxStudents }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <table class="table-condensed">
+                                <thead>
+                                <tr>
+                                    <td><strong>{{ _('Research groups') }}</strong></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for group in r_researchGroups %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url_for('group_page', id=group.ID ) }}">{{ group.name }}</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

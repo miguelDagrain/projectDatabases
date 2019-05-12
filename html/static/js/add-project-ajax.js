@@ -1,19 +1,19 @@
 var formData = new FormData();
 
-function handleUploadAttachementDrop (event) {
+function handleUploadAttachementDrop(event) {
 
     //prevent file from being opened
     event.preventDefault();
 
-    if(event.dataTransfer.items){
+    if (event.dataTransfer.items) {
         var currentLang = $('#multi-language-desc-buttons').children()[0].innerHTML;
         for (var it = 0; it < event.dataTransfer.items.length; it++) {
-            if(event.dataTransfer.items[it].kind === 'file') {
+            if (event.dataTransfer.items[it].kind === 'file') {
                 var file = event.dataTransfer.items[it].getAsFile();
 
-                if(currentLang === 'nl'){
+                if (currentLang === 'nl') {
                     window.formData.append('nlUploads', file);
-                }else if(currentLang === 'en'){
+                } else if (currentLang === 'en') {
                     window.formData.append('engUploads', file);
                 }
 
@@ -24,11 +24,11 @@ function handleUploadAttachementDrop (event) {
             }
         }
 
-    }else {
+    } else {
         for (var it = 0; it < ev.dataTransfer.files.length; it++) {
-             window.formData.append('Attachments', event.dataTransfer.files[it]);
+            window.formData.append('Attachments', event.dataTransfer.files[it]);
 
-            var listItem = "<li>" +  event.dataTransfer.files[it].name + "</li>";
+            var listItem = "<li>" + event.dataTransfer.files[it].name + "</li>";
             $('#administration-form-upload').append(listItem);
         }
     }
@@ -36,7 +36,7 @@ function handleUploadAttachementDrop (event) {
 }
 
 
-function handleUploadAttachementOver (event) {
+function handleUploadAttachementOver(event) {
     //prevent file from being opened
     event.preventDefault();
 }
@@ -48,10 +48,14 @@ function addProject() {
         formData.append('Promotors', promotorsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
+    var supervisorsInput = document.getElementById('Supervisors').getElementsByClassName('given-input-block')[0];
+    for (var iter = 0; iter < supervisorsInput.childElementCount; iter++) {
+        formData.append('Supervisors', supervisorsInput.children[iter].getElementsByTagName('span')[0].innerHTML)
+    }
 
-    var staffInput = document.getElementById('Staff').getElementsByClassName('given-input-block')[0];
-    for (var iter = 0; iter < staffInput.childElementCount; iter++) {
-        formData.append('Staff',  staffInput.children[iter].getElementsByTagName('span')[0].innerHTML)
+    var externInput = document.getElementById('Extern').getElementsByClassName('given-input-block')[0];
+    for (var iter = 0; iter < externInput.childElementCount; iter++) {
+        formData.append('Extern', externInput.children[iter].getElementsByTagName('span')[0].innerHTML)
     }
 
     var tagsInput = document.getElementById('Tags').getElementsByClassName('given-input-block')[0];
@@ -109,8 +113,8 @@ function addProject() {
         contentType: false
     });
 
-    request.done(function (data){
-        if(data.result){ //check if true is returned
+    request.done(function (data) {
+        if (data.result) { //check if true is returned
             window.location.replace($SCRIPT_ROOT + '/projects'); //this wil call the get
         }
     });

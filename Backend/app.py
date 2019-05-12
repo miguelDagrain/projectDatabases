@@ -4,7 +4,7 @@ import sys
 import datetime
 import os
 from functools import wraps
-#from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 
 from flask import *
 from flask.templating import render_template
@@ -37,8 +37,10 @@ app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 # uncomment this if you want to calculate tags
 # findTags()
+
 
 # overriding the login manager of flask login to support roles, inspired from 
 # https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes 
@@ -46,8 +48,7 @@ def login_required(role="ANY"):
     def wrapper(fn):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
-            temp = current_user
-            if not current_user.is_authenticated():
+            if not current_user.is_authenticated:
                 return login_manager.unauthorized()
             if (role not in current_user.roles) and (role != "ANY"):
                 return login_manager.unauthorized()
@@ -95,7 +96,7 @@ def home():
     # Keep preset values
 
     resp = make_response(render_template("home.html", page="index",
-                                         homedoc=homepage))
+                                         homedoc=homepage, err=request.args.get('err', default=None)))
     if request.cookies.get('lang') is None:
         lang = get_locale()
         resp.set_cookie('lang', lang)
@@ -162,7 +163,6 @@ def add_research_group():
         if row[1] == 'true':
             disciplines.append(row[0])
 
-
     name = request.form.get("Name")
     abbrev = request.form.get("Abbreviation")
     disciplineNr = request.form.get("Discipline")
@@ -171,7 +171,7 @@ def add_research_group():
     address = request.form.get("Address")
     telephone = request.form.get("Telephone")
     # desc = request.form.get("Description")
-    desc = list() # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+    desc = list()  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
 
     r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
     Raccess = ResearchGroupAccess()
@@ -267,10 +267,12 @@ def show_people():
     for person in people:
         for group in researchGroups:
             if group.ID == person.research_group:
-                neededValuesPeoplePage[person.id] = {"name" : person.name, "group": group.name, "promotor": person.promotor, "ID": person.id}
-                #neededValuesPeoplePage.append([person.name, group.name, person.promotor, person.id])
+                neededValuesPeoplePage[person.id] = {"name": person.name, "group": group.name,
+                                                     "promotor": person.promotor, "ID": person.id}
+                # neededValuesPeoplePage.append([person.name, group.name, person.promotor, person.id])
 
-    return render_template("people.html", r_values=json.dumps(neededValuesPeoplePage, default=lambda x: x.__dict__), r_researchGroups=researchGroups,
+    return render_template("people.html", r_values=json.dumps(neededValuesPeoplePage, default=lambda x: x.__dict__),
+                           r_researchGroups=researchGroups,
                            page="people")
 
 
@@ -376,8 +378,8 @@ def show_projects():
         if len(proj.desc) > 0:
             firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
             tempDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines)
-            if(tempDescLines!=None):
-                firstDescLines=tempDescLines.group() + " ..."
+            if (tempDescLines != None):
+                firstDescLines = tempDescLines.group() + " ..."
 
         pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
@@ -411,102 +413,144 @@ def show_projects():
 
 @app.route("/projects/", methods=["POST"])
 def add_project():
+    # Get an access class
     access = FullDataAccess()
+
+    # Acquire form data
     title = request.form["Title"]
     maxStudents = request.form["Maxstudents"]
-    project = Project(None, title, maxStudents, True)
+    descriptionTextNl = request.form["nlDescription"]
+    descriptionTextEng = request.form["engDescription"]
+
     researchGroupNrs = request.form.getlist("Researchgroup")
+    typeNrs = request.form.getlist("Type")
+    disciplineNrs = request.form.getlist("Discipline")
+    tags = request.form.getlist("Tags")
+    related = request.form.getlist("Related")
+    promotorNames = request.form.getlist("Promotors")
+    supervisorNames = request.form.getlist("Supervisors")
+    externNames = request.form.getlist("Extern")
+
+    # Acquire request files
+    files_nl = request.files.getlist("nlUploads")
+    files_en = request.files.getlist("engUploads")
+
+    # Create basic project
+    project = Project(None, title, maxStudents, True)
+
+    # Assign research group ID's
     for researchGroupNr in researchGroupNrs:
         project.researchGroup.append(int(researchGroupNr))
 
-    descriptionTextNl = request.form["nlDescription"]
-
-    doc = Document(None, "dutch", descriptionTextNl)
-
-    project.desc.append(doc)
-
-    files = request.files.getlist("nlUploads")
-    for file in files:
+    # Create dutch document
+    docNL = Document(None, "dutch", descriptionTextNl)
+    # Link attachments to document
+    for file in files_nl:
         nameFile = secure_filename(title + '_' + file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
-        doc.attachment.append(nameFile)
+        docNL.attachment.append(nameFile)
+    # Assign document as description
+    project.desc.append(docNL)
 
-    descriptionTextEng = request.form["engDescription"]
-
+    # Create english document
     docEn = Document(None, "english", descriptionTextEng)
-
-    project.desc.append(docEn)
-
-    files = request.files.getlist("engUploads")
-    for file in files:
+    # Link attachments to document
+    for file in files_en:
         nameFile = secure_filename(title + '_' + file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
         docEn.attachment.append(nameFile)
+    # Assign document as description
+    project.desc.append(docEn)
 
-    typeNrs = request.form.getlist("Type")
+    # Append types to the project
     typeOptions = access.get_projectType()
-
     for typeNr in typeNrs:
         project.type.append(typeOptions[int(typeNr) - 1])
 
-    disciplineNrs = request.form.getlist("Discipline")
-
+    # Append disciplines to the project
     for disciplineNr in disciplineNrs:
         project.discipline.append(int(disciplineNr))
 
-    # todo: toevoegen zodat er onderscheid is tussen promotors en begeleiders
-    promotorsNameArray = request.form.getlist("Promotors")
-
+    # Fetch all employees from the database
     employeeOptions = access.get_employees()
-    promotorNameId = {promotorOption.name: promotorOption.id for promotorOption in employeeOptions}
 
-    for promotorName in promotorsNameArray:
-        if promotorName in promotorNameId:  # dit zal normaal gezien true geven voor alle mogelijke inputs omdat javascript hierop al controleerde
-            project.promotor.append(promotorNameId[promotorName])
+    # Add promotors to the project
+    # Create dictionary of promotor name and his id, used to easily append ID to the project
+    promotor_id_dict = {promotorOption.name: promotorOption.id for promotorOption in employeeOptions}
+    # Loop over names and connect the associated ID's to the project
+    for promotorName in promotorNames:
+        if promotorName in promotor_id_dict:
+            project.promotors.append(promotor_id_dict[promotorName])
 
-    staffNameArray = request.form.getlist("Staff")
+    # Add supervisors to the project
+    # Create dictionary of supervisor name and his id, used to easily append ID to the project
+    supervisor_id_dict = {staffOption.name: staffOption.id for staffOption in
+                          employeeOptions}
+    # Loop over names and connect the associated ID's to the project
+    for staffName in supervisorNames:
+        if staffName in supervisor_id_dict:
+            project.supervisors.append(supervisor_id_dict[staffName])
 
-    staffNameId = {staffOption.name: staffOption.id for staffOption in employeeOptions} #ik ben gewoon te lui om de naam te veranderen van promotoroption
+    # Add extern employees to the project
+    for name in externNames:
+        project.extern_employees.append(name)
 
-    for staffName in staffNameArray:
-        if staffName in staffNameId:  # dit zal normaal gezien true geven voor alle mogelijke inputs omdat javascript hierop al controleerde
-            project.staff.append(staffNameId[staffName])
-
-    tags = request.form.getlist("Tags")
+    # Add tags to the project
     project.tag = list(tags)
 
-    related = request.form.getlist("Related")
-
+    # Add related projects to the project
+    # Fetch all projects from the database
     relatedProjectOptions = access.get_projects()
-    relatedProjectTitleId = {relatedProjectOption.title: relatedProjectOption.ID for relatedProjectOption in
-                             relatedProjectOptions}
-
+    # Create dictionary of project title and its id, used to easily find the required ID
+    related_project_id_dict = {relatedProjectOption.title: relatedProjectOption.ID for relatedProjectOption in
+                               relatedProjectOptions}
+    # Loop over related projects and append the associated ID to the project relations
     for relatedProjectTitle in related:
-        if relatedProjectTitle in relatedProjectTitleId:
-            project.relatedProject.append(relatedProjectTitleId[relatedProjectTitle])
+        if relatedProjectTitle in related_project_id_dict:
+            project.relatedProject.append(related_project_id_dict[relatedProjectTitle])
 
+    # Assign active year
     now = datetime.now()
     project.activeYear.append(now.year)
 
+    # Finalize project and add it to the database
     access.add_project(project)
 
+    # Return result to javascript
     return jsonify(result=True)
 
 
 # TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods=['GET'])
 def project_page(id):
-    su=current_user
-    if(su.is_authenticated):
-        if(su.session.EORS is EORS.STUDENT):
-            sa=SessionAccess()
-            sa.add_sessionProjectClick(su.session.sessionID,id)
+    su = current_user
+    if su.is_authenticated:
+        if su.session.EORS is EORS.STUDENT:
+            sa = SessionAccess()
+            sa.add_sessionProjectClick(su.session.sessionID, id)
     Paccess = ProjectAccess()
     Eaccess = EmployeeAccess()
     Raccess = ResearchGroupAccess()
     project = Paccess.get_project(id)
     promotorsIDs = Paccess.get_projectPromotors(id)
-    document = Paccess.get_projectDocuments(id)
+    documents = Paccess.get_projectDocuments(id)
+    document = Document(None, None, None)
+    if request.cookies.get("lang") == 'nl':
+        for d in documents:
+            if d.language == 'dutch':
+                document = d
+    else:
+        for d in documents:
+            if d.language == 'english':
+                document = d
+
+    # If for some reason there is no text, select a document with text
+    if document.text is None:
+        for d in documents:
+            if d.text is not None:
+                document = d
+                break
+
     promotors = list()
     for promotorID in promotorsIDs:
         promotors.append(Eaccess.get_employee(promotorID))
@@ -516,33 +560,50 @@ def project_page(id):
     for staffID in staffIDs:
         staff.append(Eaccess.get_employee(staffID))
 
-    researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
-    docattachments = document[0].attachment
+    # Todo fetch extern employees
+    extern = list()
 
-    return render_template("project.html", r_project=project, r_promotors=promotors, r_staff=staff,
+    researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
+    docattachments = document.attachment
+
+    if len(staff) == 0:
+        staff = None
+    if len(promotors) == 0:
+        promotors = None
+    if len(docattachments) == 0:
+        docattachments = None
+    if len(extern) == 0:
+        extern = None
+
+    return render_template("project.html", r_project=project, r_promotors=promotors, supervisors=staff, desc=document,
                            r_researchGroups=researchGroups, page="projects", r_attachments=docattachments,
-                           added_bookmark=request.args.get('added_bookmark', default=False))
+                           extern=extern, added_bookmark=request.args.get('added_bookmark', default=False))
 
 
 @app.route('/projects/<int:id>/add_student', methods=['POST'])
 def add_student(id):
     sid = request.form["sid"]
     try:
-        if (len(sid) != 8): raise Exception('student id not the right size')
-        if (sid[0] == 's' or sid[0] == 'S'):
+        if len(sid) != 8:
+            raise Exception('student id not the right size')
+        if sid[0] == 's' or sid[0] == 'S':
             sid = sid[1:]
             sid = '2' + sid
 
         sa = StudentAccess()
         stu = sa.get_studentOnStudentNumber(sid)
-        if (stu == None):  raise Exception('student doesnt exist')
+        if stu is None:
+            raise Exception('student doesnt exist')
         pa = ProjectAccess()
         proj = pa.get_project(id)
-        if (proj == None):  raise Exception('project doesnt exist')
+        if proj is None:
+            raise Exception('project doesnt exist')
         registrations = sa.get_projectRegistrationsOnProject(id)
-        if (len(registrations) >= proj.maxStudents):  raise Exception('project already has maximum amount of students')
+        if len(registrations) >= proj.maxStudents:
+            raise Exception('project already has maximum amount of students')
         for i in registrations:
-            if (i.student == sid):  raise Exception('student already registered for this project')
+            if i.student == sid:
+                raise Exception('student already registered for this project')
         sa.add_projectRegistration(id, stu.studentID)
         return 'true'
     except:
@@ -637,9 +698,9 @@ def apply_filter_projects():
     #     Paccess = ProjectAccess()
     #     projects = Paccess.filter_projects(query, type, discipline, group, status)
     #
-        # return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-        #                        r_disciplines=disciplineOptions, r_types=typeOptions, page="projects",
-        #                        alt=json.dumps(projects, default=lambda x: x.__dict__))
+    # return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
+    #                        r_disciplines=disciplineOptions, r_types=typeOptions, page="projects",
+    #                        alt=json.dumps(projects, default=lambda x: x.__dict__))
     return redirect(url_for('show_projects'))
 
 
@@ -701,6 +762,7 @@ def form_modify_types():
     # access = DomainAccess
     # types = access.get_projectType()
 
+
 @app.route("/administration/modify_types", methods=["POST"])
 def modify_types():
     """
@@ -725,8 +787,6 @@ def modify_types():
             access.remove_type(type)
 
     # disciplines = access.get_disciplines()
-
-
     return render_template("administration-modify-types.html", send=True)
 
 
@@ -819,9 +879,9 @@ def check_project_title_correct():
 def load_user(user_id):
     eors = EORS.UNKNOWN
     if (user_id[0] == "S"):
-        sa=SessionAccess()
-        se=sa.get_SessionOnId(user_id[1:])
-        us=User(se)
+        sa = SessionAccess()
+        se = sa.get_SessionOnId(user_id[1:])
+        us = User(se)
 
         # eors = EORS.STUDENT
         # us = User(Session(0, user_id[1:], 0, eors))
@@ -843,7 +903,7 @@ def load_user(user_id):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    return redirect(url_for('index'))
+    return redirect(url_for('home', err="login_required"))
 
 
 @app.route('/login/', methods=['POST'])
@@ -854,8 +914,7 @@ def login():
     password = request.form["password"]
     try:
         if us.login(username, password):
-            if(us.session.EORS==EORS.STUDENT):
-
+            if (us.session.EORS == EORS.STUDENT):
                 sa.add_Session(us.session)
             login_user(us)
             temp = current_user
@@ -871,9 +930,9 @@ def login():
 
 @app.route("/logout/", methods=['GET', 'POST'])
 def logout():
-    if(current_user.session.EORS==EORS.STUDENT):
-        us=current_user
-        sa=SessionAccess()
+    if (current_user.session.EORS == EORS.STUDENT):
+        us = current_user
+        sa = SessionAccess()
         sa.add_Session(us.session)
     logout_user()
     next = request.args.get('logout')
@@ -917,7 +976,7 @@ def upload_file():
 @app.route('/showInterest/', methods=['POST'])
 def showInterest():
     # message = request.form["Message"]
-    message="ik zijn eens geinteresseerd"
+    message = "ik zijn eens geinteresseerd"
     sender = "miguel.dagraine@student.uantwerpen.be"  # todo: huidige persoon ingelogd moet nog opgehaald worden
     receiver = "thibautvangoethem2@gmail.com"  # todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax
     subject = "Expressing interest in " + "naam van project"  # todo: nog naam van project van project via ajax door sturen
