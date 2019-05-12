@@ -10,8 +10,9 @@ class Project:
         self.tag = list()
         self.ID = id
         self.relatedProject = list()
-        self.promotor = list()
-        self.staff = list()
+        self.promotors = list()
+        self.supervisors = list()
+        self.extern_employees = list()
         self.discipline = list()
         self.registeredStudents = 0
         self.register_count = 0
