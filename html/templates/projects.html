@@ -69,6 +69,52 @@
             <label>
                 {{ _('Search query') }}:
                 <input id="SQInput" type="text" class="form-control-sm" name="Search_query" onKeyUp="filterProjects()">
+                <style>
+                    .collapsible {
+                        background-color: Transparent;
+                        color: lightblue;
+                        cursor: pointer;
+                        border: none;
+                        text-align: right;
+                        width:100%;
+
+
+                    }
+
+                    .content {
+
+                        display: none;
+                        overflow: hidden;
+                        color: white;
+                        width:100%;
+                        text-align:left
+                    }
+
+                </style>
+                <button type="button" class="collapsible" id="SearchIncludes">&#8595; Include</button>
+                <div class="content">
+                    <input type="checkbox" id="include_title" onchange="filterProjects()" checked>Title<br>
+                    <input type="checkbox" id="include_description" onchange="filterProjects()" checked>Description<br>
+                    <input type="checkbox" id="include_promotor"  onchange="filterProjects()">Promotors<br>
+
+                </div>
+                <script>
+                    var coll = document.getElementsByClassName("collapsible");
+                    var i;
+
+                    for (i = 0; i < coll.length; i++) {
+                        coll[i].addEventListener("click", function() {
+                            this.classList.toggle("active");
+                            var content = this.nextElementSibling;
+                            if (content.style.display === "block") {
+                                content.style.display = "none";
+                            } else {
+                                content.style.display = "block";
+                            }
+                        });
+                    }
+                </script>
+
             </label>
 
             <label class="multi-select">
@@ -171,11 +217,15 @@
     </div>
 
     <script type="text/javascript">
-        var Words = {{words|tojson|safe}};
-        wordTable = JSON.parse(Words);
 
         var Data = {{alt|tojson|safe}};
         obj = JSON.parse(Data);
+
+        var Words = {{words|tojson|safe}};
+        wordTable = JSON.parse(Words);
+
+        var Promoters = {{promoters|tojson|safe}};
+        promoters = JSON.parse(Promoters);
 
         projectCount = 0;
         result = [];

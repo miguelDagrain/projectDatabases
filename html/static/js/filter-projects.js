@@ -17,29 +17,50 @@ function filterProjects(){
         tokens = []
     }
 
-    // Count Occurances in Title
-    for ( var i in obj){
-        obj[i].relevance = 0;
-        for( var j in tokens) {
-            // Check in title
-            if (countOccurances(obj[i].title, tokens[j])) {
-                obj[i].relevance++;
+    document.getElementById("include_title");
 
+    if (document.getElementById("include_title").checked) {
+        // Count Occurances in Title
+        for (var i in obj) {
+            obj[i].relevance = 0;
+            for (var j in tokens) {
+                // Check in title
+                if (countOccurances(obj[i].title, tokens[j])) {
+                    obj[i].relevance++;
+
+                }
             }
         }
     }
 
-    // Count Occurances in Description
-    for( var j in tokens) {
-        for (var word in wordTable){
-            if (countOccurances(word, tokens[j]) > 0){
-                //console.log("influenced by:" + word)
-                for ( var i in wordTable[word]) {
-                    if (i != "total") {
-                        var div = (Object.keys(wordTable[word]).length -1);
-                        obj[i].relevance += wordTable[word][i] / (wordTable[word]["total"] * div)
-                    }
+    if (document.getElementById("include_description").checked){
+        // Count Occurances in Description
+        for( var j in tokens) {
+            for (var word in wordTable){
+                if (countOccurances(word, tokens[j]) > 0){
+                    //console.log("influenced by:" + word)
+                    for ( var i in wordTable[word]) {
+                        if (i != "total") {
+                            var div = (Object.keys(wordTable[word]).length -1);
+                            obj[i].relevance += wordTable[word][i] / (wordTable[word]["total"] * div)
+                        }
 
+                    }
+                }
+            }
+        }
+    }
+
+    if (document.getElementById("include_promotor").checked){
+        // Check occurances in Promotors
+        for (var i in promoters ){
+            for (var t in tokens){
+                if (countOccurances(promoters[i]["name"], tokens[t]) > 0) {
+                    for (var j in promoters[i]["projects"]){
+                        if (obj.hasOwnProperty( promoters[i]["projects"][j])){
+                            obj[promoters[i]["projects"][j]].relevance ++;
+                        }
+                    }
                 }
             }
         }

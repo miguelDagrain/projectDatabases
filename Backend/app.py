@@ -360,6 +360,10 @@ def show_projects():
     types = access.get_projectType()
     projData = {}
     words = {}
+    promoters = access.get_promotors_and_associated_projects()
+
+    #print(promoters, file=sys.stdout)
+
 
     for proj in projects:
         researchGroupNames = []
@@ -385,7 +389,7 @@ def show_projects():
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents, "description": firstDescLines}
 
-        # print(proj.tag[0], file=sys.stdout)
+        #print(proj.tag[0], file=sys.stdout)
 
         for d in proj.desc:
             textstr = d.text
@@ -408,7 +412,8 @@ def show_projects():
     return render_template("projects.html", r_researchGroups=researchGroups,
                            r_disciplines=disciplines, r_types=types, page="projects",
                            alt=json.dumps(projData, default=lambda x: x.__dict__),
-                           words=json.dumps(words, default=lambda x: x.__dict__))
+                           words=json.dumps(words, default=lambda x: x.__dict__),
+                           promoters=json.dumps(promoters, default=lambda x: x.__dict__))
 
 
 @app.route("/projects/", methods=["POST"])

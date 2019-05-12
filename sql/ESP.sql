@@ -37,7 +37,7 @@ DROP DOMAIN IF EXISTS INTEXT;
 DROP DOMAIN IF EXISTS title;
 DROP DOMAIN IF EXISTS subject;
 
-set timezone='CEST';
+set timezone='CET';
 
 create table title(
   title varchar(255) primary key
