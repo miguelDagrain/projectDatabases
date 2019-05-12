@@ -2,22 +2,32 @@
 
 {% block stylesheets %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/people-table-style.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/people-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
-{% endblock stylesheets%}
+{% endblock stylesheets %}
 
 {% block scripts %}
 
-<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
-<!--script src="{{ url_for('static', filename='js/add-staff-ajax.js') }}"></script-->
-<script src="{{ url_for('static', filename='js/filter-people.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+    <!--script src="{{ url_for('static', filename='js/add-staff-ajax.js') }}"></script-->
+    <script src="{{ url_for('static', filename='js/filter-people.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
 
-{% endblock scripts%}
+{% endblock scripts %}
 
 
 
@@ -25,156 +35,158 @@
 
 {% block body %}
 
-<div style="display: flex">
+    <div style="display: flex">
 
-    <form class="side-bar" action="{{ url_for('show_people') }}" method="get">
+        <form class="side-bar" action="{{ url_for('show_people') }}" method="get">
 
-        <label class="side-bar-input">
-            {{ _('Name') }}:
-            <input id="SQInput" type="text" class="form-control-sm" name="Name"  onKeyUp="filterPeople()">
-        </label>
+            <label class="side-bar-input">
+                {{ _('Name') }}:
+                <input id="SQInput" type="text" class="form-control-sm" name="Name" onKeyUp="filterPeople()">
+            </label>
 
-        <label class="dropdown">
-            {{ _('Research group') }}:
-            <select id="research_group" name="Research_group" onchange="filterPeople()">
-                <option value="0">{{ _('All') }}</option>
-
-
-                <!-- todo: check if this also can move to external file -->
-                <script>
-                    var iter = 0;
-                </script>
-
-                {% for group in r_researchGroups %}
-
-                <option value="" id="noValue">{{ group.name }}</option>
-
-                <script>
-                    iter++;
-                    document.getElementById("noValue").setAttribute("value", iter.toString(10));
-                    document.getElementById("noValue").removeAttribute("id");
-                </script>
-
-                {% endfor %}
-
-            </select>
-        </label>
-
-        <label class="dropdown">
-            {{ _('Promotor') }}:
-            <select id="promotor" name="Promotor"  onchange="filterPeople()">
-                <option value="0">{{ _('All') }}</option>
-                <option value="1">{{ _('Yes') }}</option>
-                <option value="2">{{ _('No') }}</option>
-            </select>
-        </label>
+            <label class="dropdown">
+                {{ _('Research group') }}:
+                <select id="research_group" name="Research_group" onchange="filterPeople()">
+                    <option value="0">{{ _('All') }}</option>
 
 
-    </form>
+                    <!-- todo: check if this also can move to external file -->
+                    <script>
+                        var iter = 0;
+                    </script>
 
-    <div class="page-content">
-        <h1>{{ _('People') }}</h1>
+                    {% for group in r_researchGroups %}
 
-        {% if 'admin' in current_user.roles %}
+                        <option value="" id="noValue">{{ group.name }}</option>
 
-        <button class="page-content-button" data-toggle="modal" data-target="#modal-form-staff">{{ _('add staf') }}</button>
+                        <script>
+                            iter++;
+                            document.getElementById("noValue").setAttribute("value", iter.toString(10));
+                            document.getElementById("noValue").removeAttribute("id");
+                        </script>
 
-        <div id="modal-form-staff" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form class="modal-body administration-form" action="{{ url_for('add_staff') }}" method="post">
+                    {% endfor %}
 
-                            <label for="administration-form-name">{{ _('Name') }}:</label>
-                            <input type="text" id="administration-form-name" name="Name">
+                </select>
+            </label>
 
-                            <label for="administration-form-email">{{ _('E-mail') }}:</label>
-                            <input type="text" id="administration-form-email" name="Email">
+            <label class="dropdown">
+                {{ _('Promotor') }}:
+                <select id="promotor" name="Promotor" onchange="filterPeople()">
+                    <option value="0">{{ _('All') }}</option>
+                    <option value="1">{{ _('Yes') }}</option>
+                    <option value="2">{{ _('No') }}</option>
+                </select>
+            </label>
 
-                            <label for="administration-form-office">{{ _('Office address') }}:</label>
-                            <input type="text" id="administration-form-office" name="Office">
 
-                            <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
-                            <div class="dropdown">
-                                <select name="Researchgroup" id="administration-form-researchgroup">
+        </form>
 
-                                    <script>
-                                            iter = 0;
-                                    </script>
+        <div class="page-content">
+            <h1>{{ _('People') }}</h1>
 
-                                    {% for group in r_researchGroups %}
+            {% if 'admin' in current_user.roles %}
 
-                                    <option value="" id="noGroupName">{{ group.name }}</option>
+                <button class="page-content-button" data-toggle="modal"
+                        data-target="#modal-form-staff">{{ _('add staf') }}</button>
 
-                                    <script>
-                                        document.getElementById("noGroupName").setAttribute("value", iter.toString(10));
-                                        document.getElementById("noGroupName").removeAttribute("id");
-                                        iter++;
-                                    </script>
+                <div id="modal-form-staff" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form class="modal-body administration-form" action="{{ url_for('add_staff') }}"
+                                      method="post">
 
-                                    {% endfor %}
+                                    <label for="administration-form-name">{{ _('Name') }}:</label>
+                                    <input type="text" id="administration-form-name" name="Name">
 
-                                </select>
+                                    <label for="administration-form-email">{{ _('E-mail') }}:</label>
+                                    <input type="text" id="administration-form-email" name="Email">
+
+                                    <label for="administration-form-office">{{ _('Office address') }}:</label>
+                                    <input type="text" id="administration-form-office" name="Office">
+
+                                    <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
+                                    <div class="dropdown">
+                                        <select name="Researchgroup" id="administration-form-researchgroup">
+
+                                            <script>
+                                                iter = 0;
+                                            </script>
+
+                                            {% for group in r_researchGroups %}
+
+                                                <option value="" id="noGroupName">{{ group.name }}</option>
+
+                                                <script>
+                                                    document.getElementById("noGroupName").setAttribute("value", iter.toString(10));
+                                                    document.getElementById("noGroupName").removeAttribute("id");
+                                                    iter++;
+                                                </script>
+
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+
+                                    <label for="administration-form-title">{{ _('Title') }}:</label>
+                                    <div class="dropdown">
+                                        <select name="Title" id="administration-form-title">
+                                            <option value="0">{{ _('professor') }}</option>
+                                            <option value="1">{{ _('phd') }}</option>
+                                            <option value="2">{{ _('none') }}</option>
+                                        </select>
+                                    </div>
+
+                                    <label for="administration-form-role">{{ _('Role') }}:</label>
+                                    <div class="dropdown">
+                                        <select name="Role" id="administration-form-role">
+                                            <option value="0">{{ _('intern') }}</option>
+                                            <option value="1">{{ _('extern') }}</option>
+                                        </select>
+                                    </div>
+
+                                    <label for="administration-form-promotor">{{ _('Promotor') }}:</label>
+                                    <input type="checkbox" id="administration-form-promotor" name="Promotor">
+
+                                    <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                                </form>
                             </div>
-
-                            <label for="administration-form-title">{{ _('Title') }}:</label>
-                            <div class="dropdown">
-                                <select name="Title" id="administration-form-title">
-                                    <option value="0">{{ _('professor') }}</option>
-                                    <option value="1">{{ _('phd') }}</option>
-                                    <option value="2">{{ _('none') }}</option>
-                                </select>
-                            </div>
-
-                            <label for="administration-form-role">{{ _('Role') }}:</label>
-                            <div class="dropdown">
-                                <select name="Role" id="administration-form-role">
-                                    <option value="0">{{ _('intern') }}</option>
-                                    <option value="1">{{ _('extern') }}</option>
-                                </select>
-                            </div>
-
-                            <label for="administration-form-promotor">{{ _('Promotor') }}:</label>
-                            <input type="checkbox" id="administration-form-promotor" name="Promotor">
-
-                            <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        {% endif %}
+            {% endif %}
 
-        <table class="table " id="people_table">
-            <thead>
+            <table class="table " id="people_table">
+                <thead>
                 <tr>
                     <th class="th-1">{{ _('Name') }}</th>
                     <th class="th-2">{{ _('Research group') }}</th>
                     <th class="th-3">{{ _('Promotor') }}</th>
                 </tr>
-            <thead>
+                <thead>
 
-        </table>
+            </table>
+        </div>
     </div>
-</div>
 
-<script>setUpDropdowns()</script>
-<script>
+    <script>setUpDropdowns()</script>
+    <script>
 
-    var people = {{r_values | tojson| safe}};
-    peopleList = JSON.parse(people);
-    peopleCount = 0;
-    result = [];
+        var people = {{r_values | tojson| safe}};
+        peopleList = JSON.parse(people);
+        peopleCount = 0;
+        result = [];
 
-    window.onscroll = function(ev) {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight * 0.95) {
-            showMorePeople(document.getElementById("SQInput").value.trim());
-        }
+        window.onscroll = function (ev) {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight * 0.95) {
+                showMorePeople(document.getElementById("SQInput").value.trim());
+            }
 
-    };
-    filterPeople();
+        };
+        filterPeople();
 
-</script>
+    </script>
 
 {% endblock body %}
