@@ -421,6 +421,7 @@ def add_project():
     maxStudents = request.form["Maxstudents"]
     descriptionTextNl = request.form["nlDescription"]
     descriptionTextEng = request.form["engDescription"]
+    den = request.form.get("engDescription")
 
     researchGroupNrs = request.form.getlist("Researchgroup")
     typeNrs = request.form.getlist("Type")

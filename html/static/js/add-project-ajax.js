@@ -96,13 +96,30 @@ function addProject() {
         }
     }
 
+    var nlDesc = $("#nlDesc");
+    var engDesc = $("#engDesc");
+
+    var nlButton = $("#nlButton");
+    var enButton = $("#enButton");
+
+    nlButton = document.getElementById('nlButton');
+    enButton = document.getElementById('enButton');
+
     formData.append('Title', $('#administration-form-title').val());
     formData.append('Maxstudents', $('#administration-form-max').val().toString(10));
-    if ('' === $('#nlDesc').html() && '' === $('#engDesc').html()) {
-        $('#enButton').click();
+
+    if ('' === nlDesc.html() && '' === engDesc.html()) {
+        enButton.click();
     }
-    formData.append('nlDescription', $('#nlDesc').html());
-    formData.append('engDescription', $('#engDesc').html());
+
+    // To make sure the data is stored, we have to simulate a click on the other button.
+    // See code in multi-lang-descr.js line 45-92
+    nlButton.click();
+    enButton.click();
+    nlButton.click();
+
+    formData.append('nlDescription', nlDesc.html());
+    formData.append('engDescription', engDesc.html());
 
 
     var request = $.ajax({
@@ -117,7 +134,7 @@ function addProject() {
     request.done(function (data) {
         if (data.result) { //check if true is returned
             window.location.replace($SCRIPT_ROOT + '/projects'); //this wil call the get
-        }else{
+        } else {
             var url = new URL($SCRIPT_ROOT + '/projects');
             url.searchParams.append("error", true);
             console.log(url.toString());
@@ -138,7 +155,6 @@ function setupFormAddProject() {
 
 $(document).ready(function () {
     $('#add-project-form').submit(function () {
-        console.log("disabling button");
         $('#submit-btn').attr("disabled", true);
     });
 });
