@@ -563,6 +563,7 @@ class ProjectAccess:
             employees=list()
             for row in cursor:
                 employees.append(row[1])
+            return employees
         except Exception as e:
             self.dbconnect.rollback()
             print("unable to get external employees from a project" + str(e))

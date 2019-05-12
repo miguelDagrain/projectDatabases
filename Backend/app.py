@@ -1005,5 +1005,14 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingFirst(),trigger='cron', minute='0', hour='0', day='10', month='9', year='*')
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
-    app.run(debug=True, host=ip, port=port)
+    project=Project(None,"feesten",3,True)
+    project.extern_employees.append("joske")
+    project.extern_employees.append("josephienke")
+    project.extern_employees.append("joost")
+    pa=ProjectAccess()
+    pa.add_project(project)
+
+    proj=pa.get_project(project.ID)
+    print("feest")
+    # app.run(debug=True, host=ip, port=port)
 
