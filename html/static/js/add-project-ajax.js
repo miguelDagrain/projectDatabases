@@ -104,6 +104,7 @@ function addProject() {
     formData.append('nlDescription', $('#nlDesc').html());
     formData.append('engDescription', $('#engDesc').html());
 
+
     var request = $.ajax({
         type: "POST",
         url: $SCRIPT_ROOT + '/projects/',
@@ -116,6 +117,11 @@ function addProject() {
     request.done(function (data) {
         if (data.result) { //check if true is returned
             window.location.replace($SCRIPT_ROOT + '/projects'); //this wil call the get
+        }else{
+            var url = new URL($SCRIPT_ROOT + '/projects');
+            url.searchParams.append("error", true);
+            console.log(url.toString());
+            window.location.replace(url.toString());
         }
     });
 
@@ -123,8 +129,16 @@ function addProject() {
 
 function setupFormAddProject() {
     $('#add-project-form').bind('submit', function (event) {
+
         event.preventDefault();
         addProject();
         $(this).modal('hide');
     });
 }
+
+$(document).ready(function () {
+    $('#add-project-form').submit(function () {
+        console.log("disabling button");
+        $('#submit-btn').attr("disabled", true);
+    });
+});

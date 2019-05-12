@@ -545,9 +545,9 @@ def project_page(id):
                 document = d
 
     # If for some reason there is no text, select a document with text
-    if document.text is None:
+    if document.text is None or document.text == "":
         for d in documents:
-            if d.text is not None:
+            if d.text is not None and d.text != "":
                 document = d
                 break
 
@@ -560,8 +560,7 @@ def project_page(id):
     for staffID in staffIDs:
         staff.append(Eaccess.get_employee(staffID))
 
-    # Todo fetch extern employees
-    extern = list()
+    extern = project.extern_employees
 
     researchGroups = Raccess.get_researchGroupsOnIDs(project.researchGroup)
     docattachments = document.attachment

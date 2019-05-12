@@ -860,7 +860,13 @@ class ProjectAccess:
             'FROM project JOIN projectpromotor p ON project.projectid = p.project ' \
             'WHERE p.employee=%s AND project.active=false'
         cursor.execute(sql, (str(employeeID),))
-        count = cursor.fetchone()[0]
+        count = int(cursor.fetchone()[0])
+        sql = \
+            'SELECT count(distinct project.projectid) ' \
+            'FROM project JOIN projectstaff p on project.projectid = p.project ' \
+            'WHERE p.employee=%s AND project.active=false'
+        cursor.execute(sql, (str(employeeID),))
+        count += int(cursor.fetchone()[0])
         return count
 
     def get_projects_of_employee(self, employeeID):
@@ -871,6 +877,13 @@ class ProjectAccess:
             'select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s',
             (str(employeeID),))
         projects = list()
+        for row in cursor:
+            project = Project(row[0], row[1], row[2], row[3])
+            projects.append(project)
+
+        cursor.execute(
+            'select * from project JOIN projectstaff p on project.projectid = p.project WHERE p.employee=%s',
+            (str(employeeID),))
         for row in cursor:
             project = Project(row[0], row[1], row[2], row[3])
             projects.append(project)
