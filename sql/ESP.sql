@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS projectYearConnection;
 DROP TABLE IF EXISTS projectYear;
 drop table if exists projectResearchgroup;
 drop table if exists projectDiscipline;
+drop table if exists externEmployee;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS contactPerson;
 DROP TABLE IF EXISTS employeeRoles;
@@ -144,6 +145,12 @@ CREATE TABLE project
   title         VARCHAR(255) NOT NULL,
   maxStudents   INT          NOT NULL,
   active        BOOLEAN
+);
+
+CREATE TABLE externEmployee(
+  projectID int references project(projectID) ON DELETE CASCADE ,
+  name VARCHAR(255),
+  primary key (projectID,name)
 );
 
 CREATE TABLE projectDiscipline

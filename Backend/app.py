@@ -1005,11 +1005,5 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingFirst(),trigger='cron', minute='0', hour='0', day='10', month='9', year='*')
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
-
     app.run(debug=True, host=ip, port=port)
 
-    # sa=SessionAccess()
-    # s=Session(None,1,sa.get_CurentSQLTime(),EORS.STUDENT)
-    # s.clickedProjects.append('1')
-    # s.clickedProjects.append('3')
-    # sa.add_Session(s)

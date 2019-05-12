@@ -538,6 +538,35 @@ class ProjectAccess:
         self.dbconnect = dbConnection.connection
         self.doc = DocumentAccess()
 
+    def add_externEmployee(self,projectID,name):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute("execute insertExternEmployee(%s,%s)",(str(projectID),name,))
+            self.dbconnect.commit()
+        except Exception as e:
+            self.dbconnect.rollback()
+            print("unable to add external employee"+str(e))
+
+    def delete_projectExternEmployees(self,projectID):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute("execute deleteProjectExternEmployees (%s)", (str(projectID),))
+            self.dbconnect.commit()
+        except Exception as e:
+            self.dbconnect.rollback()
+            print("unable to delete external employees from a project" + str(e))
+
+    def get_externalEmployeesFromProject(self,projectID):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute("execute getProjectExternEmployees (%s)", (str(projectID),))
+            employees=list()
+            for row in cursor:
+                employees.append(row[1])
+        except Exception as e:
+            self.dbconnect.rollback()
+            print("unable to get external employees from a project" + str(e))
+
     def remove_bookmark(self, projectID, studentID):
         cursor = self.dbconnect.get_cursor()
         sql = 'DELETE FROM bookmark b WHERE b.project= %s AND b.student= %s'
@@ -863,6 +892,7 @@ class ProjectAccess:
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
             project.activeYear=self.get_projectYears(project.ID)
+            project.extern_employees=self.get_externalEmployeesFromProject(project.ID)
 
             sa = StudentAccess()
             registrations = sa.get_projectRegistrationsOnProject(project.ID)
@@ -919,6 +949,8 @@ class ProjectAccess:
             cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
             project.tag = list(cursor.fetchall())
 
+            project.extern_employees=self.get_externalEmployeesFromProject(project.ID)
+
             project.activeYear=self.get_projectYears(project.ID)
 
         return projects
@@ -942,6 +974,7 @@ class ProjectAccess:
         project.relatedProject = self.get_projectRelations(project.ID)
         project.researchGroup = self.get_projectresearchgroups(project.ID)
         project.type=self.get_typesFromProject(project.ID)
+        project.extern_employees = self.get_externalEmployeesFromProject(project.ID)
         return project
 
     def remove_project(self, ID):
@@ -1003,6 +1036,8 @@ class ProjectAccess:
 
                 cursor.execute('SELECT tag FROM projectTag WHERE project=%s', (project.ID,))
                 project.tag = list(cursor.fetchall())
+
+                project.extern_employees = self.get_externalEmployeesFromProject(project.ID)
 
                 project.activeYear=self.get_projectYears(project.ID)
 
@@ -1081,12 +1116,15 @@ class ProjectAccess:
                 self.add_projectTag(proj.ID, i)
             for i in proj.relatedProject:
                 self.add_projectRelation(proj.ID, i)
-            for i in proj.promotor:
+            for i in proj.promotors:
                 self.add_projectPromotor(proj.ID, i)
-            for i in proj.staff:
+            for i in proj.supervisors:
                 self.add_projectStaff(proj.ID, i)
             for i in proj.researchGroup:
                 self.add_projectResearchgroup(proj.ID, i)
+            for i in proj.extern_employees:
+                self.add_externEmployee(proj.ID,i)
+
             self.dbconnect.commit()
         except (Exception, self.dbconnect.get_error()) as error:
             self.dbconnect.rollback()
@@ -1136,6 +1174,10 @@ class ProjectAccess:
             for i in project.researchGroup:
                 self.add_projectDocument(project.ID, i)
             self.dbconnect.commit()
+
+            self.delete_projectExternEmployees(project.ID)
+            for i in project.extern_employees:
+                self.add_externEmployee(project.ID,i)
         except:
             self.dbconnect.rollback()
             raise Exception('unable to change project')

@@ -39,6 +39,9 @@ def setup_preparedStatements():
         cursor=connection.get_cursor()
         cursor.execute('prepare insertClick as insert into sessionProjectClick values($1,$2)')
         cursor.execute('prepare insertSessionProjectClick as insert into sessionProjectClick values($1,$2)')
+        cursor.execute('prepare insertExternEmployee as insert into externEmployee values($1,$2)')
+        cursor.execute('prepare deleteProjectExternEmployees AS DELETE FROM externEmployee WHERE projectID=$1')
+        cursor.execute('prepare getProjectExternEmployees AS SELECT * FROM externEmployee WHERE projectID=$1')
     except Exception as e:
         print('error while making prepared statements ' + str(e))
         connection.rollback()
