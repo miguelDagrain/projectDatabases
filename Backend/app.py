@@ -21,6 +21,7 @@ from ResearchGroup import ResearchGroup
 from Session import *
 from User import *
 from TagCalculator import findTags
+from TagCalculator import findTag
 from MailService import MailService
 from config import config_data
 
@@ -42,8 +43,8 @@ login_manager.init_app(app)
 # findTags()
 
 
-# overriding the login manager of flask login to support roles, inspired from 
-# https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes 
+# overriding the login manager of flask login to support roles, inspired from
+# https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes
 def login_required(role="ANY"):
     def wrapper(fn):
         @wraps(fn)
@@ -521,6 +522,8 @@ def add_project():
 
     # Finalize project and add it to the database
     access.add_project(project)
+    if(project.tag==None or len(project.tag)==0):
+        findTags(project)
 
     # Return result to javascript
     return jsonify(result=True)
@@ -1070,4 +1073,8 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
     app.run(debug=True, host=ip, port=port)
+
+
+
+
 
