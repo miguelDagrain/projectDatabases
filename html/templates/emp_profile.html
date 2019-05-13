@@ -148,16 +148,13 @@
             {% for project in projects %}
                 <tr>
                     <td>
-{#                        <button class="profile-button" data-toggle="modal" data-target="#project-assignment">#}
-{#                            <i class="fa fa-user"></i>#}
-{#                        </button>#}
-                        <button class="profile-button" data-toggle="modal" data-target="#project-editor"
+                        <button class="icon-button" data-toggle="modal" data-target="#project-editor"
                                 data-id="{{ project.ID }}" data-title="{{ project.title }}"
                                 data-desc-nl="{{ project.desc_nl.text }}" data-desc-en="{{ project.desc_en.text }}"
                                 data-desc-nl-id="{{ project.desc_nl.ID }}" data-desc-en-id="{{ project.desc_en.ID }}">
                             &#9998;
                         </button>
-                        <button class="profile-button" data-toggle="modal" data-target="#delete-project"
+                        <button class="icon-button" data-toggle="modal" data-target="#delete-project"
                                 data-id="{{ project.ID }}">
                             <i class="fa fa-trash-o"></i>
                         </button>

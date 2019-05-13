@@ -3,69 +3,74 @@
 {% block title %}{{ r_person.name }}{% endblock title %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
 
 {% endblock stylesheets %}
 
 {% block body %}
 
-<div style="display:flex;">
+    <div style="display:flex;">
 
 
-    <div class="page-content">
-        <h1>{{ r_person.name }}</h1>
+        <div class="page-content">
+            <h1>{{ r_person.name }}</h1>
 
-        {% if 'admin' in current_user.roles %}
+            {% if 'admin' in current_user.roles %}
 
-            <button class="page-content-button" data-toggle="modal" data-target="#remove-confirmation">{{ _('remove employee') }}</button>
+                <button class="page-content-button" data-toggle="modal"
+                        data-target="#remove-confirmation">{{ _('remove employee') }}</button>
 
-            <div id="remove-confirmation" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <p>{{ _('Are you sure you want to remove this employee?') }}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <form action="{{ url_for('apply_remove_person', id=r_person.id) }}" method="post">
-                                <button class="page-content-button" name="remove" type="submit">{{ _('Yes') }}</button>
-                            </form>
-                            <button class="page-content-button" name="cancel" data-dismiss="modal">{{ _('No')}}</button>
+                <div id="remove-confirmation" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <p>{{ _('Are you sure you want to remove this employee?') }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <form action="{{ url_for('apply_remove_person', id=r_person.id) }}" method="post">
+                                    <button class="page-content-button" name="remove"
+                                            type="submit">{{ _('Yes') }}</button>
+                                </form>
+                                <button class="page-content-button" name="cancel"
+                                        data-dismiss="modal">{{ _('No') }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        {% endif %}
+            {% endif %}
 
 
-        <p>{{ _('Research group') }}: <a href="{{ url_for('group_page', id=r_person.research_group ) }}">{{ r_groupName }}</a></p>
-        <br>
-        <br>
+            <p>{{ _('Research group') }}: <a
+                    href="{{ url_for('group_page', id=r_person.research_group ) }}">{{ r_groupName }}</a></p>
+            <br>
+            <br>
 
-        <h2>{{ _('Projects') }}:</h2>
+            <h2>{{ _('Projects') }}:</h2>
 
-        <br>
+            <br>
 
-        <table class="content-table">
-            {% for tupleProjectAndYear in r_projectAndYear %}
-                <tr>
-                    <th>{{ tupleProjectAndYear[0] }}</th>
-                </tr>
-                {% for project in tupleProjectAndYear[1] %}
+            <table class="content-table">
+                {% for tupleProjectAndYear in r_projectAndYear %}
                     <tr>
-                        <td>
-                            <ul>
-                                <li><a href="{{ url_for('project_page', id=project.ID) }}" >{{ project.title }}</a></li>
-                            </ul>
-                        </td>
+                        <th>{{ tupleProjectAndYear[0] }}</th>
                     </tr>
+                    {% for project in tupleProjectAndYear[1] %}
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li><a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </table>
+            </table>
+
+        </div>
 
     </div>
-
-</div>
 
 
 {% endblock body %}

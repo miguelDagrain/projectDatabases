@@ -3,20 +3,20 @@
 {% block title %}{{ _('Projects') }}{% endblock title %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
 {% endblock stylesheets %}
 
 {% block scripts %}
 
-<script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
-<script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
 
 {% endblock scripts %}
 
@@ -24,8 +24,8 @@
 
     <div class="side-bar">
         <div>
-            <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{_('modify disciplines')}}</a>
-            <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{_('modify types')}}</a>
+            <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{ _('modify disciplines') }}</a>
+            <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{ _('modify types') }}</a>
         </div>
 
     </div>
@@ -37,7 +37,7 @@
         {% endblock administration_content %}
     </div>
 
-<script>setUpDropdowns()</script>
-<script>setUpMultiSelection()</script>
+    <script>setUpDropdowns()</script>
+    <script>setUpMultiSelection()</script>
 
 {% endblock body %}
