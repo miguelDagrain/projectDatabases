@@ -523,7 +523,7 @@ def add_project():
     # Finalize project and add it to the database
     access.add_project(project)
     if(project.tag==None or len(project.tag)==0):
-        findTags(project)
+        findTag(project)
 
     # Return result to javascript
     return jsonify(result=True)
