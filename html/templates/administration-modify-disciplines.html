@@ -20,7 +20,7 @@
 <form class="administration-form" action="{{ url_for('modify_disciplines') }}" method="post">
 
 <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
-    <div class="dropdown">
+    <div class="dropdown" style="display: inline-block;width:60%;">
         <select name="Discipline" id="administration-form-disciplines">
 
             <option value="0" >{{ _('All') }}</option>

@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ _('Projects') }}{% endblock title %}
+{% block title %}{{ _('Administration') }}{% endblock title %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/project-table-style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
+
+{% block table_style %}{% endblock table_style %}
 
 {% endblock stylesheets %}
 
@@ -18,25 +19,34 @@
 <script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
 
+{% block administration_scripts %}{% endblock administration_scripts %}
+
 {% endblock scripts %}
 
 {% block body %}
 
-    <div class="side-bar">
-        <div>
-            <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{_('modify disciplines')}}</a>
-            <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{_('modify types')}}</a>
+    <div style="display: flex;">
+
+        <div class="side-bar">
+            <div>
+                <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{_('modify disciplines')}}</a>
+                <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{_('modify types')}}</a>
+                <a class="side-bar-button" href="{{ url_for('show_research_groups') }}">{{_('Research groups')}}</a>
+                <a class="side-bar-button" href="{{ url_for('show_people') }}">{{_('People')}}</a>
+            </div>
+
+            {% block administration_side_bar_extension %}{% endblock administration_side_bar_extension %}
+
+        </div>
+
+
+        <div class="page-content">
+            {% block administration_content %}
+
+            {% endblock administration_content %}
         </div>
 
     </div>
-
-
-    <div class="page-content">
-        {% block administration_content %}
-
-        {% endblock administration_content %}
-    </div>
-
 <script>setUpDropdowns()</script>
 <script>setUpMultiSelection()</script>
 

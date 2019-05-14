@@ -102,18 +102,6 @@
                                     {{ _('Projects') }}
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class=" hyperlink {{ "active" if page=="rgroups" }}"
-                                   href="{{ url_for('show_research_groups') }}">
-                                    {{ _('Research groups') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class=" hyperlink {{ "active" if page=="people" }}"
-                                   href="{{ url_for('show_people') }}">
-                                    {{ _('People') }}
-                                </a>
-                            </li>
                             {% if current_user.is_authenticated %}
                                 {% if 'admin' in current_user.roles %}
                                     <li class="nav-item">
