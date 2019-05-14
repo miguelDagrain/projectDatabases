@@ -2,48 +2,48 @@
 
 {% block administration_content %}
 
-<h1>{{ _('Modify Types') }}</h1>
+    <h1>{{ _('Modify Types') }}</h1>
 
-<h2>{{ _('Add Type') }}</h2>
+    <h2>{{ _('Add Type') }}</h2>
 
-<form class="administration-form" action="{{ url_for('modify_types') }}" method="post">
+    <form class="administration-form" action="{{ url_for('modify_types') }}" method="post">
 
-    <label for="administration-form-name">{{ _('New type') }}:</label>
-    <input type="text" id="administration-form-name" name="Name">
+        <label for="administration-form-name">{{ _('New type') }}:</label>
+        <input type="text" id="administration-form-name" name="Name">
 
-    <input  class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+        <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
 
-</form>
+    </form>
 
-<h2>{{ _('Remove Type') }}</h2>
+    <h2>{{ _('Remove Type') }}</h2>
 
-<form class="administration-form" action="{{ url_for('modify_types') }}" method="post">
+    <form class="administration-form" action="{{ url_for('modify_types') }}" method="post">
 
-    <label for="administration-form-type">{{ _('Type') }}:</label>
-    <div class="dropdown" style="display: inline-block;width:60%;">
-        <select id="administration-form-type" name="Type">
+        <label for="administration-form-type">{{ _('Type') }}:</label>
+        <div class="dropdown" style="display: inline-block;width:60%;">
+            <select id="administration-form-type" name="Type">
 
-            <script>
-                var iter = 0;
-            </script>
+                <script>
+                    var iter = 0;
+                </script>
 
-            {% for type in r_types %}
+                {% for type in r_types %}
 
-            <option value="" id="noValueType">{{ type }}</option>
+                    <option value="" id="noValueType">{{ type }}</option>
 
-            <script>
-                document.getElementById("noValueType").setAttribute("value", iter.toString(10));
-                document.getElementById("noValueType").removeAttribute("id");
-                iter++;
-            </script>
+                    <script>
+                        document.getElementById("noValueType").setAttribute("value", iter.toString(10));
+                        document.getElementById("noValueType").removeAttribute("id");
+                        iter++;
+                    </script>
 
-            {% endfor %}
+                {% endfor %}
 
-        </select>
-    </div>
+            </select>
+        </div>
 
-    <input  class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+        <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
 
-</form>
+    </form>
 
 {% endblock administration_content %}

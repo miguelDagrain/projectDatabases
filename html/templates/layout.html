@@ -67,42 +67,43 @@
 </head>
 <footer>
 
-<div class="container-fluid">
+    <div class="container-fluid">
 
 
-    <header id="header">
-        <div class="row navbar-blue">
-            <div class="col" style="margin:0 ">
-                <a href="{{ url_for('index') }}">
-                    <img class="banner" src="{{ url_for('static', filename="image/banner2.png") }}" alt="ESP banner">
-                </a>
+        <header id="header">
+            <div class="row navbar-blue">
+                <div class="col" style="margin:0 ">
+                    <a href="{{ url_for('index') }}">
+                        <img class="banner" src="{{ url_for('static', filename="image/banner2.png") }}"
+                             alt="ESP banner">
+                    </a>
+                </div>
+                <div class="col float-right">
+                    <form method="get" action="{{ url_for('pick_language') }}" class="float-right">
+                        <input type="hidden" name="url_redirect" value="">
+                        <button class="btn-lang" type="submit" value="nl" name="send">nl</button>
+                        <button class="btn-lang" type="submit" value="en" name="send">en</button>
+                    </form>
+
+                </div>
             </div>
-            <div class="col float-right">
-                <form method="get" action="{{ url_for('pick_language') }}" class="float-right">
-                    <input type="hidden" name="url_redirect" value="">
-                    <button class="btn-lang" type="submit" value="nl" name="send">nl</button>
-                    <button class="btn-lang" type="submit" value="en" name="send">en</button>
-                </form>
-
-            </div>
-        </div>
-        <div class="row navbar-blue" style="padding-bottom: 0.5%">
-            <div class="col" style="padding-left: 0">
-                <nav class="navbar" style="padding: 2px">
-                    <div class="container">
-                        <ul class="nav navbar-nav flex-row flex-col">
-                            <li class="nav-item">
-                                <a class=" hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">
-                                    {{ _('Home') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class=" hyperlink {{ "active" if page=="projects" }}"
-                                   href="{{ url_for('show_projects') }}">
-                                    {{ _('Projects') }}
-                                </a>
-                            </li>
-                            {% if current_user.is_authenticated %}
+            <div class="row navbar-blue" style="padding-bottom: 0.5%">
+                <div class="col" style="padding-left: 0">
+                    <nav class="navbar" style="padding: 2px">
+                        <div class="container">
+                            <ul class="nav navbar-nav flex-row flex-col">
+                                <li class="nav-item">
+                                    <a class=" hyperlink {{ "active" if page=="index" }}" href="{{ url_for('index') }}">
+                                        {{ _('Home') }}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class=" hyperlink {{ "active" if page=="projects" }}"
+                                       href="{{ url_for('show_projects') }}">
+                                        {{ _('Projects') }}
+                                    </a>
+                                </li>
+                                {% if current_user.is_authenticated %}
                                 {% if 'admin' in current_user.roles %}
                                     <li class="nav-item">
                                         <a class=" hyperlink {{ "active" if page=="administration" }}"
@@ -149,86 +150,71 @@
         </div>
     </header>
 
-    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Login</h4>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" id="login_form">
-                        <div class="alert alert-danger" id="login-failed" style="display:none">
-                            {{ _('Wrong username or password') }}
-                        </div>
-                        <div class="form-group">
-                            <label for="user" style="margin-bottom: 5px">{{ _('Username') }}</label>
-                            <input id="user" class="form-control" type="text" placeholder="{{ _('username') }}"
-                                   required>
-                        </div>
-                        <div class="form-group">
-                            <label for="pass" style="margin-bottom: 5px">{{ _('Password') }}</label>
-                            <input id="pass" class="form-control" type="password" placeholder="{{ _('password') }}"
-                                   required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" form="login_form" class="btn btn-primary" onclick="performLogin()">Login
-                    </button>
+        <!--Login modal-->
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Login</h4>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" id="login_form">
+                            <div class="alert alert-danger" id="login-failed" style="display:none">
+                                {{ _('Wrong username or password') }}
+                            </div>
+                            <div class="form-group">
+                                <label for="user" style="margin-bottom: 5px">{{ _('Username') }}</label>
+                                <input id="user" class="form-control" type="text" placeholder="{{ _('username') }}"
+                                       required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pass" style="margin-bottom: 5px">{{ _('Password') }}</label>
+                                <input id="pass" class="form-control" type="password" placeholder="{{ _('password') }}"
+                                       required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" form="login_form" class="btn btn-primary" onclick="performLogin()">Login
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- login popup -->
-    <div class="col-14 float-right" id="loginpopup">
-        <div class="float-right" style="margin-bottom: 0">
-            {% if not current_user.is_authenticated %}
-                <label style="display:flex;">
-                    <small>
-                        {{ _('username') }}:
-                        <input type="text" name="Search_query">
-                    </small>
-                </label>
-                <label style="display:flex;">
-                    <small>
-                        {{ _('password') }}:
-                        <input type="text" name="Search_query">
-                    </small>
-                </label>
-            {% endif %}
-        </div>
-    </div>
-    <div class="fixed-bottom" style="text-align:center">
-        <div class="container" style="display:none" id="cookiePopup">
-            {{ _('We use cookies to power and improve your experiences on this site') }}
-            <button type="button" class="btn btn-primary btn-sm" onclick="closeCookieBanner()">
-                ok
-            </button>
-        </div>
-    </div>
-    <script>
-        var cookies = getCookie("allowCookies");
-        if (cookies !== "true") {
-            document.getElementById('cookiePopup').style.display = 'block';
-        }
 
-        function closeCookieBanner() {
-            document.cookie = "allowCookies=true; path=/";
-            document.getElementById('cookiePopup').style.display = 'none';
-        }
+        <!--Cookie banner-->
+        <div class="fixed-bottom" style="text-align:center">
+            <div class="container" style="display:none" id="cookiePopup">
+                {{ _('We use cookies to power and improve your experiences on this site') }}
+                <button type="button" class="btn btn-primary btn-sm" onclick="closeCookieBanner()">
+                    ok
+                </button>
+            </div>
+        </div>
 
-        //found on https://stackoverflow.com/questions/10730362/get-cookie-by-name
-        function getCookie(name) {
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
-            if (parts.length === 2) return parts.pop().split(";").shift();
-        }
-    </script>
-</div>
+        <script>
+            var cookies = getCookie("allowCookies");
+            if (cookies !== "true") {
+                document.getElementById('cookiePopup').style.display = 'block';
+            }
+
+            function closeCookieBanner() {
+                document.cookie = "allowCookies=true; path=/";
+                document.getElementById('cookiePopup').style.display = 'none';
+            }
+
+            //found on https://stackoverflow.com/questions/10730362/get-cookie-by-name
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length === 2) return parts.pop().split(";").shift();
+            }
+        </script>
+    </div>
 
     <style>
         .wrapper {
@@ -236,7 +222,8 @@
             padding-bottom: 40px;
 
         }
-        .footer{
+
+        .footer {
             clear: both;
             height: 70px;
             text-align: center;
@@ -248,15 +235,14 @@
     </style>
 
     <div class="wrapper">
-    {% block body %}
+        {% block body %}
 
-    {% endblock body %}
+        {% endblock body %}
 
         <div class="push"></div>
     </div>
 
     <footer class="footer">ESP - UAntwerpen</footer>
 
-</body>
 </footer>
 </html>

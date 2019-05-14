@@ -59,7 +59,7 @@
                                     <label for="administration-form-upload">{{ _('attached files') }}:</label>
                                     <div class="upload" ondrop="handleUploadAttachementDrop(event);"
                                          ondragover="handleUploadAttachementOver(event);">
-                                        <img src="{{ url_for('static', filename='image/upload.png') }}">
+                                        <img src="{{ url_for('static', filename='image/upload.png') }}" alt="upload icon">
                                         <p>{{ _('drag here your files that you want to upload') }}</p>
                                     </div>
                                     <ul id="administration-form-upload"></ul>

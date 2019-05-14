@@ -12,12 +12,14 @@
 
         {% if 'admin' in current_user.roles %}
 
-            <button class="page-content-button" data-toggle="modal" data-target="#modal-form-group">{{ _('add group') }}</button>
+            <button class="page-content-button" data-toggle="modal"
+                    data-target="#modal-form-group">{{ _('add group') }}</button>
 
             <div id="modal-form-group" class="modal fade" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <form class="modal-body administration-form" action="{{ url_for('add_research_group') }}" method="post">
+                        <form class="modal-body administration-form" action="{{ url_for('add_research_group') }}"
+                              method="post">
                             <label for="administration-form-name">{{ _('Group name') }}:</label>
                             <input type="text" id="administration-form-name" name="Name">
 

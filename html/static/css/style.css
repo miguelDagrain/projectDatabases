@@ -1,23 +1,10 @@
-.profile-button {
+.icon-button {
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
     cursor: pointer;
     overflow: hidden;
     outline: none;
-}
-
-#loginpopup {
-    display: none;
-    /*position:fixed;*/
-    /*left:90%;*/
-    /*height:200px;*/
-}
-
-.showPopupButton {
-    border: none;
-    background: #405080;
-    color: white;
 }
 
 .btn-login {

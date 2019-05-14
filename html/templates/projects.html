@@ -74,7 +74,7 @@
                 <div class="content">
                     <input type="checkbox" id="include_title" onchange="filterProjects()" checked>Title<br>
                     <input type="checkbox" id="include_description" onchange="filterProjects()" checked>Description<br>
-                    <input type="checkbox" id="include_promotor"  onchange="filterProjects()">Promotors<br>
+                    <input type="checkbox" id="include_promotor" onchange="filterProjects()">Promotors<br>
 
                 </div>
                 <script>
@@ -82,7 +82,7 @@
                     var i;
 
                     for (i = 0; i < coll.length; i++) {
-                        coll[i].addEventListener("click", function() {
+                        coll[i].addEventListener("click", function () {
                             this.classList.toggle("active");
                             var content = this.nextElementSibling;
                             if (content.style.display === "block") {

@@ -2,28 +2,28 @@
 
 {% block administration_content %}
 
-<h1>{{ _('Modify Disciplines') }}</h1>
+    <h1>{{ _('Modify Disciplines') }}</h1>
 
-<h2 style="margin-top:2%;">{{ _('Add Discipline') }}</h2>
+    <h2 style="margin-top:2%;">{{ _('Add Discipline') }}</h2>
 
-<form class="administration-form" action="{{ url_for('modify_disciplines') }}" method="post">
+    <form class="administration-form" action="{{ url_for('modify_disciplines') }}" method="post">
 
-    <label for="administration-form-name" >{{ _('New discipline') }}:</label>
-    <input type="text" id="administration-form-name" name="Name">
+        <label for="administration-form-name">{{ _('New discipline') }}:</label>
+        <input type="text" id="administration-form-name" name="Name">
 
-    <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+        <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
 
-</form>
+    </form>
 
-<h2 style="margin-top:2%;">{{ _('Remove Discipline') }}</h2>
+    <h2 style="margin-top:2%;">{{ _('Remove Discipline') }}</h2>
 
-<form class="administration-form" action="{{ url_for('modify_disciplines') }}" method="post">
+    <form class="administration-form" action="{{ url_for('modify_disciplines') }}" method="post">
 
-<label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
-    <div class="dropdown" style="display: inline-block;width:60%;">
-        <select name="Discipline" id="administration-form-disciplines">
+        <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
+        <div class="dropdown" style="display: inline-block;width:60%;">
+            <select name="Discipline" id="administration-form-disciplines">
 
-            <option value="0" >{{ _('All') }}</option>
+                <option value="0">{{ _('All') }}</option>
 
                 <script>
                     var iter = 0;
@@ -31,22 +31,22 @@
 
                 {% for discip in r_disciplines %}
 
-                <option value="" id="noValueDis">{{ discip }}</option>
+                    <option value="" id="noValueDis">{{ discip }}</option>
 
-                <script>
-                    document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
-                    document.getElementById("noValueDis").removeAttribute("id");
-                    iter++;
-                </script>
+                    <script>
+                        document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                        document.getElementById("noValueDis").removeAttribute("id");
+                        iter++;
+                    </script>
 
                 {% endfor %}
 
-        </select>
-    </div>
+            </select>
+        </div>
 
-    <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+        <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
 
-</form>
+    </form>
 
 {% endblock administration_content %}
 
