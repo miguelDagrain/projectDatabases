@@ -1063,51 +1063,51 @@ class ProjectAccess:
             raise Exception('unable to get project filter data')
             raise Exception('unable to get project filter data')
 
-    def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
-        try:
-            cursor = self.dbconnect.get_cursor()
-
-            sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
-                  "WHERE p.title LIKE %(searchQueryQ)s "
-
-            if researchGroup != "":
-                sql += "AND name = %(researchGroupQ)s "
-            # hier is een fout typeQ wordt nooit vervangen
-            # todo: implementeren van type in sql.
-            # if (type != ""):
-            #     sql += "AND type = %(typeQ)s "
-
-            disciplineValue = ""
-
-            if discipline is not None:
-
-                sql += "AND discipline IN ( "
-
-                for iterDiscipline in discipline:
-                    sql += "'" + iterDiscipline + "', "
-
-                sql = sql[0:len(sql) - 2]
-                sql += " ) "
-
-            # gemeenschappelijke sql uit de if else structuur gehaald.
-            if status == 1:
-
-                sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
-
-            elif status == 2:
-
-                sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
-
-            cursor.execute(sql, dict(searchQueryQ="%" + searchQuery + "%", researchGroupQ=researchGroup))
-
-            projects = list()
-            for row in cursor:
-                project = self.get_project(row[0])
-                projects.append(project)
-            return projects
-        except:
-            self.dbconnect.rollback()
-            raise Exception('unable to filter employees')
+    # def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
+    #     try:
+    #         cursor = self.dbconnect.get_cursor()
+    #
+    #         sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
+    #               "WHERE p.title LIKE %(searchQueryQ)s "
+    #
+    #         if researchGroup != "":
+    #             sql += "AND name = %(researchGroupQ)s "
+    #         # hier is een fout typeQ wordt nooit vervangen
+    #         # todo: implementeren van type in sql.
+    #         # if (type != ""):
+    #         #     sql += "AND type = %(typeQ)s "
+    #
+    #         disciplineValue = ""
+    #
+    #         if discipline is not None:
+    #
+    #             sql += "AND discipline IN ( "
+    #
+    #             for iterDiscipline in discipline:
+    #                 sql += "'" + iterDiscipline + "', "
+    #
+    #             sql = sql[0:len(sql) - 2]
+    #             sql += " ) "
+    #
+    #         # gemeenschappelijke sql uit de if else structuur gehaald.
+    #         if status == 1:
+    #
+    #             sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
+    #
+    #         elif status == 2:
+    #
+    #             sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
+    #
+    #         cursor.execute(sql, dict(searchQueryQ="%" + searchQuery + "%", researchGroupQ=researchGroup))
+    #
+    #         projects = list()
+    #         for row in cursor:
+    #             project = self.get_project(row[0])
+    #             projects.append(project)
+    #         return projects
+    #     except:
+    #         self.dbconnect.rollback()
+    #         raise Exception('unable to filter employees')
 
     def get_promotors_and_associated_projects(self):
         """
@@ -1418,16 +1418,6 @@ class StudentAccess:
             prs.append(pr)
         return prs
 
-    # this function is pretty useless at the moment because to get a single registration you need al the data from it
-    # def get_projectRegistration(self):
-    #     cursor = self.dbconnect.get_cursor()
-    #     cursor.execute('select * from projectRegistration')
-    #     prs = list()
-    #     for row in cursor:
-    #         pr = ProjectRegistration(row[0], row[1], row[2])
-    #         prs.append(pr)
-    #     return prs
-
     def add_projectRegistration(self, pr, student):
         """
         adds a new projecctregistration
@@ -1716,6 +1706,11 @@ class SessionAccess:
         self.dbconnect = dbConnection.connection
 
     def get_SessionOnId(self,id):
+        """
+        getter for a single session based on the session id
+        :param id: the sessionid
+        :return: a session object
+        """
         from Session import Session
         from Session import EORS
         try:
@@ -1733,6 +1728,11 @@ class SessionAccess:
             return None
 
     def get_SessionOnSID(self,studentID):
+        """
+        gets all the session that belong to a certain studentid
+        :param studentID: the studentID
+        :return:a list of sessions
+        """
         try:
             cursor = self.dbconnect.get_cursor()
             cursor.execute('select * from Session where studentID=%s', (str(studentID),))
@@ -1745,6 +1745,10 @@ class SessionAccess:
         return None
 
     def add_Session(self, session):
+        """
+        adds a session to the database
+        :param session: the new session
+        """
         from Session import EORS
         if(session.EORS!=EORS.STUDENT):
             return
@@ -1770,6 +1774,10 @@ class SessionAccess:
             self.dbconnect.rollback()
 
     def change_Session(self,session):
+        """
+        changes the values of a session that already is in the database
+        :param session: the session you are cahnging
+        """
         from Session import EORS
         if (session.EORS != EORS.STUDENT):
             return
@@ -1788,6 +1796,11 @@ class SessionAccess:
             self.dbconnect.rollback()
 
     def add_sessionProjectClick(self,sessionID,projectID):
+        """
+        adds a session project click that binds a sessionid and a projectid
+        :param sessionID:
+        :param projectID:
+        """
         try:
             cursor=self.dbconnect.get_cursor()
             cursor.execute('execute insertSessionProjectClick(%s,%s)',(str(sessionID),str(projectID),))
@@ -1797,6 +1810,10 @@ class SessionAccess:
             self.dbconnect.rollback()
 
     def get_CurentSQLTime(self):
+        """
+        a quick function that returns the NOW() time of sql, this time should be used in the session classes
+        :return: a string with the current time
+        """
         try:
             cursor = self.dbconnect.get_cursor()
             cursor.execute('SELECT NOW()')
@@ -1806,6 +1823,11 @@ class SessionAccess:
             print('couldnt get current time ' + str(e))
 
     def get_StudentProjectClicks(self,studentID):
+        """
+        gets the 50 most recent clicks of a certain student
+        :param studentID: the student id
+        :return: a list of project id's
+        """
         try:
             cursor=self.dbconnect.get_cursor()
             cursor.execute('execute getStudentProjectClicks(%s)',(str(studentID),))
@@ -1816,9 +1838,6 @@ class SessionAccess:
         except Exception as e:
             print('couldnt get student project clicks '+str(e))
             return None
-
-
-
 
 class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
     def __init__(self):
