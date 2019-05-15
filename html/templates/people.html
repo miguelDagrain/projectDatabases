@@ -1,16 +1,12 @@
-{% extends "layout.html" %}
+{% extends "administration.html" %}
 
-{% block stylesheets %}
+{% block table_style %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/people-table-style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
-{% endblock stylesheets %}
+{% endblock table_style %}
 
-{% block scripts %}
+{% block administration_scripts %}
 
     <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
@@ -26,17 +22,13 @@
         });
     </script>
 
-{% endblock scripts %}
+{% endblock administration_scripts %}
 
 
+{% block administration_side_bar_extension %}
 
-{% block title %}{{ _('People') }}{% endblock title %}
 
-{% block body %}
-
-    <div style="display: flex">
-
-        <form class="side-bar" action="{{ url_for('show_people') }}" method="get">
+        <form action="{{ url_for('show_people') }}" method="get">
 
             <label class="side-bar-input">
                 {{ _('Name') }}:
@@ -80,6 +72,9 @@
 
 
         </form>
+
+{% endblock administration_side_bar_extension %}
+{% block administration_content %}
 
         <div class="page-content">
             <h1>{{ _('People') }}</h1>
@@ -168,24 +163,24 @@
 
             </table>
         </div>
-    </div>
 
-    <script>setUpDropdowns()</script>
-    <script>
+        <script>
 
-        var people = {{r_values | tojson| safe}};
-        peopleList = JSON.parse(people);
-        peopleCount = 0;
-        result = [];
+            var people = {{r_values | tojson| safe}};
+            peopleList = JSON.parse(people);
+            peopleCount = 0;
+            result = [];
 
-        window.onscroll = function (ev) {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight * 0.95) {
-                showMorePeople(document.getElementById("SQInput").value.trim());
-            }
+            window.onscroll = function (ev) {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight * 0.95) {
+                    showMorePeople(document.getElementById("SQInput").value.trim());
+                }
 
-        };
-        filterPeople();
+            };
+            filterPeople();
 
-    </script>
+        </script>
 
-{% endblock body %}
+{% endblock administration_content %}
+
+

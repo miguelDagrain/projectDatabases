@@ -103,64 +103,52 @@
                                         {{ _('Projects') }}
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class=" hyperlink {{ "active" if page=="rgroups" }}"
-                                       href="{{ url_for('show_research_groups') }}">
-                                        {{ _('Research groups') }}
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class=" hyperlink {{ "active" if page=="people" }}"
-                                       href="{{ url_for('show_people') }}">
-                                        {{ _('People') }}
-                                    </a>
-                                </li>
                                 {% if current_user.is_authenticated %}
-                                    {% if 'admin' in current_user.roles %}
-                                        <li class="nav-item">
-                                            <a class=" hyperlink {{ "active" if page=="administration" }}"
-                                               href="{{ url_for( 'get_administration' ) }}">
-                                                {{ _('Administration') }}
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                    {% if 'employee' in current_user.roles %}
-                                        <li class="nav-item">
-                                            <a class="hyperlink {{ "active" if page=="profile" }}"
-                                               href="{{ url_for('emp_profile') }}">
-                                                {{ _('Profile') }}
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                    {% if 'student' in current_user.roles %}
-                                        <li class="nav-item">
-                                            <a class=" hyperlink {{ "active" if page=="bookmarks" }}"
-                                               href="{{ url_for('bookmark_page') }}">
-                                                {{ _('Bookmarks') }}
-                                            </a>
-                                        </li>
-                                    {% endif %}
+                                {% if 'admin' in current_user.roles %}
+                                    <li class="nav-item">
+                                        <a class=" hyperlink {{ "active" if page=="administration" }}"
+                                           href="{{ url_for( 'get_administration' ) }}">
+                                            {{ _('Administration') }}
+                                        </a>
+                                    </li>
                                 {% endif %}
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
-                {% if current_user.is_authenticated %}
-                    <div class="col text-right">
-                        <button class="btn-login" data-toggle="modal"
-                                onclick="window.location.href='{{ url_for('logout') }}'">
-                            Logout
-                        </button>
+                                {% if 'employee' in current_user.roles %}
+                                    <li class="nav-item">
+                                        <a class="hyperlink {{ "active" if page=="profile" }}"
+                                           href="{{ url_for('emp_profile') }}">
+                                            {{ _('Profile') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if 'student' in current_user.roles %}
+                                    <li class="nav-item">
+                                        <a class=" hyperlink {{ "active" if page=="bookmarks" }}"
+                                           href="{{ url_for('bookmark_page') }}">
+                                            {{ _('Bookmarks') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
                     </div>
-                {% else %}
-                    <div class="col text-right">
-                        <button class="btn-login" data-toggle="modal" data-target="#login-modal">
-                            Login
-                        </button>
-                    </div>
-                {% endif %}
+                </nav>
             </div>
-        </header>
+            {% if current_user.is_authenticated %}
+                <div class="col text-right">
+                    <button class="btn-login" data-toggle="modal"
+                            onclick="window.location.href='{{ url_for('logout') }}'">
+                        Logout
+                    </button>
+                </div>
+            {% else %}
+                <div class="col text-right">
+                    <button class="btn-login" data-toggle="modal" data-target="#login-modal">
+                        Login
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </header>
 
         <!--Login modal-->
         <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">

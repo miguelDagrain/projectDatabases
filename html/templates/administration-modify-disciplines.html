@@ -2,51 +2,130 @@
 
 {% block administration_content %}
 
+        <script type="text/javascript" name="addDiscipline">
+        function performAddition() {
+            $("#add_discipline_form").on("submit", function (event) {
+                event.preventDefault();
+                var form = document.getElementById("add_discipline_form");
+                var formData = form["user"].value;
+                $.ajax({
+                    url: "{{ url_for("modify_disciplines") }}",
+                    type: "POST",
+                    data: {discip: form["user"].value}
+                }).done(function (data) {
+                    if (data === "true") {
+                        console.log("discipline added");
+                        $("#add_discipline").modal("hide");
+                        document.location.reload(true)
+                    }
+                    else if (data === "reactivated discipline") {
+                        var failed = document.getElementById("failed");
+                        failed.style.display = "block";
+                    }
+                    else {
+                        var failed = document.getElementById("failed");
+                        failed.style.display = "block";
+                    }
+                });
+            });
+        }
+    </script>
+
     <h1>{{ _('Modify Disciplines') }}</h1>
 
     <h2 style="margin-top:2%;">{{ _('Add Discipline') }}</h2>
 
-    <form class="administration-form" action="{{ url_for('modify_disciplines') }}" method="post">
+    <button class="page-content-button" data-toggle="modal"
+            data-target="#add_discipline">{{ _('add discipline') }}</button>
 
-        <label for="administration-form-name">{{ _('New discipline') }}:</label>
-        <input type="text" id="administration-form-name" name="Name">
-
-        <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
-
-    </form>
-
+    <div class="modal fade" id="add_discipline" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <form method="post" id="add_discipline_form">
+                                <div class="alert alert-danger" id="failed" style="display:none">
+                                    {{ _('adding discipline failed') }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="user" style="margin-bottom: 5px">{{ _('Discipline name') }}</label>
+                                    <input id="user" class="form-control" type="text"
+                                           placeholder="{{ _('Name of new discipline') }}"
+                                           required>
+                                </div>
+                            </form>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" form="add_discipline_form" class="btn btn-primary"
+                                    onclick="performAddition()">{{ _('add') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
     <h2 style="margin-top:2%;">{{ _('Remove Discipline') }}</h2>
 
-    <form class="administration-form" action="{{ url_for('modify_disciplines') }}" method="post">
+    <button class="page-content-button" data-toggle="modal"
+            data-target="#remove_discipline">{{ _('remove discipline') }}</button>
+    <div class="modal fade" id="remove_discipline" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                                <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
+                            <div class="dropdown" style="display: inline-block;width:60%;">
+                            <select name="Discipline" id="administration-form-disciplines">
 
-        <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
-        <div class="dropdown">
-            <select name="Discipline" id="administration-form-disciplines">
+                                <option value="0">{{ _('All') }}</option>
 
-                <option value="0">{{ _('All') }}</option>
+                                <script>
+                                    var iter = 0;
+                                </script>
 
-                <script>
-                    var iter = 0;
-                </script>
+                                {% for discip in r_disciplines %}
 
-                {% for discip in r_disciplines %}
+                                    <option value="" id="noValueDis">{{ discip }}</option>
 
-                    <option value="" id="noValueDis">{{ discip }}</option>
+                                    <script>
+                                        document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                                        document.getElementById("noValueDis").removeAttribute("id");
+                                        iter++;
+                                    </script>
 
-                    <script>
-                        document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
-                        document.getElementById("noValueDis").removeAttribute("id");
-                        iter++;
-                    </script>
-
-                {% endfor %}
-
-            </select>
-        </div>
-
-        <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
-
-    </form>
+                                {% endfor %}
+                            </select>
+                            </div>
+                            <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                        </div>
+                    </div>
+                </div>
+{#    <form class="administration-form" action="{{ url_for('remove_disciplines') }}" method="post">#}
+{##}
+{#        <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>#}
+{#        <div class="dropdown" style="display: inline-block;width:60%;">#}
+{#            <select name="Discipline" id="administration-form-disciplines">#}
+{##}
+{#                <option value="0">{{ _('All') }}</option>#}
+{##}
+{#                <script>#}
+{#                    var iter = 0;#}
+{#                </script>#}
+{##}
+{#                {% for discip in r_disciplines %}#}
+{##}
+{#                    <option value="" id="noValueDis">{{ discip }}</option>#}
+{##}
+{#                    <script>#}
+{#                        document.getElementById("noValueDis").setAttribute("value", iter.toString(10));#}
+{#                        document.getElementById("noValueDis").removeAttribute("id");#}
+{#                        iter++;#}
+{#                    </script>#}
+{##}
+{#                {% endfor %}#}
+{##}
+{#            </select>#}
+{#        </div>#}
+{##}
+{#        <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">#}
+{##}
+{#    </form>#}
 
 {% endblock administration_content %}
 

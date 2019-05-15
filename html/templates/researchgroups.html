@@ -1,29 +1,12 @@
-{% extends "layout.html" %}
-{% block title %}{{ _('Research groups') }}{% endblock title %}
+{% extends "administration.html" %}
 
-{% block stylesheets %}
+{% block table_style %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar-style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/content-style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/research-group-table-style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdownSelection.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/administration-form.css') }}">
 
-{% endblock stylesheets %}
+{% endblock table_style %}
 
-
-{% block scripts %}
-
-    <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/multi-select.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dropdownMenus.js') }}"></script>
-
-{% endblock scripts %}
-
-{% block body %}
-
-    <div class="page-content">
+{% block administration_content %}
 
         <h1>{{ _('Research groups') }}</h1>
 
@@ -131,10 +114,4 @@
             </tbody>
         </table>
 
-    </div>
-
-
-    <script>setUpDropdowns()</script>
-    <script>setUpMultiSelection()</script>
-
-{% endblock body %}
+{% endblock administration_content %}

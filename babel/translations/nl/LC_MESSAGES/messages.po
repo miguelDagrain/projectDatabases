@@ -110,9 +110,25 @@ msgstr "medewerkers aanpassen"
 msgid "modify disciplines"
 msgstr "disciplines aanpassen"
 
+#: html/templates/administration.html:89
+msgid "add discipline"
+msgstr "disciplines toevoegen"
+
+#: html/templates/administration.html:90
+msgid "remove discipline"
+msgstr "disciplines verwijderen"
+
 #: html/templates/administration.html:39
 msgid "modify types"
 msgstr "types aanpassen"
+
+#: html/templates/administration.html:91
+msgid "add type"
+msgstr "types toevoegen"
+
+#: html/templates/administration.html:92
+msgid "remove type"
+msgstr "types verwijderen"
 
 #: html/templates/bookmarks.html:34 html/templates/layout.html:138
 msgid "Bookmarks"
