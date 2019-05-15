@@ -133,7 +133,8 @@ function addProject() {
 
     request.done(function (data) {
         if (data.result) { //check if true is returned
-            window.location.replace($SCRIPT_ROOT + '/projects'); //this wil call the get
+            $('#modal-form-project').modal('hide'); //sluit de modal
+            window.location.replace($SCRIPT_ROOT + '/projects'); //this wil call the get, empty inputs of modal
         } else {
             var url = new URL($SCRIPT_ROOT + '/projects');
             url.searchParams.append("error", true);

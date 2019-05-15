@@ -687,6 +687,23 @@ class ProjectAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save projectType!\n%s' % error)
 
+    def add_projectDiscipline(self, projectID, discipline):
+        """
+        adds a new discipline to a project
+        :param projectID: the id of the project
+        :param discipline: teh discipline you want to add
+        """
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select * from projectDiscipline where discipline=%s and projectID=%s',
+                           (str(discipline), projectID))
+            if cursor.rowcount == 0:
+                cursor.execute('insert into projectDiscipline values(%s, %s)', (projectID, str(discipline)))
+                self.dbconnect.commit()
+        except (Exception, self.dbconnect.get_error()) as error:
+            self.dbconnect.rollback()
+            raise Exception('Unable to save projectDiscipline!\n%s' % error)
+
     def get_projectPromotors(self, projectID):
         """
         gets all the promotors for a certain project
@@ -1174,6 +1191,8 @@ class ProjectAccess:
                 self.add_projectResearchgroup(proj.ID, i)
             for i in proj.extern_employees:
                 self.add_externEmployee(proj.ID,i)
+            for i in proj.discipline:
+                self.add_projectDiscipline(proj.ID,i)
 
             self.dbconnect.commit()
         except (Exception, self.dbconnect.get_error()) as error:

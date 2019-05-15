@@ -459,6 +459,8 @@ def add_project():
 
     # Assign research group ID's
     for researchGroupNr in researchGroupNrs:
+        if int(researchGroupNr) == 0:
+            continue
         project.researchGroup.append(int(researchGroupNr))
 
     # Create dutch document
@@ -484,11 +486,16 @@ def add_project():
     # Append types to the project
     typeOptions = access.get_projectType()
     for typeNr in typeNrs:
+        if int(typeNr) == 0:
+            continue
         project.type.append(typeOptions[int(typeNr) - 1])
 
     # Append disciplines to the project
+    disciplineOptions = access.get_disciplines()
     for disciplineNr in disciplineNrs:
-        project.discipline.append(int(disciplineNr))
+        if int(disciplineNr) == 0:
+            continue
+        project.discipline.append(disciplineOptions[int(disciplineNr) - 1])
 
     # Fetch all employees from the database
     employeeOptions = access.get_employees()
@@ -535,7 +542,7 @@ def add_project():
 
     # Finalize project and add it to the database
     access.add_project(project)
-    findTag(project)
+    # findTag(project)
 
     # Return result to javascript
     return jsonify(result=True)
