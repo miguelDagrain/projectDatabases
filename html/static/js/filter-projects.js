@@ -16,6 +16,7 @@ function filterProjects(){
     if (sq.length == 0){
         tokens = []
     }
+    var relevant=false;
 
     document.getElementById("include_title");
 
@@ -27,6 +28,7 @@ function filterProjects(){
                 // Check in title
                 if (countOccurances(obj[i].title, tokens[j])) {
                     obj[i].relevance++;
+                    relevant=true;
 
                 }
             }
@@ -43,6 +45,7 @@ function filterProjects(){
                         if (i != "total") {
                             var div = (Object.keys(wordTable[word]).length -1);
                             obj[i].relevance += wordTable[word][i] / (wordTable[word]["total"] * div)
+                            relevant=true;
                         }
 
                     }
@@ -59,6 +62,7 @@ function filterProjects(){
                     for (var j in promoters[i]["projects"]){
                         if (obj.hasOwnProperty( promoters[i]["projects"][j])){
                             obj[promoters[i]["projects"][j]].relevance ++;
+                            relevant=true;
                         }
                     }
                 }
@@ -161,8 +165,17 @@ function filterProjects(){
         }
     }
 
-    // Sort by relevance
-    result.sort(function(a, b){return b.relevance - a.relevance});
+    // if you are searching on something then Sort by relevance
+    // if not then sort by clickrelevance which is a value that depends on your previous clicked projects, this only matters with students
+    if(relevant) {
+        result.sort(function (a, b) {
+            return b.relevance - a.relevance
+        });
+    }else{
+        result.sort(function (a, b) {
+            return b.clickRelevance - a.clickRelevance
+        });
+    }
 
     // Update page content
     var tableList = document.getElementById("project_list");

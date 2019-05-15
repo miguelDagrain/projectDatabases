@@ -24,6 +24,7 @@ from TagCalculator import findTags
 from TagCalculator import findTag
 from MailService import MailService
 from config import config_data
+from RelevanceCalculator import RelevanceCalculator
 
 from helperFunc import *
 
@@ -364,8 +365,11 @@ def show_projects():
     promoters = access.get_promotors_and_associated_projects()
 
     #print(promoters, file=sys.stdout)
-
-
+    rc=None
+    su = current_user
+    if su.is_authenticated:
+        if su.session.EORS is EORS.STUDENT:
+            rc=RelevanceCalculator(su.session.ID)
     for proj in projects:
         researchGroupNames = []
         for rg in proj.researchGroup:
@@ -386,9 +390,15 @@ def show_projects():
             if (tempDescLines != None):
                 firstDescLines = tempDescLines.group() + " ..."
 
-        pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
+        if(rc!=None):
+            pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,"clickRelevance":rc.calculateProjectWeighting(proj.tag),
                  "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
                  "registeredStudents": proj.registeredStudents, "description": firstDescLines}
+        else:
+            pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,"clickRelevance": 1,
+                     "disciplines": disciplineNames, "researchGroup": researchGroupNames,
+                     "maxStudents": proj.maxStudents,
+                     "registeredStudents": proj.registeredStudents, "description": firstDescLines}
 
         #print(proj.tag[0], file=sys.stdout)
 
@@ -409,6 +419,7 @@ def show_projects():
                     words[w]["total"] += 1
 
         projData[proj.ID] = pjson
+
 
     return render_template("projects.html", r_researchGroups=researchGroups,
                            r_disciplines=disciplines, r_types=types, page="projects",
@@ -505,6 +516,7 @@ def add_project():
     # Add tags to the project
     project.tag = list(tags)
 
+
     # Add related projects to the project
     # Fetch all projects from the database
     relatedProjectOptions = access.get_projects()
@@ -522,8 +534,7 @@ def add_project():
 
     # Finalize project and add it to the database
     access.add_project(project)
-    if(project.tag==None or len(project.tag)==0):
-        findTag(project)
+    findTag(project)
 
     # Return result to javascript
     return jsonify(result=True)

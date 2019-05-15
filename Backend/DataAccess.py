@@ -1805,6 +1805,20 @@ class SessionAccess:
         except Exception as e:
             print('couldnt get current time ' + str(e))
 
+    def get_StudentProjectClicks(self,studentID):
+        try:
+            cursor=self.dbconnect.get_cursor()
+            cursor.execute('execute getStudentProjectClicks(%s)',(str(studentID),))
+            projs=list()
+            for row in cursor:
+                projs.append(row)
+            return  projs
+        except Exception as e:
+            print('couldnt get student project clicks '+str(e))
+            return None
+
+
+
 
 class FullDataAccess(DocumentAccess, DomainAccess, EmployeeAccess, ProjectAccess, StudentAccess, ResearchGroupAccess):
     def __init__(self):
