@@ -132,7 +132,7 @@ def modify_homepage():
 
     return jsonify(result=True)
 
-
+@login_required(role='admin')
 @app.route("/researchgroups/")
 def show_research_groups():
     """
@@ -236,6 +236,7 @@ def apply_remove_group(id):
 
 
 @app.route("/people/", methods=["GET"])
+@login_required(role='admin')
 def show_people():
     """
     Shows a table of people on a webpage
@@ -715,10 +716,14 @@ def apply_filter_projects():
 @app.route("/administration/")
 @login_required(role='admin')
 def get_administration():
-    return render_template("administration.html", page="administration")
+    access = DomainAccess()
+    disciplines = access.get_disciplines()
+    types = access.get_projectType()
+    return render_template("administration.html", page="administration", r_disciplines = disciplines, r_types = types)
 
 
 @app.route("/administration/modify_disciplines", methods=["GET"])
+@login_required(role='admin')
 def form_modify_disciplines():
     """
     function that returns a form to modify disciplines
@@ -731,6 +736,7 @@ def form_modify_disciplines():
 
 
 @app.route("/administration/modify_disciplines", methods=["POST"])
+@login_required(role='admin')
 def modify_disciplines():
     """
     function that adds a discipline to the possible disciplines
@@ -740,24 +746,68 @@ def modify_disciplines():
     disciplines = access.get_alldisciplines()
     actives = access.get_disciplines()
 
-    value = request.form.get("Name")
-    if value:
-        if value in disciplines and value not in actives:
-            access.reactivate_discipline(value)
-        elif value not in disciplines:
-            access.add_discipline(value)
-    else:
-        value = request.form.get("Discipline")
-        if value:
-            discipline = disciplines[int(value)]
-            access.remove_discipline(discipline)
+    value = request.form["discip"]
+    try:
 
-    disciplines = access.get_disciplines()
+        if value:
+            if value in disciplines and value not in actives:
+                access.reactivate_discipline(value)
+                return 'reactivated discipline'
+            elif value not in disciplines:
+                access.add_discipline(value)
+                return 'true'
+    except:
+        return 'false'
+
+
+    # else:
+    #     value = request.form.get("Discipline")
+    #     if value:
+    #         discipline = disciplines[int(value)]
+    #         access.remove_discipline(discipline)
+    #
+    # disciplines = access.get_disciplines()
+    #
+    # return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=True)
+
+@app.route("/administration/modify_disciplines", methods=["POST"])
+@login_required(role='admin')
+def show_disciplines():
+    """
+    function that adds a discipline to the possible disciplines
+    :return: Rendered template of the administration-modify-disciplines with disciplines
+    """
+    access = DomainAccess()
+    disciplines = access.get_alldisciplines()
+    actives = access.get_disciplines()
+
 
     return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=True)
 
+@app.route("/administration/modify_disciplines", methods=["POST"])
+@login_required(role='admin')
+def remove_disciplines():
+    """
+    function that adds a discipline to the possible disciplines
+    :return: Rendered template of the administration-modify-disciplines with disciplines
+    """
+    access = DomainAccess()
+    disciplines = access.get_alldisciplines()
+    actives = access.get_disciplines()
+
+    value = request.form.get("Discipline")
+    try:
+            if value:
+                discipline = disciplines[int(value)]
+                access.remove_discipline(discipline)
+            return 'true'
+    except:
+        return 'false'
+
+
 
 @app.route("/administration/modify_types", methods=["GET"])
+@login_required(role='admin')
 def form_modify_types():
     """
     function that returns a form to modify types
@@ -772,6 +822,7 @@ def form_modify_types():
 
 
 @app.route("/administration/modify_types", methods=["POST"])
+@login_required(role='admin')
 def modify_types():
     """
     function that modifies
@@ -781,21 +832,42 @@ def modify_types():
     active = access.get_projectType()
     types = access.get_allprojectType()
 
-    value = request.form.get("Name")
-    if value:
-        if value in types and value not in active:
-            access.reactivate_projectType(value)
+    value = request.form["typ"]
+    try:
+        if value:
+            if value in types and value not in active:
+                access.reactivate_projectType(value)
+                return 'reactivated type'
 
-        elif value not in types:
-            access.add_projectType(value)
-    else:
+            elif value not in types:
+                access.add_projectType(value)
+                return'true'
+
+    except:
+        return 'false'
+    # disciplines = access.get_disciplines()
+
+@app.route("/administration/modify_types", methods=["POST"])
+@login_required(role='admin')
+def remove_types():
+    """
+    function that modifies
+    :return:
+    """
+    access = DomainAccess()
+    active = access.get_projectType()
+    types = access.get_allprojectType()
+
+    value = request.form.get("Name")
+    try:
         value = request.form.get("Type")
         if value:
             type = types[int(value)]
             access.remove_type(type)
+            return 'true'
+    except:
+        return 'false'
 
-    # disciplines = access.get_disciplines()
-    return render_template("administration-modify-types.html", send=True)
 
 
 # @app.errorhandler(404)
