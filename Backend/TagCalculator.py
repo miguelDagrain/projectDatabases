@@ -199,10 +199,10 @@ def findTags(): # =========================================================
     for i,proj in enumerate(projects):
         if(proj.active):
             disciplines=""
-            for i in proj.discipline:
-                disciplines+=i
-            for i in projects[i].desc:
-                lines.append([str(proj.ID),proj.title,i.text,disciplines,str(proj.maxStudents),str(proj.active)])
+            for j in proj.discipline:
+                disciplines+=j[0]
+            for j in projects[i].desc:
+                lines.append([str(proj.ID),proj.title,j.text,disciplines,str(proj.maxStudents),str(proj.active)])
         project_ids[len(lines)-1] = str(proj.ID)
 
 

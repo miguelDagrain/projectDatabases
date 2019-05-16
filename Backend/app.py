@@ -39,9 +39,16 @@ app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+#setting up the database connection
+#setting up the database connection
+ip = config_data['ip']
+port = config_data['port']
+# app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )
+dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
+                               dbhost=config_data['dbhost'])
 
 # uncomment this if you want to calculate tags
-# findTags()
+findTags()
 
 
 # overriding the login manager of flask login to support roles, inspired from
@@ -542,7 +549,7 @@ def add_project():
 
     # Finalize project and add it to the database
     access.add_project(project)
-    # findTag(project)
+    findTag(project)
 
     # Return result to javascript
     return jsonify(result=True)
@@ -1148,13 +1155,7 @@ def remove_project():
 
 
 if __name__ == "__main__":
-    ip = config_data['ip']
-    port = config_data['port']
-    # temp=access.get_researchGroupOnID(1)
-    # temp2=access.get_projectPromotors(1)
-    # app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )
-    dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
-                               dbhost=config_data['dbhost'])
+
 
     # mailer = MailService()
     #

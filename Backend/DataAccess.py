@@ -1078,53 +1078,6 @@ class ProjectAccess:
         except:
             self.dbconnect.rollback()
             raise Exception('unable to get project filter data')
-            raise Exception('unable to get project filter data')
-
-    # def filter_projects(self, searchQuery="", type="", discipline=None, researchGroup="", status=0):
-    #     try:
-    #         cursor = self.dbconnect.get_cursor()
-    #
-    #         sql = "SELECT * FROM project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup " \
-    #               "WHERE p.title LIKE %(searchQueryQ)s "
-    #
-    #         if researchGroup != "":
-    #             sql += "AND name = %(researchGroupQ)s "
-    #         # hier is een fout typeQ wordt nooit vervangen
-    #         # todo: implementeren van type in sql.
-    #         # if (type != ""):
-    #         #     sql += "AND type = %(typeQ)s "
-    #
-    #         disciplineValue = ""
-    #
-    #         if discipline is not None:
-    #
-    #             sql += "AND discipline IN ( "
-    #
-    #             for iterDiscipline in discipline:
-    #                 sql += "'" + iterDiscipline + "', "
-    #
-    #             sql = sql[0:len(sql) - 2]
-    #             sql += " ) "
-    #
-    #         # gemeenschappelijke sql uit de if else structuur gehaald.
-    #         if status == 1:
-    #
-    #             sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) < maxStudents) "
-    #
-    #         elif status == 2:
-    #
-    #             sql += "AND ((SELECT COUNT(student) FROM project INNER JOIN projectRegistration ON project.projectID=projectRegistration.project) >= maxStudents) "
-    #
-    #         cursor.execute(sql, dict(searchQueryQ="%" + searchQuery + "%", researchGroupQ=researchGroup))
-    #
-    #         projects = list()
-    #         for row in cursor:
-    #             project = self.get_project(row[0])
-    #             projects.append(project)
-    #         return projects
-    #     except:
-    #         self.dbconnect.rollback()
-    #         raise Exception('unable to filter employees')
 
     def get_promotors_and_associated_projects(self):
         """
