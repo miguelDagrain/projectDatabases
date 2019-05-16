@@ -33,7 +33,7 @@
                 var form = document.getElementById("add_student_form");
                 var formData = form["user"].value;
                 $.ajax({
-                    url: "{{ url_for("add_student",id=r_project.ID) }}",
+                    url: "{{ url_for("assign_student",id=r_project.ID) }}",
                     type: "POST",
                     data: {sid: form["user"].value}
                 }).done(function (data) {
