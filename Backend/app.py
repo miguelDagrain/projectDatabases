@@ -21,6 +21,8 @@ from ResearchGroup import ResearchGroup
 from Session import *
 from User import *
 from config import config_data
+from TagCalculator import findTags
+from TagCalculator import findTag
 
 # from apscheduler.schedulers.background import BackgroundScheduler
 
