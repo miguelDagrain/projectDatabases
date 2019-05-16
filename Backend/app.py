@@ -1,10 +1,8 @@
+import datetime
 import json
 import re
 import sys
-import datetime
-import os
 from functools import wraps
-# from apscheduler.schedulers.background import BackgroundScheduler
 
 from flask import *
 from flask.templating import render_template
@@ -15,18 +13,16 @@ from werkzeug.utils import secure_filename
 
 from DataAccess import *
 from Document import *
-from Project import Project
 from Employee import Employee
+from MailService import MailService
+from Project import Project
+from RelevanceCalculator import RelevanceCalculator
 from ResearchGroup import ResearchGroup
 from Session import *
 from User import *
-from TagCalculator import findTags
-from TagCalculator import findTag
-from MailService import MailService
 from config import config_data
-from RelevanceCalculator import RelevanceCalculator
 
-from helperFunc import *
+# from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__, template_folder="../html/templates/", static_folder="../html/static")
 app_data = {'app_name': "newName"}
@@ -51,9 +47,14 @@ dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbu
 findTags()
 
 
-# overriding the login manager of flask login to support roles, inspired from
-# https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes
 def login_required(role="ANY"):
+    """
+    Overrides the default login manager of Flask-Login to support roles.
+    https://stackoverflow.com/questions/15871391/implementing-flask-login-with-multiple-user-classes
+    :param role: role of the user that logged in
+    :return: function wrapper
+    """
+
     def wrapper(fn):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
@@ -85,6 +86,10 @@ def get_locale():
 
 @app.route("/")
 def index():
+    """
+    Redirect to home page on url /
+    :return: redirection to 'home' url
+    """
     return redirect(url_for("home"))
 
 
@@ -115,7 +120,7 @@ def home():
 @app.route("/home/", methods=["POST"])
 def modify_homepage():
     """
-    function to modify the home-page
+    Function to modify the homepage
     """
 
     if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
@@ -140,6 +145,7 @@ def modify_homepage():
 
     return jsonify(result=True)
 
+
 @login_required(role='admin')
 @app.route("/researchgroups/")
 def show_research_groups():
@@ -158,8 +164,7 @@ def show_research_groups():
 def add_research_group():
     """
     Adds a research group to the database
-    This function is called whenever the user uses the POST method on the
-    add research group page
+    This function is called whenever the user uses the POST method on the research group page
     :return: Rendered template of the administration-add-group with disciplines and a send message
     """
     if request.form.get("Name") is None:
@@ -176,11 +181,11 @@ def add_research_group():
     abbrev = request.form.get("Abbreviation")
     disciplineNr = request.form.get("Discipline")
     discipline = disciplines[int(disciplineNr)]
-    active = True  # active wordt gebruikt voor leesbaarheid
+    active = True  # active is used for readability
     address = request.form.get("Address")
     telephone = request.form.get("Telephone")
     # desc = request.form.get("Description")
-    desc = list()  # TODO : dit aanpassen zodat het nieuwe descripties kan aanemen (nu ga ik het gewoon document 1 eraan kopellen)
+    desc = list()
 
     r = ResearchGroup(None, name, abbrev, discipline, active, address, telephone, desc)
     Raccess = ResearchGroupAccess()
@@ -192,9 +197,10 @@ def add_research_group():
 @app.route("/researchgroups/<int:id>", methods=["GET"])
 def group_page(id):
     """
-    Renders a template with the description of a project
+    Renders a template with the research group specific information.
+    This page shows the projects connected to the research group and its members
     :param id: the id of the researchgroup
-    :return: rendered template of the group
+    :return: rendered template of the groups page
     """
     Racces = ResearchGroupAccess()
     researchGroup = Racces.get_singleResearchGroupOnID(id)
@@ -232,9 +238,9 @@ def group_page(id):
 @app.route("/researchgroups/<int:id>", methods=["POST"])
 def apply_remove_group(id):
     """
-    function that removes a research group and redirects to the researchgroups page
+    Function that removes a research group and redirects to the research groups page
     :param id: id of the group to be removed
-    :return: redirection to researchgroups page
+    :return: redirection to research groups page
     """
 
     Racces = ResearchGroupAccess()
@@ -247,7 +253,7 @@ def apply_remove_group(id):
 @login_required(role='admin')
 def show_people():
     """
-    Shows a table of people on a webpage
+    Shows a table of people on a html page
     :return: Rendered template of people HTML
     """
     Raccess = ResearchGroupAccess()
@@ -289,9 +295,9 @@ def show_people():
 @app.route("/people/", methods=["POST"])
 def add_staff():
     """
-    function that adds a staff member to the database, is called everytime the user uses the POST method on the
-    add staf form of the people page
-    :return: redirection to show people
+    Function that adds a staff member to the database, is called every time the user uses the POST method on the
+    add staff form of the people page
+    :return: redirection to show people page
     """
     Raccess = ResearchGroupAccess()
     researchGroups = Raccess.get_researchGroups()
@@ -308,7 +314,7 @@ def add_staff():
     roleOptions = Daccess.get_intextOrigin()
     roleNr = request.form.get("Role")
     role = roleOptions[int(roleNr)]
-    active = True  # active wordt gebruikt voor leesbaarheid
+    active = True  # active is used for readability
     promotor = True if request.form.get("Promotor") == 'on' else False
 
     emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
@@ -320,7 +326,7 @@ def add_staff():
 @app.route("/people/<int:id>", methods=["GET"])
 def get_person(id):
     """
-    function that return a tab of the person whose id agrees with the given id
+    Function that return a tab of the person whose id equals the parameter id
     :param id: id of the person whose tab we like to visit
     :return: rendered template of person.html with the person as attribute
     """
@@ -351,7 +357,7 @@ def get_person(id):
 @app.route("/people/<int:id>", methods=["POST"])
 def apply_remove_person(id):
     """
-    function that removes the person on whose id agrees with the given id
+    function that removes the person on whose id equals the parameter id
     :param id: id of the person to be removed
     :return: redirection to show_people
     """
@@ -363,6 +369,10 @@ def apply_remove_person(id):
 
 @app.route("/projects/", methods=["GET"])
 def show_projects():
+    """
+    Shows a list of all active projects on a HTML page
+    :return: Rendered template of projects.html
+    """
     access = FullDataAccess()
     projects = access.get_project_filter_data()
     researchGroups = access.get_researchGroups()
@@ -372,12 +382,11 @@ def show_projects():
     words = {}
     promoters = access.get_promotors_and_associated_projects()
 
-    #print(promoters, file=sys.stdout)
-    rc=None
+    rc = None
     su = current_user
     if su.is_authenticated:
         if su.session.EORS is EORS.STUDENT:
-            rc=RelevanceCalculator(su.session.ID)
+            rc = RelevanceCalculator(su.session.ID)
     for proj in projects:
         researchGroupNames = []
         for rg in proj.researchGroup:
@@ -398,17 +407,18 @@ def show_projects():
             if (tempDescLines != None):
                 firstDescLines = tempDescLines.group() + " ..."
 
-        if(rc!=None):
-            pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,"clickRelevance":rc.calculateProjectWeighting(proj.tag),
-                 "disciplines": disciplineNames, "researchGroup": researchGroupNames, "maxStudents": proj.maxStudents,
-                 "registeredStudents": proj.registeredStudents, "description": firstDescLines}
-        else:
-            pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,"clickRelevance": 1,
+        if rc is not None:
+            pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
+                     "clickRelevance": rc.calculateProjectWeighting(proj.tag),
                      "disciplines": disciplineNames, "researchGroup": researchGroupNames,
                      "maxStudents": proj.maxStudents,
                      "registeredStudents": proj.registeredStudents, "description": firstDescLines}
-
-        #print(proj.tag[0], file=sys.stdout)
+        else:
+            pjson = {"ID": proj.ID, "title": proj.title, "status": proj.active, "type": typeNames, "tag": proj.tag,
+                     "clickRelevance": 1,
+                     "disciplines": disciplineNames, "researchGroup": researchGroupNames,
+                     "maxStudents": proj.maxStudents,
+                     "registeredStudents": proj.registeredStudents, "description": firstDescLines}
 
         for d in proj.desc:
             textstr = d.text
@@ -428,7 +438,6 @@ def show_projects():
 
         projData[proj.ID] = pjson
 
-
     return render_template("projects.html", r_researchGroups=researchGroups,
                            r_disciplines=disciplines, r_types=types, page="projects",
                            alt=json.dumps(projData, default=lambda x: x.__dict__),
@@ -436,8 +445,14 @@ def show_projects():
                            promoters=json.dumps(promoters, default=lambda x: x.__dict__))
 
 
+# Todo try catch and return result=false if exception encountered
 @app.route("/projects/", methods=["POST"])
 def add_project():
+    """
+    Adds a project to the database. The project data is stored in a form in the request.
+    :return: json formatted result (true or false)
+    """
+
     # Get an access class
     access = FullDataAccess()
 
@@ -531,7 +546,6 @@ def add_project():
     # Add tags to the project
     project.tag = list(tags)
 
-
     # Add related projects to the project
     # Fetch all projects from the database
     relatedProjectOptions = access.get_projects()
@@ -555,9 +569,13 @@ def add_project():
     return jsonify(result=True)
 
 
-# TODO meerdere promotors kunnen in 1 project, geeft nu enkel 1 weer
 @app.route("/projects/<int:id>", methods=['GET'])
 def project_page(id):
+    """
+    Creates a project specific page for the project with ID = id.
+    :param id: ID of the project
+    :return: Rendered template of project.html
+    """
     su = current_user
     if su.is_authenticated:
         if su.session.EORS is EORS.STUDENT:
@@ -615,7 +633,12 @@ def project_page(id):
 
 
 @app.route('/projects/<int:id>/add_student', methods=['POST'])
-def add_student(id):
+def assign_student(id):
+    """
+    Assigns a student to a project
+    :param id: Project to assign the student to
+    :return: true or false (as string) false if encountered an exception, else true
+    """
     sid = request.form["sid"]
     try:
         if len(sid) != 8:
@@ -646,25 +669,44 @@ def add_student(id):
 
 @app.route('/download/<string:name>', methods=['GET'])
 def download(name):
+    """
+    Creates the possibility to download stored files.
+    :param name: Name of the file to download
+    :return: # todo ?
+    """
     return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name, as_attachment=True)
 
 
 @app.route('/download_homepage/<string:name>', methods=['GET'])
 def download_homepage(name):
+    # todo used?
     return send_from_directory(directory=app.config['HOME_PAGE_FOLDER'], filename=name, as_attachment=True)
 
 
 @app.route("/projects/<int:id>", methods=["POST"])
+@login_required(role="employee")
 def apply_remove_project(id):
+    """
+    Removes a project from the database
+    :param id: ID of the project that needs to be removed
+    :return:
+    """
     Paccess = ProjectAccess()
     Paccess.remove_project(id)
 
     return redirect(url_for('show_projects'))
 
 
+# todo empty?
 @login_required(role='student')
 @app.route("/projects/<int:id>/<int:empty>", methods=["GET"])
 def add_bookmark(id, empty):
+    """
+    Adds a bookmark for the currently logged user. (needs role student)
+    :param id: ID of the project to create a bookmark for
+    :param empty: todo
+    :return: redirect to project page
+    """
     student = current_user.session.ID
     Access = StudentAccess()
     Access.add_bookmark(id, student)
@@ -674,6 +716,10 @@ def add_bookmark(id, empty):
 @login_required(role='student')
 @app.route("/bookmarks/", methods=['GET'])
 def bookmark_page():
+    """
+    Creates a bookmark page based on the bookmarks of the student
+    :return: Rendered template of bookmarks.html
+    """
     student = current_user.session.ID
 
     Access = StudentAccess()
@@ -695,6 +741,10 @@ def bookmark_page():
 @app.route("/delete-bookmark/", methods=['POST'])
 @login_required(role='student')
 def remove_bookmark():
+    """
+    Removes a bookmark.
+    :return: Redirection to bookmark page
+    """
     project_id = request.form['project-id']
     student_id = current_user.session.ID
     pAccess = ProjectAccess()
@@ -704,6 +754,7 @@ def remove_bookmark():
 
 @app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
+    # TODO nog gebruikt?
     # if request.args.get("Search_query") is None:
     #     return show_projects()
     # else:
@@ -741,17 +792,22 @@ def apply_filter_projects():
 @app.route("/administration/")
 @login_required(role='admin')
 def get_administration():
+    """
+    Creates an administration page. To view this page, the logged user needs the admin role.
+    :return: Rendered template of administration.html
+    """
     access = DomainAccess()
     disciplines = access.get_disciplines()
     types = access.get_projectType()
-    return render_template("administration.html", page="administration", r_disciplines = disciplines, r_types = types)
+    return render_template("administration.html", page="administration", r_disciplines=disciplines, r_types=types)
 
 
 @app.route("/administration/modify_disciplines", methods=["GET"])
 @login_required(role='admin')
 def form_modify_disciplines():
     """
-    function that returns a form to modify disciplines
+    Function that returns a form to modify disciplines.
+    The logged user needs the admin role.
     :return: Rendered template of the administration-modify-disciplines with disciplines
     """
     access = DomainAccess()
@@ -764,8 +820,8 @@ def form_modify_disciplines():
 @login_required(role='admin')
 def modify_disciplines():
     """
-    function that adds a discipline to the possible disciplines
-    :return: Rendered template of the administration-modify-disciplines with disciplines
+    Function that adds a discipline to the possible disciplines.
+    :return: True if no exception is encountered, else false (both in string representation)
     """
     access = DomainAccess()
     disciplines = access.get_alldisciplines()
@@ -773,7 +829,6 @@ def modify_disciplines():
 
     value = request.form["discip"]
     try:
-
         if value:
             if value in disciplines and value not in actives:
                 access.reactivate_discipline(value)
@@ -785,73 +840,32 @@ def modify_disciplines():
         return 'false'
 
 
-    # else:
-    #     value = request.form.get("Discipline")
-    #     if value:
-    #         discipline = disciplines[int(value)]
-    #         access.remove_discipline(discipline)
-    #
-    # disciplines = access.get_disciplines()
-    #
-    # return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=True)
-
-@app.route("/administration/modify_disciplines", methods=["POST"])
-@login_required(role='admin')
-def show_disciplines():
-    """
-    function that adds a discipline to the possible disciplines
-    :return: Rendered template of the administration-modify-disciplines with disciplines
-    """
-    access = DomainAccess()
-    disciplines = access.get_alldisciplines()
-    actives = access.get_disciplines()
-
-
-    return render_template("administration-modify-disciplines.html", r_disciplines=disciplines, send=True)
-
 @app.route("/administration/modify_disciplines", methods=["POST"])
 @login_required(role='admin')
 def remove_disciplines():
     """
-    function that adds a discipline to the possible disciplines
-    :return: Rendered template of the administration-modify-disciplines with disciplines
+    Function that removes a discipline to the possible disciplines
+    :return: True if no exception is encountered, else false (both in string representation)
     """
     access = DomainAccess()
     disciplines = access.get_alldisciplines()
-    actives = access.get_disciplines()
 
     value = request.form.get("Discipline")
     try:
-            if value:
-                discipline = disciplines[int(value)]
-                access.remove_discipline(discipline)
-            return 'true'
+        if value:
+            discipline = disciplines[int(value)]
+            access.remove_discipline(discipline)
+        return 'true'
     except:
         return 'false'
-
-
-
-@app.route("/administration/modify_types", methods=["GET"])
-@login_required(role='admin')
-def form_modify_types():
-    """
-    function that returns a form to modify types
-    :return: Rendered template of the administration-modify-templates with types
-    """
-    access = DomainAccess()
-    types = access.get_projectType()
-
-    return render_template("administration-modify-types.html", r_types=types, send=False)
-    # access = DomainAccess
-    # types = access.get_projectType()
 
 
 @app.route("/administration/modify_types", methods=["POST"])
 @login_required(role='admin')
 def modify_types():
     """
-    function that modifies
-    :return:
+    Function that modifies
+    :return: True if no exception is encountered, else false (both in string representation)
     """
     access = DomainAccess()
     active = access.get_projectType()
@@ -866,24 +880,21 @@ def modify_types():
 
             elif value not in types:
                 access.add_projectType(value)
-                return'true'
-
+                return 'true'
     except:
         return 'false'
-    # disciplines = access.get_disciplines()
+
 
 @app.route("/administration/modify_types", methods=["POST"])
 @login_required(role='admin')
 def remove_types():
     """
-    function that modifies
-    :return:
+    Function that removes a type
+    :return: True if no exception is encountered, else false (both in string representation)
     """
     access = DomainAccess()
-    active = access.get_projectType()
     types = access.get_allprojectType()
 
-    value = request.form.get("Name")
     try:
         value = request.form.get("Type")
         if value:
@@ -894,19 +905,22 @@ def remove_types():
         return 'false'
 
 
-
-# @app.errorhandler(404)
-# def handle_404(e):
-#     '''
-#     Handles error 404 (missing page)
-#     :param e: Exception container
-#     :return: Rendered template of the 404.html file
-#     '''
-#     return render_template("404.html"), 404
+@app.errorhandler(404)
+def handle_404(e):
+    """
+    Handles error 404 (missing page)
+    :param e: Exception container
+    :return: Rendered template of the 404.html file
+    """
+    return render_template("404.html"), 404
 
 
 @app.route("/lang/", methods=["GET"])
 def pick_language():
+    """
+    Sets the selected language and reload current page.
+    :return: response that redirects to the current page and sets the language cookie
+    """
     lang = request.args.get('send')
     url = request.args.get('url_redirect')
     resp = make_response(redirect(url))
@@ -914,10 +928,12 @@ def pick_language():
     return resp
 
 
-# alles onder de check is om vragen uit javascript te beantwoorden met json (gegevens uit de database), het
-# is niet de bedoeling dat een je deze url gebruikt vanuit de website, dan zullen ze doorsturen naar de home page
 @app.route("/check/empl_names", methods=["GET"])
 def check_empl_names():
+    """
+    Used to create suggestions for employee names
+    :return: Suggestions for employee names
+    """
     Eaccess = EmployeeAccess()
     employees = Eaccess.get_employees()
 
@@ -936,6 +952,10 @@ def check_empl_names():
 
 @app.route("/check/empl_name_correct", methods=["GET"])
 def check_empl_name_correct():
+    """
+    Checks if an employee name is correct.
+    :return: True if correct, else false (jsonified)
+    """
     Eaccess = EmployeeAccess()
     employees = Eaccess.get_employees()
 
@@ -950,6 +970,10 @@ def check_empl_name_correct():
 
 @app.route("/check/project_titles", methods=["GET"])
 def check_project_titles():
+    """
+    Used to create suggestions for project titles
+    :return: Suggestions for project titles
+    """
     Paccess = ProjectAccess()
     projects = Paccess.get_projects()
 
@@ -968,6 +992,10 @@ def check_project_titles():
 
 @app.route("/check/project_title_correct", methods=["GET"])
 def check_project_title_correct():
+    """
+    Checks if a project title is correct
+    :return: True if correct, else false (jsonified)
+    """
     Paccess = ProjectAccess()
     projects = Paccess.get_projects()
 
@@ -982,6 +1010,11 @@ def check_project_title_correct():
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Loads a user
+    :param user_id: id of the user
+    :return: the loaded user
+    """
     eors = EORS.UNKNOWN
     if (user_id[0] == "S"):
         sa = SessionAccess()
@@ -1008,11 +1041,19 @@ def load_user(user_id):
 
 @login_manager.unauthorized_handler
 def unauthorized():
+    """
+    Redirect to home page if an unauthorized user tries to visit a page he can not see.
+    :return: redirection to home page
+    """
     return redirect(url_for('home', err="login_required"))
 
 
 @app.route('/login/', methods=['POST'])
 def login():
+    """
+    Logs a user in.
+    :return: True if user is logged in correctly, else false
+    """
     sa = SessionAccess()
     us = User(Session(None, 1, sa.get_CurentSQLTime(), EORS.UNKNOWN))
     username = request.form["username"]
@@ -1035,7 +1076,11 @@ def login():
 
 @app.route("/logout/", methods=['GET', 'POST'])
 def logout():
-    if (current_user.session.EORS == EORS.STUDENT):
+    """
+    Logs the user out.
+    :return: redirection to home page
+    """
+    if current_user.session.EORS == EORS.STUDENT:
         us = current_user
         sa = SessionAccess()
         sa.add_Session(us.session)
@@ -1047,16 +1092,29 @@ def logout():
 
 @app.route('/upload/')
 def upload():
+    """
+    Create template to upload files
+    :return: rendered template of uploader.html
+    """
     return render_template('uploader.html')
 
 
 def allowed_file(filename):
+    """
+    Determine if file extension is allowed
+    :param filename: filename
+    :return: true if the extension is allowed
+    """
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
+    """
+    Upload a file
+    :return: redirection to url
+    """
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -1073,13 +1131,12 @@ def upload_file():
             if not os.path.exists(app.config['UPLOAD_FOLDER'] + "test/"):
                 os.mkdir(app.config['UPLOAD_FOLDER'] + "test/")
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], "test/" + filename))
-
-            # return redirect(url_for('uploaded_file',filename=filename))
     return 'file uploaded successfully'
 
 
 @app.route('/showInterest/', methods=['POST'])
 def showInterest():
+    # todo used?
     # message = request.form["Message"]
     message = "ik zijn eens geinteresseerd"
     sender = "miguel.dagraine@student.uantwerpen.be"  # todo: huidige persoon ingelogd moet nog opgehaald worden
@@ -1094,6 +1151,10 @@ def showInterest():
 @app.route('/profile/')
 @login_required(role='employee')
 def emp_profile():
+    """
+    Creates a profile page for an employee.
+    :return: Rendered template of profile.html
+    """
     access = ProjectAccess()
     if current_user.session.EORS != EORS.EMPLOYEE:
         return redirect(url_for("index"))
@@ -1113,6 +1174,10 @@ def emp_profile():
 @app.route('/profile/', methods=['POST'])
 @login_required(role='employee')
 def change_project():
+    """
+    Changes a project
+    :return: redirect to employee profile
+    """
     # Fetch data from HTML
     project_id = request.form['project-id']
     new_title = request.form['project-title']
@@ -1149,6 +1214,10 @@ def change_project():
 @app.route('/profile/remove', methods=['POST'])
 @login_required(role='employee')
 def remove_project():
+    """
+    Removes a project from the database
+    :return: redirection to employee profile
+    """
     id = request.form['project-id']
     apply_remove_project(id)
     return redirect(url_for('emp_profile', removed=True))
@@ -1164,8 +1233,3 @@ if __name__ == "__main__":
     # scheduler.add_job(mailer.sendMailExtendingSecond(), trigger='cron', minute='0', hour='0', day='20', month='9',year='*')
     # scheduler.add_job(deactivate_projects(), trigger='cron', minute='0', hour='0', day='25', month='9',year='*')
     app.run(debug=True, host=ip, port=port)
-
-
-
-
-
