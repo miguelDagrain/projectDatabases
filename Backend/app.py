@@ -11,7 +11,15 @@ from flask_login import LoginManager
 from flask_login import login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
 
-from DataAccess import *
+from dbConnection import setConnection
+from documentAccess import DocumentAccess
+from domainAccess import DomainAccess
+from eployeeAccess import EmployeeAccess
+from projectAccess import ProjectAccess
+from researchGroupAccess import ResearchGroupAccess
+from sessionAccess import SessionAccess
+from studentAccess import StudentAccess
+
 from Document import *
 from Employee import Employee
 from MailService import MailService
@@ -42,11 +50,11 @@ login_manager.init_app(app)
 ip = config_data['ip']
 port = config_data['port']
 # app.run(debug=True, host=ip, port=port, ssl_context=('../cert.pem', '../key.pem') )
-dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
+setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                                dbhost=config_data['dbhost'])
 
 # uncomment this if you want to calculate tags
-findTags()
+# findTags()
 
 
 def login_required(role="ANY"):
@@ -207,7 +215,7 @@ def group_page(id):
     Racces = ResearchGroupAccess()
     researchGroup = Racces.get_singleResearchGroupOnID(id)
 
-    Eacces = EmployeeAccess()
+    Eacces = EmployeeAccess.EmployeeAccess()
     researchers = list()
     contactPersons = list()
     for empl in Eacces.get_employees():
@@ -262,12 +270,12 @@ def show_people():
     researchGroups = Raccess.get_researchGroups()
 
     if request.args.get("Name") is None:
-        Eaccess = EmployeeAccess()
+        Eaccess = EmployeeAccess.EmployeeAccess()
         people = Eaccess.get_employees()
 
 
     else:
-        Eaccess = EmployeeAccess()
+        Eaccess = EmployeeAccess.EmployeeAccess()
         people = Eaccess.get_employees()
         # researchGroupOptions = [""]
         #
@@ -320,7 +328,7 @@ def add_staff():
     promotor = True if request.form.get("Promotor") == 'on' else False
 
     emp = Employee(None, name, email, office, research_group, title, role, active, promotor)
-    Eaccess = EmployeeAccess()
+    Eaccess = EmployeeAccess.EmployeeAccess()
     Eaccess.add_employee(emp)
     return redirect(url_for('show_people'))
 
@@ -332,7 +340,7 @@ def get_person(id):
     :param id: id of the person whose tab we like to visit
     :return: rendered template of person.html with the person as attribute
     """
-    Eaccess = EmployeeAccess()
+    Eaccess = EmployeeAccess.EmployeeAccess()
     person = Eaccess.get_employee(id)
 
     Raccess = ResearchGroupAccess()
@@ -363,7 +371,7 @@ def apply_remove_person(id):
     :param id: id of the person to be removed
     :return: redirection to show_people
     """
-    Eaccess = EmployeeAccess()
+    Eaccess = EmployeeAccess.EmployeeAccess()
     Eaccess.remove_employee(id)
 
     return redirect(url_for('show_people'))
@@ -375,14 +383,17 @@ def show_projects():
     Shows a list of all active projects on a HTML page
     :return: Rendered template of projects.html
     """
-    access = FullDataAccess()
-    projects = access.get_project_filter_data()
-    researchGroups = access.get_researchGroups()
-    disciplines = access.get_disciplines()
-    types = access.get_projectType()
+    pa=ProjectAccess()
+    ra=ResearchGroupAccess()
+    da=DomainAccess()
+
+    projects = pa.get_project_filter_data()
+    researchGroups = ra.get_researchGroups()
+    disciplines = da.get_disciplines()
+    types = da.get_projectType()
     projData = {}
     words = {}
-    promoters = access.get_promotors_and_associated_projects()
+    promoters = pa.get_promotors_and_associated_projects()
 
     rc = None
     su = current_user
@@ -392,7 +403,7 @@ def show_projects():
     for proj in projects:
         researchGroupNames = []
         for rg in proj.researchGroup:
-            researchGroupNames.append(access.get_researchGroupsOnIDs(rg)[0].name)
+            researchGroupNames.append(ra.get_researchGroupsOnIDs(rg)[0].name)
 
         typeNames = []
         for tp in proj.type:
@@ -456,7 +467,9 @@ def add_project():
     """
 
     # Get an access class
-    access = FullDataAccess()
+    da=DomainAccess()
+    ea=EmployeeAccess.EmployeeAccess()
+    pa=ProjectAccess()
 
     # Acquire form data
     title = request.form["Title"]
@@ -508,21 +521,21 @@ def add_project():
     project.desc.append(docEn)
 
     # Append types to the project
-    typeOptions = access.get_projectType()
+    typeOptions = da.get_projectType()
     for typeNr in typeNrs:
         if int(typeNr) == 0:
             continue
         project.type.append(typeOptions[int(typeNr) - 1])
 
     # Append disciplines to the project
-    disciplineOptions = access.get_disciplines()
+    disciplineOptions = da.get_disciplines()
     for disciplineNr in disciplineNrs:
         if int(disciplineNr) == 0:
             continue
         project.discipline.append(disciplineOptions[int(disciplineNr) - 1])
 
     # Fetch all employees from the database
-    employeeOptions = access.get_employees()
+    employeeOptions = ea.get_employees()
 
     # Add promotors to the project
     # Create dictionary of promotor name and his id, used to easily append ID to the project
@@ -550,7 +563,7 @@ def add_project():
 
     # Add related projects to the project
     # Fetch all projects from the database
-    relatedProjectOptions = access.get_projects()
+    relatedProjectOptions = pa.get_projects()
     # Create dictionary of project title and its id, used to easily find the required ID
     related_project_id_dict = {relatedProjectOption.title: relatedProjectOption.ID for relatedProjectOption in
                                relatedProjectOptions}
@@ -564,7 +577,7 @@ def add_project():
     project.activeYear.append(now.year)
 
     # Finalize project and add it to the database
-    access.add_project(project)
+    pa.add_project(project)
     findTag(project)
 
     # Return result to javascript
@@ -584,7 +597,7 @@ def project_page(id):
             sa = SessionAccess()
             sa.add_sessionProjectClick(su.session.sessionID, id)
     Paccess = ProjectAccess()
-    Eaccess = EmployeeAccess()
+    ea = EmployeeAccess()
     Raccess = ResearchGroupAccess()
     project = Paccess.get_project(id)
     promotorsIDs = Paccess.get_projectPromotors(id)
@@ -608,12 +621,12 @@ def project_page(id):
 
     promotors = list()
     for promotorID in promotorsIDs:
-        promotors.append(Eaccess.get_employee(promotorID))
+        promotors.append(ea.get_employee(promotorID))
 
     staffIDs = Paccess.get_projectStaff(id)
     staff = list()
     for staffID in staffIDs:
-        staff.append(Eaccess.get_employee(staffID))
+        staff.append(ea.get_employee(staffID))
 
     extern = project.extern_employees
 
@@ -724,17 +737,18 @@ def bookmark_page():
     """
     student = current_user.session.ID
 
-    Access = StudentAccess()
-    fullAccess = FullDataAccess()
+    sa = StudentAccess()
+    pa = ProjectAccess()
+
 
     IDS = []
-    bookmarks = Access.get_studentBookmarks(student)
+    bookmarks = sa.get_studentBookmarks(student)
     for bookmark in bookmarks:
         IDS.append(bookmark.project)
 
     projecten = []
     for project_id in IDS:
-        project = fullAccess.get_project(project_id)
+        project = pa.get_project(project_id)
         projecten.append(project)
 
     return render_template("bookmarks.html", b_projecten=projecten, page="bookmarks", empty=(len(projecten) == 0))
@@ -936,7 +950,7 @@ def check_empl_names():
     Used to create suggestions for employee names
     :return: Suggestions for employee names
     """
-    Eaccess = EmployeeAccess()
+    Eaccess = EmployeeAccess.EmployeeAccess()
     employees = Eaccess.get_employees()
 
     given_letters = request.args.get("letters")
@@ -958,7 +972,7 @@ def check_empl_name_correct():
     Checks if an employee name is correct.
     :return: True if correct, else false (jsonified)
     """
-    Eaccess = EmployeeAccess()
+    Eaccess = EmployeeAccess.EmployeeAccess()
     employees = Eaccess.get_employees()
 
     given_name = request.args.get('input')

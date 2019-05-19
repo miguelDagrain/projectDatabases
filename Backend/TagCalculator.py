@@ -6,10 +6,11 @@
 
 from collections import defaultdict, Counter
 import math
-import codecs
-import csv
 import re
-from DataAccess import *
+
+from eployeeAccess import EmployeeAccess
+from projectAccess import ProjectAccess
+
 
 def findTag(project):
     # =========================================================

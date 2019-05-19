@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 # import ldap
-from DataAccess import EmployeeAccess
-from DataAccess import StudentAccess
+from DataAccess import eployeeAccess
+from DataAccess import studentAccess
 from config import config_data
 from ldapConfig import ldapConfig_data
 from Session import EORS
@@ -64,7 +64,7 @@ class User(UserMixin):
         try:
             ldap_conn.bind_s(user_dn, password)
             ldap_conn.unbind_s()
-            eacces = EmployeeAccess()
+            eacces = eployeeAccess()
 
             emp=eacces.get_employeeOnName(userName)
             if(emp!=None):
@@ -77,7 +77,7 @@ class User(UserMixin):
                 self.active = True
                 self.anon = False
                 return True
-            sacces = StudentAccess()
+            sacces = studentAccess()
             number=userName[1:]
             number="2"+number
             stu=sacces.get_studentOnStudentNumber(number)

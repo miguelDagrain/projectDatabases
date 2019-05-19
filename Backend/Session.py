@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 # enum to denote employee or student
 class EORS(Enum):
     UNKNOWN = 0

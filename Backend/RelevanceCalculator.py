@@ -1,4 +1,6 @@
-from DataAccess import *
+from projectAccess import ProjectAccess
+from sessionAccess import SessionAccess
+
 
 class RelevanceCalculator():
     """

@@ -15,7 +15,7 @@ dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbu
                               dbhost=config_data['dbhost'])
 ldapUsers= open("pdbldapRealUsers.ldif","w+")
 counter=1
-eacces=EmployeeAccess()
+eacces=eployeeAccess()
 eacces.dbconnect=dbConnection.connection
 employees=eacces.get_employees()
 for i in employees:
@@ -36,7 +36,7 @@ for i in employees:
                     "homeDirectory: USERDIRECTORY \n\n")
     counter+=1
 
-sacces=StudentAccess()
+sacces=studentAccess()
 sacces.dbconnect=dbConnection.connection
 students=sacces.get_students()
 for i in students:
