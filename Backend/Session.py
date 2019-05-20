@@ -26,14 +26,14 @@ class Session:
         self.EORS = EORS
 
     def get_clickedProjects(self, dbconnect):
-        access = __import__('DataAccess', fromlist=['ProjectAccess'])
-        pro = access.ProjectAccess(dbconnect)
+        from DataAccess.projectAccess import ProjectAccess
+        pro = ProjectAccess()
         projects = list()
         for i in self.clickedProjects:
             projects.append(pro.get_project(i))
         return projects
 
     def get_student(self, dbconnect):
-        access = __import__('DataAccess', fromlist=['StudentAccess'])
-        sa = access.StudentAccess(dbconnect)
-        return sa.get_student(self.studentID)
+        from DataAccess.studentAccess import StudentAccess
+        sa = StudentAccess()
+        return sa.get_student(self.ID)

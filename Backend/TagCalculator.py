@@ -185,6 +185,7 @@ def findTag(project):
             pa.add_projectTag(line[0], i)
     print('project tags calculated')
 
+
 def findTags(): # =========================================================
     # Data uit ESP
     # =========================================================
@@ -274,7 +275,6 @@ def findTags(): # =========================================================
 
     stop_words = set(stopwords_nl + stopwords_en)
 
-
     def get_normal_tokens(line):
         tokens = line.split()
         tokens_copy = []
@@ -282,7 +282,6 @@ def findTags(): # =========================================================
             if re.match('[a-z][a-z][a-z]+', token) and not (token in stop_words) and not (token in name_tokens):
                 tokens_copy.append(token)
         return tokens_copy
-
 
     # =========================================================
     # 4. Enumerate bi-grams, and count global frequency
@@ -297,7 +296,6 @@ def findTags(): # =========================================================
             bigram = token + '_' + token_next
             bigrams.add(bigram)
         return bigrams
-
 
     cnt_bigrams = Counter()
     for line in lines:

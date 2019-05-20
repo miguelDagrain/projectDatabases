@@ -24,9 +24,9 @@ class User(UserMixin):
     """
 
     def get_id(self):
-        if self.session!=None:
-            if self.session.EORS==EORS.EMPLOYEE:
-                return str("E"+str(self.session.ID))
+        if self.session is not None:
+            if self.session.EORS == EORS.EMPLOYEE:
+                return str("E" + str(self.session.ID))
             elif self.session.EORS == EORS.STUDENT:
                 return str("S" + str(self.session.sessionID))
             else:
@@ -62,14 +62,16 @@ class User(UserMixin):
         base_dn = "dc=" + ldapConfig_data["dcName"] + ",dc=" + ldapConfig_data['dcDomain']
         search_filter = "uid=" + userName
         try:
+            from DataAccess.employeeAccess import EmployeeAccess
+            from DataAccess.studentAccess import StudentAccess
             ldap_conn.bind_s(user_dn, password)
             ldap_conn.unbind_s()
-            eacces = employeeAccess()
+            eacces = EmployeeAccess()
 
-            emp=eacces.get_employeeOnName(userName)
-            if(emp!=None):
+            emp = eacces.get_employeeOnName(userName)
+            if emp is not None:
                 self.session.ID = emp.id
-                self.session.EORS=EORS.EMPLOYEE
+                self.session.EORS = EORS.EMPLOYEE
                 self.auth = True
                 self.roles = eacces.get_employeeRoles(emp.id)
                 self.roles.append("employee")
@@ -77,11 +79,11 @@ class User(UserMixin):
                 self.active = True
                 self.anon = False
                 return True
-            sacces = studentAccess()
-            number=userName[1:]
-            number="2"+number
-            stu=sacces.get_studentOnStudentNumber(number)
-            if(stu!=None):
+            sacces = StudentAccess()
+            number = userName[1:]
+            number = "2" + number
+            stu = sacces.get_studentOnStudentNumber(number)
+            if stu is not None:
                 self.session.ID = stu.studentID
                 self.session.EORS = EORS.STUDENT
                 self.auth = True
@@ -110,7 +112,7 @@ class User(UserMixin):
     def normalLogin(self, userName, password):
         if userName == 'admin' and password == "hunter1":
             self.session.ID = 16
-            self.session.EORS=EORS.EMPLOYEE
+            self.session.EORS = EORS.EMPLOYEE
             self.auth = True
             self.roles = ('employee', 'admin', 'user')
             self.active = True
@@ -129,7 +131,7 @@ class User(UserMixin):
             self.session.ID = 1
             self.session.EORS = EORS.STUDENT
             self.auth = True
-            self.roles = ('student','user')
+            self.roles = ('student', 'user')
             self.active = True
             self.anon = False
             return True

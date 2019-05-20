@@ -4,11 +4,11 @@ class Bookmark:
         self.student = sid
 
     def getProject(self, dbconnect):
-        access = __import__('DataAccess', fromlist=['ProjectAccess'])
-        pro = access.ProjectAccess(dbconnect)
+        from DataAccess.projectAccess import ProjectAccess
+        pro = ProjectAccess()
         return pro.get_project(self.project)
 
     def getStudent(self, dbconnect):
-        access = __import__('DataAccess', fromlist=['StudentAccess'])
-        stu = access.StudentAccess(dbconnect)
+        from DataAccess.studentAccess import StudentAccess
+        stu = StudentAccess()
         return stu.get_student(self.student)

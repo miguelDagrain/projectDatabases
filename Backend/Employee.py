@@ -22,16 +22,16 @@ class Employee:
         self.promotor = promotor
 
     def getResearchGroup(self):
-        access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])
-        res = access.ResearchGroupAccess()
-        return res.get_researchGroupOnID(self.research_group)
+        from DataAccess.researchGroupAccess import ResearchGroupAccess
+        res = ResearchGroupAccess()
+        return res.get_singleResearchGroupOnID(self.research_group)
 
     def getPromotor(self):
-        access = __import__('DataAccess', fromlist=['EmployeeAccess'])
-        emp = access.EmployeeAccess()
+        from DataAccess.employeeAccess import EmployeeAccess
+        emp = EmployeeAccess()
         return emp.get_employee(self.id)
 
     def getProjects(self):
-        access = __import__('DataAccess', fromlist=['EmployeeAccess'])
-        promotor = access.EmployeeAccess()
+        from DataAccess.employeeAccess import EmployeeAccess
+        promotor = EmployeeAccess()
         return promotor.get_employeeProjects(self.id)

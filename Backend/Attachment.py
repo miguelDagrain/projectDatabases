@@ -5,5 +5,6 @@ class Attachment:
 
     def get_document(self, connect):
         access = __import__('DataAccess', fromlist=['DocumentAccess'])
-        da = access.DocumentAccess(connect)
+        from DataAccess.documentAccess import DocumentAccess
+        da = DocumentAccess()
         return da.get_document(self.docid)

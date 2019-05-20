@@ -19,11 +19,3 @@ class Project:
         self.desc_nl = None
         self.desc_en = None
 
-
-    def get_researchGroup(self, dbConnect):
-        access = __import__('DataAccess', fromlist=['ResearchGroupAccess'])
-        groups=list()
-
-        res = access.ResearchGroupAccess(dbConnect)
-        for i in self.researchGroup:
-            groups.append(res.get_researchGroupOnID(i))
