@@ -3,6 +3,7 @@ from App.utilities import login_required
 
 from DataAccess.employeeAccess import EmployeeAccess
 from DataAccess.researchGroupAccess import ResearchGroupAccess
+from DataAccess.domainAccess import DomainAccess
 
 
 @app.route("/people/", methods=["GET"])
@@ -45,7 +46,7 @@ def show_people():
 
     return render_template("people.html", r_values=json.dumps(neededValuesPeoplePage, default=lambda x: x.__dict__),
                            r_researchGroups=researchGroups,
-                           page="people")
+                           page="administration")
 
 
 @app.route("/people/", methods=["POST"])
@@ -107,7 +108,7 @@ def get_person(id):
     orderedYearAndProject = sorted(yearAndProject.items(), key=lambda k: k[0], reverse=True)
 
     return render_template("person.html", r_person=person, r_groupName=group.name,
-                           r_projectAndYear=orderedYearAndProject, page="people")
+                           r_projectAndYear=orderedYearAndProject, page="administration")
 
 
 @app.route("/people/<int:id>", methods=["POST"])

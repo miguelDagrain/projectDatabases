@@ -18,7 +18,7 @@ def show_research_groups():
     groups = access.get_researchGroups()
     access = DomainAccess()
     disciplines = access.get_disciplines()
-    return render_template("researchgroups.html", r_groups=groups, r_disciplines=disciplines, page="rgroups")
+    return render_template("researchgroups.html", r_groups=groups, r_disciplines=disciplines, page="administration")
 
 
 @app.route("/researchgroups/", methods=["POST"])
@@ -52,7 +52,8 @@ def add_research_group():
     Raccess = ResearchGroupAccess()
     Raccess.add_researchGroup(r)
     researchGroups = Raccess.get_researchGroups()
-    return render_template("researchgroups.html", r_groups=researchGroups, r_disciplines=disciplines, page="rgroups")
+    return render_template("researchgroups.html", r_groups=researchGroups, r_disciplines=disciplines,
+                           page="administration")
 
 
 @app.route("/researchgroups/<int:id>", methods=["GET"])
@@ -93,7 +94,7 @@ def group_page(id):
 
     return render_template("researchgroup.html", r_groupName=researchGroup.name, r_groupID=researchGroup.ID,
                            r_description=description, r_researchers=researchers, r_contactPersons=contactPersons,
-                           r_projects=projects, page='rgroups')
+                           r_projects=projects, page='administration')
 
 
 @app.route("/researchgroups/<int:id>", methods=["POST"])
