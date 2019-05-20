@@ -361,7 +361,7 @@ class ProjectAccess:
 
     def get_projects_of_employee(self, employeeID):
         from Project import Project
-        from studentAccess import StudentAccess
+        from DataAccess.studentAccess import StudentAccess
         cursor = self.dbconnect.get_cursor()
         # cursor.execute('select * from project JOIN projectpromotor p on project.projectid = p.project WHERE p.employee=%s', str(employeeID))
         cursor.execute(
