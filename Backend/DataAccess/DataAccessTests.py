@@ -8,13 +8,13 @@ from Employee import *
 from ProjectRegistration import *
 from Project import *
 from Student import *
-from documentAccess import DocumentAccess
-from domainAccess import  DomainAccess
-from eployeeAccess import EmployeeAccess
-from projectAccess import ProjectAccess
-from researchGroupAccess import ResearchGroupAccess
-from sessionAccess import SessionAccess
-from studentAccess import StudentAccess
+from DataAccess.documentAccess import DocumentAccess
+from DataAccess.domainAccess import  DomainAccess
+from DataAccess.employeeAccess import EmployeeAccess
+from DataAccess.projectAccess import ProjectAccess
+from DataAccess.researchGroupAccess import ResearchGroupAccess
+from DataAccess.sessionAccess import SessionAccess
+from DataAccess.studentAccess import StudentAccess
 
 
 

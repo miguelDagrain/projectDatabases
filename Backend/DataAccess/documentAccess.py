@@ -1,5 +1,6 @@
 import dbConnection
 
+
 class DocumentAccess:
     def __init__(self):
         """

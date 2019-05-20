@@ -1,6 +1,6 @@
 import dbConnection
 
-from documentAccess import DocumentAccess
+from DataAccess.documentAccess import DocumentAccess
 
 class ResearchGroupAccess:
     def __init__(self):

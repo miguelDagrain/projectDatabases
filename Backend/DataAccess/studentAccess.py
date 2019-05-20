@@ -1,6 +1,7 @@
 import dbConnection
 
-from projectAccess import ProjectAccess
+from DataAccess.projectAccess import ProjectAccess
+
 
 class StudentAccess:
     def __init__(self):
