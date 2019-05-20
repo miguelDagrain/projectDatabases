@@ -1,15 +1,15 @@
 # Programmeer project databases 2019: ESP
 # aanpassing Script voor extractie van tags
 #
-# Auteur: Len Feremans (aangepats door thibaut van goethem)
+# Auteur: Len Feremans (aangepast door thibaut van goethem)
 # Datum: 14 Maart
 
 from collections import defaultdict, Counter
 import math
 import re
 
-from employeeAccess import EmployeeAccess
-from projectAccess import ProjectAccess
+from DataAccess.employeeAccess import EmployeeAccess
+from DataAccess.projectAccess import ProjectAccess
 
 
 def findTag(project):
