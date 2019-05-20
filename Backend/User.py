@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 # import ldap
-from DataAccess import eployeeAccess
+from DataAccess import employeeAccess
 from DataAccess import studentAccess
 from config import config_data
 from ldapConfig import ldapConfig_data
@@ -64,7 +64,7 @@ class User(UserMixin):
         try:
             ldap_conn.bind_s(user_dn, password)
             ldap_conn.unbind_s()
-            eacces = eployeeAccess()
+            eacces = employeeAccess()
 
             emp=eacces.get_employeeOnName(userName)
             if(emp!=None):

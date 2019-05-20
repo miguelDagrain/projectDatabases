@@ -15,7 +15,7 @@ dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbu
                               dbhost=config_data['dbhost'])
 ldapUsers= open("pdbldapRealUsers.ldif","w+")
 counter=1
-eacces=eployeeAccess()
+eacces=employeeAccess()
 eacces.dbconnect=dbConnection.connection
 employees=eacces.get_employees()
 for i in employees:

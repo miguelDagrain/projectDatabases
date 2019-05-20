@@ -12,13 +12,13 @@ from flask_login import login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
 
 from dbConnection import setConnection
-from documentAccess import DocumentAccess
-from domainAccess import DomainAccess
-from eployeeAccess import EmployeeAccess
-from projectAccess import ProjectAccess
-from researchGroupAccess import ResearchGroupAccess
-from sessionAccess import SessionAccess
-from studentAccess import StudentAccess
+from DataAccess.documentAccess import DocumentAccess
+from DataAccess.domainAccess import DomainAccess
+from DataAccess.employeeAccess import EmployeeAccess
+from DataAccess.projectAccess import ProjectAccess
+from DataAccess.researchGroupAccess import ResearchGroupAccess
+from DataAccess.sessionAccess import SessionAccess
+from DataAccess.studentAccess import StudentAccess
 
 from Document import *
 from Employee import Employee
