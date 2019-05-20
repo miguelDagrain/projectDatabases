@@ -1,5 +1,5 @@
-from projectAccess import ProjectAccess
-from sessionAccess import SessionAccess
+from DataAccess.projectAccess import ProjectAccess
+from DataAccess.sessionAccess import SessionAccess
 
 
 class RelevanceCalculator():
