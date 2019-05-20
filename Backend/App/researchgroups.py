@@ -4,6 +4,8 @@ from App.utilities import login_required
 from DataAccess.researchGroupAccess import ResearchGroupAccess
 from DataAccess.domainAccess import DomainAccess
 from DataAccess.employeeAccess import EmployeeAccess
+from DataAccess.projectAccess import ProjectAccess
+
 
 @login_required(role='admin')
 @app.route("/researchgroups/")
