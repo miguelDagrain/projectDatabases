@@ -1,6 +1,6 @@
-from base import *
-from utilities import login_required
-from projects import apply_remove_project
+from App.base import *
+from App.utilities import login_required
+from App.projects import apply_remove_project
 
 from DataAccess.projectAccess import ProjectAccess
 from DataAccess.documentAccess import DocumentAccess

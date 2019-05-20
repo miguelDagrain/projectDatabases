@@ -1,5 +1,5 @@
-from base import *
-from utilities import get_locale
+from App.base import *
+from App.utilities import get_locale
 
 
 @app.route("/")

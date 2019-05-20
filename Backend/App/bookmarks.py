@@ -1,5 +1,5 @@
-from base import *
-from utilities import login_required
+from App.base import *
+from App.utilities import login_required
 
 from DataAccess.studentAccess import StudentAccess
 from DataAccess.projectAccess import ProjectAccess

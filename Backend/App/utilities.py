@@ -1,4 +1,4 @@
-from base import *
+from App.base import *
 
 
 def login_required(role="ANY"):
