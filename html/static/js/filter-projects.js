@@ -215,7 +215,7 @@ function showMoreProjects(sq) {
 
     for (var i = projectCount; i < projectCount + 10; i++) {
 
-        if ((result[i].relevance === 0 && sq.length > 0 || result[i].relevance === -1)){break;}
+        if (result.length<=i || (result[i].relevance === 0 && sq.length > 0 || result[i].relevance === -1)){break;}
 
         var cont = document.createElement("tr");
 
