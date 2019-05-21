@@ -43,7 +43,7 @@ class EmployeeAccess:
         """
         from Employee import Employee
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (str(id),))
+        cursor.execute('SELECT * FROM employee WHERE employeeID=%s ', (id,))
         row = cursor.fetchone()
         return Employee(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
@@ -71,11 +71,11 @@ class EmployeeAccess:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO employee values(default,%s,%s,%s,%s,%s,%s,%s,%s)',
-                           (empl.name, empl.email, empl.office, empl.research_group.ID, empl.title, empl.internOrExtern,
+                           (empl.name, empl.email, empl.office, empl.research_group, empl.title, empl.internOrExtern,
                             empl.active, empl.promotor))
             cursor.execute('SELECT LASTVAL()')
             eid = cursor.fetchone()[0]
-            empl.Id = eid
+            empl.id = eid
             # get id and return updated object
             self.dbconnect.commit()
         except(Exception, self.dbconnect.get_error()) as error:

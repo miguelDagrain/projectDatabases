@@ -13,7 +13,7 @@ class Student:
         self.studentNumber=number
         self.likedProject = list()
 
-    def get_likedProjects(self, dbconnect):
+    def get_likedProjects(self):
         from DataAccess.projectAccess import ProjectAccess
         pro = ProjectAccess()
         projects = list()

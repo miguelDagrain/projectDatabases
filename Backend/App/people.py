@@ -56,15 +56,13 @@ def add_staff():
     add staff form of the people page
     :return: redirection to show people page
     """
-    Raccess = ResearchGroupAccess()
-    researchGroups = Raccess.get_researchGroups()
 
     Daccess = DomainAccess()
     name = request.form.get("Name")
     email = request.form.get("Email")
     office = request.form.get("Office")
     researchgroupNr = request.form.get("Researchgroup")
-    research_group = researchGroups[int(researchgroupNr)]
+    research_group = int(researchgroupNr)
     titleOptions = Daccess.get_titles()
     titleNr = request.form.get("Title")
     title = titleOptions[int(titleNr)]

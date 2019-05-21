@@ -32,7 +32,7 @@ class MailService:
                     "kind regards"
 
         for employee in eAccess.get_employees():
-            if employee.getPromotor():
+            if employee.getEmpl():
                 #opnieuw hier kunnen we gebruik maken van de employee email
                 #employee.email
 
@@ -63,7 +63,7 @@ class MailService:
                     "Kind regards"
 
         for employee in eAccess.get_employees():
-            if employee.getPromotor():
+            if employee.getEmpl():
                 #opnieuw hier kunnen we gebruik maken van de employee email
                 #employee.email
 
