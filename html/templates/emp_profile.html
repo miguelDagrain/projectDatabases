@@ -18,58 +18,11 @@
     <script src="{{ url_for('static', filename='js/close-menus.js') }}"></script>
     <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
+    <script src="{{ url_for('static', filename="js/employee_profile.js") }}"></script>
     <script>
-        $(document).ready(function () {
-            $('#profile-table').DataTable({
-                "columnDefs": [
-                    {"bSortable": false, "targets": 0}
-                ],
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                "order": [[0, 'asc'], [1, 'asc']],
-                "pageLength": -1,
-                "stateSave": true,
-                "lengthChange": false,
-                "paging": false,
-                "info": false
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        tinymce.init({
-            selector: '#project-desc-nl',
-            menubar: 'edit insert format table tools',
-            height: '400px'
-        });
-    </script>
-    <script type="text/javascript">
-        tinymce.init({
-            selector: '#project-desc-en',
-            menubar: 'edit insert format table tools',
-            height: '400px'
-        });
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#project-editor').on('show.bs.modal', function (e) {
-                var title = $(e.relatedTarget).data('title');
-                var project_id = $(e.relatedTarget).data('id');
-                var desc_nl = $(e.relatedTarget).data('desc-nl');
-                var desc_en = $(e.relatedTarget).data('desc-en');
-                var desc_nl_id = $(e.relatedTarget).data('desc-nl-id');
-                var desc_en_id = $(e.relatedTarget).data('desc-en-id');
-                $("#project-editor .modal-body #project-title").val(title);
-                $("#project-editor .modal-body #project-id").val(project_id);
-                $("#project-editor .modal-body #desc-nl-id").val(desc_nl_id);
-                $("#project-editor .modal-body #desc-en-id").val(desc_en_id);
-                tinyMCE.get('project-desc-en').setContent(desc_en);
-                tinyMCE.get('project-desc-nl').setContent(desc_nl);
-                document.getElementById("modal-title").innerHTML = "Edit: " + title;
-            });
-            $('#delete-project').on('show.bs.modal', function (e) {
-                var id = $(e.relatedTarget).data('id');
-                $('#delete-project .modal-footer #project-id').val(id);
-            });
-        });
+        // Jinja2 dynamic variables needed in employee_profile.js
+        let activateText = "{{ _('Activate project') }}";
+        let deactivateText = "{{ _('Deactivate project') }}";
     </script>
 
 {% endblock scripts %}
@@ -80,146 +33,165 @@
 
 {% block body %}
 
-    <div class="page-content">
+<div class="page-content">
 
-        <div class="row">
-            <div class="col">
-                <h1>{{ _('Your projects') }}</h1>
-            </div>
-            {% if err == True %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ _('Cannot update project') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
-            {% if update == True %}
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ _('Project updated') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
-            {% if removed == True %}
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    {{ _('Project removed') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endif %}
-            {% if inactive > 0 %}
-                <div class="col float-right">
-                    <small class="float-right">
-                        {% if inactive == 0 %}
-                            {{ _('You have') }} <span style="color:lightgreen">0</span> {{ _('inactive projects') }}
-                        {% else %}
-                            {{ _('You have') }} <span style="color: red">{{ inactive }}</span>
-                            {{ _('inactive projects') }}
-                        {% endif %}
-                    </small>
-                </div>
-            {% endif %}
+    <div class="row">
+        <div class="col">
+            <h1>{{ _('Your projects') }}</h1>
         </div>
-        <table class="table" id="profile-table">
-            <thead>
-            <tr>
-                <th class="th-sm"></th>
-                <th class="th-sm">
-                    <strong>{{ _('Project name') }}</strong>
-                </th>
-                <th class="th-sm">
-                    <strong>{{ _('Students needed') }}</strong>
-                </th>
-                <th class="th-sm">
-                    <strong>{{ _('Active') }}</strong>
-                </th>
-                <th class="th-sm">
-                    <strong>{{ _('Extend') }}</strong>
-                </th>
-                <th class="th-sm">
-                    <strong>{{ _('Year') }}</strong>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for project in projects %}
-                <tr>
-                    <td>
-                        <button class="icon-button" data-toggle="modal" data-target="#project-editor"
-                                data-id="{{ project.ID }}" data-title="{{ project.title }}"
-                                data-desc-nl="{{ project.desc_nl.text }}" data-desc-en="{{ project.desc_en.text }}"
-                                data-desc-nl-id="{{ project.desc_nl.ID }}" data-desc-en-id="{{ project.desc_en.ID }}">
-                            &#9998;
-                        </button>
-                        <button class="icon-button" data-toggle="modal" data-target="#delete-project"
-                                data-id="{{ project.ID }}">
-                            <i class="fa fa-trash-o"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a>
-                    </td>
-                    <td>
-                        {% if project.maxStudents - project.register_count == 0 %}
-                            {{ _('FULL') }}
-                        {% elif project.maxStudents - project.register_count < 0 %}
-                            <span style="color: red">{{ _('ERR') }}</span>
-                        {% else %}
-                            {{ project.maxStudents - project.register_count }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if project.active == True %}
-                            &#10004;
-                        {% else %}
-                            &#10060;
-                        {% endif %}
-                    </td>
-                    <td>
-                        <label>
-                            <input type="checkbox" data-toggle="toggle" data-on="{{ _('Yes') }}"
-                                   data-off="{{ _('No') }}" data-height="20%" data-width="20%">
-                        </label>
-                    </td>
-                    <td>
-                        {% for year in project.activeYear %}
-                            {{ year }}
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% if err == True %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ _('Cannot update project') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        {% if update == True %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ _('Project updated') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        {% if deactivate == True %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ _('Project deactivated') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        {% if activate == True %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ _('Project activated') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        {% if inactive > 0 %}
+            <div class="col float-right">
+                <small class="float-right">
+                    {% if inactive == 0 %}
+                        {{ _('You have') }} <span style="color:lightgreen">0</span> {{ _('inactive projects') }}
+                    {% else %}
+                        {{ _('You have') }} <span style="color: red">{{ inactive }}</span>
+                        {{ _('inactive projects') }}
+                    {% endif %}
+                </small>
+            </div>
+        {% endif %}
     </div>
-
-
-    <!--Project editor modal -->
-    <div class="modal fade" id="project-editor" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-title">Edit: Project name</h4>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+    <table class="table" id="profile-table">
+        <thead>
+        <tr>
+            <th class="th-sm"></th>
+            <th class="th-sm">
+                <strong>{{ _('Project name') }}</strong>
+            </th>
+            <th class="th-sm">
+                <strong>{{ _('Students needed') }}</strong>
+            </th>
+            <th class="th-sm">
+                <strong>{{ _('Active') }}</strong>
+            </th>
+            <th class="th-sm">
+                <strong>{{ _('Year') }}</strong>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr>
+                <td>
+                    <button class="icon-button" data-toggle="modal" data-target="#project-editor"
+                            data-id="{{ project.ID }}" data-title="{{ project.title }}"
+                            data-desc-nl="{{ project.desc_nl.text }}" data-desc-en="{{ project.desc_en.text }}"
+                            data-desc-nl-id="{{ project.desc_nl.ID }}" data-desc-en-id="{{ project.desc_en.ID }}">
+                        &#9998;
                     </button>
-                </div>
-                <div class="modal-body">
+                    {% if project.active == True %}
+                        <button class="icon-button" data-toggle="modal" data-target="#change-project-active"
+                                data-id="{{ project.ID }}" data-type="deactivate">&#9940;
+                        </button>
+                    {% else %}
+                        <button class="icon-button" data-toggle="modal" data-target="#change-project-active"
+                                data-id="{{ project.ID }}" data-type="activate">&#9851;
+                        </button>
+                    {% endif %}
+                    {#                        <button class="icon-button" data-toggle="modal" data-target="#delete-project"#}
+                    {#                                data-id="{{ project.ID }}">#}
+                    {#                            <i class="fa fa-trash-o"></i>#}
+                    {#                        </button>#}
+                </td>
+                <td>
+                    <a href="{{ url_for('project_page', id=project.ID) }}">{{ project.title }}</a>
+                </td>
+                <td>
+                    {% if project.maxStudents - project.register_count == 0 %}
+                        {{ _('FULL') }}
+                    {% elif project.maxStudents - project.register_count < 0 %}
+                        <span style="color: red">{{ _('ERR') }}</span>
+                    {% else %}
+                        {{ project.maxStudents - project.register_count }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if project.active == True %}
+                        &#10004;
+                    {% else %}
+                        &#10060;
+                    {% endif %}
+                </td>
+                <td>
+                    {% for year in project.activeYear %}
+                        {{ year }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!--Project editor modal -->
+<div class="modal fade" id="project-editor" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">Edit: Project name</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
                     <form method="post" id="edit_form">
-                        <div class="form-group">
-                            <label for="project-title" style="margin-bottom: 5px">{{ _('Title') }}</label>
-                            <input id="project-title" class="form-control" type="text" name="project-title"
-                                   placeholder="{{ _('Project title') }}" required>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="project-title" style="margin-bottom: 5px">{{ _('Title') }}</label>
+                                    <input id="project-title" class="form-control" type="text" name="project-title"
+                                           placeholder="{{ _('Project title') }}" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="project-desc-nl">{{ _('Dutch description') }}</label>
-                            <textarea id="project-desc-nl" name="desc-nl"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="project-desc-en">{{ _('English description') }}</label>
-                            <textarea id="project-desc-en" name="desc-en"></textarea>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="project-desc-nl">{{ _('Dutch description') }}</label>
+                                    <textarea id="project-desc-nl" name="desc-nl"></textarea>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="project-desc-en">{{ _('English description') }}</label>
+                                    <textarea id="project-desc-en" name="desc-en"></textarea>
+                                </div>
+                            </div>
                         </div>
                         <!--TODO-->
                         <!--Toevoegen verlengen als inactief, toevoegen/verwijderen van promotors exclusief uzelf-->
@@ -227,52 +199,54 @@
                         <input type="hidden" name="desc-nl-id" id="desc-nl-id">
                         <input type="hidden" name="desc-en-id" id="desc-en-id">
                     </form>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-                        <button type="submit" form="edit_form" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--Delete modal -->
-    <div class="modal fade" id="delete-project" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-title">Are you sure?</h4>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-footer">
-                    <form id="delete_form" method="post" action="{{ url_for('remove_project') }}">
-                        <input type="hidden" id="project-id" name="project-id">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="submit" form="delete_form" class="btn btn-primary">Yes</button>
-                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                    <button type="submit" form="edit_form" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!--Project assignment modal-->
-    <div class="modal fade" id="project-assignment" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modal-title">{{ _('Assign students') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <!--TODO-->
-                    Listing of students + option to add/remove students here
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Discard') }}</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">{{ _('Save') }}</button>
-                </div>
+<!--Deactivation/reactivation modal -->
+<div class="modal fade" id="change-project-active" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">Are you sure?</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <form id="change-active-form" method="post" action="{{ url_for('change_project_status') }}">
+                    <input type="hidden" id="project-id" name="project-id">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" form="change-active-form" class="btn btn-primary">Yes</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
+<!--Project assignment modal-->
+<div class="modal fade" id="project-assignment" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">{{ _('Assign students') }}</h4>
+            </div>
+            <div class="modal-body">
+                <!--TODO-->
+                Listing of students + option to add/remove students here
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Discard') }}</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ _('Save') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock body %}
