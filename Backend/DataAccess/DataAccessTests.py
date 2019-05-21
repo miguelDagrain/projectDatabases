@@ -8,6 +8,7 @@ from Employee import *
 from ProjectRegistration import *
 from Project import *
 from Student import *
+from Session import *
 from DataAccess.documentAccess import DocumentAccess
 from DataAccess.domainAccess import  DomainAccess
 from DataAccess.employeeAccess import EmployeeAccess
@@ -316,7 +317,7 @@ class Test(unittest.TestCase):
         ea.add_employee(e)
         pa.add_projectPromotor(1,1)
         p = pa.get_project(1)
-        self.assertEqual(1, p.promotor[0])
+        self.assertEqual(1, p.promotors[0])
 
         prom=pa.get_projectPromotors(1)
         self.assertEqual(1,prom[0])
@@ -355,9 +356,54 @@ class Test(unittest.TestCase):
         self.assertEqual('jefke',stus[1].name)
         self.assertEqual(20170001, stus[1].studentNumber)
 
+        pa=ProjectAccess()
+        pa.add_project(Project(None,'test',15,True))
+        sa.add_bookmark(1,1)
+        stub=sa.get_studentBookmarks(1)
+        self.assertEqual(1,len(stub))
+        self.assertEqual(1,stub[0].project)
 
+        bstu=sa.get_projectBookmarks(1)
+        self.assertEqual(1,len(bstu))
+        self.assertEqual(1, bstu[0].student)
 
+        stu=sa.get_studentOnStudentNumber("20170001")
+        self.assertEqual(2,stu.studentID)
+        self.assertEqual('jefke', stu.name)
 
+        sa.add_projectRegistration(1,1)
+        spr=sa.get_projectRegistrationsOnProject(1)
+        self.assertEqual(1,len(spr))
+        self.assertEqual(1, spr[0].student)
+
+        spr=sa.get_projectRegistrationsOnStudent(1)
+        self.assertEqual(1, len(spr))
+        self.assertEqual(1, spr[0].student)
+
+        pr=sa.get_projectRegistrations()
+        self.assertEqual(1,len(pr))
+
+    def test_SessionAccess(self):
+        sa=SessionAccess()
+        sta=StudentAccess()
+        pa=ProjectAccess()
+
+        stu=Student(None,'jefke','20170001')
+        sta.add_student(stu)
+
+        ses = Session(None,1,sa.get_CurentSQLTime(),EORS.STUDENT)
+        sa.add_Session(ses)
+
+        ses=sa.get_SessionOnId(1)
+        self.assertEqual(EORS.STUDENT,ses.EORS)
+        self.assertEqual(1,ses.ID)
+
+        pa.add_project(Project(None,"testproject",3,True))
+        sa.add_sessionProjectClick(1,1)
+
+        ses=sa.get_SessionOnId(1)
+        self.assertEqual(1,len(ses.clickedProjects))
+        self.assertEqual(1,ses.clickedProjects[0])
 
 if __name__ == '__main__':
     unittest.main()
