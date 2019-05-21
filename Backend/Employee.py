@@ -26,7 +26,8 @@ class Employee:
         res = ResearchGroupAccess()
         return res.get_singleResearchGroupOnID(self.research_group)
 
-    def getPromotor(self):
+    #controleert of employee aanwezig is in database
+    def getEmpl(self):
         from DataAccess.employeeAccess import EmployeeAccess
         emp = EmployeeAccess()
         return emp.get_employee(self.id)

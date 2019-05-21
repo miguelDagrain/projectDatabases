@@ -212,7 +212,7 @@ class Test(unittest.TestCase):
         r = ResearchGroup(None, "testgroep", "tg", 'Mathematics', True, "hier", "0412864523", list())
         ra.add_researchGroup(r)
 
-        e=Employee(None,'testpersoon','email@noreply.com',"hier",r,'phd','intern',True,True)
+        e=Employee(None,'testpersoon','email@noreply.com',"hier",r.ID,'phd','intern',True,True)
         ea.add_employee(e)
 
         e=ea.get_employee(1)
@@ -225,7 +225,7 @@ class Test(unittest.TestCase):
         self.assertEqual(True, e.active)
         self.assertEqual(True, e.promotor)
 
-        e = Employee(None, 'testpersoon2', 'email2@noreply.com', "hier2", r, 'phd', 'intern', True, True)
+        e = Employee(None, 'testpersoon2', 'email2@noreply.com', "hier2", r.ID, 'phd', 'intern', True, True)
         ea.add_employee(e)
 
         emps=ea.get_employees()
@@ -313,7 +313,7 @@ class Test(unittest.TestCase):
         tags=pa.get_projectTags(1)
         self.assertEqual('tag', tags[0])
 
-        e = Employee(None, 'testpersoon', 'email@noreply.com', "hier", r, 'phd', 'intern', True, True)
+        e = Employee(None, 'testpersoon', 'email@noreply.com', "hier", r.ID, 'phd', 'intern', True, True)
         ea.add_employee(e)
         pa.add_projectPromotor(1,1)
         p = pa.get_project(1)
