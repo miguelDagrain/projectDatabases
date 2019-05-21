@@ -626,6 +626,26 @@ class ProjectAccess:
             self.dbconnect.rollback()
             raise Exception('Unable to save project!\n%s' % error)
 
+    def change_project_active(self, id, value):
+        cursor = self.dbconnect.get_cursor()
+        try:
+
+            if value is True:
+
+                import datetime
+                now = datetime.datetime.now()
+                year = now.year
+
+                cursor.execute('update project set active= %s WHERE projectid= %s', ("0", str(id)))
+                self.add_projectYears(id, year)
+
+            elif value is False:
+                cursor.execute('update project set active= %s WHERE projectid= %s', ("1", str(id)))
+        except Exception as e:
+            self.dbconnect.rollback()
+            print(str(e))
+            raise e
+
     def change_project(self, project):
         """
         change the data of a project that already is in the database
@@ -639,8 +659,8 @@ class ProjectAccess:
             if cursor.rowcount == 0:
                 raise Exception('no project found with that id')
             cursor.execute(
-                'update project set title= %s,maxStudents= %s,active= %s,researchGroup= %s where projectID=%s',
-                (project.title, project.maxStudents, project.active, project.researchGroup, project.ID))
+                'update project set title= %s,maxStudents= %s,active= %s where projectID=%s',
+                (project.title, str(project.maxStudents), str(project.active), project.ID))
 
             cursor.execute('delete from projectYearConnection where projectID=%s', (project.ID,))
             for i in project.activeYear:
@@ -674,6 +694,6 @@ class ProjectAccess:
             self.delete_projectExternEmployees(project.ID)
             for i in project.extern_employees:
                 self.add_externEmployee(project.ID,i)
-        except:
+        except Exception as e:
             self.dbconnect.rollback()
-            raise Exception('unable to change project')
+            raise Exception('unable to change project ' + str(e))

@@ -4,14 +4,13 @@ from App.utilities import login_required
 from DataAccess.studentAccess import StudentAccess
 from DataAccess.projectAccess import ProjectAccess
 
-# todo test?
+
 @login_required(role='student')
 @app.route("/projects/add_bookmark/<int:id>/", methods=["GET"])
 def add_bookmark(id):
     """
     Adds a bookmark for the currently logged user. (needs role student)
     :param id: ID of the project to create a bookmark for
-    :param empty: todo
     :return: redirect to project page
     """
     student = current_user.session.ID

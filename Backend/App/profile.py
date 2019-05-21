@@ -1,6 +1,5 @@
 from App.base import *
 from App.utilities import login_required
-from App.projects import apply_remove_project
 
 from DataAccess.projectAccess import ProjectAccess
 from DataAccess.documentAccess import DocumentAccess
@@ -25,7 +24,8 @@ def emp_profile():
                            page='profile',
                            err=request.args.get('err', default=False, type=bool),
                            update=request.args.get('update', default=False, type=bool),
-                           removed=request.args.get('removed', default=False, type=bool)
+                           deactivate=request.args.get('deactivate', default=False, type=bool),
+                           activate=request.args.get('activate', default=False, type=bool)
                            )
 
 
@@ -69,13 +69,22 @@ def change_project():
         return redirect(url_for('emp_profile', err=True))
 
 
-@app.route('/profile/remove', methods=['POST'])
+@app.route('/profile/state', methods=['POST'])
 @login_required(role='employee')
-def remove_project():
+def change_project_status():
     """
     Removes a project from the database
     :return: redirection to employee profile
     """
     id = request.form['project-id']
-    apply_remove_project(id)
-    return redirect(url_for('emp_profile', removed=True))
+    pAccess = ProjectAccess()
+    p = pAccess.get_project(id)
+
+    pAccess.change_project_active(id, p.active)
+
+    if p.active:
+        return redirect(url_for('emp_profile', deactivate=True))
+    elif p.active is False:
+        return redirect(url_for('emp_profile', activate=True))
+    else:
+        return redirect(url_for('emp_profile', err=True))
