@@ -35,8 +35,9 @@ function handleUploadAttachementOver (event) {
 }
 
 function editHomepage(){
-
-    formData.append("newHome", $('#administration-form-description').val().toString(1000000));
+    //var str = "test" + document.getElementById('administration-form-description').innerHTML.toString();
+    var str = tinymce.get('administration-form-description').getContent();
+    formData.append("newHome", str);
 
     var request = $.ajax({
         type: "POST",

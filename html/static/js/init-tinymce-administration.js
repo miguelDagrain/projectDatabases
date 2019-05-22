@@ -77,7 +77,7 @@ tinymce.init({
 
                             var t = document.getElementById("administration-form-title").value.toString();
 
-                            a.href= dl + t + data.title;
+                            a.href= dl + t + "_" + data.title;
                         }else{
                             a.href= dl + data.title;
                         }
