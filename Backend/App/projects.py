@@ -21,14 +21,18 @@ def show_projects():
 
     projects = pa.get_project_filter_data(request.cookies.get("lang"))
     researchGroups = ra.get_researchGroups()
-    role = current_user.roles
-    isAdmin= False
-    for x in role:
-        if x == "admin":
-            isAdmin = True
-    if isAdmin == True:
-        disciplines = da.get_alldisciplines()
-        types = da.get_allprojectType()
+    if(current_user.is_authenticated):
+        role = current_user.roles
+        isAdmin= False
+        for x in role:
+            if x == "admin":
+                isAdmin = True
+        if isAdmin == True:
+            disciplines = da.get_alldisciplines()
+            types = da.get_allprojectType()
+        else:
+            disciplines = da.get_disciplines()
+            types = da.get_projectType()
     else:
         disciplines = da.get_disciplines()
         types = da.get_projectType()
