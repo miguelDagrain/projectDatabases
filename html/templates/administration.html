@@ -100,7 +100,6 @@
         </div>
 
         <div class="page-content">
-            {% block administration_content %}
                 <div class="modal fade" id="add_discipline" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -209,7 +208,7 @@
                         </div>
                     </div>
                 </div>
-            {% endblock administration_content %}
+            {% block administration_content %}{% endblock administration_content %} <!--dit is voor uitbreiding op deze file niet om te gebruiken in deze file-->
         </div>
 
     </div>
