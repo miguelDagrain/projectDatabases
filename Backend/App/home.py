@@ -17,8 +17,11 @@ def home():
     Renders the index template
     :return: Rendered index template
     """
+
+    this_dir = os.path.dirname(__file__)
+    home_file = app.config['HOME_PAGE_FOLDER'] + 'homepage.html'
     try:
-        homepage = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "r").read()
+        homepage = open(os.path.join(this_dir, home_file), "r").read()
     # Store configuration file values
     except FileNotFoundError:
         homepage = ''
@@ -37,6 +40,8 @@ def modify_homepage():
     """
     Function to modify the homepage
     """
+    this_dir = os.path.dirname(__file__)
+    home_file = app.config['HOME_PAGE_FOLDER'] + 'homepage.html'
     value = ""
     if request.form.get("newHome"):
         value = request.form.get("newHome")
@@ -44,11 +49,11 @@ def modify_homepage():
     if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
         os.mkdir(app.config['HOME_PAGE_FOLDER'])
 
-    homeFile= open(app.config['HOME_PAGE_FOLDER']+'homepage.html', "w+")
+    homeFile= open(os.path.join(this_dir, home_file), "w+")
     homeFile.write(value)
     homeFile.seek(0)
+    print(homeFile.read(), file=sys.stdout)
     homeFile.flush()
-    homeFile.close()
 
     files = request.files.getlist("Attachments")
 
