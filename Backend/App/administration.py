@@ -56,7 +56,7 @@ def modify_disciplines():
         return 'false'
 
 
-@app.route("/administration/modify_disciplines", methods=["POST"])
+@app.route("/administration/remove_disciplines", methods=["POST"])
 @login_required(role='admin')
 def remove_disciplines():
     """
@@ -101,7 +101,7 @@ def modify_types():
         return 'false'
 
 
-@app.route("/administration/modify_types", methods=["POST"])
+@app.route("/administration/remove_types", methods=["POST"])
 @login_required(role='admin')
 def remove_types():
     """

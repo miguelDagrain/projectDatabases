@@ -19,7 +19,7 @@ def show_projects():
     ra=ResearchGroupAccess()
     da=DomainAccess()
 
-    projects = pa.get_project_filter_data()
+    projects = pa.get_project_filter_data(request.cookies.get("lang"))
     researchGroups = ra.get_researchGroups()
     role = current_user.roles
     isAdmin= False

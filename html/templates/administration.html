@@ -129,7 +129,8 @@
                         <div class="modal-content">
                             <div class="modal-body">
                                 <div class="dropdown" style="display: inline-block;width:60%;">
-                                    <form class="administration-form" action="{{ url_for('remove_disciplines') }}"
+                                    <form id="remove-discipline" class="administration-form"
+                                          action="{{ url_for('remove_disciplines') }}"
                                           method="post">
                                         <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
                                         <select name="Discipline" id="administration-form-disciplines">
@@ -146,9 +147,11 @@
                                                 </script>
                                             {% endfor %}
                                         </select>
+
                                     </form>
                                 </div>
-                                <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                                <input class="administration-form-submit" type="submit" form="remove-discipline"
+                                               value="{{ _('Enter') }}">
                             </div>
                         </div>
                     </div>
@@ -181,7 +184,7 @@
                         <div class="modal-content">
                             <div class="modal-body">
                                 <div class="dropdown" style="display: inline-block;width:60%;">
-                                    <form class="administration-form" action="{{ url_for('remove_types') }}"
+                                    <form id="remove-type" class="administration-form" action="{{ url_for('remove_types') }}"
                                           method="post">
                                         <label for="administration-form-type">{{ _('Type') }}:</label>
                                         <select name="Type" id="administration-form-types">
@@ -200,7 +203,7 @@
                                         </select>
                                     </form>
                                 </div>
-                                <input class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
+                                <input form="remove-type" class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
                             </div>
                         </div>
                     </div>
