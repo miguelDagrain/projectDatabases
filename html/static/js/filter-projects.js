@@ -244,11 +244,16 @@ function showMoreProjects(sq) {
         */
 
         var tagCollection = document.createElement("td");
+        var maxtags=3;
+        var tagamount=0;
         for (var t in result[i]["tag"]){
-
+            tagamount+=1;
             tag = document.createElement("p");
             tag.appendChild(document.createTextNode(result[i]["tag"][t]));
             tagCollection.appendChild(tag);
+            if(tagamount>=maxtags){
+                break;
+            }
 
         }
 
