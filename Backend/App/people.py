@@ -104,7 +104,11 @@ def get_person(id):
                 yearAndProject[year].append(project)
 
     orderedYearAndProject = sorted(yearAndProject.items(), key=lambda k: k[0], reverse=True)
-
+    unknownlist=list()
+    for project in projects:
+        if(len(project.activeYear) is 0):
+            unknownlist.append(project)
+    orderedYearAndProject.append(("unknown year",unknownlist))
     return render_template("person.html", r_person=person, r_groupName=group.name,
                            r_projectAndYear=orderedYearAndProject, page="administration")
 

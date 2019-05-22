@@ -18,7 +18,14 @@
     <script src="{{ url_for('static', filename='plugin/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/init-tinymce-administration.js') }}"></script>
     <script src="{{ url_for('static', filename='js/edit-homepage-ajax.js') }}"></script>
-
+    <script>
+        $(document).on('focusin', function (e) {
+            if ($(e.target).closest(".tox-dialog").length) {
+                e.stopImmediatePropagation();
+            }
+        });
+        dl = "../download_homepage/"
+    </script>
 {% endblock scripts %}
 
 {% block body %}

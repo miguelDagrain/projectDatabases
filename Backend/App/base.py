@@ -30,7 +30,7 @@ app = Flask(__name__, template_folder=ROOT+"html/templates/", static_folder=ROOT
 app_data = {'app_name': "newName"}
 app.config['BABEL_TRANSLATION_DIRECTORIES'] = ROOT+"babel/translations/"
 app.config['UPLOAD_FOLDER'] = ROOT+"attachments/"
-app.config['HOME_PAGE_FOLDER'] = ROOT+"homepage/"
+app.config['HOME_PAGE_FOLDER'] =ROOT+"homepage/"
 ALLOWED_EXTENSIONS = {'html', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 babel = Babel(app)
 app.secret_key = b'&-s\xa6\xbe\x9b(g\x8a~\xcd9\x8c)\x01]\xf5\xb8F\x1d\xb2'

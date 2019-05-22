@@ -40,21 +40,22 @@ def modify_homepage():
     """
     Function to modify the homepage
     """
-
-    if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
-        os.mkdir(app.config['HOME_PAGE_FOLDER'])
-
+    this_dir = os.path.dirname(__file__)
+    home_file = app.config['HOME_PAGE_FOLDER'] + 'homepage.html'
     value = ""
     if request.form.get("newHome"):
         value = request.form.get("newHome")
 
-    homeFile = open(app.config['HOME_PAGE_FOLDER'] + 'homepage.html', "w+")
+    if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
+        os.mkdir(app.config['HOME_PAGE_FOLDER'])
+
+    homeFile= open(os.path.join(this_dir, home_file), "w+")
     homeFile.write(value)
-    homeFile.close()
+    homeFile.seek(0)
+    print(homeFile.read(), file=sys.stdout)
+    homeFile.flush()
 
     files = request.files.getlist("Attachments")
-
-    print(files, file=sys.stdout)
 
     for file in files:
         print(file.filename, file=sys.stdout)
