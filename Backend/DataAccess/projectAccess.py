@@ -70,7 +70,9 @@ class ProjectAccess:
         :return: a list of documents
         """
         cursor = self.dbconnect.get_cursor()
+
         cursor.execute('select * from projectDocument where projectID=%s', (projectID,))
+
         desc = list()
         for row in cursor:
             desc.append(self.doc.get_document(row[1]))
@@ -496,7 +498,7 @@ class ProjectAccess:
             self.dbconnect.rollback()
             raise Exception('unable to remove project')
 
-    def get_project_filter_data(self):
+    def get_project_filter_data(self, language):
         from Project import Project
         try:
             cursor = self.dbconnect.get_cursor()

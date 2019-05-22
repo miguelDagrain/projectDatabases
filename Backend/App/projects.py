@@ -19,7 +19,7 @@ def show_projects():
     ra=ResearchGroupAccess()
     da=DomainAccess()
 
-    projects = pa.get_project_filter_data()
+    projects = pa.get_project_filter_data(request.cookies.get("lang"))
     researchGroups = ra.get_researchGroups()
     disciplines = da.get_disciplines()
     types = da.get_projectType()

@@ -51,8 +51,6 @@ def modify_homepage():
 
     homeFile= open(os.path.join(this_dir, home_file), "w+")
     homeFile.write(value)
-    homeFile.seek(0)
-    print(homeFile.read(), file=sys.stdout)
     homeFile.flush()
 
     files = request.files.getlist("Attachments")
@@ -60,6 +58,6 @@ def modify_homepage():
     for file in files:
         print(file.filename, file=sys.stdout)
         nameFile = secure_filename(file.filename)
-        file.save(os.path.join(app.config['HOME_PAGE_FOLDER'], nameFile))
+        file.save(os.path.join(this_dir, app.config['HOME_PAGE_FOLDER'], nameFile))
 
     return jsonify(result=True)
