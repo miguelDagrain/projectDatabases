@@ -52,9 +52,9 @@ def modify_homepage():
     homeFile.write(value)
     homeFile.close()
 
-    files = request.files.getlist("Attachments")
+    print(value, file=sys.stdout)
 
-    print(files, file=sys.stdout)
+    files = request.files.getlist("Attachments")
 
     for file in files:
         print(file.filename, file=sys.stdout)
