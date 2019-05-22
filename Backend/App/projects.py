@@ -21,8 +21,18 @@ def show_projects():
 
     projects = pa.get_project_filter_data()
     researchGroups = ra.get_researchGroups()
-    disciplines = da.get_disciplines()
-    types = da.get_projectType()
+    role = current_user.roles
+    isAdmin= False
+    for x in role:
+        if x == "admin":
+            isAdmin = True
+    if isAdmin == True:
+        disciplines = da.get_alldisciplines()
+        types = da.get_allprojectType()
+    else:
+        disciplines = da.get_disciplines()
+        types = da.get_projectType()
+
     projData = {}
     words = {}
     promoters = pa.get_promotors_and_associated_projects()
