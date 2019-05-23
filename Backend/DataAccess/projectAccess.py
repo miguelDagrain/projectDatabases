@@ -499,9 +499,13 @@ class ProjectAccess:
             raise Exception('unable to remove project')
 
     def get_project_filter_data(self, language):
+        """
+        returns projects with the neccesairy data to provide to the projects page and it's filter.
+        :param language: language of the project descriptions.
+        :return: Projects
+        """
         from Project import Project
-        import sys
-        print(language, file=sys.stdout)
+
         try:
             cursor = self.dbconnect.get_cursor()
             # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
@@ -514,20 +518,23 @@ class ProjectAccess:
             #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
             # temp query
+
             sql = "select * from project Where active = TRUE;"
             cursor.execute(sql)
             projects = list()
+
             for row in cursor:
                 project = Project(row[0], row[1], row[2], row[3], row[4])
                 projects.append(project)
-
+            
             # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
             for project in projects:
+                
                 cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
                 project.type = list(cursor.fetchall())
-
+               
                 project.desc = self.get_projectDocuments_with_language(project.ID, language)
-
+                
                 cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
                 project.discipline = list(cursor.fetchall())
 
@@ -550,9 +557,9 @@ class ProjectAccess:
                 project.extern_employees = self.get_externalEmployeesFromProject(project.ID)
 
                 project.activeYear=self.get_projectYears(project.ID)
-
-
+            
             return projects
+
         except:
             self.dbconnect.rollback()
             raise Exception('unable to get project filter data')
@@ -762,9 +769,6 @@ class ProjectAccess:
         ids = list()
 
         for row in cursor:
-            #try:
-                #cursor.execute('select lang from document where documentID=%s', (row[1],))
-                #if cursor[0][0] ==
             ids.append(row[1])
 
         desc = list()
