@@ -60,6 +60,8 @@ def show_projects():
             disciplineNames.append(dc[0])
 
         firstDescLines = "No description found."
+        if request.cookies.get("lang") == "nl":
+            firstDescLines = "Geen beschrijving gevonden."
         if len(proj.desc) > 0:
             firstDescLines = re.sub(r'<.+?>', '', proj.desc[0].text)
             tempDescLines = re.match(r'(?:[^.:;]+[.:;]){1}', firstDescLines)

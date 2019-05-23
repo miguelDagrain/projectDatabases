@@ -500,6 +500,8 @@ class ProjectAccess:
 
     def get_project_filter_data(self, language):
         from Project import Project
+        import sys
+        print(language, file=sys.stdout)
         try:
             cursor = self.dbconnect.get_cursor()
             # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
@@ -524,7 +526,7 @@ class ProjectAccess:
                 cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
                 project.type = list(cursor.fetchall())
 
-                project.desc = self.get_projectDocuments(project.ID)
+                project.desc = self.get_projectDocuments_with_language(project.ID, language)
 
                 cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
                 project.discipline = list(cursor.fetchall())
@@ -746,3 +748,33 @@ class ProjectAccess:
         except Exception as e:
             self.dbconnect.rollback()
             raise Exception('unable to change project ' + str(e))
+
+    def get_projectDocuments_with_language(self, projectID, language):
+        """
+        get all the documents for a certain project
+        :param projectID: the id of the project
+        :return: a list of documents
+        """
+        cursor = self.dbconnect.get_cursor()
+
+        cursor.execute('select * from projectDocument where projectID=%s', (projectID,))
+
+        ids = list()
+
+        for row in cursor:
+            #try:
+                #cursor.execute('select lang from document where documentID=%s', (row[1],))
+                #if cursor[0][0] ==
+            ids.append(row[1])
+
+        desc = list()
+        for id in ids:
+            cursor.execute('select lang from document where documentID=%s', (id,))
+
+            for row in cursor:
+                if row[0] == "dutch" and language == "nl":
+                    desc.append(self.doc.get_document(id))
+                if row[0] == "english" and language == "en":
+                    desc.append(self.doc.get_document(id))
+
+        return desc
