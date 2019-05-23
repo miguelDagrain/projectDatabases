@@ -58,6 +58,7 @@ create table registration(
 insert into registration values ('busy');
 insert into registration values ('succeeded');
 insert into registration values ('failed');
+insert into registration values ('past');
 
 create table language(
   lang varchar(255) primary key
@@ -144,7 +145,8 @@ CREATE TABLE project
   projectID     SERIAL PRIMARY KEY,
   title         VARCHAR(255) NOT NULL,
   maxStudents   INT          NOT NULL,
-  active        BOOLEAN
+  active        BOOLEAN,
+  reactivate    BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE externEmployee(

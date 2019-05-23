@@ -371,14 +371,14 @@ class ProjectAccess:
             (str(employeeID),))
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3])
+            project = Project(row[0], row[1], row[2], row[3], row[4])
             projects.append(project)
 
         cursor.execute(
             'select * from project JOIN projectstaff p on project.projectid = p.project WHERE p.employee=%s',
             (str(employeeID),))
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3])
+            project = Project(row[0], row[1], row[2], row[3], row[4])
             projects.append(project)
 
         for project in projects:
@@ -429,7 +429,7 @@ class ProjectAccess:
         cursor.execute(sql)
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3])
+            project = Project(row[0], row[1], row[2], row[3], row[4])
             projects.append(project)
 
         # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
@@ -474,7 +474,7 @@ class ProjectAccess:
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (ID,))
         if (cursor.rowcount == 0): return None
         row = cursor.fetchone()
-        project = Project(row[0], row[1], row[2], row[3])
+        project = Project(row[0], row[1], row[2], row[3], row[4])
         project.desc = self.get_projectDocuments(project.ID)
         project.activeYear = self.get_projectYears(project.ID)
         project.promotors = self.get_projectPromotors(project.ID)
@@ -499,7 +499,13 @@ class ProjectAccess:
             raise Exception('unable to remove project')
 
     def get_project_filter_data(self, language):
+        """
+        returns projects with the neccesairy data to provide to the projects page and it's filter.
+        :param language: language of the project descriptions.
+        :return: Projects
+        """
         from Project import Project
+
         try:
             cursor = self.dbconnect.get_cursor()
             # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
@@ -512,20 +518,23 @@ class ProjectAccess:
             #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
 
             # temp query
+
             sql = "select * from project Where active = TRUE;"
             cursor.execute(sql)
             projects = list()
-            for row in cursor:
-                project = Project(row[0], row[1], row[2], row[3])
-                projects.append(project)
 
+            for row in cursor:
+                project = Project(row[0], row[1], row[2], row[3], row[4])
+                projects.append(project)
+            
             # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
             for project in projects:
+                
                 cursor.execute('SELECT type FROM projectTypeConnection WHERE projectID=%s', (project.ID,))
                 project.type = list(cursor.fetchall())
-
-                project.desc = self.get_projectDocuments(project.ID)
-
+               
+                project.desc = self.get_projectDocuments_with_language(project.ID, language)
+                
                 cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
                 project.discipline = list(cursor.fetchall())
 
@@ -548,9 +557,9 @@ class ProjectAccess:
                 project.extern_employees = self.get_externalEmployeesFromProject(project.ID)
 
                 project.activeYear=self.get_projectYears(project.ID)
-
-
+            
             return projects
+
         except:
             self.dbconnect.rollback()
             raise Exception('unable to get project filter data')
@@ -638,11 +647,58 @@ class ProjectAccess:
                 now = datetime.datetime.now()
                 year = now.year
 
-                cursor.execute('update project set active= %s WHERE projectid= %s', ("0", str(id)))
+                cursor.execute('update project set active= %s WHERE projectid= %s', (False, str(id)))
                 self.add_projectYears(id, year)
 
             elif value is False:
-                cursor.execute('update project set active= %s WHERE projectid= %s', ("1", str(id)))
+                cursor.execute('update project set active= %s WHERE projectid= %s', (True, str(id)))
+                cursor.execute('update projectRegistration set status= %s WHERE  status= %s', ('past', 'succeeded'))
+        except Exception as e:
+            self.dbconnect.rollback()
+            print(str(e))
+            raise e
+
+    def change_project_reactivate(self, id, value):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            if value is True:
+
+                cursor.execute('update project set reactivate= %s WHERE projectid= %s', (False, str(id)))
+
+            elif value is False:
+                cursor.execute('update project set reactivate= %s WHERE projectid= %s', (True, str(id)))
+
+        except Exception as e:
+            self.dbconnect.rollback()
+            print(str(e))
+            raise e
+
+    def reset_projects_reactivate(self):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select projectID from project')
+
+            for i in cursor:
+                self.change_project_reactivate(i[0], True)
+
+        except Exception as e:
+            self.dbconnect.rollback()
+            print(str(e))
+            raise e
+
+    def get_id_projects_reactivate(self):
+        cursor = self.dbconnect.get_cursor()
+        try:
+
+            projectsReactive = list()
+
+            cursor.execute('select * from project WHERE reactivate = TRUE')
+
+            for i in cursor:
+                projectsReactive.append(i[0])
+
+            return projectsReactive
+
         except Exception as e:
             self.dbconnect.rollback()
             print(str(e))
@@ -699,3 +755,30 @@ class ProjectAccess:
         except Exception as e:
             self.dbconnect.rollback()
             raise Exception('unable to change project ' + str(e))
+
+    def get_projectDocuments_with_language(self, projectID, language):
+        """
+        get all the documents for a certain project written in the right language
+        :param projectID: the id of the project, language: language the document should be written in
+        :return: a list of documents
+        """
+        cursor = self.dbconnect.get_cursor()
+
+        cursor.execute('select * from projectDocument where projectID=%s', (projectID,))
+
+        ids = list()
+
+        for row in cursor:
+            ids.append(row[1])
+
+        desc = list()
+        for id in ids:
+            cursor.execute('select lang from document where documentID=%s', (id,))
+
+            for row in cursor:
+                if row[0] == "dutch" and language == "nl":
+                    desc.append(self.doc.get_document(id))
+                if row[0] == "english" and language == "en":
+                    desc.append(self.doc.get_document(id))
+
+        return desc

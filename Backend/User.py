@@ -14,7 +14,7 @@ class User(UserMixin):
         self.auth = False
         self.active = True
         self.anon = False
-        self.roles = list
+        self.roles = list()
 
     def is_active(self):
         return self.active

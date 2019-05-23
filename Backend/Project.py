@@ -1,5 +1,5 @@
 class Project:
-    def __init__(self, id, title, max_students, active):
+    def __init__(self, id, title, max_students, active, reactivate):
         self.title = title
         self.maxStudents = max_students
         self.desc = list()
@@ -18,4 +18,4 @@ class Project:
         self.register_count = 0
         self.desc_nl = None
         self.desc_en = None
-
+        self.reactivate = reactivate

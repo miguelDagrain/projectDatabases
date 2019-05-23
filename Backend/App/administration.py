@@ -49,9 +49,11 @@ def modify_disciplines():
             if value in disciplines and value not in actives:
                 access.reactivate_discipline(value)
                 return 'reactivated discipline'
+
             elif value not in disciplines:
                 access.add_discipline(value)
                 return 'true'
+
     except:
         return 'false'
 
@@ -71,7 +73,8 @@ def remove_disciplines():
         if value:
             discipline = disciplines[int(value)]
             access.remove_discipline(discipline)
-        return 'true'
+        actives = access.get_disciplines()
+        return render_template("administration.html", r_disciplines=actives, send=True)
     except:
         return 'false'
 
@@ -116,6 +119,7 @@ def remove_types():
         if value:
             type = types[int(value)]
             access.remove_type(type)
-            return 'true'
+            actives = access.get_projectType()
+            return render_template("administration.html", r_types=actives, send=True)
     except:
         return 'false'
