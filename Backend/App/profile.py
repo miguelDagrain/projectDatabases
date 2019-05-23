@@ -71,7 +71,7 @@ def change_project():
 
 @app.route('/profile/state', methods=['POST'])
 @login_required(role='employee')
-def change_project_status():
+def change_project_reactivate():
     """
     Removes a project from the database
     :return: redirection to employee profile
@@ -80,11 +80,11 @@ def change_project_status():
     pAccess = ProjectAccess()
     p = pAccess.get_project(id)
 
-    pAccess.change_project_active(id, p.active)
+    pAccess.change_project_reactivate(id, p.reactivate)
 
-    if p.active:
+    if p.reactivate:
         return redirect(url_for('emp_profile', deactivate=True))
-    elif p.active is False:
+    elif p.reactivate is False:
         return redirect(url_for('emp_profile', activate=True))
     else:
         return redirect(url_for('emp_profile', err=True))

@@ -34,12 +34,12 @@ $(document).ready(function () {
      * pops up.
      * This function fills the modal with the needed data.
      */
-    $('#change-project-active').on('show.bs.modal', function (e) {
+    $('#change-project-reactivate').on('show.bs.modal', function (e) {
         let id = $(e.relatedTarget).data('id');
         let type = $(e.relatedTarget).data('type');
 
-        let title = $('#change-project-active .modal-header .modal-title');
-        $('#change-project-active .modal-footer #project-id').val(id);
+        let title = $('#change-project-reactivate .modal-header .modal-title');
+        $('#change-project-reactivate .modal-footer #project-id').val(id);
         switch(type){
             case "activate":
                 title.text(activateText);

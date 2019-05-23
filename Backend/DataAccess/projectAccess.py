@@ -371,14 +371,14 @@ class ProjectAccess:
             (str(employeeID),))
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3])
+            project = Project(row[0], row[1], row[2], row[3], row[4])
             projects.append(project)
 
         cursor.execute(
             'select * from project JOIN projectstaff p on project.projectid = p.project WHERE p.employee=%s',
             (str(employeeID),))
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3])
+            project = Project(row[0], row[1], row[2], row[3], row[4])
             projects.append(project)
 
         for project in projects:
@@ -429,7 +429,7 @@ class ProjectAccess:
         cursor.execute(sql)
         projects = list()
         for row in cursor:
-            project = Project(row[0], row[1], row[2], row[3])
+            project = Project(row[0], row[1], row[2], row[3], row[4])
             projects.append(project)
 
         # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
@@ -474,7 +474,7 @@ class ProjectAccess:
         cursor.execute('SELECT * FROM project WHERE projectID=%s ', (ID,))
         if (cursor.rowcount == 0): return None
         row = cursor.fetchone()
-        project = Project(row[0], row[1], row[2], row[3])
+        project = Project(row[0], row[1], row[2], row[3], row[4])
         project.desc = self.get_projectDocuments(project.ID)
         project.activeYear = self.get_projectYears(project.ID)
         project.promotors = self.get_projectPromotors(project.ID)
@@ -516,7 +516,7 @@ class ProjectAccess:
             cursor.execute(sql)
             projects = list()
             for row in cursor:
-                project = Project(row[0], row[1], row[2], row[3])
+                project = Project(row[0], row[1], row[2], row[3], row[4])
                 projects.append(project)
 
             # de ,'s zijn nodig om de types over te laten gaan in tuples, anders zal dit fouten geven.
@@ -638,11 +638,58 @@ class ProjectAccess:
                 now = datetime.datetime.now()
                 year = now.year
 
-                cursor.execute('update project set active= %s WHERE projectid= %s', ("0", str(id)))
+                cursor.execute('update project set active= %s WHERE projectid= %s', (False, str(id)))
                 self.add_projectYears(id, year)
 
             elif value is False:
-                cursor.execute('update project set active= %s WHERE projectid= %s', ("1", str(id)))
+                cursor.execute('update project set active= %s WHERE projectid= %s', (True, str(id)))
+                cursor.execute('update projectRegistration set status= %s WHERE  status= %s', ('past', 'succeeded'))
+        except Exception as e:
+            self.dbconnect.rollback()
+            print(str(e))
+            raise e
+
+    def change_project_reactivate(self, id, value):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            if value is True:
+
+                cursor.execute('update project set reactivate= %s WHERE projectid= %s', (False, str(id)))
+
+            elif value is False:
+                cursor.execute('update project set reactivate= %s WHERE projectid= %s', (True, str(id)))
+
+        except Exception as e:
+            self.dbconnect.rollback()
+            print(str(e))
+            raise e
+
+    def reset_projects_reactivate(self):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('select projectID from project')
+
+            for i in cursor:
+                self.change_project_reactivate(i[0], True)
+
+        except Exception as e:
+            self.dbconnect.rollback()
+            print(str(e))
+            raise e
+
+    def get_id_projects_reactivate(self):
+        cursor = self.dbconnect.get_cursor()
+        try:
+
+            projectsReactive = list()
+
+            cursor.execute('select * from project WHERE reactivate = TRUE')
+
+            for i in cursor:
+                projectsReactive.append(i[0])
+
+            return projectsReactive
+
         except Exception as e:
             self.dbconnect.rollback()
             print(str(e))
