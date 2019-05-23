@@ -751,8 +751,8 @@ class ProjectAccess:
 
     def get_projectDocuments_with_language(self, projectID, language):
         """
-        get all the documents for a certain project
-        :param projectID: the id of the project
+        get all the documents for a certain project written in the right language
+        :param projectID: the id of the project, language: language the document should be written in
         :return: a list of documents
         """
         cursor = self.dbconnect.get_cursor()
