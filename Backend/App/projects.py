@@ -5,6 +5,7 @@ from DataAccess.projectAccess import ProjectAccess
 from DataAccess.researchGroupAccess import ResearchGroupAccess
 from DataAccess.domainAccess import DomainAccess
 from DataAccess.employeeAccess import EmployeeAccess
+from DataAccess.studentAccess import StudentAccess
 from DataAccess.sessionAccess import SessionAccess
 from MailService import MailService
 
@@ -347,38 +348,6 @@ def apply_remove_project(id):
 
 @app.route("/projects/search", methods=["GET"])
 def apply_filter_projects():
-    # TODO nog gebruikt?
-    # if request.args.get("Search_query") is None:
-    #     return show_projects()
-    # else:
-    #     Raccess = ResearchGroupAccess()
-    #     researchGroups = Raccess.get_researchGroups()
-    #     typeOptions = ["", "Bachelor dissertation", "Master thesis", "Research internship 1", "Research internship 2"]
-    #     Daccess = DomainAccess()
-    #     disciplineOptions = Daccess.get_disciplines()
-    #     researchGroupOptions = [""]
-    #
-    #     for iter in researchGroups:
-    #         researchGroupOptions.append(iter.name)
-    #
-    #     query = request.args.get("Search_query")
-    #     print(query, file=sys.stderr)
-    #     typeNr = int(request.args.get("Type"))
-    #     type = typeOptions[typeNr]
-    #
-    #     disciplineNrs = request.args.getlist("Disciplines")
-    #     discipline = helper_get_selected_multi_choice(disciplineNrs, disciplineOptions)
-    #
-    #     groupNr = int(request.args.get("Research_group"))
-    #     group = researchGroupOptions[groupNr]
-    #     status = int(request.args.get("Status"))
-    #
-    #     Paccess = ProjectAccess()
-    #     projects = Paccess.filter_projects(query, type, discipline, group, status)
-    #
-    # return render_template("projects.html", r_projects=projects, r_researchGroups=researchGroups,
-    #                        r_disciplines=disciplineOptions, r_types=typeOptions, page="projects",
-    #                        alt=json.dumps(projects, default=lambda x: x.__dict__))
     return redirect(url_for('show_projects'))
 
 

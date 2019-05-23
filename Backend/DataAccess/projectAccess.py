@@ -508,15 +508,6 @@ class ProjectAccess:
 
         try:
             cursor = self.dbconnect.get_cursor()
-            # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
-            #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
-
-            # TODO: dit werkt niemeer :(
-            # sql = "SELECT p.projectid, title, maxstudents, p.active, name, discipline, type, (" \
-            #       "SELECT COUNT(*) FROM projectregistration pr WHERE pr.project=p.projectid) as cnt " \
-            #       "FROM (project p INNER JOIN researchGroup ON researchGroup.groupID=p.researchGroup)" \
-            #       "INNER JOIN projectTypeConnection ON p.projectid=projectTypeConnection.projectID"
-
             # temp query
 
             sql = "select * from project Where active = TRUE;"

@@ -1,5 +1,5 @@
 import subprocess
-from DataAccess import employeeAccess
+from DataAccess.employeeAccess import EmployeeAccess
 
 class MailService:
     def __init__(self):
@@ -14,7 +14,7 @@ class MailService:
 
 
     def sendMailExtendingFirst(self):
-        eAccess = employeeAccess()
+        eAccess = EmployeeAccess()
 
         subject = "verlengen projecten, extending projects"
 
@@ -43,7 +43,7 @@ class MailService:
 
 
     def sendMailExtendingSecond(self):
-        eAccess = employeeAccess()
+        eAccess = EmployeeAccess()
 
         subject = "herinnering verlengen projecten, reminder extending projects"
 
