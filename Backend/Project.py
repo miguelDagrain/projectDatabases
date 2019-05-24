@@ -1,5 +1,5 @@
 class Project:
-    def __init__(self, id, title, max_students, active, reactivate):
+    def __init__(self, id, title, max_students, active, reactivate=False):
         self.title = title
         self.maxStudents = max_students
         self.desc = list()
