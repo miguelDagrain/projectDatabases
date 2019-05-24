@@ -12,6 +12,12 @@ class ProjectAccess:
         self.doc = DocumentAccess()
 
     def add_externEmployee(self,projectID,name):
+        """
+        adds an external employee to this project
+        :param projectID:
+        :param name:
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute("execute insertExternEmployee(%s,%s)",(str(projectID),name,))
@@ -21,6 +27,11 @@ class ProjectAccess:
             print("unable to add external employee"+str(e))
 
     def delete_projectExternEmployees(self,projectID):
+        """
+        Deletes the extern employees of this project
+        :param projectID:
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute("execute deleteProjectExternEmployees (%s)", (str(projectID),))
@@ -30,6 +41,11 @@ class ProjectAccess:
             print("unable to delete external employees from a project" + str(e))
 
     def get_externalEmployeesFromProject(self,projectID):
+        """
+        Get the external employees from this project
+        :param projectID:
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute("execute getProjectExternEmployees (%s)", (str(projectID),))
@@ -42,6 +58,12 @@ class ProjectAccess:
             print("unable to get external employees from a project" + str(e))
 
     def remove_bookmark(self, projectID, studentID):
+        """
+        removes a bookmark
+        :param projectID:
+        :param studentID:
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         sql = 'DELETE FROM bookmark b WHERE b.project= %s AND b.student= %s'
         try:
@@ -53,6 +75,12 @@ class ProjectAccess:
                 "Unable to delete bookmark with projectID=" + str(projectID) + " and studentID=" + str(studentID))
 
     def change_title(self, projectID, newTitle):
+        """
+        Change title of this project
+        :param projectID:
+        :param newTitle:
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         sql = 'UPDATE project SET title= %s WHERE projectID=%s'
         try:
@@ -346,6 +374,11 @@ class ProjectAccess:
             raise e
 
     def get_number_of_inactive_by_employee(self, employeeID):
+        """
+        Get number of inactive projects of this employee
+        :param employeeID: this employee's ID
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         sql = \
             'SELECT count(distinct project.projectid) ' \
@@ -362,6 +395,11 @@ class ProjectAccess:
         return count
 
     def get_projects_of_employee(self, employeeID):
+        """
+        Returns the projects of this employee
+        :param employeeID:
+        :return: projects
+        """
         from Project import Project
         from DataAccess.studentAccess import StudentAccess
         cursor = self.dbconnect.get_cursor()
@@ -580,15 +618,19 @@ class ProjectAccess:
 
         for id in list(employees.keys()):
             #print(id, file=sys.stdout)
-            projects = self.get_employee_projects_IDs(id)
+            projects = self.get_promotor_projects_IDs(id)
             employees[id]['projects'] = projects
             if not projects:
                 del employees[id]
 
         return employees
 
-    def get_employee_projects_IDs(self, ID):
-
+    def get_promotor_projects_IDs(self, ID):
+        """
+        Get all the Id's of the projects this employee is a promotor for.
+        :param ID: employee ID
+        :return: project ID's
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT project FROM projectPromotor WHERE employee = %s', (ID,))
         projects = []
@@ -624,7 +666,11 @@ class ProjectAccess:
         return employees
 
     def get_supervisor_projects_IDs(self, ID):
-
+        """
+        Get all the Id's of the projects this employee is a supervisor for.
+        :param ID: employee ID
+        :return: project ID's
+        """
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT project FROM projectStaff WHERE employee = %s', (ID,))
         projects = []
@@ -674,6 +720,12 @@ class ProjectAccess:
             raise Exception('Unable to save project!\n%s' % error)
 
     def change_project_active(self, id, value):
+        """
+        Change project activity
+        :param id:
+        :param value:
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
 
@@ -695,6 +747,12 @@ class ProjectAccess:
             raise e
 
     def change_project_reactivate(self, id, value):
+        """
+        Flip value of reactivate bool
+        :param id:
+        :param value:
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             if value is True:
@@ -710,6 +768,10 @@ class ProjectAccess:
             raise e
 
     def reset_projects_reactivate(self):
+        """
+        Reset the projects to be reactivated
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('select projectID from project')
@@ -723,6 +785,10 @@ class ProjectAccess:
             raise e
 
     def get_id_projects_reactivate(self):
+        """
+        Return id's of the projects that need to be reactivated
+        :return:
+        """
         cursor = self.dbconnect.get_cursor()
         try:
 
