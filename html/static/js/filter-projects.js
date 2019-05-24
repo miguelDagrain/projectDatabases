@@ -70,6 +70,22 @@ function filterProjects(){
         }
     }
 
+    if (document.getElementById("include_supervisor").checked){
+        // Check occurances in Promotors
+        for (var i in supervisors ){
+            for (var t in tokens){
+                if (countOccurances(supervisors[i]["name"], tokens[t]) > 0) {
+                    for (var j in supervisors[i]["projects"]){
+                        if (obj.hasOwnProperty( supervisors[i]["projects"][j])){
+                            obj[supervisors[i]["projects"][j]].relevance ++;
+                            relevant=true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // Add to the possible projects list
     for (var i in obj){
         if (obj[i].relevance >= 0 || sq.length === 0 ){

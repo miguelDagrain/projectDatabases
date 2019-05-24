@@ -76,6 +76,7 @@
                     <input type="checkbox" id="include_title" onchange="filterProjects()" checked>Title<br>
                     <input type="checkbox" id="include_description" onchange="filterProjects()" checked>Description<br>
                     <input type="checkbox" id="include_promotor" onchange="filterProjects()">Promotors<br>
+                    <input type="checkbox" id="include_supervisor" onchange="filterProjects()">Supervisors<br>
 
                 </div>
                 <script>
@@ -205,6 +206,9 @@
 
         var Promoters = {{promoters|tojson|safe}};
         promoters = JSON.parse(Promoters);
+
+        var Supervisors = {{supervisors|tojson|safe}};
+        supervisors = JSON.parse(Supervisors);
 
         projectCount = 0;
         result = [];
