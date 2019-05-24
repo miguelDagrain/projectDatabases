@@ -19,22 +19,9 @@ def show_people():
     if request.args.get("Name") is None:
         Eaccess = EmployeeAccess()
         people = Eaccess.get_employees()
-
-
     else:
         Eaccess = EmployeeAccess()
         people = Eaccess.get_employees()
-        # researchGroupOptions = [""]
-        #
-        # for iter in researchGroups:
-        #     researchGroupOptions.append(iter.name)
-        #
-        # name = request.args.get("Name")
-        # groupNr = int(request.args.get("Research_group"))
-        # group = researchGroupOptions[groupNr]
-        # promotor = int(request.args.get("Promotor"))
-        #
-        # people = Raccess.filter_employees(name, group, promotor)
 
     neededValuesPeoplePage = {}
     for person in people:
@@ -42,7 +29,6 @@ def show_people():
             if group.ID == person.research_group:
                 neededValuesPeoplePage[person.id] = {"name": person.name, "group": group.name,
                                                      "promotor": person.promotor, "ID": person.id}
-                # neededValuesPeoplePage.append([person.name, group.name, person.promotor, person.id])
 
     return render_template("people.html", r_values=json.dumps(neededValuesPeoplePage, default=lambda x: x.__dict__),
                            r_researchGroups=researchGroups,

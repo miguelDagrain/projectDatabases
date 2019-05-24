@@ -60,11 +60,19 @@
                     </button>
                 </div>
             {% endif %}
-            <h1>{{ r_project.title }}</h1>
+            <h1>{{ r_project.title }}
+                {% if r_project.active == False %}
+                    <small style="color: red;">{{ _('INACTIVE') }}!</small>
+                {% endif %}
+            </h1>
             <!--button for making the add_student button appears-->
             {% if ('employee' in current_user.roles ) %}
-                <button class="page-content-button" data-toggle="modal"
-                        data-target="#student-modal">{{ _('add student') }}</button>
+                {% if r_project.active == True %}
+                    <button class="page-content-button" data-toggle="modal"
+                            data-target="#student-modal">{{ _('add student') }}</button>
+                {% else %}
+                    <button class="page-content-button" disabled>{{ _('add student') }}</button>
+                {% endif %}
             {% endif %}
             <!--here starts the form for adding a student-->
             <div class="modal fade" id="student-modal" tabindex="-1" role="dialog">
@@ -115,13 +123,22 @@
                 </div>
 
             {% endif %}
+
             {% if 'student' in current_user.roles %}
                 <form action="{{ url_for('add_bookmark', id=r_project.ID, empty=0) }}" method="get">
-                    <button class="page-content-button" type="submit">{{ _('add bookmark') }}</button>
+                    {% if r_project.active == True %}
+                        <button class="page-content-button" type="submit">{{ _('add bookmark') }}</button>
+                    {% else %}
+                        <button class="page-content-button" disabled>{{ _('add bookmark') }}</button>
+                    {% endif %}
                 </form>
 
-                <button class="page-content-button" data-toggle="modal"
-                        data-target="#modal-form-show-interest">{{ _('express interest') }}</button>
+                {% if r_project.active == True %}
+                    <button class="page-content-button" data-toggle="modal"
+                            data-target="#modal-form-show-interest">{{ _('express interest') }}</button>
+                {% else %}
+                    <button class="page-content-button" disabled>{{ _('express interest') }}</button>
+                {% endif %}
 
                 <div id="modal-form-show-interest" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg" role="document">

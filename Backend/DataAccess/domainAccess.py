@@ -1,5 +1,6 @@
 import dbConnection
 
+
 class DomainAccess:
     def __init__(self):
         """
