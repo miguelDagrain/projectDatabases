@@ -22,6 +22,7 @@ def show_projects():
 
     projects = pa.get_project_filter_data(request.cookies.get("lang"))
     researchGroups = ra.get_researchGroups()
+
     if(current_user.is_authenticated):
         role = current_user.roles
         isAdmin= False
