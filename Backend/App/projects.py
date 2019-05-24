@@ -159,9 +159,11 @@ def add_project():
     # Create dutch document
     docNL = Document(None, "dutch", descriptionTextNl)
     # Link attachments to document
+    this_dir = os.path.dirname(__file__)
+    upload_folder = os.path.join(this_dir, app.config['UPLOAD_FOLDER'])
     for file in files_nl:
         nameFile = secure_filename(title + '_' + file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        file.save(os.path.join(upload_folder, nameFile))
         docNL.attachment.append(nameFile)
     # Assign document as description
     project.desc.append(docNL)
@@ -171,7 +173,7 @@ def add_project():
     # Link attachments to document
     for file in files_en:
         nameFile = secure_filename(title + '_' + file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        file.save(os.path.join(os.path.join(upload_folder, nameFile)))
         docEn.attachment.append(nameFile)
     # Assign document as description
     project.desc.append(docEn)
