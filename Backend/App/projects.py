@@ -64,6 +64,7 @@ def show_projects():
 
         disciplineNames = []
         for dc in proj.discipline:
+            print(dc, file=sys.stdout)
             disciplineNames.append(dc[0])
 
         firstDescLines = "No description found."

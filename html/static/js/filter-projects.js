@@ -18,18 +18,18 @@ function filterProjects(){
     }
     var relevant=false;
 
-    document.getElementById("include_title");
+    for (var i in obj) {
+        obj[i].relevance = 0;
+    }
 
     if (document.getElementById("include_title").checked) {
         // Count Occurances in Title
         for (var i in obj) {
-            obj[i].relevance = 0;
             for (var j in tokens) {
                 // Check in title
                 if (countOccurances(obj[i].title, tokens[j])) {
                     obj[i].relevance++;
                     relevant=true;
-
                 }
             }
         }
@@ -47,7 +47,6 @@ function filterProjects(){
                             obj[i].relevance += wordTable[word][i] / (wordTable[word]["total"] * div)
                             relevant=true;
                         }
-
                     }
                 }
             }
@@ -81,6 +80,20 @@ function filterProjects(){
                             relevant=true;
                         }
                     }
+                }
+            }
+        }
+    }
+
+    if (document.getElementById("include_tags").checked){
+        // Check occurances in Promotors
+        for (var i in obj ){
+            for (var t in tokens){
+                for (var j in obj[i]["tag"])
+                if (countOccurances(obj[i]["tag"][j][0], tokens[t]) > 0) {
+                    obj[i].relevance ++;
+                    relevant=true;
+
                 }
             }
         }
