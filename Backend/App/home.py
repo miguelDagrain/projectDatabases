@@ -46,8 +46,8 @@ def modify_homepage():
     if request.form.get("newHome"):
         value = request.form.get("newHome")
 
-    if not os.path.isdir(app.config['HOME_PAGE_FOLDER']):
-        os.mkdir(app.config['HOME_PAGE_FOLDER'])
+    if not os.path.isdir(os.path.join(this_dir, app.config['HOME_PAGE_FOLDER'])):
+        os.mkdir(os.path.join(this_dir, app.config['HOME_PAGE_FOLDER']))
 
     homeFile= open(os.path.join(this_dir, home_file), "w+")
     homeFile.write(value)

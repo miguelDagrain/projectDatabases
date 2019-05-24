@@ -525,9 +525,6 @@ class ProjectAccess:
                 project.type = list(cursor.fetchall())
                
                 project.desc = self.get_projectDocuments_with_language(project.ID, language)
-                
-                cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
-                project.discipline = list(cursor.fetchall())
 
                 cursor.execute('SELECT student FROM projectRegistration WHERE project=%s AND status=%s',
                                (project.ID, "succeeded"))
@@ -535,6 +532,15 @@ class ProjectAccess:
 
                 cursor.execute('SELECT researchgroupid FROM projectResearchgroup WHERE projectID=%s', (project.ID,))
                 project.researchGroup = list(cursor.fetchall())
+
+                cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
+                project.discipline = list(cursor.fetchall())
+
+                for rg in project.researchGroup:
+                    cursor.execute('SELECT discipline FROM researchGroup WHERE groupID=%s', (rg,))
+                    for row in cursor:
+                        if row[0] != None:
+                            project.discipline.append(row[0])
 
                 cursor.execute('SELECT project2 FROM projectRelation WHERE project1=%s', (project.ID,))
                 project.relatedProject = list(cursor.fetchall())

@@ -52,6 +52,7 @@ def show_projects():
         if su.session.EORS is EORS.STUDENT:
             rc = RelevanceCalculator(su.session.ID)
     for proj in projects:
+        print( proj.researchGroup, file=sys.stdout)
         researchGroupNames = []
         for rg in proj.researchGroup:
             researchGroupNames.append(ra.get_researchGroupsOnIDs(rg)[0].name)
@@ -62,10 +63,11 @@ def show_projects():
             #print(tp, file=sys.stdout)
             typeNames.append(tp[0])
 
+        print(proj.discipline, file=sys.stdout)
         disciplineNames = []
         for dc in proj.discipline:
-            print(dc, file=sys.stdout)
-            disciplineNames.append(dc[0])
+
+            disciplineNames.append(dc)
 
         firstDescLines = "No description found."
         if request.cookies.get("lang") == "nl":
