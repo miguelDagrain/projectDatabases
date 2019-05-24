@@ -10,12 +10,14 @@ from TagCalculator import findTags
 from MailService import MailService
 from config import config_data
 
-from helperFunc import *
+from DataAccess.employeeAccess import EmployeeAccess
+from DataAccess.studentAccess import StudentAccess
+
 dbConnection.setConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'], dbpass=config_data['dbpass'],
                               dbhost=config_data['dbhost'])
 ldapUsers= open("pdbldapRealUsers.ldif","w+")
 counter=1
-eacces=employeeAccess()
+eacces=EmployeeAccess()
 eacces.dbconnect=dbConnection.connection
 employees=eacces.get_employees()
 for i in employees:
@@ -36,7 +38,7 @@ for i in employees:
                     "homeDirectory: USERDIRECTORY \n\n")
     counter+=1
 
-sacces=studentAccess()
+sacces=StudentAccess()
 sacces.dbconnect=dbConnection.connection
 students=sacces.get_students()
 for i in students:
