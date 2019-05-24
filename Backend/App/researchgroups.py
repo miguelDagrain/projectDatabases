@@ -32,7 +32,7 @@ def add_research_group():
         return show_research_groups()
 
     Daccess = DomainAccess()
-    discipline = Daccess.get_disciplinesWithActivity()
+    discipline = Daccess.get_disciplines()
     disciplines = []
     for row in discipline:
         if row[1] == 'true':

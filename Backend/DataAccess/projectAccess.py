@@ -252,7 +252,7 @@ class ProjectAccess:
             tags.append(row[0])
         return tags
 
-    def delete_all_ProjectTages(self):
+    def delete_all_ProjectTags(self):
         """
         deletes all tags in the database, this is used for when the new tags are calculated
         """

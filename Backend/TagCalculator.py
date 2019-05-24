@@ -342,7 +342,7 @@ def findTags(): # =========================================================
         count_promotor_projects = cnt_bigrams_promotor[promotor][bigram]
         return (count_promotor_projects * count_line) / math.log(count_all_projects + 1)
 
-    pa.delete_all_ProjectTages()
+    pa.delete_all_ProjectTags()
     for i, line in enumerate(lines):
         # compute bigrams
         bigrams = frequency(i, lines).most_common()

@@ -217,7 +217,7 @@ class StudentAccess:
             cursor.execute('select * from student where studentID=%s', (student.studentID,))
             if cursor.rowcount == 0:
                 raise Exception('no student found with that id')
-            cursor.execute('update  student set name= %s, setgf studentnumber=%s where studentId=%s',
+            cursor.execute('update  student set name= %s, set studentnumber=%s where studentId=%s',
                            (student.name, student.studentNumber, student.studentID))
 
             cursor.execute('delete from bookmark where student=%s', (student.studentID,))
