@@ -7,7 +7,6 @@ tinymce.init({
             tinymce.triggerSave();
         });
 
-
         var openDialog = function () {
 
             var files = document.getElementById("administration-form-upload").firstChild;
@@ -26,7 +25,6 @@ tinymce.init({
                     value: myListItemName
                 });
             });
-
 
             return editor.windowManager.open({
                 title: 'Example plugin',
@@ -82,14 +80,16 @@ tinymce.init({
         };
 
         editor.ui.registry.addMenuItem('linktofile', {
-               text: 'link to file',
-               icon: 'link',
-               onAction: function () {
-                   // Open window
-                   openDialog();
+            text: 'link to file',
+            icon: 'link',
+            onAction: function () {
+                // Open window
+                openDialog();
 
-               }
+            }
         });
+
+
     },
 
     schema: "html4",

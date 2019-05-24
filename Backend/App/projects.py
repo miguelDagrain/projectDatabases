@@ -22,6 +22,7 @@ def show_projects():
 
     projects = pa.get_project_filter_data(request.cookies.get("lang"))
     researchGroups = ra.get_researchGroups()
+
     if(current_user.is_authenticated):
         role = current_user.roles
         isAdmin= False
@@ -41,6 +42,9 @@ def show_projects():
     projData = {}
     words = {}
     promoters = pa.get_promotors_and_associated_projects()
+    supervisors = pa.get_supervisors_and_associated_projects()
+
+    #print(supervisors, file=sys.stdout)
 
     rc = None
     su = current_user
@@ -52,8 +56,10 @@ def show_projects():
         for rg in proj.researchGroup:
             researchGroupNames.append(ra.get_researchGroupsOnIDs(rg)[0].name)
 
+
         typeNames = []
         for tp in proj.type:
+            #print(tp, file=sys.stdout)
             typeNames.append(tp[0])
 
         disciplineNames = []
@@ -104,7 +110,8 @@ def show_projects():
                            r_disciplines=disciplines, r_types=types, page="projects",
                            alt=json.dumps(projData, default=lambda x: x.__dict__),
                            words=json.dumps(words, default=lambda x: x.__dict__),
-                           promoters=json.dumps(promoters, default=lambda x: x.__dict__))
+                           promoters=json.dumps(promoters, default=lambda x: x.__dict__),
+                           supervisors=json.dumps(supervisors, default=lambda x: x.__dict__))
 
 
 # Todo try catch and return result=false if exception encountered

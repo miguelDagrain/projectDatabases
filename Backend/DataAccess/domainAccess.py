@@ -76,19 +76,6 @@ class DomainAccess:
                 disciplines.append(row[0])
         return disciplines
 
-    def get_disciplinesWithActivity(self):
-        """
-        gets all disciplines
-        :return: a list of disciplines
-        """
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute('select * from discipline')
-        disciplines = list()
-        for row in cursor:
-            if row[1] == 'true':
-                disciplines.append((row[0],row[1]))
-        return disciplines
-
     def get_alldisciplines(self):
         """
         gets all disciplines

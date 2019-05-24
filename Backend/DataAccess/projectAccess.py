@@ -252,7 +252,7 @@ class ProjectAccess:
             tags.append(row[0])
         return tags
 
-    def delete_all_ProjectTages(self):
+    def delete_all_ProjectTags(self):
         """
         deletes all tags in the database, this is used for when the new tags are calculated
         """
@@ -572,10 +572,12 @@ class ProjectAccess:
             employees[row[0]] = {}
             employees[row[0]]['name'] = row[1]
 
-        for id in employees.keys():
+        for id in list(employees.keys()):
             #print(id, file=sys.stdout)
             projects = self.get_employee_projects_IDs(id)
             employees[id]['projects'] = projects
+            if not projects:
+                del employees[id]
 
         return employees
 
@@ -588,6 +590,43 @@ class ProjectAccess:
             projects.append(row[0])
 
         return projects
+
+    def get_supervisors_and_associated_projects(self):
+        """
+        Get all supervisors with their associated project Id's
+        :return:
+        """
+        import sys
+
+        cursor = self.dbconnect.get_cursor()
+        employees = {}
+        cursor.execute('SELECT employeeID, name FROM employee')
+
+
+        for row in cursor:
+            #print(row[1], file=sys.stdout)
+            employees[row[0]] = {}
+            employees[row[0]]['name'] = row[1]
+
+        for id in list(employees.keys()):
+            #print(id, file=sys.stdout)
+            projects = self.get_supervisor_projects_IDs(id)
+            employees[id]['projects'] = projects
+            if not projects:
+                del employees[id]
+
+        return employees
+
+    def get_supervisor_projects_IDs(self, ID):
+
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT project FROM projectStaff WHERE employee = %s', (ID,))
+        projects = []
+        for row in cursor:
+            projects.append(row[0])
+
+        return projects
+
 
 
     def add_project(self, proj):

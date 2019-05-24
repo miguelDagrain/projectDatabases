@@ -140,6 +140,13 @@ CREATE TABLE contactPerson
   PRIMARY KEY (rgroup)
 );
 
+CREATE TABLE externEmployee(
+  projectID int references project(projectID) ON DELETE CASCADE ,
+  name VARCHAR(255),
+  primary key (projectID,name)
+);
+
+
 CREATE TABLE project
 (
   projectID     SERIAL PRIMARY KEY,
@@ -149,11 +156,6 @@ CREATE TABLE project
   reactivate    BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE externEmployee(
-  projectID int references project(projectID) ON DELETE CASCADE ,
-  name VARCHAR(255),
-  primary key (projectID,name)
-);
 
 CREATE TABLE projectDiscipline
 (

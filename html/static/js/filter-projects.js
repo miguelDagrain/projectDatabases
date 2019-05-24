@@ -70,6 +70,22 @@ function filterProjects(){
         }
     }
 
+    if (document.getElementById("include_supervisor").checked){
+        // Check occurances in Promotors
+        for (var i in supervisors ){
+            for (var t in tokens){
+                if (countOccurances(supervisors[i]["name"], tokens[t]) > 0) {
+                    for (var j in supervisors[i]["projects"]){
+                        if (obj.hasOwnProperty( supervisors[i]["projects"][j])){
+                            obj[supervisors[i]["projects"][j]].relevance ++;
+                            relevant=true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // Add to the possible projects list
     for (var i in obj){
         if (obj[i].relevance >= 0 || sq.length === 0 ){
@@ -109,7 +125,8 @@ function filterProjects(){
 
         // Check discipline
         var discFound = false;
-        for (var itt in result[i].type){
+
+        for (var itt in result[i].disciplines){
             if (!selectedDisciplines.includes(result[i].disciplines[itt]) ){
                 continue;
             }
@@ -118,6 +135,7 @@ function filterProjects(){
         }
         if (!discFound && !(selectedDisciplines.includes("All") || selectedDisciplines.includes("Alles"))){
             result[i].relevance = -1;
+            relevant = true;
             continue;
         }
 
@@ -132,6 +150,7 @@ function filterProjects(){
         }
         if (!typeFound && !(selectedTypes.includes("All") || selectedTypes.includes("Alles"))){
             result[i].relevance = -1;
+            relevant = true;
             continue;
         }
 
@@ -143,8 +162,9 @@ function filterProjects(){
                 break;
             }
         }
-        if (!rgFound && rg.selectedIndex>0){
+        if (!rgFound && rg.selectedIndex > 0){
             result[i].relevance = -1;
+            relevant = true;
             continue;
         }
 
@@ -153,12 +173,14 @@ function filterProjects(){
             case 1:
                 if (result[i].maxStudents <= result[i].registeredStudents){
                     result[i].relevance = -1;
+                    relevant = true;
                     continue;
                 }
                 break;
             case 2:
                 if (result[i].maxStudents > result[i].registeredStudents){
                     result[i].relevance = -1;
+                    relevant = true;
                     continue;
                 }
                 break;

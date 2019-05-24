@@ -82,17 +82,26 @@
 
         <div class="side-bar">
             <div>
-                <button class="side-bar-button" data-toggle="modal"
-                        data-target="#add_discipline">{{ _('add discipline') }}</button>
-                <button class="side-bar-button" data-toggle="modal"
-                        data-target="#remove_discipline">{{ _('remove discipline') }}</button>
-                <button class="side-bar-button" data-toggle="modal" data-target="#add_type">{{ _('add type') }}</button>
-                <button class="side-bar-button" data-toggle="modal"
-                        data-target="#remove_type">{{ _('remove type') }}</button>
-                {#                <a class="side-bar-button" href="{{ url_for('modify_disciplines') }}">{{ _('modify disciplines') }}</a>#}
-                {#                <a class="side-bar-button" href="{{ url_for('modify_types') }}">{{ _('modify types') }}</a>#}
-                <a class="side-bar-button" href="{{ url_for('show_research_groups') }}">{{ _('Research groups') }}</a>
-                <a class="side-bar-button" href="{{ url_for('show_people') }}">{{ _('People') }}</a>
+                <label class="side-bar-input">
+                    {{ _('Disciplines') }}
+                    <button class="side-bar-button" data-toggle="modal"
+                            data-target="#add_discipline">{{ _('Add') }}</button>
+                    <button class="side-bar-button" data-toggle="modal"
+                            data-target="#remove_discipline">{{ _('Deactivate') }}</button>
+                </label>
+                <label class="side-bar-input">
+                    {{ _('Types') }}
+                    <button class="side-bar-button" data-toggle="modal"
+                            data-target="#add_type">{{ _('Add') }}</button>
+                    <button class="side-bar-button" data-toggle="modal"
+                            data-target="#remove_type">{{ _('Deactivate') }}</button>
+                </label>
+                <label class="side-bar-input">
+                    {{ _('Other options') }}
+                    <a class="side-bar-button"
+                       href="{{ url_for('show_research_groups') }}">{{ _('Groups') }}</a>
+                    <a class="side-bar-button" href="{{ url_for('show_people') }}">{{ _('People') }}</a>
+                </label>
             </div>
 
             {% block administration_side_bar_extension %}{% endblock administration_side_bar_extension %}
@@ -100,115 +109,118 @@
         </div>
 
         <div class="page-content">
-                <div class="modal fade" id="add_discipline" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <form method="post" id="add_discipline_form">
-                                    <div class="alert alert-danger" id="failed" style="display:none">
-                                        {{ _('adding discipline failed') }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="user" style="margin-bottom: 5px">{{ _('Discipline name') }}</label>
-                                        <input id="user" class="form-control" type="text"
-                                               placeholder="{{ _('Name of new discipline') }}"
-                                               required>
-                                    </div>
-                                </form>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" form="add_discipline_form" class="btn btn-primary"
-                                        onclick="performAdditionDis()">{{ _('add') }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal fade" id="remove_discipline" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <div class="dropdown" style="display: inline-block;width:60%;">
-                                    <form id="remove-discipline" class="administration-form"
-                                          action="{{ url_for('remove_disciplines') }}"
-                                          method="post">
-                                        <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
-                                        <select name="Discipline" id="administration-form-disciplines">
-                                            <option value="0">{{ _('All') }}</option>
-                                            <script>
-                                                var iter = 0;
-                                            </script>
-                                            {% for discip in r_disciplines %}
-                                                <option value="" id="noValueDis">{{ discip }}</option>
-                                                <script>
-                                                    document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
-                                                    document.getElementById("noValueDis").removeAttribute("id");
-                                                    iter++;
-                                                </script>
-                                            {% endfor %}
-                                        </select>
-
-                                    </form>
+            <div class="modal fade" id="add_discipline" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <form method="post" id="add_discipline_form">
+                                <div class="alert alert-danger" id="failed" style="display:none">
+                                    {{ _('adding discipline failed') }}
                                 </div>
-                                <input class="administration-form-submit" type="submit" form="remove-discipline"
-                                               value="{{ _('Enter') }}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="add_type" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <form method="post" id="add_type_form">
-                                    <div class="alert alert-danger" id="failed" style="display:none">
-                                        {{ _('adding type failed') }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="user" style="margin-bottom: 5px">{{ _('Type name') }}</label>
-                                        <input id="user" class="form-control" type="text"
-                                               placeholder="{{ _('Name of new type') }}"
-                                               required>
-                                    </div>
-                                </form>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" form="add_type_form" class="btn btn-primary"
-                                        onclick="performAddition()">{{ _('add') }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="remove_type" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <div class="dropdown" style="display: inline-block;width:60%;">
-                                    <form id="remove-type" class="administration-form" action="{{ url_for('remove_types') }}"
-                                          method="post">
-                                        <label for="administration-form-type">{{ _('Type') }}:</label>
-                                        <select name="Type" id="administration-form-types">
-                                            <option value="0">{{ _('All') }}</option>
-                                            <script>
-                                                var iter = 0;
-                                            </script>
-                                            {% for typ in r_types %}
-                                                <option value="" id="noValueDis">{{ typ }}</option>
-                                                <script>
-                                                    document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
-                                                    document.getElementById("noValueDis").removeAttribute("id");
-                                                    iter++;
-                                                </script>
-                                            {% endfor %}
-                                        </select>
-                                    </form>
+                                <div class="form-group">
+                                    <label for="user" style="margin-bottom: 5px">{{ _('Discipline name') }}</label>
+                                    <input id="user" class="form-control" type="text"
+                                           placeholder="{{ _('Name of new discipline') }}"
+                                           required>
                                 </div>
-                                <input form="remove-type" class="administration-form-submit" type="submit" value="{{ _('Enter') }}">
-                            </div>
+                            </form>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" form="add_discipline_form" class="btn btn-primary"
+                                    onclick="performAdditionDis()">{{ _('add') }}
+                            </button>
                         </div>
                     </div>
                 </div>
-            {% block administration_content %}{% endblock administration_content %} <!--dit is voor uitbreiding op deze file niet om te gebruiken in deze file-->
+            </div>
+
+            <div class="modal fade" id="remove_discipline" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="dropdown" style="display: inline-block;width:60%;">
+                                <form id="remove-discipline" class="administration-form"
+                                      action="{{ url_for('remove_disciplines') }}"
+                                      method="post">
+                                    <label for="administration-form-disciplines">{{ _('Discipline') }}:</label>
+                                    <select name="Discipline" id="administration-form-disciplines">
+                                        <option value="0">{{ _('All') }}</option>
+                                        <script>
+                                            var iter = 0;
+                                        </script>
+                                        {% for discip in r_disciplines %}
+                                            <option value="" id="noValueDis">{{ discip }}</option>
+                                            <script>
+                                                document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                                                document.getElementById("noValueDis").removeAttribute("id");
+                                                iter++;
+                                            </script>
+                                        {% endfor %}
+                                    </select>
+
+                                </form>
+                            </div>
+                            <input class="administration-form-submit" type="submit" form="remove-discipline"
+                                   value="{{ _('Enter') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="add_type" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <form method="post" id="add_type_form">
+                                <div class="alert alert-danger" id="failed" style="display:none">
+                                    {{ _('adding type failed') }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="user" style="margin-bottom: 5px">{{ _('Type name') }}</label>
+                                    <input id="user" class="form-control" type="text"
+                                           placeholder="{{ _('Name of new type') }}"
+                                           required>
+                                </div>
+                            </form>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" form="add_type_form" class="btn btn-primary"
+                                    onclick="performAddition()">{{ _('add') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="remove_type" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="dropdown" style="display: inline-block;width:60%;">
+                                <form id="remove-type" class="administration-form"
+                                      action="{{ url_for('remove_types') }}"
+                                      method="post">
+                                    <label for="administration-form-type">{{ _('Type') }}:</label>
+                                    <select name="Type" id="administration-form-types">
+                                        <option value="0">{{ _('All') }}</option>
+                                        <script>
+                                            var iter = 0;
+                                        </script>
+                                        {% for typ in r_types %}
+                                            <option value="" id="noValueDis">{{ typ }}</option>
+                                            <script>
+                                                document.getElementById("noValueDis").setAttribute("value", iter.toString(10));
+                                                document.getElementById("noValueDis").removeAttribute("id");
+                                                iter++;
+                                            </script>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                            <input form="remove-type" class="administration-form-submit" type="submit"
+                                   value="{{ _('Enter') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% block administration_content %}{% endblock administration_content %}
+            <!--dit is voor uitbreiding op deze file niet om te gebruiken in deze file-->
         </div>
 
     </div>
