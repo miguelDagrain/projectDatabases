@@ -26,7 +26,6 @@ tinymce.init({
                 });
             });
 
-
             return editor.windowManager.open({
                 title: 'Example plugin',
                 body: {

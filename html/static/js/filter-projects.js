@@ -125,7 +125,8 @@ function filterProjects(){
 
         // Check discipline
         var discFound = false;
-        for (var itt in result[i].type){
+
+        for (var itt in result[i].disciplines){
             if (!selectedDisciplines.includes(result[i].disciplines[itt]) ){
                 continue;
             }
@@ -134,6 +135,7 @@ function filterProjects(){
         }
         if (!discFound && !(selectedDisciplines.includes("All") || selectedDisciplines.includes("Alles"))){
             result[i].relevance = -1;
+            relevant = true;
             continue;
         }
 
@@ -148,6 +150,7 @@ function filterProjects(){
         }
         if (!typeFound && !(selectedTypes.includes("All") || selectedTypes.includes("Alles"))){
             result[i].relevance = -1;
+            relevant = true;
             continue;
         }
 
@@ -159,8 +162,9 @@ function filterProjects(){
                 break;
             }
         }
-        if (!rgFound && rg.selectedIndex>0){
+        if (!rgFound && rg.selectedIndex > 0){
             result[i].relevance = -1;
+            relevant = true;
             continue;
         }
 
@@ -169,12 +173,14 @@ function filterProjects(){
             case 1:
                 if (result[i].maxStudents <= result[i].registeredStudents){
                     result[i].relevance = -1;
+                    relevant = true;
                     continue;
                 }
                 break;
             case 2:
                 if (result[i].maxStudents > result[i].registeredStudents){
                     result[i].relevance = -1;
+                    relevant = true;
                     continue;
                 }
                 break;

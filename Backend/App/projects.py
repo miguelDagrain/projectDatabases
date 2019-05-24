@@ -56,8 +56,10 @@ def show_projects():
         for rg in proj.researchGroup:
             researchGroupNames.append(ra.get_researchGroupsOnIDs(rg)[0].name)
 
+
         typeNames = []
         for tp in proj.type:
+            #print(tp, file=sys.stdout)
             typeNames.append(tp[0])
 
         disciplineNames = []
