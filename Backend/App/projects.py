@@ -30,14 +30,11 @@ def show_projects():
             if x == "admin":
                 isAdmin = True
         if isAdmin == True:
-            disciplines = da.get_alldisciplines()
-            types = da.get_allprojectType()
-        else:
-            disciplines = da.get_disciplines()
-            types = da.get_projectType()
-    else:
-        disciplines = da.get_disciplines()
-        types = da.get_projectType()
+            allDisciplines = da.get_alldisciplines()
+            allTypes = da.get_allprojectType()
+
+    disciplines = da.get_disciplines()
+    types = da.get_projectType()
 
     projData = {}
     words = {}
@@ -109,8 +106,8 @@ def show_projects():
 
         projData[proj.ID] = pjson
 
-    return render_template("projects.html", r_researchGroups=researchGroups,
-                           r_disciplines=disciplines, r_types=types, page="projects",
+    return render_template("projects.html", r_researchGroups=researchGroups, r_allDisciplines=allDisciplines,
+                           r_disciplines=disciplines, r_allTypes=allTypes, r_types=types, page="projects",
                            alt=json.dumps(projData, default=lambda x: x.__dict__),
                            words=json.dumps(words, default=lambda x: x.__dict__),
                            promoters=json.dumps(promoters, default=lambda x: x.__dict__),

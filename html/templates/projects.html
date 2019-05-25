@@ -107,7 +107,14 @@
                         var iter = 0;
                     </script>
 
-                    {% for type in r_types %}
+                    {% if ('admin' in current_user.roles) %}
+                        {% set types = r_allTypes %}
+                    {% else %}
+                        {% set types = r_types %}
+                    {% endif %}
+
+
+                    {% for type in types %}
                         <option value="" id="noValueType">{{ type }}</option>
                         <script>
                             iter++;
@@ -115,6 +122,7 @@
                             document.getElementById("noValueType").removeAttribute("id");
                         </script>
                     {% endfor %}
+
                 </select>
             </label>
 
@@ -127,7 +135,13 @@
                         var iter = 0;
                     </script>
 
-                    {% for discip in r_disciplines %}
+                    {% if ('admin' in current_user.roles) %}
+                        {% set disciplines = r_allDisciplines %}
+                    {% else %}
+                        {% set disciplines =  r_disciplines %}
+                    {% endif %}
+
+                    {% for discip in disciplines %}
                         <option value="" id="noValueDis">{{ discip }}</option>
                         <script>
                             iter++;
@@ -253,6 +267,7 @@
                             </script>
 
                             {% for discipline in r_disciplines %}
+
 
                                 <option value="" id="noDiscipline">{{ discipline }}</option>
 
