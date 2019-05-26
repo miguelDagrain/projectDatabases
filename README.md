@@ -63,7 +63,7 @@ set up server
 
 >sudo dpkg-reconfigure slapd
 
-now you will be promted with a gui
+now you will be prompted with a gui
 
 say no for the first question
 
