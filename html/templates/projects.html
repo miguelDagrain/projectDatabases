@@ -238,7 +238,7 @@
                     <label for="administration-form-title">{{ _('Title') }}:</label>
                     <input type="text" id="administration-form-title" name="Title">
                     <label for="administration-form-max">{{ _('Maxstudents') }}:</label>
-                    <input type="number" id="administration-form-max" name="Maxstudents">
+                    <input type="number" id="administration-form-max" name="Maxstudents" min="0" max="255">
                     <label for="administration-form-researchgroup">{{ _('Research group') }}:</label>
                     <div class="multi-select input-block">
                         <select name="Researchgroup" id="administration-form-researchgroup" multiple>
