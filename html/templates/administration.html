@@ -24,7 +24,6 @@
 {% endblock scripts %}
 
 {% block body %}
-{#    😷 deze code maakt mij ziek🤮🤒#}
     <script type="text/javascript" name="addDiscipline">
         function performAdditionDis() {
             $("#add_discipline_form").on("submit", function (event) {
@@ -41,8 +40,9 @@
                         $("#add_discipline").modal("hide");
                         document.location.reload()
                     } else if (data === "reactivated discipline") {
-                        var failed = document.getElementById("reactivated discipline");
-                        failed.style.display = "block";
+                        console.log("discipline reactivated");
+                        $("#add_discipline").modal("hide");
+                        document.location.reload()
                     } else {
                         var failed = document.getElementById("failed");
                         failed.style.display = "block";
@@ -68,8 +68,8 @@
                         $("#add_type").modal("hide");
                         document.location.reload(true)
                     } else if (data === "reactivated type") {
-                        var failed = document.getElementById("reactivated type");
-                        failed.style.display = "block";
+                        console.log("type reactivated");
+                        $("#add_type").modal("hide");
                     } else {
                         var failed = document.getElementById("failed");
                         failed.style.display = "block";

@@ -53,7 +53,7 @@ def modify_disciplines():
             elif value not in disciplines:
                 access.add_discipline(value)
                 return 'true'
-
+        return 'false'
     except:
         return 'false'
 
