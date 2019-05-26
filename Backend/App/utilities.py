@@ -44,14 +44,18 @@ def download(name):
     """
     Creates the possibility to download stored files.
     :param name: Name of the file to download
-    :return: # todo ?
+    :return: file
     """
     return send_from_directory(directory=app.config['UPLOAD_FOLDER'], filename=name, as_attachment=True)
 
 
 @app.route('/download_homepage/<string:name>', methods=['GET'])
 def download_homepage(name):
-    # todo used?
+    '''
+    Download the files from the homepage
+    :param name: File to download
+    :return: file
+    '''
     return send_from_directory(directory=app.config['HOME_PAGE_FOLDER'], filename=name, as_attachment=True)
 
 

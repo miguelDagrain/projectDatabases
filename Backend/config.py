@@ -1,4 +1,4 @@
-config_data = {}
+config_data = dict()
 config_data['app_name'] = 'pdb'
 config_data['dbname'] = 'pdbdatabase'
 config_data['dbuser'] = 'pdb'
