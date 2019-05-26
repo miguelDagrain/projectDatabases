@@ -36,6 +36,7 @@ def show_people():
 
 
 @app.route("/people/", methods=["POST"])
+@login_required(role='admin')
 def add_staff():
     """
     Function that adds a staff member to the database, is called every time the user uses the POST method on the
@@ -100,6 +101,7 @@ def get_person(id):
 
 
 @app.route("/people/<int:id>", methods=["POST"])
+@login_required(role='admin')
 def apply_remove_person(id):
     """
     function that removes the person on whose id equals the parameter id

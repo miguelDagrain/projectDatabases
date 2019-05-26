@@ -7,8 +7,9 @@ from DataAccess.employeeAccess import EmployeeAccess
 from DataAccess.projectAccess import ProjectAccess
 
 
-@login_required(role='admin')
+
 @app.route("/researchgroups/")
+@login_required(role='admin')
 def show_research_groups():
     """
     Shows the research groups on the website
@@ -22,6 +23,7 @@ def show_research_groups():
 
 
 @app.route("/researchgroups/", methods=["POST"])
+@login_required(role='admin')
 def add_research_group():
     """
     Adds a research group to the database
@@ -49,7 +51,6 @@ def add_research_group():
     researchGroups = Raccess.get_researchGroups()
     return render_template("researchgroups.html", r_groups=researchGroups, r_disciplines=disciplines,
                            page="administration")
-
 
 @app.route("/researchgroups/<int:id>", methods=["GET"])
 def group_page(id):

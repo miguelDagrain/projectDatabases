@@ -118,8 +118,8 @@ def show_projects():
 
 
 # Todo try catch and return result=false if exception encountered
-@login_required(role="employee")
 @app.route("/projects/", methods=["POST"])
+@login_required(role="employee")
 def add_project():
     """
     Adds a project to the database. The project data is stored in a form in the request.
@@ -308,8 +308,8 @@ def project_page(id):
                            extern=extern, added_bookmark=request.args.get('added_bookmark', default=False))
 
 
-@login_required(role="employee")
 @app.route('/projects/<int:id>/add_student', methods=['POST'])
+@login_required(role="employee")
 def assign_student(id):
     """
     Assigns a student to a project
@@ -364,9 +364,8 @@ def apply_filter_projects():
 
 
 @app.route('/showInterest/', methods=['POST'])
+@login_required(role="student")
 def showInterest():
-    # todo used?
-    # message = request.form["Message"]
     message = "ik zijn eens geinteresseerd"
     sender = "miguel.dagraine@student.uantwerpen.be"  # todo: huidige persoon ingelogd moet nog opgehaald worden
     receiver = "thibautvangoethem2@gmail.com"  # todo: je moet nog kiezen welke promotor je de mail naar toestuurt verstuur het dan via ajax

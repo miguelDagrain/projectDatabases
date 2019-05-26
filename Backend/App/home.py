@@ -1,5 +1,6 @@
 from App.base import *
 from App.utilities import get_locale
+from App.utilities import login_required
 
 
 @app.route("/")
@@ -36,6 +37,7 @@ def home():
 
 
 @app.route("/home/", methods=["POST"])
+@login_required(role='admin')
 def modify_homepage():
     """
     Function to modify the homepage

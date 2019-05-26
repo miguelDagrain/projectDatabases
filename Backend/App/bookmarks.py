@@ -5,8 +5,9 @@ from DataAccess.studentAccess import StudentAccess
 from DataAccess.projectAccess import ProjectAccess
 
 
-@login_required(role='student')
+
 @app.route("/projects/add_bookmark/<int:id>/", methods=["GET"])
+@login_required(role='student')
 def add_bookmark(id):
     """
     Adds a bookmark for the currently logged user. (needs role student)
@@ -19,8 +20,9 @@ def add_bookmark(id):
     return redirect(url_for('project_page', id=id, added_bookmark=True))
 
 
-@login_required(role='student')
+
 @app.route("/bookmarks/", methods=['GET'])
+@login_required(role='student')
 def bookmark_page():
     """
     Creates a bookmark page based on the bookmarks of the student
