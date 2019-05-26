@@ -408,6 +408,7 @@
                     </div>
 
                     <div class="multi-text-input" id="Related">
+
                         <label for="administration-form-related">{{ _('Related projects') }}</label>
 
                         <div class="input-block">
@@ -418,7 +419,6 @@
                                      class="dropdown-items dropdown-hide text-suggestion-input-dropdown"></div>
                                 <script>setUpSuggestions($("#administration-form-related"), $("#administration-form-related-suggestions"), "/check/project_titles")</script>
                             </div>
-
 
                             <button id="administration-form-related-add">{{ _('add') }}</button>
                             <script>setUpOnlyAcceptLimited($("#administration-form-related"), $("#administration-form-related-add"), "/check/project_title_correct")</script>

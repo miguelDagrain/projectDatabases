@@ -572,7 +572,9 @@ class ProjectAccess:
                 project.researchGroup = list(cursor.fetchall())
 
                 cursor.execute('SELECT discipline FROM projectDiscipline WHERE projectID=%s', (project.ID,))
-                project.discipline = list(cursor.fetchall())
+                project.discipline=list()
+                for row in cursor:
+                    project.discipline.append(row[0])
 
                 for rg in project.researchGroup:
                     cursor.execute('SELECT discipline FROM researchGroup WHERE groupID=%s', (rg,))
