@@ -67,11 +67,13 @@ def remove_disciplines():
     """
     access = DomainAccess()
     disciplines = access.get_alldisciplines()
+    actives = access.get_disciplines()
+
 
     value = request.form.get("Discipline")
     try:
         if value:
-            discipline = disciplines[int(value)]
+            discipline = actives[int(value)]
             access.remove_discipline(discipline)
         actives = access.get_disciplines()
         return render_template("administration.html", r_disciplines=actives, send=True)
@@ -113,11 +115,13 @@ def remove_types():
     """
     access = DomainAccess()
     types = access.get_allprojectType()
+    active = access.get_projectType()
+
 
     try:
         value = request.form.get("Type")
         if value:
-            type = types[int(value)]
+            type = active[int(value)]
             access.remove_type(type)
             actives = access.get_projectType()
             return render_template("administration.html", r_types=actives, send=True)
