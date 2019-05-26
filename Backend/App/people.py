@@ -48,7 +48,7 @@ def add_staff():
     email = request.form.get("Email")
     office = request.form.get("Office")
     researchgroupNr = request.form.get("Researchgroup")
-    research_group = int(researchgroupNr)
+    research_group = int(researchgroupNr)+1
     titleOptions = Daccess.get_titles()
     titleNr = request.form.get("Title")
     title = titleOptions[int(titleNr)]

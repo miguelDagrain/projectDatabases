@@ -30,14 +30,11 @@ def show_projects():
             if x == "admin":
                 isAdmin = True
         if isAdmin == True:
-            disciplines = da.get_alldisciplines()
-            types = da.get_allprojectType()
-        else:
-            disciplines = da.get_disciplines()
-            types = da.get_projectType()
-    else:
-        disciplines = da.get_disciplines()
-        types = da.get_projectType()
+            allDisciplines = da.get_alldisciplines()
+            allTypes = da.get_allprojectType()
+
+    disciplines = da.get_disciplines()
+    types = da.get_projectType()
 
     projData = {}
     words = {}
@@ -52,6 +49,7 @@ def show_projects():
         if su.session.EORS is EORS.STUDENT:
             rc = RelevanceCalculator(su.session.ID)
     for proj in projects:
+        #print( proj.researchGroup, file=sys.stdout)
         researchGroupNames = []
         for rg in proj.researchGroup:
             researchGroupNames.append(ra.get_researchGroupsOnIDs(rg)[0].name)
@@ -62,10 +60,11 @@ def show_projects():
             #print(tp, file=sys.stdout)
             typeNames.append(tp[0])
 
+        #print(proj.discipline, file=sys.stdout)
         disciplineNames = []
         for dc in proj.discipline:
-            print(dc, file=sys.stdout)
-            disciplineNames.append(dc[0])
+
+            disciplineNames.append(dc)
 
         firstDescLines = "No description found."
         if request.cookies.get("lang") == "nl":
@@ -107,8 +106,8 @@ def show_projects():
 
         projData[proj.ID] = pjson
 
-    return render_template("projects.html", r_researchGroups=researchGroups,
-                           r_disciplines=disciplines, r_types=types, page="projects",
+    return render_template("projects.html", r_researchGroups=researchGroups, r_allDisciplines=allDisciplines,
+                           r_disciplines=disciplines, r_allTypes=allTypes, r_types=types, page="projects",
                            alt=json.dumps(projData, default=lambda x: x.__dict__),
                            words=json.dumps(words, default=lambda x: x.__dict__),
                            promoters=json.dumps(promoters, default=lambda x: x.__dict__),
@@ -160,9 +159,11 @@ def add_project():
     # Create dutch document
     docNL = Document(None, "dutch", descriptionTextNl)
     # Link attachments to document
+    this_dir = os.path.dirname(__file__)
+    upload_folder = os.path.join(this_dir, app.config['UPLOAD_FOLDER'])
     for file in files_nl:
         nameFile = secure_filename(title + '_' + file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        file.save(os.path.join(upload_folder, nameFile))
         docNL.attachment.append(nameFile)
     # Assign document as description
     project.desc.append(docNL)
@@ -172,7 +173,7 @@ def add_project():
     # Link attachments to document
     for file in files_en:
         nameFile = secure_filename(title + '_' + file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], nameFile))
+        file.save(os.path.join(os.path.join(upload_folder, nameFile)))
         docEn.attachment.append(nameFile)
     # Assign document as description
     project.desc.append(docEn)

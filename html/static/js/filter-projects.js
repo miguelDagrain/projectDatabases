@@ -136,6 +136,7 @@ function filterProjects(){
     // Weighted relevance for each token
     for ( var i in result){
 
+        console.log(result[i].disciplines);
         // Check discipline
         var discFound = false;
 
