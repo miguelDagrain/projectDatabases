@@ -1,6 +1,6 @@
 # ESP 2.0 #
 
-This project is created for the course <i>Programming project databases</i>. This repository is the remote repository of 
+This project is created for the course _Programming project databases_. This repository is the remote repository of 
 our ESP website and is created by Thibaut Van Goethem, Olivier Van Houtte, Miguel Dagrain, Robbe Van de Velde and Freek De Sagher.
 <br>A running version of this application can be found at http://studento.uantwerpen.be:5001
 
