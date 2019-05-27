@@ -70,8 +70,8 @@ In this section you find information on how to update translation or how to add 
 All files regarding translation are found in the babel folder.
 
 In order to create new Dutch translations, run the next commands from the project root.
-> pybabel extract -F babel/babel.cfg -o babel/messages.pot
-> pybabel update -i babel/messages.pot -d .
+> pybabel extract -F babel/babel.cfg -o babel/messages.pot . <br>
+> pybabel update -i babel/messages.pot -d babel/translations
 
 After this is done, go to the [messages.po](babel/translations/nl/LC_MESSAGES/messages.po) file, and fill in the new entries.
 
